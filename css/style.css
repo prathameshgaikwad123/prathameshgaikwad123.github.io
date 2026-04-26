@@ -964,3 +964,7 @@ ul {
         page-break-inside: avoid;
     }
 }
+.github-chart {
+    text-align: center;
+    padding: 20px;
+}
