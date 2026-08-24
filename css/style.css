@@ -2,10 +2,16 @@
    PRATHAMESH GAIKWAD — MULTIDISCIPLINARY DIGITAL DESIGNER
    Design system + site styles
 
-   Typefaces  Archivo (display) · Inter (text)
-              Both OFL-licensed, loaded in one request from Google Fonts.
+   Typefaces  Castoro (display / editorial) · Inter (UI + body)
+              Castoro ships one weight only (400 roman + 400 italic),
+              so hierarchy is carried by size, measure and colour —
+              never by weight. font-synthesis is off everywhere the
+              display face is used so nothing renders faux-bold.
    Themes     Light is the base; dark is defined twice so that both the
               system preference and an explicit choice resolve correctly.
+   Grid       One 12-column grid (6 on small screens) shared by every
+              section, so labels, headlines and media align down the
+              whole page rather than per-section.
    =================================================================== */
 
 /* ====== 1. TOKENS =================================================== */
@@ -27,28 +33,34 @@
     --on-accent:    #FFFFFF;
 
     /* --- Type --------------------------------------------------------- */
-    --font-display: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-display: 'Castoro', 'Iowan Old Style', 'Palatino Linotype',
+                    Palatino, Georgia, 'Times New Roman', serif;
     --font-text:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-    /* Fluid scale. The two display steps are tuned so that the longest
-       single word they must carry still fits its column at every width:
-       "MULTIDISCIPLINARY" for --t-hero, "COMMUNICATION" for --t-xxl.
-       Measured against Archivo, which is the widest face in the stack.   */
-    --t-hero:    clamp(1.875rem, 9.2vw, 8.4rem);
-    --t-xxl:     clamp(2rem, 5.4vw, 5rem);
-    --t-xl:      clamp(1.75rem, 4.2vw, 3.25rem);
-    --t-l:       clamp(1.375rem, 2.6vw, 2rem);
-    --t-m:       clamp(1.125rem, 1.5vw, 1.375rem);
-    --t-lead:    clamp(1.0625rem, 1.35vw, 1.3125rem);
+    /* Editorial scale. Two display steps carry the page: --t-display for
+       the masthead headline, --t-xxl for project titles. Both are capped
+       so that the longest unbreakable word still fits its column at every
+       width — "Multidisciplinary" for --t-display, measured in Castoro,
+       which is narrower than a grotesque and so runs cooler than it looks. */
+    --t-display: clamp(2.5rem, 12vw, 9.5rem);
+    --t-xxl:     clamp(2.125rem, 5.6vw, 4.5rem);
+    --t-xl:      clamp(1.75rem, 4vw, 3.25rem);
+    --t-l:       clamp(1.375rem, 2.6vw, 2.125rem);
+    --t-m:       clamp(1.0625rem, 1.4vw, 1.25rem);
+    --t-lead:    clamp(1.125rem, 1.7vw, 1.5rem);
     --t-body:    1rem;
     --t-small:   0.875rem;
     --t-meta:    0.75rem;
 
-    /* --- Space ------------------------------------------------------- */
-    --gutter:      clamp(1.25rem, 5vw, 5rem);
-    --shell:       88rem;   /* 1408px */
-    --measure:     34rem;   /* comfortable reading width */
-    --sec-space:   clamp(5rem, 12vh, 9.5rem);
+    /* --- Space -------------------------------------------------------
+       --sec-space is deliberately large: the page is meant to be read in
+       one scroll, and the silence between sections is what separates
+       them now that most rules and every card have gone.               */
+    --gutter:      clamp(1.375rem, 5vw, 6rem);
+    --col-gap:     clamp(1rem, 2.2vw, 2rem);
+    --shell:       90rem;   /* 1440px */
+    --measure:     36rem;   /* comfortable reading width */
+    --sec-space:   clamp(5.5rem, 13vw, 11rem);
     --header-h:    4.5rem;
 
     /* --- Motion ------------------------------------------------------ */
@@ -105,7 +117,7 @@ html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--header-h) + 1.5rem);
+    scroll-padding-top: calc(var(--header-h) + 2rem);
 }
 
 body {
@@ -158,7 +170,7 @@ button {
 :focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 1px;
 }
 
 .skip-link {
@@ -184,30 +196,52 @@ button {
 
 /* ====== 3. TYPE PRIMITIVES ========================================= */
 
+/* Every display-face element routes through this selector so the single
+   available weight and the disabled synthesis stay in one place. */
+.display,
+.hero__title,
+.hero__statement,
+.sec-head__title,
+.project__title,
+.about__opening,
+.cap-row__title,
+.exp__role,
+.impact__figure,
+.step__title,
+.contact__mail,
+.case-hero__title,
+.case-next__title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-synthesis-weight: none;
+    font-synthesis: none;
+    font-feature-settings: "kern" 1, "liga" 1;
+}
+
 .eyebrow {
     font-family: var(--font-text);
     font-size: var(--t-meta);
     font-weight: 500;
     line-height: 1.4;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
 }
 
 .lead {
     font-size: var(--t-lead);
-    line-height: 1.55;
-    letter-spacing: -0.012em;
+    line-height: 1.5;
+    letter-spacing: -0.014em;
     color: var(--ink-2);
 }
 
-.prose > * + * { margin-top: 1.15em; }
+.prose > * + * { margin-top: 1.3em; }
 
 .prose {
     max-width: var(--measure);
     color: var(--ink-2);
     font-size: var(--t-m);
-    line-height: 1.68;
+    line-height: 1.72;
 }
 
 .prose strong { color: var(--ink); font-weight: 500; }
@@ -227,73 +261,85 @@ button {
     padding-inline: var(--gutter);
 }
 
-.section { padding-block: var(--sec-space); }
+/* One continuous column of sections. There is no card, panel or boxed
+   container anywhere below this line — sections are separated by space
+   and by a single hairline at the top of each masthead. */
+.section { padding-block: 0 var(--sec-space); }
 
-.section + .section { padding-top: 0; }
+.section:first-of-type { padding-top: var(--sec-space); }
 
-/* Section header: label left, statement right — an editorial masthead. */
+/* --- Section masthead ----------------------------------------------
+   Index + label pinned to the left column, statement in the wide
+   column. Identical geometry in every section, which is what makes the
+   page read as one document rather than a stack of modules.          */
 .sec-head {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
     border-top: 1px solid var(--ink);
-    padding-top: 1rem;
+    padding-top: 1.125rem;
+    padding-bottom: clamp(3.25rem, 6vw, 5.5rem);
 }
 
 .sec-head__label {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
-    color: var(--ink);
+    gap: 0.875rem;
+    color: var(--ink-2);
 }
 
 .sec-head__label::before {
     content: attr(data-index);
     font-family: var(--font-display);
+    font-synthesis: none;
     font-size: var(--t-meta);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--accent);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
 }
 
 .sec-head__title {
-    font-family: var(--font-display);
     font-size: var(--t-xl);
-    font-weight: 400;
-    line-height: 1.06;
-    letter-spacing: -0.032em;
-    max-width: 22ch;
+    line-height: 1.08;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    max-width: 20ch;
+    text-wrap: pretty;
 }
 
+/* From 62rem up every block below shares one 12-column grid, declared
+   with this custom property so each section can opt in with a single
+   line. Three alignment families are used across the whole page and
+   nothing else:
+     A  micro-label in columns 1–3, content from column 4
+        (section mastheads, approach, tools, case-study blocks)
+     B  paired content, 1–4 alongside 6–12
+        (about, capabilities, experience, in practice)
+     C  wide + narrow, 1–8 alongside 9–12
+        (projects, contact)                                              */
 @media (min-width: 62rem) {
     .sec-head {
-        grid-template-columns: 14rem minmax(0, 1fr);
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
         align-items: start;
-        gap: clamp(2rem, 5vw, 5rem);
     }
-    .sec-head__title { max-width: 26ch; }
+    .sec-head__label { grid-column: 1 / span 3; }
+    .sec-head__title { grid-column: 4 / span 9; max-width: 22ch; }
 }
 
 
 /* ====== 5. HEADER & NAV ============================================ */
+/* Flat and opaque. No blur, no translucency, no border until the page
+   has actually moved. */
 
 .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--paper);                                  /* fallback */
-    background: color-mix(in srgb, var(--paper) 86%, transparent);
-    backdrop-filter: saturate(140%) blur(14px);
-    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    background: var(--paper);
     border-bottom: 1px solid transparent;
-    transition: border-color var(--dur-fast) var(--ease-io),
-                background var(--dur-fast) var(--ease-io);
-}
-
-/* No backdrop-filter support → keep it fully opaque so text stays legible. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .site-header { background: var(--paper); }
+    transition: border-color var(--dur-fast) var(--ease-io);
 }
 
 .site-header.is-scrolled { border-bottom-color: var(--rule); }
@@ -306,62 +352,65 @@ button {
     min-height: var(--header-h);
 }
 
+/* Wordmark left, navigation centred on the page axis, controls right.
+   The centre column is the page's optical spine, so the nav reads as
+   part of the masthead rather than as a toolbar pushed to one side. */
+@media (min-width: 62rem) {
+    .site-header__inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+    }
+    .site-header__actions { justify-self: end; }
+}
+
 /* --- Wordmark ------------------------------------------------------- */
 .wordmark {
     display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
+    align-items: baseline;
+    gap: 0.5rem;
     font-family: var(--font-display);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-}
-
-.wordmark__mark {
-    display: grid;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    background: var(--ink);
-    color: var(--paper);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    transition: background var(--dur-fast) var(--ease-io);
-}
-
-.wordmark:hover .wordmark__mark { background: var(--accent); color: var(--on-accent); }
-
-.wordmark__role {
-    display: none;
-    font-family: var(--font-text);
-    font-size: var(--t-meta);
+    font-synthesis: none;
+    font-size: 1.0625rem;
     font-weight: 400;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    color: var(--ink);
+}
+
+/* Was a filled square; now a set of initials that sit on the same
+   baseline as the name. */
+.wordmark__mark {
+    font-size: 0.8125rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-3);
-    padding-left: 0.75rem;
-    margin-left: 0.125rem;
-    border-left: 1px solid var(--rule);
+    transition: color var(--dur-fast) var(--ease-io);
 }
 
-@media (min-width: 75rem) { .wordmark__role { display: inline; } }
+.wordmark:hover .wordmark__mark { color: var(--accent); }
+
+/* The role line is stated at full size in the hero and repeated in the
+   footer, so the masthead keeps the name alone: with the navigation
+   centred there is no width left for a strapline that would not crowd
+   it. Kept in the markup for the document outline. */
+.wordmark__role { display: none; }
 
 /* --- Desktop nav ---------------------------------------------------- */
 .site-nav__list {
     display: flex;
     align-items: center;
-    gap: clamp(1rem, 2.2vw, 2rem);
+    gap: clamp(1.25rem, 2.4vw, 2.5rem);
+    counter-reset: nav;
 }
 
 .site-nav__link {
     position: relative;
     display: inline-block;
-    padding-block: 0.25rem;
+    padding-block: 0.375rem;
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-2);
     transition: color var(--dur-fast) var(--ease-io);
@@ -389,25 +438,23 @@ button {
 .site-header__actions {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 /* --- Theme toggle --------------------------------------------------- */
+/* Borderless: the icon is the control. */
 .theme-toggle {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    color: var(--ink-2);
-    border: 1px solid var(--rule);
-    border-radius: 50%;
-    transition: color var(--dur-fast) var(--ease-io),
-                border-color var(--dur-fast) var(--ease-io);
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--ink-3);
+    transition: color var(--dur-fast) var(--ease-io);
 }
 
-.theme-toggle:hover { color: var(--ink); border-color: var(--rule-strong); }
+.theme-toggle:hover { color: var(--ink); }
 
-.theme-toggle svg { width: 1rem; height: 1rem; }
+.theme-toggle svg { width: 1.0625rem; height: 1.0625rem; }
 
 .theme-toggle .icon-moon { display: none; }
 :root[data-theme="dark"] .theme-toggle .icon-sun  { display: none; }
@@ -424,16 +471,14 @@ button {
 .nav-toggle {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 1.75rem;
+    height: 1.75rem;
     color: var(--ink);
-    border: 1px solid var(--rule);
-    border-radius: 50%;
 }
 
 .nav-toggle__bars {
     position: relative;
-    width: 0.875rem;
+    width: 1.125rem;
     height: 0.5rem;
 }
 
@@ -443,30 +488,30 @@ button {
     position: absolute;
     left: 0;
     width: 100%;
-    height: 1.5px;
+    height: 1px;
     background: currentColor;
     transition: transform var(--dur-fast) var(--ease-io),
                 top var(--dur-fast) var(--ease-io);
 }
 
 .nav-toggle__bars::before { top: 0; }
-.nav-toggle__bars::after  { top: calc(100% - 1.5px); }
+.nav-toggle__bars::after  { top: calc(100% - 1px); }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { top: 3.25px; transform: rotate(45deg); }
-.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after  { top: 3.25px; transform: rotate(-45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { top: 3.5px; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after  { top: 3.5px; transform: rotate(-45deg); }
 
 @media (min-width: 62rem) { .nav-toggle { display: none; } }
 
-/* --- Mobile nav panel ----------------------------------------------- */
+/* --- Mobile nav panel ----------------------------------------------
+   Full height, numbered, set in the display face — a contents page
+   rather than a dropdown.                                            */
 @media (max-width: 61.99rem) {
     .site-nav {
         position: fixed;
-        inset: var(--header-h) 0 auto 0;
-        max-height: calc(100dvh - var(--header-h));
+        inset: var(--header-h) 0 0 0;
         overflow-y: auto;
         background: var(--paper);
-        border-bottom: 1px solid var(--rule);
-        padding: 1rem var(--gutter) 2.5rem;
+        padding: clamp(1.5rem, 6vw, 3rem) var(--gutter) 3rem;
         transform: translateY(-101%);
         visibility: hidden;
         /* visibility is delayed on the way out so the panel stays on screen
@@ -490,17 +535,34 @@ button {
         gap: 0;
     }
 
-    .site-nav__list li { border-bottom: 1px solid var(--rule); }
+    .site-nav__list li {
+        counter-increment: nav;
+        border-bottom: 1px solid var(--rule);
+    }
+
+    .site-nav__list li:first-child { border-top: 1px solid var(--rule); }
 
     .site-nav__link {
-        display: block;
-        padding-block: 1.125rem;
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+        padding-block: clamp(0.875rem, 3.2vw, 1.375rem);
         font-family: var(--font-display);
-        font-size: 1.5rem;
+        font-synthesis: none;
+        font-size: clamp(1.75rem, 8vw, 2.75rem);
         font-weight: 400;
         letter-spacing: -0.02em;
         text-transform: none;
         color: var(--ink);
+    }
+
+    .site-nav__link::before {
+        content: '0' counter(nav);
+        font-family: var(--font-text);
+        font-size: var(--t-meta);
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        color: var(--ink-3);
     }
 
     .site-nav__link::after { display: none; }
@@ -514,24 +576,35 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.625rem;
-    padding: 1rem 1.75rem;
+    gap: 0.75rem;
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.11em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     white-space: nowrap;
-    border: 1px solid var(--ink);
     transition: background var(--dur-fast) var(--ease-io),
                 color var(--dur-fast) var(--ease-io),
                 border-color var(--dur-fast) var(--ease-io);
 }
 
-.btn--primary { background: var(--ink); color: var(--paper); }
+/* The single filled element on the page. */
+.btn--primary {
+    padding: 1.0625rem 1.875rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+}
+
 .btn--primary:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
-.btn--ghost { background: transparent; color: var(--ink); border-color: var(--rule-strong); }
-.btn--ghost:hover { border-color: var(--ink); }
+/* Secondary actions are underlined text, not a second box. */
+.btn--ghost {
+    padding: 1.0625rem 0;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--rule-strong);
+}
+
+.btn--ghost:hover { color: var(--ink); border-bottom-color: var(--ink); }
 
 .btn svg { width: 0.875rem; height: 0.875rem; flex: none; }
 
@@ -539,13 +612,13 @@ button {
 .arrow-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.75rem;
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.11em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink);
-    padding-bottom: 0.375rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--rule-strong);
     transition: color var(--dur-fast) var(--ease-io),
                 border-color var(--dur-fast) var(--ease-io);
@@ -596,8 +669,19 @@ button {
 /* ====== 8. HERO ===================================================== */
 
 .hero {
-    padding-top: clamp(3.5rem, 9vh, 7rem);
-    padding-bottom: clamp(3.5rem, 8vh, 6.5rem);
+    display: flex;
+    flex-direction: column;
+    padding-top: clamp(2.5rem, 8vh, 5.5rem);
+    padding-bottom: clamp(4rem, 10vh, 7rem);
+}
+
+/* Only tall enough to fill the screen where filling it is an
+   improvement; on short or narrow viewports the content sets the height.
+   The slack is absorbed below the headline rather than around it, so a
+   short window never squeezes the space under the masthead to nothing. */
+@media (min-width: 48rem) {
+    .hero { min-height: calc(100svh - var(--header-h)); }
+    .hero__body { margin-top: auto; }
 }
 
 .hero__masthead {
@@ -606,58 +690,62 @@ button {
     align-items: baseline;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.125rem;
+    border-bottom: 1px solid var(--ink);
 }
 
 .hero__name { color: var(--ink); font-weight: 500; }
 
 .hero__title {
-    font-family: var(--font-display);
-    font-size: var(--t-hero);
-    font-weight: 500;
-    line-height: 0.92;
-    letter-spacing: -0.045em;
-    text-transform: uppercase;
-    margin-top: clamp(1.5rem, 4vw, 3rem);
-    text-wrap: balance;
+    font-size: var(--t-display);
+    /* Castoro has a large x-height and long extenders; below about 1.0
+       the ascenders of one line start touching the descenders above. */
+    line-height: 1.0;
+    letter-spacing: -0.024em;
+    margin-top: clamp(2.5rem, 9vw, 5.5rem);
+    margin-bottom: clamp(2.5rem, 7vw, 4.5rem);
+    /* The line break is authored in the markup; balancing would fight it. */
+    text-wrap: nowrap;
+    white-space: normal;
 }
 
 .hero__title .hero__stop { color: var(--accent); }
 
 .hero__body {
     display: grid;
-    gap: clamp(2rem, 5vw, 4.5rem);
-    margin-top: clamp(2rem, 5vw, 3.5rem);
+    gap: clamp(2.25rem, 5vw, 4rem);
 }
 
+/* Set in the display face and italic — the one editorial aside on the
+   page, and the bridge between the headline and the body copy. */
 .hero__statement {
-    font-family: var(--font-display);
     font-size: var(--t-l);
-    font-weight: 400;
-    line-height: 1.22;
-    letter-spacing: -0.025em;
+    font-style: italic;
+    line-height: 1.28;
+    letter-spacing: -0.012em;
     color: var(--ink);
-    max-width: 28ch;
+    max-width: 22ch;
 }
 
 .hero__support {
     font-size: var(--t-m);
-    line-height: 1.65;
+    line-height: 1.7;
     color: var(--ink-2);
-    max-width: 44ch;
+    max-width: 46ch;
 }
 
+/* Baseline, not centre: the marker should sit on the first line of the
+   label even when the label wraps to two. */
 .hero__meta {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.625rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
 }
 
 .hero__dot {
-    width: 0.4375rem;
-    height: 0.4375rem;
+    width: 0.375rem;
+    height: 0.375rem;
     border-radius: 50%;
     background: var(--accent);
     flex: none;
@@ -666,25 +754,29 @@ button {
 .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.5rem 2.5rem;
     margin-top: clamp(2rem, 5vw, 3rem);
 }
 
 @media (min-width: 62rem) {
     .hero__body {
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+        column-gap: clamp(2rem, 6vw, 6rem);
         align-items: end;
     }
-    .hero__actions { margin-top: 0; }
 }
 
 
 /* ====== 9. SELECTED WORK ============================================ */
+/* Each project is a spread: a rule and an index line, a very large
+   title, a short column of detail, then the work itself at the full
+   width of the grid. No frame, no card, no thumbnail.                  */
 
 .work__list {
     display: flex;
     flex-direction: column;
-    gap: clamp(4.5rem, 10vw, 9rem);
+    gap: clamp(5rem, 13vw, 11rem);
 }
 
 .project {
@@ -704,40 +796,40 @@ button {
 .project__index {
     display: flex;
     align-items: baseline;
-    gap: 0.875rem;
-    padding-bottom: 0.875rem;
+    gap: 1rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid var(--ink);
 }
 
 .project__no {
     font-family: var(--font-display);
+    font-synthesis: none;
     font-size: var(--t-meta);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--accent);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
 }
 
 .project__category {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
 }
 
 .project__title {
-    font-family: var(--font-display);
     font-size: var(--t-xxl);
-    font-weight: 400;
-    line-height: 1.0;
-    letter-spacing: -0.038em;
+    line-height: 1.02;
+    letter-spacing: -0.022em;
     color: var(--ink);
-    max-width: 20ch;
+    max-width: 17ch;
+    text-wrap: pretty;
 }
 
 .project__title a {
     display: inline;
-    background-image: linear-gradient(var(--accent), var(--accent));
+    background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
     background-size: 0% 1px;
     background-position: 0 100%;
@@ -754,17 +846,16 @@ button {
     position: relative;
     overflow: hidden;
     background: var(--surface-2);
-    border: 1px solid var(--rule);
 }
 
 .project__media img {
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
-    transition: transform 0.7s var(--ease), filter var(--dur) var(--ease-io);
+    transition: transform 0.8s var(--ease);
 }
 
-.project:hover .project__media img { transform: scale(1.018); }
+.project:hover .project__media img { transform: scale(1.015); }
 
 .project__media-link { display: block; }
 
@@ -776,10 +867,10 @@ button {
 }
 
 .project__desc {
-    font-size: var(--t-m);
-    line-height: 1.65;
+    font-size: var(--t-body);
+    line-height: 1.68;
     color: var(--ink-2);
-    max-width: 42ch;
+    max-width: 40ch;
 }
 
 .project__disciplines {
@@ -790,7 +881,7 @@ button {
 
 .project__disciplines li {
     font-size: var(--t-meta);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-3);
 }
@@ -804,21 +895,27 @@ button {
 .project__cta { align-self: start; }
 
 /* --- Desktop -------------------------------------------------------
-   Title and summary sit side by side on a 12-column grid; the image
+   Title and summary sit side by side on the 12-column grid; the image
    then runs the full content width beneath them, so the work itself is
    the largest element on screen rather than a thumbnail beside text.  */
 @media (min-width: 62rem) {
     .project {
         grid-template-columns: repeat(12, minmax(0, 1fr));
-        column-gap: clamp(1.25rem, 2vw, 2rem);
-        row-gap: clamp(1.75rem, 3.5vw, 2.75rem);
+        column-gap: var(--col-gap);
+        row-gap: clamp(2.25rem, 4.5vw, 3.5rem);
         align-items: start;
     }
 
     .project__index  { order: 0; grid-row: 1; grid-column: 1 / -1; }
-    .project__head   { order: 0; grid-row: 2; grid-column: 1 / span 7; }
+    .project__head   { order: 0; grid-row: 2; grid-column: 1 / span 8; }
     .project__detail { order: 0; grid-row: 2; grid-column: 9 / span 4; align-self: end; }
     .project__media  { order: 0; grid-row: 3; grid-column: 1 / -1; }
+
+    /* The eight-column span is the measure — a ch cap on top of it would
+       only add a second, invisible edge the titles do not share. */
+    .project__title { max-width: none; }
+
+    .project__media img { aspect-ratio: 16 / 9; }
 }
 
 
@@ -826,30 +923,25 @@ button {
 
 .about__grid {
     display: grid;
-    gap: clamp(2rem, 5vw, 4rem);
+    gap: clamp(2.5rem, 6vw, 4rem);
 }
 
 /* The opening paragraph steps up one level so the section has a clear
    entry point without competing with the section heading. */
 .about__opening {
-    font-family: var(--font-display);
     font-size: var(--t-l);
-    font-weight: 400;
-    line-height: 1.28;
-    letter-spacing: -0.024em;
+    line-height: 1.3;
+    letter-spacing: -0.014em;
     color: var(--ink);
     max-width: 30ch;
 }
 
-.prose > .about__opening + * { margin-top: 1.6em; }
+.prose > .about__opening + * { margin-top: 1.9em; }
 
 .about__aside { display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); align-content: start; }
 
-.about__portrait {
-    border: 1px solid var(--rule);
-    background: var(--surface-2);
-    max-width: 22rem;
-}
+/* Unframed: image, then a caption in the micro type. */
+.about__portrait { max-width: 26rem; }
 
 .about__portrait img {
     width: 100%;
@@ -858,24 +950,28 @@ button {
 }
 
 .about__portrait figcaption {
-    padding: 0.75rem 0.875rem;
-    border-top: 1px solid var(--rule);
+    padding-top: 0.875rem;
     font-size: var(--t-meta);
-    letter-spacing: 0.04em;
-    /* --ink-3 on --surface-2 measures 4.46:1 — just under AA. */
-    color: var(--ink-2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
 }
 
 @media (min-width: 62rem) {
     .about__grid {
-        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-        column-gap: clamp(2rem, 5vw, 5rem);
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
         align-items: start;
     }
+    .about__aside { grid-column: 1 / span 4; }
+    .about__grid > .prose { grid-column: 6 / span 7; max-width: none; }
+    .about__grid > .prose > :not(.about__opening) { max-width: var(--measure); }
 }
 
 
 /* ====== 11. APPROACH ================================================ */
+/* Five rows, not five columns: a numbered sequence reads as a process,
+   and keeps the whole section on one alignment.                        */
 
 .approach__list {
     display: grid;
@@ -886,44 +982,50 @@ button {
 
 .step {
     display: grid;
-    gap: 0.625rem;
-    padding-block: 1.75rem;
+    gap: 0.5rem;
+    padding-block: clamp(1.5rem, 3.5vw, 2.5rem);
     border-bottom: 1px solid var(--rule);
+    align-items: baseline;
 }
 
 .step__no {
     font-family: var(--font-display);
+    font-synthesis: none;
     font-size: var(--t-meta);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--accent);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
 }
 
 .step__title {
-    font-family: var(--font-display);
-    font-size: var(--t-m);
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    font-size: var(--t-l);
+    line-height: 1.15;
+    letter-spacing: -0.016em;
     color: var(--ink);
 }
 
 .step__desc {
-    font-size: var(--t-small);
-    line-height: 1.6;
+    font-size: var(--t-body);
+    line-height: 1.65;
     color: var(--ink-2);
-    max-width: 34ch;
+    max-width: 46ch;
 }
 
-@media (min-width: 45rem) {
-    .approach__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 3vw, 3rem); }
-}
-
-@media (min-width: 75rem) {
-    .approach__list {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        column-gap: clamp(1.25rem, 2vw, 2.25rem);
+@media (min-width: 48rem) {
+    .step {
+        grid-template-columns: 4rem minmax(0, 4fr) minmax(0, 7fr);
+        column-gap: var(--col-gap);
     }
-    .step { padding-block: 1.5rem 3.5rem; border-bottom: 0; }
+}
+
+@media (min-width: 62rem) {
+    .step {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
+    }
+    .step__no    { grid-column: 1 / span 3; }
+    .step__title { grid-column: 4 / span 3; }
+    .step__desc  { grid-column: 7 / span 6; }
 }
 
 
@@ -933,34 +1035,42 @@ button {
 
 .cap-row {
     display: grid;
-    gap: 0.5rem;
-    padding-block: clamp(1.5rem, 3vw, 2.25rem);
+    gap: 0.625rem;
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
     border-bottom: 1px solid var(--rule);
 }
 
 .cap-row__title {
-    font-family: var(--font-display);
     font-size: var(--t-l);
-    font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.028em;
+    line-height: 1.14;
+    letter-spacing: -0.018em;
     color: var(--ink);
 }
 
 .cap-row__desc {
     font-size: var(--t-body);
-    line-height: 1.62;
+    line-height: 1.66;
     color: var(--ink-2);
-    max-width: 46ch;
+    max-width: 48ch;
     margin: 0;
 }
 
 @media (min-width: 48rem) {
     .cap-row {
-        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
         column-gap: clamp(2rem, 5vw, 5rem);
         align-items: baseline;
     }
+}
+
+@media (min-width: 62rem) {
+    .cap-row {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
+        align-items: baseline;
+    }
+    .cap-row__title { grid-column: 1 / span 4; }
+    .cap-row__desc  { grid-column: 6 / span 7; }
 }
 
 
@@ -970,60 +1080,60 @@ button {
 
 .exp {
     display: grid;
-    gap: 1.25rem;
-    padding-block: clamp(2rem, 4vw, 3rem);
+    gap: 1.5rem;
+    padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
     border-bottom: 1px solid var(--rule);
 }
 
-.exp__meta { display: grid; gap: 0.375rem; }
+.exp__meta { display: grid; gap: 0.5rem; align-content: start; }
 
 .exp__role {
-    font-family: var(--font-display);
     font-size: var(--t-l);
-    font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.028em;
+    line-height: 1.14;
+    letter-spacing: -0.018em;
     color: var(--ink);
+    max-width: 18ch;
 }
 
 .exp__org {
     font-size: var(--t-small);
     color: var(--ink-2);
+    max-width: 26ch;
 }
 
 .exp__dates {
     font-size: var(--t-meta);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-3);
 }
 
-.exp__body { display: grid; gap: 1.25rem; }
+.exp__body { display: grid; gap: 1.5rem; }
 
 .exp__summary {
     font-size: var(--t-body);
-    line-height: 1.62;
+    line-height: 1.66;
     color: var(--ink-2);
-    max-width: 48ch;
+    max-width: 50ch;
 }
 
 .exp__areas-label {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .exp__areas {
     display: grid;
-    gap: 0.5rem 2rem;
+    gap: 0.625rem 2.5rem;
 }
 
 .exp__areas li {
     position: relative;
-    padding-left: 1rem;
+    padding-left: 1.125rem;
     font-size: var(--t-small);
     line-height: 1.55;
     color: var(--ink-2);
@@ -1033,8 +1143,8 @@ button {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.6em;
-    width: 0.375rem;
+    top: 0.62em;
+    width: 0.4375rem;
     height: 1px;
     background: var(--rule-strong);
 }
@@ -1045,9 +1155,11 @@ button {
 
 @media (min-width: 62rem) {
     .exp {
-        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-        column-gap: clamp(2rem, 5vw, 5rem);
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
     }
+    .exp__meta { grid-column: 1 / span 4; }
+    .exp__body { grid-column: 6 / span 7; }
 }
 
 
@@ -1061,37 +1173,40 @@ button {
 
 .impact__item {
     display: grid;
-    gap: 0.5rem;
-    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+    gap: 0.875rem;
+    padding-block: clamp(2rem, 4vw, 3.25rem);
     border-bottom: 1px solid var(--rule);
+    align-content: start;
 }
 
 .impact__figure {
-    font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5.5vw, 4rem);
-    font-weight: 400;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    /* Capped so the longest figure, "300 → 1,600+", still sets on one
+       line inside a third of the grid. */
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.03em;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
 }
 
 .impact__label {
     font-size: var(--t-small);
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--ink-2);
-    max-width: 26ch;
+    max-width: 24ch;
 }
 
 .impact__note {
-    margin-top: 1.75rem;
+    margin-top: 2rem;
     font-size: var(--t-small);
+    line-height: 1.6;
     color: var(--ink-3);
     max-width: 56ch;
 }
 
 @media (min-width: 48rem) {
     .impact { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(1.5rem, 4vw, 4rem); }
+    .impact__item { border-bottom: 0; }
 }
 
 /* A single figure quoted inside a case study, not the three-up summary. */
@@ -1102,45 +1217,65 @@ button {
 
 @media (min-width: 48rem) {
     .case-impact { grid-template-columns: minmax(0, 1fr); }
+    .case-impact .impact__item { border-bottom: 1px solid var(--rule); }
     .case-impact .impact__label { max-width: 44ch; }
 }
 
 
 /* ====== 15. TOOLS =================================================== */
+/* Label left, inventory right — rows on the same alignment as every
+   other list on the page. No pills, no chips.                          */
 
-.tools {
-    display: grid;
-    gap: 0;
-    border-top: 1px solid var(--rule);
-}
+.tools { border-top: 1px solid var(--rule); }
 
 .tools__group {
-    padding-block: 1.75rem;
+    display: grid;
+    gap: 0.75rem;
+    padding-block: clamp(1.375rem, 3vw, 2rem);
     border-bottom: 1px solid var(--rule);
+    align-items: baseline;
 }
 
 .tools__label {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 1rem;
+}
+
+.tools__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
 }
 
 .tools__items li {
-    font-size: var(--t-body);
-    line-height: 1.9;
+    font-size: var(--t-m);
+    line-height: 1.6;
     color: var(--ink);
 }
 
-@media (min-width: 40rem) {
-    .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 4vw, 3rem); }
+.tools__items li + li::before {
+    content: '/ ';
+    color: var(--rule-strong);
+    margin-right: 0.25rem;
+}
+
+@media (min-width: 48rem) {
+    .tools__group {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+        column-gap: var(--col-gap);
+    }
 }
 
 @media (min-width: 62rem) {
-    .tools { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .tools__group { border-bottom: 0; padding-bottom: 0; }
+    .tools__group {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
+    }
+    .tools__label { grid-column: 1 / span 3; }
+    .tools__items { grid-column: 4 / span 9; }
 }
 
 
@@ -1152,25 +1287,25 @@ button {
        min-width:auto, which lets the chart's min-width widen the whole
        page instead of scrolling inside its own container. */
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(1.75rem, 4vw, 2.75rem);
+    gap: clamp(2rem, 5vw, 3.5rem);
     border-top: 1px solid var(--rule);
-    padding-top: clamp(1.75rem, 4vw, 2.75rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
 }
 
 .practice__copy {
     font-size: var(--t-m);
-    line-height: 1.68;
+    line-height: 1.72;
     color: var(--ink-2);
-    max-width: 52ch;
+    max-width: 54ch;
 }
 
 /* The contribution chart draws its empty days in a very light grey, so it
-   is given a permanently light panel in both themes rather than being
-   inverted or filtered — it reads as a framed artefact either way. */
+   sits on a permanently light ground in both themes rather than being
+   inverted or filtered. Unframed, with the ground bleeding to the edge of
+   the column. */
 .practice__chart {
     background: #F1EFEA;
-    border: 1px solid var(--rule-strong);
-    padding: clamp(1rem, 2.5vw, 1.75rem);
+    padding: clamp(1.25rem, 3vw, 2rem);
 }
 
 .practice__chart-scroll {
@@ -1192,9 +1327,9 @@ button {
 }
 
 .practice__chart figcaption {
-    margin-top: 0.875rem;
+    margin-top: 1rem;
     font-size: var(--t-meta);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     /* Fixed dark ink: the panel is light in both themes, so these cannot
        use the theme tokens. 6.6:1 against #F1EFEA. */
@@ -1206,61 +1341,70 @@ button {
     border-bottom: 1px solid currentColor;
 }
 
+@media (min-width: 62rem) {
+    .practice {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
+        align-items: start;
+    }
+    .practice__copy  { grid-column: 1 / span 5; }
+    .practice__chart { grid-column: 7 / span 6; }
+}
+
 
 /* ====== 17. CONTACT ================================================= */
 
-.contact { padding-bottom: clamp(4rem, 9vh, 7rem); }
+.contact { padding-bottom: clamp(5rem, 11vh, 8rem); }
 
 .contact__grid {
     display: grid;
-    gap: clamp(2.5rem, 6vw, 5rem);
-    margin-top: clamp(2rem, 5vw, 3.5rem);
+    gap: clamp(3rem, 7vw, 5rem);
 }
 
-.contact__lead { max-width: 40ch; }
+.contact__lead { max-width: 34ch; }
 
+/* The largest link on the page after the headline. */
 .contact__mail {
     display: inline-block;
-    margin-top: 1.75rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.125rem, 2.6vw, 1.875rem);
-    font-weight: 400;
-    letter-spacing: -0.03em;
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: clamp(1.375rem, 3.6vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
     color: var(--ink);
     word-break: break-word;
     border-bottom: 1px solid var(--rule-strong);
-    padding-bottom: 0.2em;
+    padding-bottom: 0.12em;
     transition: color var(--dur-fast) var(--ease-io), border-color var(--dur-fast) var(--ease-io);
 }
 
 .contact__mail:hover { color: var(--accent); border-color: var(--accent); }
 
-.contact__block + .contact__block { margin-top: 2.5rem; }
+.contact__block + .contact__block { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 
 .contact__label {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 1.125rem;
+    padding-bottom: 0.875rem;
     border-bottom: 1px solid var(--rule);
 }
 
 .contact__interests li {
-    font-size: var(--t-body);
-    line-height: 1.85;
+    font-size: var(--t-m);
+    line-height: 1.9;
     color: var(--ink);
 }
 
-.contact__links { display: grid; gap: 0.625rem; }
+.contact__links { display: grid; gap: 0.75rem; }
 
 .contact__links a,
 .contact__links span {
     display: inline-flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.75rem;
     font-size: var(--t-body);
     color: var(--ink-2);
 }
@@ -1273,9 +1417,12 @@ button {
 
 @media (min-width: 62rem) {
     .contact__grid {
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
         align-items: start;
     }
+    .contact__grid > *:first-child { grid-column: 1 / span 8; }
+    .contact__grid > *:last-child  { grid-column: 9 / span 4; }
 }
 
 
@@ -1305,7 +1452,7 @@ button {
     align-items: center;
     gap: 0.5rem;
     font-size: var(--t-meta);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
@@ -1316,19 +1463,19 @@ button {
 
 .case-hero {
     padding-top: clamp(2.5rem, 7vh, 5rem);
-    padding-bottom: clamp(2rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 .breadcrumb {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
     transition: color var(--dur-fast) var(--ease-io);
 }
 
@@ -1341,24 +1488,23 @@ button {
 .case-hero__category {
     display: flex;
     align-items: baseline;
-    gap: 0.875rem;
-    padding-bottom: 1rem;
+    gap: 1rem;
+    padding-bottom: 1.125rem;
     border-bottom: 1px solid var(--ink);
 }
 
 .case-hero__title {
-    font-family: var(--font-display);
     font-size: var(--t-xxl);
-    font-weight: 400;
-    line-height: 1.0;
-    letter-spacing: -0.04em;
-    margin-top: clamp(1.25rem, 3vw, 2.25rem);
-    max-width: 24ch;
+    line-height: 1.02;
+    letter-spacing: -0.024em;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    max-width: 19ch;
+    text-wrap: pretty;
 }
 
 .case-hero__lead {
-    margin-top: clamp(1.25rem, 3vw, 2rem);
-    max-width: 52ch;
+    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+    max-width: 48ch;
 }
 
 /* --- Fact strip ----------------------------------------------------- */
@@ -1366,21 +1512,21 @@ button {
     display: grid;
     gap: 0;
     border-top: 1px solid var(--rule);
-    margin-top: clamp(2.5rem, 5vw, 4rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
 }
 
 .case-facts__item {
-    padding-block: 1.25rem;
+    padding-block: 1.375rem;
     border-bottom: 1px solid var(--rule);
 }
 
 .case-facts__key {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.625rem;
 }
 
 .case-facts__val {
@@ -1391,32 +1537,32 @@ button {
 }
 
 @media (min-width: 48rem) {
-    .case-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: clamp(1.5rem, 3vw, 3rem); }
+    .case-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--col-gap); }
     .case-facts__item { border-bottom: 0; }
 }
 
 /* --- Figures -------------------------------------------------------- */
-.case-figure { margin-block: clamp(2.5rem, 6vw, 5rem); }
+.case-figure { margin-block: clamp(3rem, 7vw, 6rem); }
 
 .case-figure img {
     width: 100%;
-    border: 1px solid var(--rule);
     background: var(--surface-2);
 }
 
-.case-figure--cover img { aspect-ratio: 16 / 10; object-fit: cover; }
+.case-figure--cover img { aspect-ratio: 16 / 9; object-fit: cover; }
 
 .case-figure figcaption {
-    margin-top: 0.875rem;
+    margin-top: 1rem;
     font-size: var(--t-meta);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
     color: var(--ink-3);
     max-width: 60ch;
 }
 
 .case-gallery {
     display: grid;
-    gap: clamp(1rem, 2.5vw, 1.75rem);
+    gap: clamp(1rem, 2.5vw, 2rem);
     margin-top: clamp(1.5rem, 4vw, 2.5rem);
 }
 
@@ -1431,57 +1577,58 @@ button {
 /* --- Case body blocks ----------------------------------------------- */
 .case-block {
     display: grid;
-    gap: 1rem;
-    padding-block: clamp(2rem, 4vw, 3.25rem);
+    gap: 1.25rem;
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem);
     border-top: 1px solid var(--rule);
 }
 
 .case-block__label {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink-3);
 }
 
 .case-block__body {
     display: grid;
-    gap: 1.15rem;
-    max-width: 60ch;
+    gap: 1.3rem;
+    max-width: 62ch;
     font-size: var(--t-m);
-    line-height: 1.68;
+    line-height: 1.72;
     color: var(--ink-2);
 }
 
 /* The gallery block needs the full column, unlike running prose. */
 .case-block__body--wide { max-width: none; }
-.case-block__note { max-width: 60ch; }
+.case-block__note { max-width: 62ch; }
 
 .case-block__body code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.875em;
     padding: 0.15em 0.4em;
     background: var(--surface-2);
-    border: 1px solid var(--rule);
 }
 
 .case-block__body h3 {
     font-family: var(--font-display);
-    font-size: var(--t-m);
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    font-synthesis: none;
+    font-size: var(--t-l);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.016em;
     color: var(--ink);
 }
 
 .case-block__body strong { color: var(--ink); font-weight: 500; }
 
-.case-list { display: grid; gap: 0.5rem; }
+.case-list { display: grid; gap: 0.625rem; }
 
 .case-list li {
     position: relative;
-    padding-left: 1.125rem;
+    padding-left: 1.25rem;
     font-size: var(--t-body);
-    line-height: 1.6;
+    line-height: 1.62;
 }
 
 .case-list li::before {
@@ -1489,41 +1636,41 @@ button {
     position: absolute;
     left: 0;
     top: 0.62em;
-    width: 0.4375rem;
+    width: 0.5rem;
     height: 1px;
-    background: var(--accent);
+    background: var(--rule-strong);
 }
 
 @media (min-width: 62rem) {
     .case-block {
-        grid-template-columns: 12rem minmax(0, 1fr);
-        column-gap: clamp(2rem, 5vw, 5rem);
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--col-gap);
     }
+    .case-block__label { grid-column: 1 / span 3; }
+    .case-block__body  { grid-column: 4 / span 9; }
 }
 
 /* --- Next project --------------------------------------------------- */
 .case-next {
     border-top: 1px solid var(--ink);
-    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    padding-block: clamp(3rem, 7vw, 5.5rem);
 }
 
 .case-next__label {
     font-size: var(--t-meta);
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .case-next__title {
-    font-family: var(--font-display);
     font-size: var(--t-xl);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
     color: var(--ink);
-    max-width: 22ch;
+    max-width: 20ch;
     transition: color var(--dur-fast) var(--ease-io);
 }
 
@@ -1532,12 +1679,13 @@ button {
 
 /* ====== 20. REVEAL MOTION =========================================== */
 /* Base state is visible. Only the .js class (set pre-paint) hides it,
-   so the page is fully readable with JavaScript disabled or broken.     */
+   so the page is fully readable with JavaScript disabled or broken.
+   One property pair, one duration — nothing staggered or parallaxed.   */
 
 .js [data-reveal] {
     opacity: 0;
-    transform: translateY(1rem);
-    transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+    transform: translateY(0.875rem);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
 }
 
 .js [data-reveal].is-in {
@@ -1570,7 +1718,7 @@ button {
 
 @media (forced-colors: active) {
     .site-header { background: Canvas; }
-    .btn, .theme-toggle, .nav-toggle, .project__media, .case-figure img { border: 1px solid CanvasText; }
+    .btn--primary, .project__media, .case-figure img { border: 1px solid CanvasText; }
     .site-nav__link.is-active { forced-color-adjust: none; text-decoration: underline; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
 }
@@ -1579,6 +1727,7 @@ button {
     .site-header, .theme-toggle, .nav-toggle, .to-top, .skip-link, .case-next { display: none !important; }
     body { background: #fff; color: #000; font-size: 11pt; }
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+    .hero { min-height: 0; }
     .section { padding-block: 1.25rem; break-inside: avoid; }
     a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
 }
