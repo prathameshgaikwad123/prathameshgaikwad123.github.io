@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Prathamesh Gaikwad — Multidisciplinary Digital Designer</title>
+<meta name="description" content="Prathamesh Gaikwad is a multidisciplinary digital designer working across UI/UX, web design, brand systems and digital experiences. Based in India, open to remote and international opportunities.">
+<meta name="author" content="Prathamesh Gaikwad">
+<link rel="canonical" href="https://prathameshgaikwad123.github.io/">
+
+<meta name="theme-color" content="#F6F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D0D0C" media="(prefers-color-scheme: dark)">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Prathamesh Gaikwad">
+<meta property="og:title" content="Prathamesh Gaikwad — Multidisciplinary Digital Designer">
+<meta property="og:description" content="UI/UX · Web · Brand · Digital Experiences. Selected work across interfaces, websites, brand systems and digital communication.">
+<meta property="og:url" content="https://prathameshgaikwad123.github.io/">
+<meta property="og:locale" content="en_IN">
+<meta property="og:image" content="https://prathameshgaikwad123.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Prathamesh Gaikwad — Multidisciplinary Digital Designer">
+
+<!-- Twitter / X. No @handle is declared because no verified account exists. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prathamesh Gaikwad — Multidisciplinary Digital Designer">
+<meta name="twitter:description" content="UI/UX · Web · Brand · Digital Experiences. Selected work across interfaces, websites, brand systems and digital communication.">
+<meta name="twitter:image" content="https://prathameshgaikwad123.github.io/assets/og-image.png">
+<meta name="twitter:image:alt" content="Prathamesh Gaikwad — Multidisciplinary Digital Designer">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300..700&amp;family=Inter:wght@400..600&amp;display=swap">
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Resolve the theme before first paint so there is no flash. Only an
+     explicit user choice is ever written to storage; otherwise the system
+     preference is followed on every visit. -->
+<script>
+(function () {
+    var root = document.documentElement;
+    try {
+        var saved = localStorage.getItem('pg-theme');
+        if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+    } catch (e) { /* storage blocked — fall through to the system preference */ }
+    root.classList.add('js');
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://prathameshgaikwad123.github.io/#website",
+      "url": "https://prathameshgaikwad123.github.io/",
+      "name": "Prathamesh Gaikwad",
+      "description": "Portfolio of Prathamesh Gaikwad, multidisciplinary digital designer.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://prathameshgaikwad123.github.io/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://prathameshgaikwad123.github.io/#person",
+      "name": "Prathamesh Gaikwad",
+      "url": "https://prathameshgaikwad123.github.io/",
+      "jobTitle": "Multidisciplinary Digital Designer",
+      "email": "mailto:prathameshg83800@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nashik",
+        "addressCountry": "IN"
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Virtuoso Optoelectronics Limited"
+      },
+      "knowsAbout": [
+        "UI/UX Design",
+        "Web Design",
+        "Information Architecture",
+        "Brand and Visual Systems",
+        "Visual Communication",
+        "Digital Experience Design",
+        "Search Engine Optimisation"
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/prathamesh-gaikwad-224734171",
+        "https://github.com/prathameshgaikwad123"
+      ]
+    }
+  ]
+}
+</script>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header" id="site-header">
+    <div class="shell site-header__inner">
+
+        <a class="wordmark" href="#top">
+            <span class="wordmark__mark" aria-hidden="true">PG</span>
+            <span>Prathamesh Gaikwad</span>
+            <span class="wordmark__role">Multidisciplinary Digital Designer</span>
+        </a>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="site-nav__list">
+                <li><a class="site-nav__link" href="#work">Work</a></li>
+                <li><a class="site-nav__link" href="#about">About</a></li>
+                <li><a class="site-nav__link" href="#capabilities">Capabilities</a></li>
+                <li><a class="site-nav__link" href="#experience">Experience</a></li>
+                <li><a class="site-nav__link" href="#contact">Contact</a></li>
+            </ul>
+            <!-- CV BUTTON — no CV file exists in this repository yet.
+                 Add your PDF at assets/prathamesh-gaikwad-cv.pdf, then
+                 uncomment the line below. Do not enable it before the file
+                 exists: it would be a broken link.
+            <ul class="site-nav__list"><li><a class="site-nav__link" href="assets/prathamesh-gaikwad-cv.pdf" download>CV</a></li></ul>
+            -->
+        </nav>
+
+        <div class="site-header__actions">
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.7 8.7 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z"/></svg>
+            </button>
+
+            <button class="nav-toggle" id="nav-toggle" type="button"
+                    aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+                <span class="nav-toggle__bars" aria-hidden="true"></span>
+            </button>
+        </div>
+
+    </div>
+</header>
+
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="hero shell" id="top" aria-labelledby="hero-title">
+
+    <div class="hero__masthead">
+        <p class="eyebrow hero__name">Prathamesh Gaikwad</p>
+        <p class="eyebrow">UI/UX · Web · Brand · Digital Experiences</p>
+    </div>
+
+    <h1 class="hero__title" id="hero-title">
+        Multidisciplinary<br>Digital Designer<span class="hero__stop">.</span>
+    </h1>
+
+    <div class="hero__body">
+        <div>
+            <p class="hero__statement">
+                I design interfaces, websites, brands and&nbsp;digital&nbsp;experiences.
+            </p>
+            <p class="hero__meta eyebrow">
+                <span class="hero__dot" aria-hidden="true"></span>
+                Based in India · Available Worldwide
+            </p>
+        </div>
+
+        <div>
+            <p class="hero__support">
+                I work across UI/UX, web design, visual communication and digital
+                experiences—combining creative thinking with technology to build work
+                that is clear, useful and memorable.
+            </p>
+            <div class="hero__actions">
+                <a class="btn btn--primary" href="#work">
+                    View Selected Work
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+                <a class="btn btn--ghost" href="#about">About Me</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ================= SELECTED WORK ================= -->
+<section class="section shell" id="work" aria-labelledby="work-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="01">Selected Work</p>
+        <h2 class="sec-head__title" id="work-title">
+            Work across interfaces, websites, brand systems and digital communication.
+        </h2>
+    </header>
+
+    <div class="work__list">
+
+        <!-- ---------- PROJECT 01 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">01</span>
+                <span class="project__category">VOEPL</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/voepl-website.html">Building a Corporate Digital Presence</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/voepl-website.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/voepl-website/cover.svg
+                         → your own 1600×1000 JPG or WebP. Update src and alt. -->
+                    <img src="assets/images/projects/voepl-website/cover.svg"
+                         alt="Placeholder for the VOEPL corporate website case study cover image."
+                         width="1600" height="1000"
+                         loading="eager" fetchpriority="high" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Contributing to the digital presence of an Indian OEM/ODM manufacturing
+                    company by working across website design, content structure, digital
+                    communication and ongoing optimisation.
+                </p>
+                <ul class="project__disciplines">
+                    <li>Web Design</li><li>UX</li><li>Information Architecture</li><li>Odoo</li><li>SEO</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/voepl-website.html">
+                    Read the case study
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- ---------- PROJECT 02 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">02</span>
+                <span class="project__category">VOEPL</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/voepl-brand-system.html">Designing a Connected Corporate Visual System</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/voepl-brand-system.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/voepl-brand-system/cover.svg → 1600×1000 -->
+                    <img src="assets/images/projects/voepl-brand-system/cover.svg"
+                         alt="Placeholder for the VOEPL corporate visual system case study cover image."
+                         width="1600" height="1000" loading="lazy" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Designing consistent visual communication across multiple touchpoints
+                    of a manufacturing organisation.
+                </p>
+                <ul class="project__disciplines">
+                    <li>Brand Systems</li><li>Visual Design</li><li>Corporate Communication</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/voepl-brand-system.html">
+                    Read the case study
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- ---------- PROJECT 03 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">03</span>
+                <span class="project__category">Safety Dojo</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/safety-dojo.html">Making Safety Communication More Memorable</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/safety-dojo.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/safety-dojo/cover.svg → 1600×1000 -->
+                    <img src="assets/images/projects/safety-dojo/cover.svg"
+                         alt="Placeholder for the Safety Dojo campaign case study cover image."
+                         width="1600" height="1000" loading="lazy" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Developing a modern visual safety awareness system designed to make
+                    important workplace messages clearer, more engaging and easier to remember.
+                </p>
+                <ul class="project__disciplines">
+                    <li>Creative Direction</li><li>Campaign Design</li><li>Visual Communication</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/safety-dojo.html">
+                    Read the case study
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- ---------- PROJECT 04 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">04</span>
+                <span class="project__category">Digital Communication</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/digital-communication.html">Growing a Manufacturing Brand's Digital Presence</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/digital-communication.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/digital-communication/cover.svg → 1600×1000 -->
+                    <img src="assets/images/projects/digital-communication/cover.svg"
+                         alt="Placeholder for the digital communication case study cover image."
+                         width="1600" height="1000" loading="lazy" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Contributed to the growth of VOEPL's LinkedIn audience from approximately
+                    300 to 1,600+ followers through consistent visual communication and content.
+                </p>
+                <ul class="project__disciplines">
+                    <li>Content Design</li><li>Social Media</li><li>Visual Communication</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/digital-communication.html">
+                    Read the case study
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- ---------- PROJECT 05 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">05</span>
+                <span class="project__category">The Evolving Web</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/web-ai-discovery.html">Designing for Search and AI Discovery</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/web-ai-discovery.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/web-ai-discovery/cover.svg → 1600×1000 -->
+                    <img src="assets/images/projects/web-ai-discovery/cover.svg"
+                         alt="Placeholder for the search and AI discovery case study cover image."
+                         width="1600" height="1000" loading="lazy" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Exploring how websites can be structured for traditional search while
+                    adapting to emerging AI-driven discovery experiences.
+                </p>
+                <ul class="project__disciplines">
+                    <li>SEO</li><li>Web Strategy</li><li>AEO Research</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/web-ai-discovery.html">
+                    Read the case study
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- ---------- PROJECT 06 ---------- -->
+        <article class="project" data-reveal>
+            <div class="project__index">
+                <span class="project__no num">06</span>
+                <span class="project__category">Selected Archive</span>
+            </div>
+
+            <div class="project__head">
+                <h3 class="project__title">
+                    <a href="work/archive.html">Websites, Digital Projects &amp; Earlier Work</a>
+                </h3>
+            </div>
+
+            <figure class="project__media">
+                <a class="project__media-link" href="work/archive.html" tabindex="-1" aria-hidden="true">
+                    <!-- REPLACE: assets/images/projects/archive/cover.svg → 1600×1000 -->
+                    <img src="assets/images/projects/archive/cover.svg"
+                         alt="Placeholder for the selected archive case study cover image."
+                         width="1600" height="1000" loading="lazy" decoding="async">
+                </a>
+            </figure>
+
+            <div class="project__detail">
+                <p class="project__desc">
+                    Selected earlier work across websites, digital projects, graphic design
+                    and social media — including work from Soch Business Mentors LLP.
+                </p>
+                <ul class="project__disciplines">
+                    <li>Web Design</li><li>Graphic Design</li><li>Social Media</li>
+                </ul>
+                <a class="arrow-link project__cta" href="work/archive.html">
+                    View the archive
+                    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                </a>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+<section class="section shell" id="about" aria-labelledby="about-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="02">About</p>
+        <h2 class="sec-head__title" id="about-title">
+            A designer who works across disciplines.
+        </h2>
+    </header>
+
+    <div class="about__grid">
+        <div class="about__aside" data-reveal>
+            <figure class="about__portrait">
+                <!-- OPTIONAL. REPLACE: assets/images/portrait.svg → your own
+                     1000×1250 portrait (JPG/WebP), or delete this <figure>. -->
+                <img src="assets/images/portrait.svg"
+                     alt="Placeholder for a portrait photograph of Prathamesh Gaikwad."
+                     width="1000" height="1250" loading="lazy" decoding="async">
+                <figcaption>Prathamesh Gaikwad · Nashik, India</figcaption>
+            </figure>
+        </div>
+
+        <div class="prose" data-reveal>
+            <p class="about__opening">
+                My work sits between design, technology and communication. I enjoy taking
+                an idea from an early concept through structure, visual design and digital
+                execution.
+            </p>
+            <p>
+                Over the past 3+ years, I have worked across graphic design, websites,
+                UI/UX, social media and digital communication. This range has shaped how
+                I approach design: I don't see interfaces, brands and communication as
+                isolated outputs, but as connected parts of an experience.
+            </p>
+            <p>
+                I am particularly interested in digital product design, web experiences,
+                visual systems and the evolving relationship between design and emerging
+                technology.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ================= MY APPROACH ================= -->
+<section class="section shell" id="approach" aria-labelledby="approach-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="03">My Approach</p>
+        <h2 class="sec-head__title" id="approach-title">
+            From understanding a problem to improving the result.
+        </h2>
+    </header>
+
+    <ol class="approach__list">
+        <li class="step" data-reveal>
+            <p class="step__no num">01</p>
+            <h3 class="step__title">Understand</h3>
+            <p class="step__desc">Understanding the business, audience and context before jumping into visual execution.</p>
+        </li>
+        <li class="step" data-reveal>
+            <p class="step__no num">02</p>
+            <h3 class="step__title">Structure</h3>
+            <p class="step__desc">Organising information, ideas and user journeys into something clear and usable.</p>
+        </li>
+        <li class="step" data-reveal>
+            <p class="step__no num">03</p>
+            <h3 class="step__title">Design</h3>
+            <p class="step__desc">Creating experiences with visual hierarchy, consistency and purpose.</p>
+        </li>
+        <li class="step" data-reveal>
+            <p class="step__no num">04</p>
+            <h3 class="step__title">Build</h3>
+            <p class="step__desc">Using design tools, web technologies and digital platforms to move ideas towards implementation.</p>
+        </li>
+        <li class="step" data-reveal>
+            <p class="step__no num">05</p>
+            <h3 class="step__title">Improve</h3>
+            <p class="step__desc">Refining work through feedback, real-world requirements and continuous learning.</p>
+        </li>
+    </ol>
+</section>
+
+
+<!-- ================= CAPABILITIES ================= -->
+<section class="section shell" id="capabilities" aria-labelledby="capabilities-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="04">Capabilities</p>
+        <h2 class="sec-head__title" id="capabilities-title">
+            Five connected areas, one way of working.
+        </h2>
+    </header>
+
+    <dl class="cap-list">
+        <div class="cap-row" data-reveal>
+            <dt class="cap-row__title">UI/UX &amp; Digital Experiences</dt>
+            <dd class="cap-row__desc">Interfaces, user flows, wireframes, responsive experiences and digital interaction.</dd>
+        </div>
+        <div class="cap-row" data-reveal>
+            <dt class="cap-row__title">Web Design</dt>
+            <dd class="cap-row__desc">Corporate websites, information architecture, responsive layouts and web implementation.</dd>
+        </div>
+        <div class="cap-row" data-reveal>
+            <dt class="cap-row__title">Brand &amp; Visual Systems</dt>
+            <dd class="cap-row__desc">Visual communication, campaign systems, presentations and scalable design assets.</dd>
+        </div>
+        <div class="cap-row" data-reveal>
+            <dt class="cap-row__title">Digital Communication</dt>
+            <dd class="cap-row__desc">Content design, social media communication and visual storytelling.</dd>
+        </div>
+        <div class="cap-row" data-reveal>
+            <dt class="cap-row__title">Emerging Creative Technology</dt>
+            <dd class="cap-row__desc">AI-assisted design and creative workflows, experimentation and evolving digital tools.</dd>
+        </div>
+    </dl>
+</section>
+
+
+<!-- ================= EXPERIENCE ================= -->
+<section class="section shell" id="experience" aria-labelledby="experience-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="05">Experience</p>
+        <h2 class="sec-head__title" id="experience-title">
+            Design, web and communication inside manufacturing and consulting.
+        </h2>
+    </header>
+
+    <ol class="exp-list">
+
+        <li class="exp" data-reveal>
+            <div class="exp__meta">
+                <h3 class="exp__role">Digital Marketing Executive</h3>
+                <p class="exp__org">Virtuoso Optoelectronics Limited (VOEPL)</p>
+                <p class="exp__dates">
+                    <span class="tbd" data-todo="voepl-dates">Employment dates to be provided</span>
+                </p>
+            </div>
+
+            <div class="exp__body">
+                <p class="exp__summary">
+                    Working across digital design, web experiences and corporate
+                    communication for an OEM/ODM manufacturing organisation.
+                </p>
+                <div>
+                    <p class="exp__areas-label">Contribution areas</p>
+                    <ul class="exp__areas">
+                        <li>Website design and maintenance using Odoo</li>
+                        <li>Digital content and visual communication</li>
+                        <li>UI/UX and responsive web improvements</li>
+                        <li>Corporate presentations, brochures and product communication</li>
+                        <li>Social media and LinkedIn content</li>
+                        <li>SEO and website optimisation initiatives</li>
+                        <li>Research into AI search and emerging digital discovery</li>
+                        <li>Internal communication and safety awareness campaigns</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="exp" data-reveal>
+            <div class="exp__meta">
+                <h3 class="exp__role">Graphic Designer &amp; Social Media Manager</h3>
+                <p class="exp__org">Soch Business Mentors LLP</p>
+                <p class="exp__dates">
+                    <span class="tbd" data-todo="soch-dates">Employment dates to be provided</span>
+                </p>
+            </div>
+
+            <div class="exp__body">
+                <div>
+                    <p class="exp__areas-label">Contribution areas</p>
+                    <ul class="exp__areas">
+                        <li>Graphic design</li>
+                        <li>Social media management</li>
+                        <li>Website projects</li>
+                        <li>Digital initiatives</li>
+                        <li>Multiple website projects</li>
+                        <li>NFT-related projects</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+    </ol>
+</section>
+
+
+<!-- ================= SELECTED IMPACT ================= -->
+<section class="section shell" id="impact" aria-labelledby="impact-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="06">Selected Impact</p>
+        <h2 class="sec-head__title" id="impact-title">
+            A small number of figures I can stand behind.
+        </h2>
+    </header>
+
+    <ul class="impact">
+        <li class="impact__item" data-reveal>
+            <p class="impact__figure">1,600+</p>
+            <p class="impact__label">VOEPL LinkedIn followers</p>
+        </li>
+        <li class="impact__item" data-reveal>
+            <p class="impact__figure">300 → 1,600+</p>
+            <p class="impact__label">Approximate audience growth during my contribution</p>
+        </li>
+        <li class="impact__item" data-reveal>
+            <p class="impact__figure">3+</p>
+            <p class="impact__label">Years of experience across design, web and digital communication</p>
+        </li>
+    </ul>
+
+    <p class="impact__note">
+        Audience growth reflects a period of team effort to which I contributed through
+        consistent visual communication and content.
+    </p>
+</section>
+
+
+<!-- ================= TOOLS ================= -->
+<section class="section shell" id="tools" aria-labelledby="tools-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="07">Tools</p>
+        <h2 class="sec-head__title" id="tools-title">
+            What I work in, day to day.
+        </h2>
+    </header>
+
+    <div class="tools">
+        <div class="tools__group" data-reveal>
+            <h3 class="tools__label">Design</h3>
+            <ul class="tools__items">
+                <li>Figma</li>
+                <li>Adobe Photoshop</li>
+                <li>Adobe Illustrator</li>
+                <li>Canva</li>
+            </ul>
+        </div>
+        <div class="tools__group" data-reveal>
+            <h3 class="tools__label">Web</h3>
+            <ul class="tools__items">
+                <li>Odoo</li>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+                <li>Webflow</li>
+            </ul>
+        </div>
+        <div class="tools__group" data-reveal>
+            <h3 class="tools__label">Digital</h3>
+            <ul class="tools__items">
+                <li>SEO</li>
+                <li>Social Media</li>
+                <li>Content Strategy</li>
+            </ul>
+        </div>
+        <div class="tools__group" data-reveal>
+            <h3 class="tools__label">Creative Technology</h3>
+            <ul class="tools__items">
+                <li>AI-assisted image workflows</li>
+                <li>AI-assisted video workflows</li>
+                <li>Prompt-based creative tools</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- ================= IN PRACTICE ================= -->
+<section class="section shell" id="practice" aria-labelledby="practice-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="08">In Practice</p>
+        <h2 class="sec-head__title" id="practice-title">
+            I build what I design.
+        </h2>
+    </header>
+
+    <div class="practice" data-reveal>
+        <p class="practice__copy">
+            Design decisions survive contact with implementation, or they don't survive
+            at all. A lot of my web work happens in the browser rather than only in
+            Figma — this portfolio included, which is hand-written HTML, CSS and
+            vanilla JavaScript with no framework.
+        </p>
+
+        <figure class="practice__chart" id="gh-chart">
+            <!-- Served by ghchart.rshah.org, a third party. If it goes down the
+                 whole figure is hidden by script.js rather than showing a
+                 broken image. -->
+            <div class="practice__chart-scroll">
+                <img src="https://ghchart.rshah.org/prathameshgaikwad123"
+                     alt="Calendar chart of Prathamesh Gaikwad's GitHub contributions over the past year."
+                     width="663" height="104" loading="lazy" decoding="async">
+            </div>
+            <figcaption>
+                GitHub contribution activity ·
+                <a href="https://github.com/prathameshgaikwad123" target="_blank" rel="noopener noreferrer">@prathameshgaikwad123</a>
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
+
+<!-- ================= CONTACT ================= -->
+<section class="section contact shell" id="contact" aria-labelledby="contact-title">
+
+    <header class="sec-head">
+        <p class="eyebrow sec-head__label" data-index="09">Contact</p>
+        <h2 class="sec-head__title" id="contact-title">
+            Open to Opportunities.
+        </h2>
+    </header>
+
+    <div class="contact__grid">
+
+        <div data-reveal>
+            <p class="lead contact__lead">
+                Currently based in India and open to remote roles, international
+                opportunities and relocation.
+            </p>
+            <a class="contact__mail" href="mailto:prathameshg83800@gmail.com">prathameshg83800@gmail.com</a>
+        </div>
+
+        <div data-reveal>
+            <div class="contact__block">
+                <h3 class="contact__label">Areas of interest</h3>
+                <ul class="contact__interests">
+                    <li>UI/UX Design</li>
+                    <li>Digital Product Design</li>
+                    <li>Web Design</li>
+                    <li>Digital Experience Design</li>
+                    <li>Visual &amp; Brand Systems</li>
+                </ul>
+            </div>
+
+            <div class="contact__block">
+                <h3 class="contact__label">Elsewhere</h3>
+                <div class="contact__links">
+                    <a href="https://www.linkedin.com/in/prathamesh-gaikwad-224734171" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        LinkedIn
+                    </a>
+                    <a href="https://github.com/prathameshgaikwad123" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                        GitHub
+                    </a>
+                    <a href="tel:+918380084093">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 12.8 12.8 0 0 0 2.8.7A2 2 0 0 1 22 16.9z"/></svg>
+                        +91 83800 84093
+                    </a>
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Nashik, India
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="shell site-footer__inner">
+        <p>© <span id="year">2026</span> Prathamesh Gaikwad — Multidisciplinary Digital Designer</p>
+        <p>Designed and built by Prathamesh Gaikwad</p>
+        <a class="to-top" href="#top">
+            Back to top
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 11V1M1.5 5.5 6 1l4.5 4.5"/></svg>
+        </a>
+    </div>
+</footer>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>

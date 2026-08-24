@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Placeholder image: VOEPL Visual System">
+  <rect width="1600" height="1000" fill="#E4E1DA"/>
+  <rect x="12" y="12" width="1576" height="976" fill="none" stroke="#CFCAC0" stroke-width="2" stroke-dasharray="10 8"/>
+  <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">
+    <text x="800" y="413" font-size="22" font-weight="600" letter-spacing="4.8" fill="#A93F24">PLACEHOLDER IMAGE</text>
+    <text x="800" y="520.3" font-size="58" font-weight="500" fill="#3F3D38">VOEPL Visual System</text>
+    <text x="800" y="592.8" font-size="22" fill="#6F6B64" font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">assets/images/projects/voepl-brand-system/cover.jpg</text>
+    <text x="800" y="645" font-size="22" fill="#8A867E">1600 &#215; 1000 &#183; cover, 16:10</text>
+  </g>
+</svg>
