@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prathameshgaikwad123.github.io/sitemap.xml
