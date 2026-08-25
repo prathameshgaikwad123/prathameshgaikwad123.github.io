@@ -27,11 +27,24 @@
         if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
     } catch (e) {}
     root.classList.add('js');
+
+    /* The intro plays on the first page of a session only, and never for
+       reduced motion. Blocked storage counts as seen. */
+    var seen = true;
+    try { seen = sessionStorage.getItem('pg-intro') === 'seen'; } catch (e) {}
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!seen && !reduce) root.classList.add('is-intro');
+    try { sessionStorage.setItem('pg-intro', 'seen'); } catch (e) {}
 })();
 </script>
 </head>
 
 <body id="top">
+
+<div class="intro" id="intro" aria-hidden="true">
+    <p class="statement intro__phrase">Hold that thought<span class="intro__stop">.</span></p>
+    <span class="intro__line"></span>
+</div>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
