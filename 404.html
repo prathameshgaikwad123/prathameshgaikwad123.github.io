@@ -8,8 +8,8 @@
 <meta name="description" content="That page could not be found.">
 <meta name="robots" content="noindex, follow">
 
-<meta name="theme-color" content="#F6F5F2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0D0D0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F0EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#100F0B" media="(prefers-color-scheme: dark)">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -31,7 +31,7 @@
 </script>
 </head>
 
-<body>
+<body id="top">
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -84,58 +84,48 @@
     </div>
 </div>
 
-<main id="main">
-    <section class="view view--home is-active" id="home" aria-labelledby="nf-title">
 
-        <div class="field" aria-hidden="true">
-            <div class="field__grid"></div>
-            <div class="field__wash" id="field-wash"></div>
-        </div>
+<main id="main" class="page">
+    <section class="notfound" aria-labelledby="nf-title">
+        <div class="shell">
+            <div class="grid">
 
-        <div class="view__inner home">
+                <p class="tag notfound__tag"><span class="tag__no num">404</span>Error</p>
 
-            <div class="home__masthead">
-                <p class="eyebrow home__name">Prathamesh Gaikwad</p>
-                <p class="eyebrow">Error 404</p>
-            </div>
+                <h1 class="notfound__title" id="nf-title">
+                    Page<br><em>Not Found</em><span class="hero__stop">.</span>
+                </h1>
 
-            <h1 class="home__title" id="nf-title">
-                <span class="home__line home__line--1">Page</span>
-                <span class="home__line home__line--2">Not Found<span class="home__stop">.</span></span>
-            </h1>
-
-            <div class="home__body">
-                <div>
-                    <p class="home__statement">This page doesn't exist — or it moved.</p>
-                </div>
-                <div>
-                    <p class="home__support">
+                <div class="notfound__body">
+                    <p>This page doesn't exist — or it moved.</p>
+                    <p>
                         The portfolio was rebuilt, so some older links no longer resolve.
                         The selected work is all reachable from the home page.
                     </p>
-                    <div class="home__actions">
+                    <div class="notfound__actions">
                         <a class="btn btn--primary" href="/">
                             Go to the home page
                             <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
                         </a>
-                        <a class="btn btn--ghost" href="/#work">Selected Work</a>
+                        <a class="btn btn--ghost" href="/#work">
+                            Selected Work
+                            <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                        </a>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </section>
 </main>
 
-<div class="baseline" id="baseline">
-    <div class="baseline__inner">
-        <p class="locator">
-            <span class="locator__count num">404</span>
-            <span class="locator__name">Not found</span>
-        </p>
-        <p class="baseline__aside">© <span id="year">2026</span> Prathamesh Gaikwad</p>
+
+<footer class="page-foot">
+    <div class="page-foot__inner">
+        <p>© <span id="year">2026</span> Prathamesh Gaikwad — Multidisciplinary Digital Designer</p>
+        <p>Designed and built by Prathamesh Gaikwad</p>
     </div>
-</div>
+</footer>
 
 <script src="/js/script.js" defer></script>
 </body>

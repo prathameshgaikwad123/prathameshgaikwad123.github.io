@@ -9,8 +9,8 @@
 <meta name="author" content="Prathamesh Gaikwad">
 <link rel="canonical" href="https://prathameshgaikwad123.github.io/work/voepl-website.html">
 
-<meta name="theme-color" content="#F6F5F2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0D0D0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F0EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#100F0B" media="(prefers-color-scheme: dark)">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Prathamesh Gaikwad">
@@ -84,7 +84,7 @@
 
         <nav class="nav" id="nav" aria-label="Primary">
             <ul class="nav__list">
-                <li><a class="nav__link" href="../index.html#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+                <li><a class="nav__link" href="../index.html#work" aria-current="true"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
                 <li><a class="nav__link" href="../index.html#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
                 <li><a class="nav__link" href="../index.html#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
                 <li><a class="nav__link" href="../index.html#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
@@ -109,7 +109,7 @@
 <div class="menu" id="menu">
     <nav aria-label="Sections">
         <ul class="menu__list">
-            <li><a class="menu__link" href="../index.html#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+            <li><a class="menu__link" href="../index.html#work" aria-current="true"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
             <li><a class="menu__link" href="../index.html#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
             <li><a class="menu__link" href="../index.html#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
             <li><a class="menu__link" href="../index.html#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
@@ -122,7 +122,7 @@
     </div>
 </div>
 
-<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="progress progress--bar" id="progress" aria-hidden="true"></div>
 
 
 <main id="main" class="page">
@@ -172,17 +172,19 @@
 
     <!-- ---------- COVER ---------- -->
     <div class="shell">
-        <figure class="case-figure case-figure--cover">
+        <figure class="case-figure case-figure--cover frame">
             <!-- REPLACE: assets/images/projects/voepl-website/cover.svg → 1600×1000 JPG/WebP -->
-            <img src="../assets/images/projects/voepl-website/cover.svg"
-                 alt="Placeholder for the VOEPL corporate website case study cover image."
-                 width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async">
+            <span class="frame__media">
+                <img src="../assets/images/projects/voepl-website/cover.svg"
+                     alt="Placeholder for the VOEPL corporate website case study cover image."
+                     width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async">
+            </span>
             <figcaption>Placeholder — replace with a wide view of the website.</figcaption>
         </figure>
     </div>
 
     <!-- ---------- BODY ---------- -->
-    <div class="shell">
+    <div class="shell case-body">
 
         <section class="case-block" aria-labelledby="ctx-01">
             <h2 class="case-block__label" id="ctx-01">Context</h2>
@@ -280,20 +282,26 @@
                     <code>ASSETS.md</code> for filenames and dimensions.
                 </p>
                 <div class="case-gallery">
-                    <figure>
-                        <img src="../assets/images/projects/voepl-website/01.svg"
-                             alt="Placeholder for a VOEPL website page layout."
-                             width="1400" height="1050" loading="lazy" decoding="async">
+                    <figure class="frame">
+                        <span class="frame__media">
+                            <img src="../assets/images/projects/voepl-website/01.svg"
+                                 alt="Placeholder for a VOEPL website page layout."
+                                 width="1400" height="1050" loading="lazy" decoding="async">
+                        </span>
                     </figure>
-                    <figure>
-                        <img src="../assets/images/projects/voepl-website/02.svg"
-                             alt="Placeholder for a VOEPL website product or capability page."
-                             width="1400" height="1050" loading="lazy" decoding="async">
+                    <figure class="frame">
+                        <span class="frame__media">
+                            <img src="../assets/images/projects/voepl-website/02.svg"
+                                 alt="Placeholder for a VOEPL website product or capability page."
+                                 width="1400" height="1050" loading="lazy" decoding="async">
+                        </span>
                     </figure>
-                    <figure>
-                        <img src="../assets/images/projects/voepl-website/03.svg"
-                             alt="Placeholder for VOEPL website responsive layouts."
-                             width="1400" height="1050" loading="lazy" decoding="async">
+                    <figure class="frame">
+                        <span class="frame__media">
+                            <img src="../assets/images/projects/voepl-website/03.svg"
+                                 alt="Placeholder for VOEPL website responsive layouts."
+                                 width="1400" height="1050" loading="lazy" decoding="async">
+                        </span>
                     </figure>
                 </div>
             </div>
@@ -311,13 +319,18 @@
     </div>
 
     <!-- ---------- NEXT ---------- -->
-    <div class="shell">
-        <nav class="case-next" aria-label="Next project">
-            <a href="voepl-brand-system.html">
-                <p class="case-next__label">Next project — 02</p>
-                <p class="case-next__title">Designing a Connected Corporate Visual System</p>
-            </a>
-        </nav>
+    <div class="zone-invert">
+        <div class="shell">
+            <nav class="case-next" aria-label="Next project">
+                <a href="voepl-brand-system.html">
+                    <p class="case-next__label">Next project — 02</p>
+                    <p class="case-next__title">Designing a Connected Corporate Visual System</p>
+                    <span class="case-next__go" aria-hidden="true">
+                        <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                    </span>
+                </a>
+            </nav>
+        </div>
     </div>
 
 </article>
