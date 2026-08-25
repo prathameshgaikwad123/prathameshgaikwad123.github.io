@@ -16,7 +16,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300..700&amp;family=Inter:wght@400..600&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Inter:wght@400..600&amp;display=swap">
 <link rel="stylesheet" href="/css/style.css">
 
 <script>
@@ -26,50 +26,116 @@
         var saved = localStorage.getItem('pg-theme');
         if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
     } catch (e) {}
+    root.classList.add('js');
 })();
 </script>
 </head>
 
 <body>
 
-<main id="main">
-    <section class="hero shell" id="top" aria-labelledby="nf-title">
+<a class="skip-link" href="#main">Skip to content</a>
 
-        <div class="hero__masthead">
-            <p class="eyebrow hero__name">Prathamesh Gaikwad</p>
-            <p class="eyebrow">Error 404</p>
+<header class="masthead" id="masthead">
+    <div class="masthead__inner">
+
+        <a class="wordmark" href="/">
+            <span class="wordmark__initials">PG</span>
+            <span class="wordmark__full">Prathamesh Gaikwad</span>
+            <span class="wordmark__role">Multidisciplinary Digital Designer</span>
+        </a>
+
+        <nav class="nav" id="nav" aria-label="Primary">
+            <ul class="nav__list">
+                <li><a class="nav__link" href="/#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+                <li><a class="nav__link" href="/#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
+                <li><a class="nav__link" href="/#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
+                <li><a class="nav__link" href="/#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
+                <li><a class="nav__link" href="/#contact"><span class="nav__num" aria-hidden="true">05</span>Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="masthead__actions">
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.7 8.7 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z"/></svg>
+            </button>
+            <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+                <span class="menu-btn__label">Menu</span>
+                <span class="menu-btn__bars" aria-hidden="true"></span>
+            </button>
         </div>
 
-        <h1 class="hero__title" id="nf-title">Page<br>Not Found<span class="hero__stop">.</span></h1>
+    </div>
+</header>
 
-        <div class="hero__body">
-            <div>
-                <p class="hero__statement">This page doesn't exist — or it moved.</p>
+<div class="menu" id="menu">
+    <nav aria-label="Sections">
+        <ul class="menu__list">
+            <li><a class="menu__link" href="/#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+            <li><a class="menu__link" href="/#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
+            <li><a class="menu__link" href="/#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
+            <li><a class="menu__link" href="/#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
+            <li><a class="menu__link" href="/#contact"><span class="nav__num" aria-hidden="true">05</span>Contact</a></li>
+        </ul>
+    </nav>
+    <div class="menu__foot">
+        <p class="eyebrow">Based in India · Available Worldwide</p>
+        <p class="eyebrow">UI/UX · Web · Brand · Digital Experiences</p>
+    </div>
+</div>
+
+<main id="main">
+    <section class="view view--home is-active" id="home" aria-labelledby="nf-title">
+
+        <div class="field" aria-hidden="true">
+            <div class="field__grid"></div>
+            <div class="field__wash" id="field-wash"></div>
+        </div>
+
+        <div class="view__inner home">
+
+            <div class="home__masthead">
+                <p class="eyebrow home__name">Prathamesh Gaikwad</p>
+                <p class="eyebrow">Error 404</p>
             </div>
-            <div>
-                <p class="hero__support">
-                    The portfolio was rebuilt, so some older links no longer resolve.
-                    The selected work is all reachable from the home page.
-                </p>
-                <div class="hero__actions">
-                    <a class="btn btn--primary" href="/">
-                        Go to the home page
-                        <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
-                    </a>
-                    <a class="btn btn--ghost" href="/#work">Selected Work</a>
+
+            <h1 class="home__title" id="nf-title">
+                <span class="home__line home__line--1">Page</span>
+                <span class="home__line home__line--2">Not Found<span class="home__stop">.</span></span>
+            </h1>
+
+            <div class="home__body">
+                <div>
+                    <p class="home__statement">This page doesn't exist — or it moved.</p>
+                </div>
+                <div>
+                    <p class="home__support">
+                        The portfolio was rebuilt, so some older links no longer resolve.
+                        The selected work is all reachable from the home page.
+                    </p>
+                    <div class="home__actions">
+                        <a class="btn btn--primary" href="/">
+                            Go to the home page
+                            <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h13M9.5 1.5 14 6l-4.5 4.5"/></svg>
+                        </a>
+                        <a class="btn btn--ghost" href="/#work">Selected Work</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </section>
 </main>
 
-<footer class="site-footer">
-    <div class="shell site-footer__inner">
-        <p>© <span id="year">2026</span> Prathamesh Gaikwad — Multidisciplinary Digital Designer</p>
-        <a class="to-top" href="/">Home</a>
+<div class="baseline" id="baseline">
+    <div class="baseline__inner">
+        <p class="locator">
+            <span class="locator__count num">404</span>
+            <span class="locator__name">Not found</span>
+        </p>
+        <p class="baseline__aside">© <span id="year">2026</span> Prathamesh Gaikwad</p>
     </div>
-</footer>
+</div>
 
 <script src="/js/script.js" defer></script>
 </body>
