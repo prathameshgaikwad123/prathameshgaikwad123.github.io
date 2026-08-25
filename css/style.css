@@ -12,9 +12,11 @@
               is interface (labels, metadata, navigation, body copy,
               numerals) is Inter.
    Model      One scrolling document. Sections are anchors, not slides.
-   Chrome     The one rounded thing on the site: the navigation is a
-              floating translucent plate, centred over the page, rather
-              than a header the page wears. Section 7.
+   Corners    Square, with two deliberate exceptions: the navigation
+              (section 7), which is a floating plate rather than a header
+              the page wears, and the perspective canvas (section 11).
+              Both are objects laid over the page, and both round to the
+              same language.
    Themes     Light is the base; dark is declared twice so the system
               preference and an explicit choice both resolve. Inverted
               zones re-declare the same token names, so every component
@@ -96,6 +98,11 @@
     --nav-rise: 0.1875rem;                        /* the tuck on scroll */
     --nav-r:    0.875rem;
     --nav-r-in: calc(var(--nav-r) - var(--nav-pad));
+
+    /* The perspective canvas (section 11) rounds to the same language,
+       starting at the navigation's radius and opening up with the
+       canvas. */
+    --feature-r: clamp(0.875rem, 1.8vw, 1.5rem);
 
     /* --- Space -------------------------------------------------------- */
     --bar:      calc(var(--nav-top) + var(--nav-h) + clamp(0.5rem, 1.4vh, 1rem));
@@ -1617,7 +1624,228 @@ html:not(.js) .menu__foot { display: none; }
 }
 
 
-/* ====== 11. CAPABILITIES ============================================ */
+/* ====== 11. PERSPECTIVE ============================================= */
+/* One held image at the width of the shell, and the statement laid over
+   it rather than in a card beside it. The image is the ground, so the
+   canvas re-declares the inverted zone's tokens — every component inside
+   it (the tag, the statement, the caption) then resolves light on dark
+   with no component-level overrides. The scrim is the same in both
+   themes for the same reason: what the text sits on is the photograph,
+   not the page.
+
+   The image itself is replaceable from three places and nowhere else:
+   the src in the markup, --feature-focus, which decides where the crop
+   holds as the canvas changes shape, and --feature-veil, which is off
+   until a backdrop turns out to be too bright to sit type on. The scrim
+   is drawn for a mid-tone image; ASSETS.md says so.                    */
+
+.feature {
+    /* Inverted zone (section 1), without its background — the image is
+       the background. */
+    --paper:       #14130E;
+    --paper-2:     #1D1C15;
+    --ink:         #F2F0EA;
+    --ink-3:       #8E8A7D;
+    --rule:        #2C2B22;
+    --rule-2:      #45443A;
+    --signal:      #FF6A3D;
+    --on-signal:   #14130E;
+
+    /* One departure from the inverted zone: the secondary tone is lifted,
+       because here it sits on a photograph rather than on flat ink. */
+    --ink-2:       #D9D5CB;
+
+    --feature-pad:   clamp(1.5rem, 5.5vw, 2.75rem);
+
+    /* The two dials for a replacement backdrop. --feature-focus is where
+       the crop holds; --feature-veil is flat extra darkening, off unless
+       the image is bright enough to need it. Nothing else has to change. */
+    --feature-focus: 50% 38%;
+    --feature-veil:  0;
+
+    position: relative;
+    display: grid;
+    align-content: end;
+    /* width is stated so the ratio can only decide the height. Left to
+       stretch, a min-height that bites would widen the canvas past the
+       shell instead of making it taller. */
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 27rem;
+    padding: var(--feature-pad);
+    border-radius: var(--feature-r);
+    overflow: hidden;
+    color: var(--ink);
+}
+
+/* --- The ground ------------------------------------------------------- */
+
+.feature__media {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--paper-2);
+}
+
+.feature__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--feature-focus);
+}
+
+/* One directional scrim, shaped to the type and nothing else: it holds
+   its density across the words, then falls away completely, so the far
+   side of the image is untouched. --feature-veil is the dial on top of
+   it — flat, off by default, and there for a backdrop bright enough that
+   the gradient alone cannot hold the type. */
+.feature__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(10, 9, 6, var(--feature-veil, 0));
+    background-image:
+        linear-gradient(to top,
+            rgba(10, 9, 6, 0.86) 0%,
+            rgba(10, 9, 6, 0.80) 44%,
+            rgba(10, 9, 6, 0.50) 68%,
+            rgba(10, 9, 6, 0.16) 84%,
+            rgba(10, 9, 6, 0) 100%);
+}
+
+/* --- The statement ---------------------------------------------------- */
+
+.feature__body { position: relative; }
+
+.feature__tag { color: var(--ink-2); }
+
+.feature__statement {
+    margin-top: clamp(0.875rem, 2vw, 1.375rem);
+    font-size: var(--t-figure);
+    text-wrap: balance;
+}
+
+.feature__lead {
+    margin-top: clamp(0.875rem, 2vw, 1.25rem);
+    max-width: 40ch;
+    font-size: var(--t-lead);
+    line-height: 1.5;
+    color: var(--ink-2);
+}
+
+.feature__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-top: clamp(1.5rem, 3.2vw, 2.25rem);
+    padding-bottom: 0.4375rem;
+    border-bottom: 1px solid var(--rule-2);
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: color var(--t-fast) var(--ease-io),
+                border-color var(--t-fast) var(--ease-io);
+}
+
+.feature__go svg {
+    width: 1rem;
+    height: 0.75rem;
+    color: var(--signal);
+    transition: transform var(--t-mid) var(--ease);
+}
+
+.feature__go:hover,
+.feature__go:focus-visible { color: var(--signal); border-bottom-color: var(--signal); }
+.feature__go:hover svg,
+.feature__go:focus-visible svg { transform: translateX(0.3rem); }
+
+/* --- The one other mark on the canvas --------------------------------- */
+/* The site's own figure caption, moved off the bottom of an image and
+   into the far corner of one. It is the only part of the section that
+   cannot rely on the scrim — the corner it sits in is deliberately left
+   clear — so it carries its own ground, in the plate language the
+   navigation introduced. Opaque enough to hold type over any photograph
+   that ends up behind it. */
+
+.feature__cap {
+    position: absolute;
+    top: var(--feature-pad);
+    right: var(--feature-pad);
+    max-width: min(11rem, calc(100% - var(--feature-pad) * 2));
+    margin-top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.5rem 0.6875rem 0.5625rem;
+    border: 1px solid rgba(242, 240, 234, 0.13);
+    border-radius: var(--nav-r-in);
+    background: rgba(10, 9, 6, 0.86);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
+    color: var(--ink-2);
+}
+
+.feature__cap .cap__text { max-width: none; line-height: 1.35; }
+
+/* --- Wider ------------------------------------------------------------ */
+
+@media (min-width: 40rem) {
+    .feature {
+        aspect-ratio: 3 / 2;
+        min-height: 24rem;
+        --feature-focus: 55% 42%;
+    }
+}
+
+/* Desktop: the cinematic band. The statement holds the left of the
+   composition, the caption drops to the opposite corner, and the crop
+   moves right so the image keeps the half it was given. */
+@media (min-width: 62rem) {
+    .feature {
+        --feature-pad:   clamp(2.5rem, 4.2vw, 4.5rem);
+        --feature-focus: 72% 50%;
+        aspect-ratio: 21 / 9;
+        min-height: 29rem;
+        align-content: center;
+    }
+
+    .feature__body { max-width: min(var(--measure), 52%); }
+
+    /* The scrim turns with the composition: across the statement, then
+       gone by four fifths, leaving the last of the canvas to the image. */
+    .feature__media::after {
+        background-image:
+            linear-gradient(to right,
+                rgba(10, 9, 6, 0.84) 0%,
+                rgba(10, 9, 6, 0.80) 34%,
+                rgba(10, 9, 6, 0.60) 48%,
+                rgba(10, 9, 6, 0.22) 64%,
+                rgba(10, 9, 6, 0) 80%);
+    }
+
+    .feature__cap {
+        top: auto;
+        bottom: var(--feature-pad);
+        max-width: 13rem;
+    }
+}
+
+/* --- Entrance ---------------------------------------------------------
+   The canvas fades in on the site's one entrance rule; the crop settles
+   out of a slight over-scale behind it. Played once, like everything
+   else, and slower than anything else on the page. */
+
+.js .feature[data-reveal-soft] .feature__media img {
+    transform: scale(1.055);
+    transition: transform 1.6s var(--ease);
+}
+
+.js .feature[data-reveal-soft].is-in .feature__media img { transform: none; }
+
+
+/* ====== 12. CAPABILITIES ============================================ */
 
 .caps__tag { grid-column: 1 / -1; }
 .caps__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -1770,7 +1998,7 @@ html:not(.js) .menu__foot { display: none; }
 }
 
 
-/* ====== 12. EXPERIENCE ============================================== */
+/* ====== 13. EXPERIENCE ============================================== */
 
 .exp__tag { grid-column: 1 / -1; }
 .exp__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -1927,7 +2155,7 @@ html:not(.js) .menu__foot { display: none; }
 }
 
 
-/* ====== 13. CONTACT & FOOTER ======================================== */
+/* ====== 14. CONTACT & FOOTER ======================================== */
 
 .contact__tag { grid-column: 1 / -1; }
 .contact__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -2069,7 +2297,7 @@ html:not(.js) .menu__foot { display: none; }
 .page-foot a:hover { color: var(--ink); }
 
 
-/* ====== 14. CASE STUDY PAGES ======================================== */
+/* ====== 15. CASE STUDY PAGES ======================================== */
 
 .page { padding-top: var(--bar); }
 
@@ -2454,7 +2682,7 @@ html:not(.js) .menu__foot { display: none; }
 .case-next a:hover .case-next__go svg { transform: translateX(0.3rem); }
 
 
-/* ====== 15. 404 ===================================================== */
+/* ====== 16. 404 ===================================================== */
 
 .notfound {
     padding-block: clamp(4rem, 14vh, 9rem) clamp(3rem, 8vh, 6rem);
@@ -2493,7 +2721,7 @@ html:not(.js) .menu__foot { display: none; }
 }
 
 
-/* ====== 16. VIEW TRANSITIONS ======================================= */
+/* ====== 17. VIEW TRANSITIONS ======================================== */
 /* Cross-document only: the cover of the project being opened settles
    into the case study. Progressive — browsers without the API navigate
    normally.                                                            */
@@ -2513,7 +2741,7 @@ html:not(.js) .menu__foot { display: none; }
 }
 
 
-/* ====== 17. PREFERENCE OVERRIDES =================================== */
+/* ====== 18. PREFERENCE OVERRIDES ==================================== */
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -2537,6 +2765,8 @@ html:not(.js) .menu__foot { display: none; }
     .js [data-reveal-rule] { transform: none; }
     /* The plate stays where it rests rather than tucking up on scroll. */
     .masthead.is-solid .masthead__inner { transform: none; }
+    /* The perspective crop arrives settled rather than settling. */
+    .js .feature[data-reveal-soft] .feature__media img { transform: none; }
     .js .idx.is-on .idx__title { transform: none; }
     .js .idx__figure .frame__media img { transform: none !important; }
     .btn:hover svg,
@@ -2558,6 +2788,10 @@ html:not(.js) .menu__foot { display: none; }
     .nav__link[aria-current] { forced-color-adjust: none; text-decoration: underline; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
     .hero__field { display: none; }
+    /* Type over a photograph cannot be guaranteed here, so the canvas
+       gives up its ground and keeps its words. */
+    .feature { background: Canvas; border: 1px solid CanvasText; }
+    .feature__media { display: none; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }
     .js .idx__figure { opacity: 1 !important; visibility: visible !important; }
@@ -2583,6 +2817,25 @@ html:not(.js) .menu__foot { display: none; }
     }
 
     .js .index__list { width: auto !important; }
+
+    /* The backdrop cannot carry light type on paper, so the perspective
+       prints as the statement it is and the image is left out. */
+    .feature {
+        --ink: #000;
+        --ink-2: #000;
+        --ink-3: #000;
+        --rule-2: #000;
+        --signal: #000;
+        aspect-ratio: auto;
+        min-height: 0;
+        padding: 0;
+        color: #000;
+        break-inside: avoid;
+    }
+
+    .feature__media { display: none; }
+    .feature__cap { position: static; justify-content: flex-start; margin-top: 1rem; }
+    .feature__cap .cap__text { text-align: left; }
 
     a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
 }

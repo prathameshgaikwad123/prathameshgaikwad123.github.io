@@ -87,6 +87,7 @@ and three sit side by side. Put your strongest overview first.
 | `assets/apple-touch-icon.png` | 180 × 180 | **Done** — placeholder, replace if you want |
 | `assets/og-image.png` | 1200 × 630 | **Done** — typographic placeholder, replace if you want |
 | `assets/images/portrait.*` | 1000 × 1250 (4:5) | **Optional** — About section |
+| `assets/images/feature/perspective.*` | 2400 × 1350 (16:9) | **Replace** — the perspective backdrop |
 
 `og-image.png` is what appears when the site is shared on LinkedIn, Slack or
 WhatsApp. The generated one is typographic and works; a version with your own
@@ -95,6 +96,29 @@ will not render an SVG.
 
 The portrait is optional. To drop it, delete the `<figure class="about__portrait">`
 block in `index.html`.
+
+### The perspective backdrop
+
+This is the one image on the site that carries type on top of it, so it is the
+one image with art direction attached. It sits between **About** and
+**Capabilities**, fills the whole canvas, and never gets a caption of its own.
+
+**What it wants to be.** A mid-tone image — a workspace, a texture, an
+architectural or environmental shot. Interest on the **right**, calm on the
+**left**, because that is where the statement sits. Avoid anything with its own
+text or logo, and avoid a bright, evenly-lit frame: the scrim is drawn for a
+mid-tone photograph and light type needs something to sit on.
+
+**Replacing it.** Change the `src` in `index.html` — search for
+`assets/images/feature/perspective` — and write real `alt` text. Then, if you
+need them, two dials in `css/style.css`, section 11, on `.feature`:
+
+| Variable | Default | What it does |
+|---|---|---|
+| `--feature-focus` | `50% 38%` mobile, `72% 50%` desktop | Where the crop holds as the canvas changes shape — an `object-position` value. Move it if your subject drifts out of frame at one size. |
+| `--feature-veil` | `0` | Flat extra darkening over the whole image, on top of the scrim. Leave at `0`. If your image is bright enough that the small `PERSPECTIVE` label goes soft, `0.12` is enough to bring it back. |
+
+Nothing else needs touching — not the markup, not the scrim, not the layout.
 
 ---
 

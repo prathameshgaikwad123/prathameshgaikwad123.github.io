@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1350" width="2400" height="1350" role="img" aria-label="Placeholder image: Perspective backdrop">
+  <rect width="2400" height="1350" fill="#E4E1DA"/>
+  <rect x="12" y="12" width="2376" height="1326" fill="none" stroke="#CFCAC0" stroke-width="2" stroke-dasharray="10 8"/>
+  <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">
+    <text x="1200" y="544" font-size="33" font-weight="600" letter-spacing="7.2" fill="#A93F24">PLACEHOLDER IMAGE</text>
+    <text x="1200" y="705" font-size="87" font-weight="500" fill="#3F3D38">Perspective backdrop</text>
+    <text x="1200" y="814" font-size="33" fill="#6F6B64" font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">assets/images/feature/perspective.jpg</text>
+    <text x="1200" y="892" font-size="33" fill="#8A867E">2400 &#215; 1350 &#183; backdrop, 16:9</text>
+  </g>
+</svg>
