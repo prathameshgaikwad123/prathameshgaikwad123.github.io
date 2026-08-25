@@ -42,7 +42,10 @@
 <!-- Resolve the theme before first paint so there is no flash. Only an
      explicit user choice is ever written to storage; otherwise the system
      preference is followed on every visit. The .js class enables the
-     entrance motion and the work-index preview plate. -->
+     entrance motion and the work-index preview plate. The intro is
+     settled here too, for the same reason: the page is never briefly
+     visible behind it. It plays on the first page of a session only, and
+     not at all for reduced motion. -->
 <script>
 (function () {
     var root = document.documentElement;
@@ -51,6 +54,14 @@
         if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
     } catch (e) { /* storage blocked — fall through to the system preference */ }
     root.classList.add('js');
+
+    /* Blocked storage counts as seen: a session that cannot be marked
+       would otherwise open on the intro at every step. */
+    var seen = true;
+    try { seen = sessionStorage.getItem('pg-intro') === 'seen'; } catch (e) {}
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!seen && !reduce) root.classList.add('is-intro');
+    try { sessionStorage.setItem('pg-intro', 'seen'); } catch (e) {}
 })();
 </script>
 
@@ -103,6 +114,14 @@
 </head>
 
 <body id="top">
+
+<!-- ================= INTRO =================
+     One phrase, one line, once per session. Hidden from assistive
+     technology, which is given the page itself straight away. -->
+<div class="intro" id="intro" aria-hidden="true">
+    <p class="statement intro__phrase">Hold that thought<span class="intro__stop">.</span></p>
+    <span class="intro__line"></span>
+</div>
 
 <a class="skip-link" href="#main">Skip to content</a>
 

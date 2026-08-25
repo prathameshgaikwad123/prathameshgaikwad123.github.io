@@ -3,6 +3,7 @@
    Vanilla JS, no dependencies. Everything here is an enhancement: with
    JavaScript disabled the page is a complete, readable document.
 
+   0. Intro      one line, once per session, then the entrance is let go
    1. Theme      light/dark, system-aware, persisted only on choice
    2. Chrome     masthead solidifies, scroll progress, active navigation
    3. Reveal     one entrance rule for the whole site, played once
@@ -43,6 +44,51 @@
     }
 
     function motionOK() { return !reduceMotion.matches; }
+
+
+    /* ---------- 0. INTRO ------------------------------------------- */
+    /* Whether the intro plays was settled in the document head, before
+       the first paint, and the overlay fades itself out in CSS — so the
+       page is revealed whatever happens to this file. The only thing
+       held here is the entrance below, so that a first-time visitor sees
+       the page arrive instead of a page that has already arrived. */
+
+    /* --intro-fill plus --intro-exit. A backstop only: the fade begins at
+       the first paint, which this script cannot time, so the end of the
+       fade itself is what is listened for. */
+    var INTRO_MS = 1250;
+    var intro = document.getElementById('intro');
+    var introPlaying = !!(intro && root.classList.contains('is-intro'));
+    var held = [];
+
+    function afterIntro(fn) {
+        if (introPlaying) held.push(fn);
+        else fn();
+    }
+
+    function endIntro() {
+        if (!introPlaying) return;
+        introPlaying = false;
+        root.classList.remove('is-intro');
+        intro.hidden = true;
+
+        var queue = held;
+        held = [];
+        queue.forEach(function (fn) { fn(); });
+    }
+
+    if (introPlaying) {
+        /* The overlay's own fade, not the line's fill or the phrase's. */
+        intro.addEventListener('animationend', function (e) {
+            if (e.target === intro) endIntro();
+        });
+
+        /* A fade that finished before this file arrived leaves no event to
+           wait for; one that never runs at all would leave the page
+           behind the overlay. Either way the intro is over. */
+        if (window.getComputedStyle(intro).opacity === '0') endIntro();
+        else window.setTimeout(endIntro, INTRO_MS + 500);
+    }
 
 
     /* ---------- 1. THEME ------------------------------------------- */
@@ -205,7 +251,9 @@
                 });
             }, { threshold: 0.04, rootMargin: '0px 0px -6% 0px' });
 
-            revealed.forEach(function (el) { io.observe(el); });
+            afterIntro(function () {
+                revealed.forEach(function (el) { io.observe(el); });
+            });
         } else {
             revealed.forEach(function (el) { el.classList.add('is-in'); });
         }

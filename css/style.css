@@ -76,6 +76,10 @@
     --t-mid:   0.42s;
     --t-fast:  0.18s;
 
+    /* Intro (section 6): the line fills, then the overlay clears. */
+    --intro-fill: 0.85s;
+    --intro-exit: 0.4s;
+
     color-scheme: light;
 }
 
@@ -582,6 +586,58 @@ em { font-style: italic; }
 .js [data-reveal-rule].is-in {
     transform: none;
     transition: transform 0.9s var(--ease) var(--d, 0s);
+}
+
+/* --- Intro -----------------------------------------------------------
+   The first page of a session opens on the phrase with one orange line
+   filling under it, then hands over to the entrance above. Roughly a
+   second in total, and nothing else moves. The overlay clears itself
+   here rather than in script, so the page is revealed even if the
+   script never arrives. Whether it plays at all is decided before the
+   first paint — once per session, never for reduced motion.          */
+
+.intro { display: none; }
+
+.is-intro .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: grid;
+    place-content: center;
+    justify-items: start;
+    padding-inline: var(--gutter);
+    background: var(--paper);
+    animation: intro-clear var(--intro-exit) var(--ease-io) var(--intro-fill) forwards;
+}
+
+.intro__phrase { animation: intro-say 0.32s var(--ease-io) both; }
+
+.intro__stop { color: var(--signal); }
+
+/* The scroll indicator's own language: the same orange, scaled from its
+   left edge, and — like that one — at a constant rate. An eased fill
+   hesitates at both ends, which in a second is all one would see. Its
+   full width is the width of the phrase above it. */
+.intro__line {
+    width: 100%;
+    height: 2px;
+    margin-top: clamp(1.25rem, 2.6vw, 2rem);
+    background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: intro-fill var(--intro-fill) linear forwards;
+}
+
+@keyframes intro-say  { from { opacity: 0; } }
+@keyframes intro-fill { to   { transform: none; } }
+
+/* Visibility is carried to the very end of the fade rather than left to
+   the script, so that a page whose script never arrives is not left
+   under a transparent sheet that still takes the clicks. */
+@keyframes intro-clear {
+    from { opacity: 1; visibility: visible; }
+    99%  { opacity: 0; visibility: visible; }
+    to   { opacity: 0; visibility: hidden; }
 }
 
 
@@ -2397,7 +2453,7 @@ html:not(.js) .menu__foot { display: none; }
 
 @media print {
     .masthead, .menu, .hero__field, .theme-toggle, .skip-link,
-    .case-next, .progress, .hero__scroll { display: none !important; }
+    .case-next, .progress, .hero__scroll, .intro { display: none !important; }
 
     body { background: #fff; color: #000; font-size: 11pt; }
     .zone-invert { background: #fff; color: #000; }
