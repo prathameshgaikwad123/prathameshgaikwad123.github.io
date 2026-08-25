@@ -103,7 +103,7 @@ in the hero, per your brief.
 real one in the Contact section if you have an account worth showing.
 
 **GitHub contribution graph — kept, but reframed.** You asked for this section
-back after the first build. It lives inside the **About** view, in a block
+back after the first build. It lives inside the **About** band, in a block
 titled *In Practice* under the heading "I build what I design", rather than as
 a bare "GitHub Activity" block.
 
@@ -122,8 +122,8 @@ Two things to know about it:
 - The chart is drawn on a permanently light panel in both themes, because its
   empty-day squares are near-white and would glare against the dark palette.
 
-To remove it, delete the `<section class="block" id="practice">` block in
-`index.html`. Nothing else needs renumbering — the panels are numbered
+To remove it, delete the `<section class="sub" id="practice">` block in
+`index.html`. Nothing else needs renumbering — the bands are numbered
 01–05 by navigation order, not by how many blocks each one holds.
 
 ---
