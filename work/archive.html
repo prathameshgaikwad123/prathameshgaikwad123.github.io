@@ -30,7 +30,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300..700&amp;family=Inter:wght@400..600&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Inter:wght@400..600&amp;display=swap">
 <link rel="stylesheet" href="../css/style.css">
 
 <script>
@@ -73,36 +73,59 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site-header" id="site-header">
-    <div class="shell site-header__inner">
+<header class="masthead" id="masthead">
+    <div class="masthead__inner">
+
         <a class="wordmark" href="../index.html">
-            <span class="wordmark__mark" aria-hidden="true">PG</span>
-            <span>Prathamesh Gaikwad</span>
+            <span class="wordmark__initials">PG</span>
+            <span class="wordmark__full">Prathamesh Gaikwad</span>
             <span class="wordmark__role">Multidisciplinary Digital Designer</span>
         </a>
-        <nav class="site-nav" id="site-nav" aria-label="Primary">
-            <ul class="site-nav__list">
-                <li><a class="site-nav__link" href="../index.html#work">Work</a></li>
-                <li><a class="site-nav__link" href="../index.html#about">About</a></li>
-                <li><a class="site-nav__link" href="../index.html#capabilities">Capabilities</a></li>
-                <li><a class="site-nav__link" href="../index.html#experience">Experience</a></li>
-                <li><a class="site-nav__link" href="../index.html#contact">Contact</a></li>
+
+        <nav class="nav" id="nav" aria-label="Primary">
+            <ul class="nav__list">
+                <li><a class="nav__link" href="../index.html#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+                <li><a class="nav__link" href="../index.html#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
+                <li><a class="nav__link" href="../index.html#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
+                <li><a class="nav__link" href="../index.html#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
+                <li><a class="nav__link" href="../index.html#contact"><span class="nav__num" aria-hidden="true">05</span>Contact</a></li>
             </ul>
         </nav>
-        <div class="site-header__actions">
+
+        <div class="masthead__actions">
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
                 <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
                 <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.7 8.7 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z"/></svg>
             </button>
-            <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
-                <span class="nav-toggle__bars" aria-hidden="true"></span>
+            <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+                <span class="menu-btn__label">Menu</span>
+                <span class="menu-btn__bars" aria-hidden="true"></span>
             </button>
         </div>
+
     </div>
 </header>
 
+<div class="menu" id="menu">
+    <nav aria-label="Sections">
+        <ul class="menu__list">
+            <li><a class="menu__link" href="../index.html#work"><span class="nav__num" aria-hidden="true">01</span>Work</a></li>
+            <li><a class="menu__link" href="../index.html#about"><span class="nav__num" aria-hidden="true">02</span>About</a></li>
+            <li><a class="menu__link" href="../index.html#capabilities"><span class="nav__num" aria-hidden="true">03</span>Capabilities</a></li>
+            <li><a class="menu__link" href="../index.html#experience"><span class="nav__num" aria-hidden="true">04</span>Experience</a></li>
+            <li><a class="menu__link" href="../index.html#contact"><span class="nav__num" aria-hidden="true">05</span>Contact</a></li>
+        </ul>
+    </nav>
+    <div class="menu__foot">
+        <p class="eyebrow">Based in India · Available Worldwide</p>
+        <p class="eyebrow">UI/UX · Web · Brand · Digital Experiences</p>
+    </div>
+</div>
 
-<main id="main">
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+
+<main id="main" class="page">
 
 <article>
 
@@ -114,8 +137,8 @@
         </a>
 
         <div class="case-hero__category">
-            <span class="project__no num">06</span>
-            <span class="project__category">Selected Archive</span>
+            <span class="case-hero__no num">06</span>
+            <span class="case-hero__cat">Selected Archive</span>
         </div>
 
         <h1 class="case-hero__title" id="case-title">Websites, Digital Projects &amp; Earlier Work</h1>
@@ -245,13 +268,13 @@
 </main>
 
 
-<footer class="site-footer">
-    <div class="shell site-footer__inner">
+<footer class="page-foot">
+    <div class="page-foot__inner">
         <p>© <span id="year">2026</span> Prathamesh Gaikwad — Multidisciplinary Digital Designer</p>
         <p>Designed and built by Prathamesh Gaikwad</p>
-        <a class="to-top" href="#top">
+        <a href="#top">
             Back to top
-            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 11V1M1.5 5.5 6 1l4.5 4.5"/></svg>
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="width:.7rem;height:.7rem;display:inline-block;vertical-align:middle;margin-left:.4rem"><path d="M6 11V1M1.5 5.5 6 1l4.5 4.5"/></svg>
         </a>
     </div>
 </footer>

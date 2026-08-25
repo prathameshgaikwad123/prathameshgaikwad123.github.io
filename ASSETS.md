@@ -54,9 +54,12 @@ Six projects, each with one cover and three gallery images.
 | `assets/images/projects/archive/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
 | `assets/images/projects/archive/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
 
-The covers run **full content width** on desktop — up to 1264 px — so they are
-the largest thing on the page. Choose them accordingly; a cropped detail often
-reads better at that size than a whole squeezed-down screen.
+Each cover appears twice. On the **work index** it fills the preview panel
+beside the project list — roughly 500 px wide on a laptop — and swaps as the
+visitor moves between projects, so it has to read instantly at that size. On
+the **case study** it runs the full content width, up to 1264 px. Choose it for
+both: a cropped detail usually survives the small size better than a whole
+squeezed-down screen.
 
 ### What each cover wants to be
 
