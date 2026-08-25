@@ -5,7 +5,8 @@
 
    0. Intro      one line, once per session, then the entrance is let go
    1. Theme      light/dark, system-aware, persisted only on choice
-   2. Chrome     masthead solidifies, scroll progress, active navigation
+   2. Chrome     the floating plate gathers ground, scroll progress, and
+                 the active section's ground travels with it
    3. Reveal     one entrance rule for the whole site, played once
    4. Menu       overlay navigation below 62rem, focus trapped
    5. Index      selected work: active row and the travelling plate
@@ -151,7 +152,7 @@
     });
 
 
-    /* ---------- 2. FIXED CHROME & ACTIVE NAVIGATION ---------------- */
+    /* ---------- 2. FLOATING NAVIGATION & ACTIVE SECTION ------------ */
     /* Which band the reader is in is decided once per frame, from a single
        line three tenths of the way down the viewport. */
 
@@ -173,6 +174,51 @@
         var y = 0;
         while (el) { y += el.offsetTop; el = el.offsetParent; }
         return y;
+    }
+
+    /* The active section's ground travels rather than being switched on
+       and off under each label: one element behind the list, moved to the
+       current link. Without this file the ground is drawn by CSS on the
+       current link instead, so the state is never lost. */
+
+    var navBar = document.getElementById('nav');
+    var navList = navBar ? navBar.querySelector('.nav__list') : null;
+    var navPill = null;
+    var pillPlaced = false;
+
+    if (navList) {
+        navPill = document.createElement('span');
+        navPill.className = 'nav__pill';
+        navPill.setAttribute('aria-hidden', 'true');
+        navList.insertBefore(navPill, navList.firstChild);
+        navBar.classList.add('has-pill');
+    }
+
+    function placeNavPill() {
+        if (!navPill) return;
+
+        var link = navList.querySelector('.nav__link[aria-current]');
+
+        /* Below the desktop breakpoint the list is not laid out at all,
+           and on a page with no section in view there is nothing to mark. */
+        if (!link || !navList.offsetWidth) {
+            navPill.classList.remove('is-on');
+            pillPlaced = false;
+            return;
+        }
+
+        /* The first placement arrives in position and fades; only later
+           changes travel. */
+        if (!pillPlaced) navPill.classList.add('is-first');
+
+        navPill.style.setProperty('--x', link.offsetLeft + 'px');
+        navPill.style.setProperty('--w', link.offsetWidth + 'px');
+        navPill.classList.add('is-on');
+
+        if (!pillPlaced) {
+            pillPlaced = true;
+            requestAnimationFrame(function () { navPill.classList.remove('is-first'); });
+        }
     }
 
     function paintSpy() {
@@ -211,6 +257,7 @@
             }
 
             paintSpy();
+            placeNavPill();
         };
 
         var onScroll = function () { scheduleChrome(paintChrome); };
@@ -218,6 +265,14 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll, { passive: true });
         paintChrome();
+
+        /* Label widths settle when the interface face arrives, and the
+           list is only measurable once the desktop breakpoint is met. */
+        if (window.document.fonts && window.document.fonts.ready) {
+            window.document.fonts.ready.then(function () { scheduleChrome(paintChrome); });
+        }
+        window.addEventListener('load', onScroll);
+        onMedia(wide, onScroll);
     }
 
 
