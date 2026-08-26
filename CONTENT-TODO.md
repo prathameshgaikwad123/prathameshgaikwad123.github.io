@@ -5,7 +5,7 @@ a dashed outline and a `⌇` symbol, and carries a `data-todo` attribute so you
 can find it:
 
 ```bash
-grep -rn "data-todo" index.html work/
+grep -rn "data-todo" src/
 ```
 
 Nothing on this list has been guessed or filled in on your behalf.
@@ -18,13 +18,14 @@ The brief was explicit about not inventing these, so they are placeholders.
 
 | `data-todo` | File | What to write |
 |---|---|---|
-| `voepl-dates` | `index.html` | Start date at VOEPL, e.g. `April 2024 — Present` |
-| `soch-dates` | `index.html` | Dates at Soch Business Mentors LLP |
+| `voepl-dates` | `src/sections/Experience.jsx` | Start date at VOEPL, e.g. `April 2024 — Present` |
+| `soch-dates` | `src/sections/Experience.jsx` | Dates at Soch Business Mentors LLP |
 
-Replace the whole `<span class="tbd">…</span>` with plain text:
+Put the real dates on the role's `todo` line in that file, and replace the
+whole `<span className="tbd">…</span>` with the date itself:
 
-```html
-<p class="exp__dates">April 2024 — Present</p>
+```jsx
+<p className="exp__dates">April 2024 — Present</p>
 ```
 
 > The old repository claimed *"April 2024 – Present"* for a **Senior Executive**
@@ -38,7 +39,7 @@ Replace the whole `<span class="tbd">…</span>` with plain text:
 
 | `data-todo` | File |
 |---|---|
-| `safety-dojo-owner` | `work/safety-dojo.html` |
+| `safety-dojo-owner` | `src/data/projects.js` — the Safety Dojo `facts` |
 
 Your brief listed Safety Dojo as its own category rather than under VOEPL, but
 your VOEPL role includes *"internal communication and safety awareness
@@ -59,6 +60,8 @@ If it is VOEPL work, replace the placeholder with
 | `outcome-safety-dojo` | 03 — Safety Dojo |
 | `outcome-web-ai-discovery` | 05 — Search & AI discovery |
 
+Each one is the last block in `src/case-studies/<project>.jsx`.
+
 Only project **04** has a verified outcome (the LinkedIn figure), so it is the
 only one with numbers on it.
 
@@ -67,8 +70,8 @@ For the other four, you have three honest options:
 1. **Give a real, verifiable outcome.** Best if you have one.
 2. **Give a qualitative outcome.** "The system is still in use for new
    collateral" is a legitimate outcome and needs no metrics.
-3. **Delete the section.** Remove the whole `<section class="case-block">` for
-   Outcome. An absent section reads better than an empty one.
+3. **Delete the section.** Remove the `Outcome` entry from the blocks that file
+   returns. An absent section reads better than an empty one.
 
 Do not fill these with estimates. A single unverifiable number undermines the
 one figure on the site that is real.
@@ -79,7 +82,7 @@ one figure on the site that is real.
 
 | `data-todo` | File |
 |---|---|
-| `archive-entries` | `work/archive.html` |
+| `archive-entries` | `src/case-studies/archive.jsx` |
 
 The archive lists categories of work but names no projects or clients, because
 none were provided. Add real names and dates, and check you have permission to
@@ -93,8 +96,8 @@ publish client work.
 repository. Your work address was not used — a portfolio should outlive a job.
 
 **Phone number.** `+91 83800 84093` was already public in the old repository, so
-it was kept. It is in the Contact section of `index.html` if you would rather
-remove it; most design portfolios do not list one.
+it was kept. It is in `src/data/site.js`, shown by the Contact section, if you
+would rather remove it; most design portfolios do not list one.
 
 **Location.** "Nashik, India" in Contact and structured data; "Based in India"
 in the hero, per your brief.
@@ -122,8 +125,8 @@ Two things to know about it:
 - The chart is drawn on a permanently light panel in both themes, because its
   empty-day squares are near-white and would glare against the dark palette.
 
-To remove it, delete the `<section class="sub" id="practice">` block in
-`index.html`. Nothing else needs renumbering — the bands are numbered
+To remove it, delete the `<section className="sub" id="practice">` block in
+`src/sections/About.jsx`. Nothing else needs renumbering — the bands are numbered
 01–05 by navigation order, not by how many blocks each one holds.
 
 ---
