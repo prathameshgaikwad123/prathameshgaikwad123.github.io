@@ -52,11 +52,17 @@ export default function useCaseTransition(indexRef, setActive) {
 
             /* Moved on the element as well as in state: the snapshot is taken
                at the first rendering opportunity, which can arrive before a
-               re-render would. */
+               re-render would. Opacity is set here too, because once the
+               index is live it belongs to Framer Motion rather than to the
+               is-on class — and the plate has to be showing to be
+               photographed. Framer Motion takes it back on its next frame,
+               animating to the same 1. */
             rows.forEach((other) => {
                 if (other !== row) other.classList.remove('is-on');
             });
             row.classList.add('is-on');
+            const figure = row.querySelector('.idx__figure');
+            if (figure) figure.style.opacity = '1';
             setActive(row.getAttribute('data-project'));
 
             img.style.viewTransitionName = 'project-cover';

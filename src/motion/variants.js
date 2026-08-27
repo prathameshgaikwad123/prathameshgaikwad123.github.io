@@ -2,10 +2,10 @@
    MOTION FOUNDATION
    A small set of shared patterns for Framer Motion, expressed in the
    same numbers the stylesheet already uses (section 1, "Motion", and
-   section 6, "Entrance motion"). Nothing here is applied yet: the site's
-   existing entrance is still the CSS one, so the migration changed no
-   animation. These exist so a section can be moved over deliberately,
-   one at a time, without inventing new timing each time.
+   section 6, "Entrance motion"). The site's entrance is still the CSS
+   one; these exist so a section can be moved over deliberately, one at a
+   time, without inventing new timing each time. The work index (section
+   9) is the first section to use them — see the end of this file.
 
    Usage:
 
@@ -85,3 +85,69 @@ export const still = (variant) => ({
     hidden: { opacity: variant.hidden.opacity ?? 1 },
     shown: { opacity: 1, transition: { duration: FAST, ease: EASE_IO } },
 });
+
+
+/* ===================================================================
+   THE WORK INDEX (stylesheet section 9)
+   One interaction, and every part of it hangs off which project is
+   active: the preview plate travels down the right five columns to meet
+   that row, the numeral and title step forward while the pair on every
+   other row steps back, and the tick sweeps in. The numbers are the ones
+   the stylesheet was already using for the same moves, so the section
+   feels as it did — only now it is one timing system rather than six
+   independent CSS transitions.
+   =================================================================== */
+
+/* How far the active row steps forward. 0.5rem for the title — the value
+   the stylesheet used — and half of it for the numeral, so the pair moves
+   as a unit with the title leading. In pixels because a transform has no
+   font size of its own to resolve a rem against. */
+export const STEP_TITLE = 8;
+export const STEP_NO = 4;
+
+/* The tick: waiting to the left of its resting place, and the nudge it
+   takes on hover, focus or press. 0.3rem was the stylesheet's nudge. */
+export const TICK_IN = -8;
+export const TICK_NUDGE = 5;
+
+/* How far the numeral and title of a row that is not the active one recede
+   while the index is being read. Only those two: they carry the row, they
+   are the only text in it large enough to spare the contrast, and the
+   category, summary and metadata stay fully legible either way. */
+export const ROW_RECEDE = 0.75;
+
+/* The plate's resting overscan, settling back as it becomes the active
+   one — the scale(1.04) the stylesheet already applied. */
+export const PLATE_SCALE = 1.04;
+
+/* travel   the plate moving to meet a new row
+   arrive   a plate clearing · leave  the one it replaces, which goes more
+            slowly and from underneath, so the two crossfade without the
+            ground showing through between them
+   settle   the image easing back off its overscan
+   step     the numeral and title stepping forward
+   tone     a change of weight rather than of place
+   tick     the fastest thing on the row                                */
+export const workTiming = {
+    travel: { duration: 0.55, ease: EASE },
+    arrive: { duration: 0.3, ease: EASE_IO },
+    leave: { duration: MID, ease: EASE_IO },
+    settle: { duration: 0.9, ease: EASE },
+    step: { duration: MID, ease: EASE },
+    tone: { duration: MID, ease: EASE_IO },
+    tick: { duration: FAST, ease: EASE },
+};
+
+/* The same states, reached without the movement — which is what the
+   stylesheet's own reduced-motion override already does to this section,
+   and what the first frame after hydration needs so that handing the
+   resting state over to Framer Motion costs nothing. */
+export const workTimingStill = {
+    travel: { duration: 0 },
+    arrive: { duration: 0 },
+    leave: { duration: 0 },
+    settle: { duration: 0 },
+    step: { duration: 0 },
+    tone: { duration: 0 },
+    tick: { duration: 0 },
+};
