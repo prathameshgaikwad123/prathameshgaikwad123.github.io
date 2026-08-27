@@ -29,9 +29,29 @@ export default defineConfig({
             input: Object.fromEntries(PAGES.map((p) => [p.id, page(p.file)])),
             output: {
                 /* Otherwise the shared chunk is named after whichever module
-                   happened to pull it in. */
+                   happened to pull it in.
+
+                   Framer Motion gets a chunk of its own. Only the work index
+                   on the home page animates, and vendor is loaded by every
+                   page — including six case studies that would otherwise pay
+                   for an animation library they never call. Its two internal
+                   packages go with it, or vendor ends up importing them back.
+
+                   React is named first, and named vendor, only so that the
+                   motion group cannot claim it: the first matching group wins,
+                   and react/jsx-runtime reaches the graph through Framer
+                   Motion as well, which is enough to pull all of React into
+                   the motion chunk and undo the split. Same-named groups
+                   become one chunk, so vendor is still one file. */
                 advancedChunks: {
-                    groups: [{ name: 'vendor', test: /node_modules/ }],
+                    groups: [
+                        { name: 'vendor', test: /node_modules[\\/]react/ },
+                        {
+                            name: 'motion',
+                            test: /node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/,
+                        },
+                        { name: 'vendor', test: /node_modules/ },
+                    ],
                 },
                 /* Likewise the stylesheet, which is the design system and
                    deserves to be recognisable in the network panel. */

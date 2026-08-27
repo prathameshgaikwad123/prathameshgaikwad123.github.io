@@ -47,12 +47,7 @@ export default function App() {
 
             <main id="main">
                 <Hero />
-                <Work
-                    indexRef={index.indexRef}
-                    active={index.active}
-                    onRowEnter={index.onRowEnter}
-                    onRowFocus={index.onRowFocus}
-                />
+                <Work index={index} />
                 <About />
                 <Capabilities />
                 <Experience />
