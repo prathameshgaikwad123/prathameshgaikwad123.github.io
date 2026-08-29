@@ -6,12 +6,22 @@ import { motionOK } from './dom.js';
    animation itself is declared in CSS — this only decides when each element
    has arrived, so nothing about the entrance changed in the migration.
 
+   `data-reveal-draw` is the fourth variant and the odd one: the hand-drawn
+   annotation in About, which is a stroke being drawn rather than a block
+   arriving. It is here rather than in src/animations/ because it is an
+   entrance, not choreography — it happens once, at one point on the page,
+   and tying it to the scroll would let the reader undraw it. Keeping it
+   here is also what lets a narrow window have it: the scroll system does
+   not load its library below 62rem, and this one does not need it.
+
    `ready` is the intro: a first-time visitor should see the page arrive
    rather than a page that has already arrived. */
 export default function useReveal(ready) {
     useEffect(() => {
         const revealed = [].slice.call(
-            document.querySelectorAll('[data-reveal], [data-reveal-soft], [data-reveal-rule]'),
+            document.querySelectorAll(
+                '[data-reveal], [data-reveal-soft], [data-reveal-rule], [data-reveal-draw]',
+            ),
         );
         if (!revealed.length) return undefined;
 

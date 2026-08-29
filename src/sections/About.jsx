@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { SITE } from '../data/site.js';
+import Words from '../components/Words.jsx';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import wordReveal from '../animations/wordReveal.js';
+
+/* The statement this section turns on. Split into words here rather
+   than in script so the sentence is complete, selectable and correct
+   in the prerendered document — the reveal only changes its weight. */
+const LEDE =
+    'My work sits between design, technology and communication. I enjoy taking '
+    + 'an idea from an early concept through structure, visual design and digital '
+    + 'execution.';
 
 /* The contribution chart comes from ghchart.rshah.org, a third party. If
    that service is unreachable, hide the whole figure rather than leaving a
@@ -42,15 +53,50 @@ function GitHubChart() {
 }
 
 export default function About() {
+    const ref = useScrollEffect(wordReveal);
+
     return (
-        <section className="band" id="about" aria-labelledby="about-title">
+        <section className="band" id="about" aria-labelledby="about-title" ref={ref}>
             <div className="shell">
                 <div className="grid">
                     <p className="tag about__tag" data-reveal="">
                         <span className="tag__no num">02</span>About
                     </p>
                     <h2 className="statement about__statement" id="about-title" data-reveal="">
-                        A designer who works across <em>disciplines</em>.
+                        A designer who works across{' '}
+                        <span className="mark" data-reveal-draw="">
+                            <em>disciplines</em>
+                            {/* The one annotated phrase on the site. Two
+                                strokes that do not quite retrace each
+                                other, drawn in sequence, so the mark reads
+                                as authored rather than as a rule the
+                                interface drew.
+
+                                `pathLength` normalises each curve to a
+                                length of 1, so the stylesheet can draw
+                                them with a dash of 1 and an offset of 1
+                                without measuring anything — which is what
+                                keeps this an entrance (section 6) rather
+                                than something that needs the scroll
+                                system's library to exist. */}
+                            <svg
+                                className="mark__draw"
+                                viewBox="0 0 220 20"
+                                preserveAspectRatio="none"
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                <path
+                                    pathLength="1"
+                                    d="M4 12.4C41 7.6 92 15.2 137 9.8c26-3.1 51-1.4 79 2.2"
+                                />
+                                <path
+                                    pathLength="1"
+                                    d="M17 17.1c38-3.9 88 3.1 132-1.7 21-2.3 42-1.2 62 1.1"
+                                />
+                            </svg>
+                        </span>
+                        .
                     </h2>
 
                     <div className="about__body">
@@ -80,9 +126,7 @@ export default function About() {
 
                         <div className="about__text" data-reveal="">
                             <p className="about__lede">
-                                My work sits between design, technology and communication. I enjoy taking
-                                an idea from an early concept through structure, visual design and digital
-                                execution.
+                                <Words text={LEDE} />
                             </p>
                             <div className="prose about__prose">
                                 <p>

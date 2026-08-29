@@ -4,6 +4,7 @@ import Menu from './components/Menu.jsx';
 import { Progress, SkipLink } from './components/Chrome.jsx';
 
 import Hero from './sections/Hero.jsx';
+import Opening from './sections/Opening.jsx';
 import Work from './sections/Work.jsx';
 import About from './sections/About.jsx';
 import Capabilities from './sections/Capabilities.jsx';
@@ -47,6 +48,7 @@ export default function App() {
 
             <main id="main">
                 <Hero />
+                <Opening />
                 <Work index={index} />
                 <About />
                 <Capabilities />
