@@ -1,3 +1,6 @@
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import panelCut from '../animations/panelCut.js';
+
 const CAPS = [
     [
         '01',
@@ -44,21 +47,53 @@ const TOOLS = [
     ],
 ];
 
+/* The statement, set on shifted baselines. Six tokens, six offsets, in
+   em so they hold their proportion as the type scale clamps — and small
+   enough that the line still reads as one line. Authored: an alternating
+   rise and fall would be a pattern, and a pattern is not a composition. */
+const SET = [
+    ['Five', '0.035em'],
+    ['connected', '-0.048em'],
+    ['areas,', '0.022em'],
+    ['one', '-0.032em'],
+    ['way', '0.042em'],
+    ['of working.', '0em'],
+];
+
 export default function Capabilities() {
+    const ref = useScrollEffect(panelCut);
+
     return (
-        <section className="band" id="capabilities" aria-labelledby="capabilities-title">
+        <section className="band" id="capabilities" aria-labelledby="capabilities-title" ref={ref}>
+            {/* The section's own header, standing on a cut panel. The
+                ground is a layer taller than the panel that clips it, so
+                the two slanted edges have somewhere to travel without
+                ever exposing the band behind — see
+                src/animations/panelCut.js. */}
+            <div className="cut">
+                <div className="cut__ground" aria-hidden="true" />
+                <div className="shell cut__type">
+                    <div className="grid">
+                        <p className="tag caps__tag" data-reveal="">
+                            <span className="tag__no num">03</span>Capabilities
+                        </p>
+                        <h2 className="statement caps__statement set" id="capabilities-title" data-reveal="">
+                            {SET.map(([word, offset], i) => (
+                                <span className="set__word" key={word} style={{ '--o': offset }}>
+                                    {word}
+                                    {i < SET.length - 1 ? ' ' : ''}
+                                </span>
+                            ))}
+                        </h2>
+                        <p className="tag tag--end caps__note" data-reveal="">
+                            <span className="tag__no num">05</span>Areas of practice
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div className="shell">
                 <div className="grid">
-                    <p className="tag caps__tag" data-reveal="">
-                        <span className="tag__no num">03</span>Capabilities
-                    </p>
-                    <h2 className="statement caps__statement" id="capabilities-title" data-reveal="">
-                        Five connected areas, one way of&nbsp;working.
-                    </h2>
-                    <p className="tag tag--end caps__note" data-reveal="">
-                        <span className="tag__no num">05</span>Areas of practice
-                    </p>
-
                     <dl className="caps">
                         {CAPS.map(([index, title, desc]) => (
                             <div className="cap-row" data-reveal="" key={index}>

@@ -1,6 +1,8 @@
 import { SITE } from '../data/site.js';
 import { SiteFoot } from '../components/Chrome.jsx';
 import { IconGitHub, IconLinkedIn, IconPhone, IconPin } from '../components/Icons.jsx';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import closePanel from '../animations/closePanel.js';
 
 const INTERESTS = [
     'UI/UX Design',
@@ -11,9 +13,18 @@ const INTERESTS = [
 ];
 
 export default function Contact() {
+    const ref = useScrollEffect(closePanel);
+
     return (
-        <section className="band zone-invert" id="contact" aria-labelledby="contact-title">
-            <div className="shell">
+        <section className="band zone-invert close" id="contact" aria-labelledby="contact-title" ref={ref}>
+            {/* The band's ground, as its own layer, so the section can
+                arrive as a contained panel and open out to the edges
+                without the composition inside ever moving with it.
+                Full bleed is its resting state — see
+                src/animations/closePanel.js. */}
+            <div className="close__ground" aria-hidden="true" />
+
+            <div className="shell close__type">
                 <div className="grid">
                     <p className="tag contact__tag" data-reveal="">
                         <span className="tag__no num">05</span>Contact

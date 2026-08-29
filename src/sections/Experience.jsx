@@ -1,9 +1,20 @@
+import { projectBySlug } from '../data/projects.js';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import driftCards from '../animations/driftCards.js';
+
+/* Each role stands beside work the section already names. The VOEPL
+   role's contribution areas open with website design and maintenance;
+   the archive's own record says it includes work from Soch Business
+   Mentors LLP. Neither plate claims anything the page does not
+   already say — and `drift` is only how far each one has to travel to
+   get where the stylesheet has already put it. */
 const ROLES = [
     {
         index: '01',
         role: 'Digital Marketing Executive',
         org: 'Virtuoso Optoelectronics Limited (VOEPL)',
         todo: 'voepl-dates',
+        plate: { slug: 'voepl-website', fig: '09', drift: 16 },
         summary:
             'Working across digital design, web experiences and corporate ' +
             'communication for an OEM/ODM manufacturing organisation.',
@@ -23,6 +34,7 @@ const ROLES = [
         role: 'Graphic Designer & Social Media Manager',
         org: 'Soch Business Mentors LLP',
         todo: 'soch-dates',
+        plate: { slug: 'archive', fig: '10', drift: 27 },
         summary: null,
         areas: [
             'Graphic design',
@@ -42,8 +54,10 @@ const IMPACT = [
 ];
 
 export default function Experience() {
+    const ref = useScrollEffect(driftCards);
+
     return (
-        <section className="band" id="experience" aria-labelledby="experience-title">
+        <section className="band" id="experience" aria-labelledby="experience-title" ref={ref}>
             <div className="shell">
                 <div className="grid">
                     <p className="tag exp__tag" data-reveal="">
@@ -67,6 +81,40 @@ export default function Experience() {
                                             Employment dates to be provided
                                         </span>
                                     </p>
+
+                                    {/* Decorative: the plate stands for work the
+                                        list beside it already describes, and the
+                                        index in Selected Work names, links and
+                                        gives alt text to. */}
+                                    {(() => {
+                                        const project = item.plate && projectBySlug(item.plate.slug);
+                                        if (!project) return null;
+
+                                        return (
+                                            <figure
+                                                className="exp__figure frame"
+                                                data-drift={item.plate.drift}
+                                                aria-hidden="true"
+                                            >
+                                                <span className="frame__media">
+                                                    <img
+                                                        src={project.cover}
+                                                        alt=""
+                                                        width="1600"
+                                                        height="1000"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                </span>
+                                                <figcaption className="cap">
+                                                    <span className="cap__no num">
+                                                        Fig. {item.plate.fig}
+                                                    </span>
+                                                    <span className="cap__text">{project.category}</span>
+                                                </figcaption>
+                                            </figure>
+                                        );
+                                    })()}
                                 </div>
 
                                 <div className="exp__body">

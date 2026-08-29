@@ -29,6 +29,12 @@
        --ink-3 4.7:1 · --signal 4.5:1                                  */
     --paper:       #F2F0EA;
     --paper-2:     #E8E5DD;
+    /* The page's own ground, kept out of reach of the inverted zones —
+       every other colour token is re-declared inside one, so this is
+       the only way a component *within* a zone can still ask what the
+       document's ground is. The closing panel needs exactly that: the
+       ink has to arrive over something. */
+    --paper-base:  #F2F0EA;
     --ink:         #16150F;
     --ink-2:       #514F46;
     --ink-3:       #6E6B60;
@@ -114,7 +120,67 @@
     --intro-fill: 0.85s;
     --intro-exit: 0.4s;
 
+    /* --- The scroll system (section 8.1) -------------------------------
+       One transition on the page holds a screen while it plays, and
+       needs a run of empty scrolling to play across. That run is
+       layout, not animation, so the stylesheet reserves it rather than
+       the script: the page is its final height at the first paint and
+       never changes it when the animation library arrives.
+
+       Every rule belonging to the scroll system carries the same three
+       conditions, and each answers a different way the system can fail
+       to be there:
+
+         @media (min-width: 62rem)                 a window wide enough
+         (prefers-reduced-motion: no-preference)   a reader who wants it
+         .js:not(.motion-off)                      a script that ran, and
+                                                   a library that loaded
+
+       The preference is a media query rather than a class so that it
+       answers the same question the timelines do, at the same moment: a
+       reader who changes it mid-visit watches the layout and the
+       animations stand down together, rather than one of them being
+       left holding a state the other has abandoned.
+
+       `.js` and `.motion-off` are the two things a media query cannot
+       know — whether the document's script ran at all, and whether the
+       animation chunk reached the browser (core.js sets the second on
+       a failed load). Without them, a reader with JavaScript off would
+       be handed a screen of empty scrolling to get past and two panels
+       clipped open at a transition that is never going to play.
+
+       So: zero by default. A phone, a reader who has asked for less
+       motion, and a document whose script never arrives all get the
+       same thing — the static composition at its own natural height,
+       with no empty screens to scroll past. */
+    --run-opening: 0px;
+
+    /* --- The two clipped panels ----------------------------------------
+       Each is written out in full, all four sides, and read back by its
+       animation rather than restated there. Two reasons, and the second
+       one is not obvious:
+
+       A browser normalises `inset(9% 4% 0% 4%)` to `inset(9% 4% 0%)` —
+       it drops the fourth value whenever left equals right, and the
+       third whenever top equals bottom. An animation that reads the
+       computed value and interpolates it towards `inset(0% 0% 0% 0%)`
+       is then matching three numbers against four, and the side that
+       fell off the end snaps to zero on the first frame. Handing the
+       animation the same declared string both sides start from is what
+       keeps the panel opening evenly.
+
+       --opening-band is the gap the statement leaves; the 37% in
+       --opening-inset is that same gap seen as a clip from the top and
+       bottom of the screen — (100 - 26) / 2. Move them together. */
+    --opening-band:  26svh;
+    --opening-inset: 37% 6% 37% 6%;
+    --close-inset:   9% 4% 0% 4%;
+
     color-scheme: light;
+}
+
+@media (min-width: 62rem) and (prefers-reduced-motion: no-preference) {
+    .js:not(.motion-off) { --run-opening: 110svh; }
 }
 
 /* Dark via system preference — never when light is explicitly chosen. */
@@ -122,6 +188,7 @@
     :root:not([data-theme="light"]) {
         --paper:       #100F0B;
         --paper-2:     #191811;
+        --paper-base:  #100F0B;
         --ink:         #F0EEE7;
         --ink-2:       #A5A196;
         --ink-3:       #8A8679;
@@ -150,6 +217,7 @@
 :root[data-theme="dark"] {
     --paper:       #100F0B;
     --paper-2:     #191811;
+    --paper-base:  #100F0B;
     --ink:         #F0EEE7;
     --ink-2:       #A5A196;
     --ink-3:       #8A8679;
@@ -644,6 +712,29 @@ em { font-style: italic; }
     transition: transform 0.9s var(--ease) var(--d, 0s);
 }
 
+/* A stroke being drawn rather than a block arriving: the hand-drawn
+   annotation in About, and the only thing on the site that uses it.
+
+   Each path carries `pathLength="1"` in the markup, which normalises
+   its length whatever its actual geometry — so a dash of 1 is the
+   whole stroke and an offset of 1 is none of it, with no measuring in
+   script and no number here that has to be kept in step with a curve.
+
+   The second stroke follows the first rather than accompanying it.
+   Two strokes drawn together are a double rule; drawn in sequence,
+   they are a hand going over its own line. */
+.js [data-reveal-draw] path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+.js [data-reveal-draw].is-in path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.62s var(--ease) var(--d, 0s);
+}
+
+.js [data-reveal-draw].is-in path:nth-child(2) {
+    transition-duration: 0.72s;
+    transition-delay: calc(var(--d, 0s) + 0.16s);
+}
+
 /* --- Intro -----------------------------------------------------------
    The first page of a session opens on the phrase with one orange line
    filling under it, then hands over to the entrance above. Roughly a
@@ -1105,6 +1196,66 @@ html:not(.js) .menu__foot { display: none; }
 
 @media (min-width: 48rem) { .hero__field { display: block; } }
 
+/* --- Scatter: three plates on the hero's own columns ------------------
+   Real covers from the index below, placed with the same arithmetic
+   the twelve-column grid uses everywhere else — --start is the column
+   line a plate begins on, --span how many columns wide it is — so the
+   field lands *on* the grid rather than over it. Vertical placement is
+   a percentage of the hero, which holds its proportions as the type
+   scale clamps between breakpoints.
+
+   Behind the content and one step back in tone: this is the field, and
+   the headline is the subject. Where they move to is
+   src/animations/heroScatter.js; where they rest is here, which is
+   also the whole composition for a narrow window, a reader who has
+   asked for less motion, and a document whose script never arrives. */
+.hero__scatter {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    padding-inline: var(--gutter);
+    pointer-events: none;
+    display: none;
+}
+
+.hero__scatter-in {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: calc(var(--shell) - 2 * var(--gutter));
+    margin-inline: auto;
+}
+
+.hero__frag {
+    position: absolute;
+    top: var(--y);
+    left: calc(var(--start) * (var(--col) + var(--gap)));
+    width: calc(var(--span) * var(--col) + (var(--span) - 1) * var(--gap));
+    /* Fixed for the life of the page. Two of these overlap at a corner
+       and rise at different rates, so the arrangement keeps changing —
+       but which plate is in front does not. A stack that reshuffles its
+       own order is a card trick, not a composition. */
+    z-index: var(--z, 1);
+}
+
+.hero__frag-in {
+    overflow: hidden;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+}
+
+.hero__frag img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    opacity: 0.92;
+}
+
+/* The narrow hero is already a dense column of type. Fragments in its
+   margins would be clutter, so there are none — and because they are
+   never displayed, the browser never fetches them either. */
+@media (min-width: 62rem) { .hero__scatter { display: block; } }
+
 .hero__inner { position: relative; z-index: 1; }
 
 /* --- Top line: who, and in what -------------------------------------- */
@@ -1302,6 +1453,124 @@ html:not(.js) .menu__foot { display: none; }
 .hero__scroll svg { width: 0.625rem; height: 0.625rem; color: var(--signal); }
 
 
+/* ====== 8.1 THE OPENING ============================================ */
+/* The seam between the first screen and the work.
+
+   Read this section top to bottom: everything above the final media
+   query is the composition — a statement, an inverted plate, the rest
+   of the statement, stacked in one column. That is what a phone shows,
+   what a reader who has asked for less motion shows, and what a
+   document whose script never arrives shows. The transition at the
+   bottom is a set of overrides on that composition, never something
+   the composition depends on.
+
+   The panel carries `zone-invert`, so it is painted in the same tokens
+   Selected Work re-declares for itself. When the transition opens it
+   to the full screen, the ground the reader is looking at is already
+   the next section's ground — which is the whole trick. */
+
+.opening { position: relative; background: var(--paper); }
+
+.opening__stage {
+    display: grid;
+    justify-items: start;
+    align-content: center;
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding: var(--band-y) var(--gutter);
+}
+
+.opening__line {
+    font-family: var(--font-display);
+    font-size: var(--t-hero);
+    font-weight: 400;
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+}
+
+.opening__line em { font-style: italic; letter-spacing: -0.03em; }
+.opening__stop { color: var(--signal); }
+
+.opening__panel {
+    width: 100%;
+    margin-block: clamp(1.5rem, 4vw, 2.75rem);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+/* Held to the right of the panel, and capped: the plate is a figure in
+   a composition here, not the composition itself. The transition below
+   widens it to the five columns the index's own plate occupies. */
+.opening__plate {
+    width: 100%;
+    max-width: 34rem;
+    margin-inline-start: auto;
+}
+
+.opening__plate .frame__media img { aspect-ratio: 16 / 10; }
+
+/* --- The transition -------------------------------------------------
+   Wide windows only, and only where the document has said motion is
+   allowed. The stage becomes one screen held by `position: sticky`
+   over the run the tokens reserved; the panel leaves the flow and
+   becomes a full-screen layer showing only the band between the two
+   halves of the statement. Opening that band to the whole screen, and
+   pressing the halves off their edges, is all the timeline in
+   src/animations/openingSplit.js does.
+
+   Sticky rather than ScrollTrigger's pin on purpose: pinning rebuilds
+   the DOM around the section it holds, and the anchor navigation, the
+   reading-progress bar and the index's travelling plate all measure
+   against this document as it stands. */
+@media (min-width: 62rem) and (prefers-reduced-motion: no-preference) {
+    .js:not(.motion-off) .opening { height: calc(100svh + var(--run-opening)); }
+
+    /* Full bleed, because the panel has to be able to reach the edges
+       of the screen — but the statement keeps the shell's left edge, so
+       it returns exactly under where the hero set it. */
+    .js:not(.motion-off) .opening__stage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        max-width: none;
+        padding-block: 0;
+        padding-inline: max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)));
+        overflow: hidden;
+    }
+
+    .js:not(.motion-off) .opening__line--a { margin-bottom: var(--opening-band); }
+
+    /* Inset evenly: a window, rather than a claim about the grid it
+       cannot keep at every width — the plate inside is what carries the
+       column alignment. */
+    .js:not(.motion-off) .opening__panel {
+        position: absolute;
+        inset: 0;
+        width: auto;
+        margin: 0;
+        padding: 0;
+        clip-path: inset(var(--opening-inset));
+    }
+
+    /* The plate is held in the right five columns — where the index's
+       own preview plate lives — so that when the panel is the whole
+       screen the reader is already looking at the right place. */
+    .js:not(.motion-off) .opening__panel-in {
+        position: absolute;
+        inset: 0;
+        max-width: var(--shell);
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+        display: grid;
+        align-content: center;
+        justify-items: end;
+    }
+
+    .js:not(.motion-off) .opening__plate { width: var(--span-5); max-width: none; margin-inline: 0; }
+}
+
+
 /* ====== 9. WORK INDEX ============================================== */
 /* The visual centre. An index on an inverted ground: one large numeral
    per project, a Castoro title, discipline metadata, one line of copy —
@@ -1338,6 +1607,63 @@ html:not(.js) .menu__foot { display: none; }
 @media (min-width: 62rem) {
     .work__statement { grid-column: 1 / span 7; }
 }
+
+/* --- The figure index ------------------------------------------------
+   The same six covers, in the same order, as one ruled row above the
+   list. The row is the layout; the loose arrangement it settles from is
+   the animation, and only the animation — see
+   src/animations/scatterToGrid.js, which uses `gsap.from`, so this
+   strip cannot end up anywhere but here.
+
+   Below 48rem it is not displayed, which also means the browser never
+   fetches its six images: on a narrow window every row of the list
+   already carries its own plate, and a second set of the same six
+   would be a scroll to get past rather than a map to read. */
+.sheet {
+    grid-column: 1 / -1;
+    display: none;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--gap);
+    margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+@media (min-width: 48rem) { .sheet { display: grid; } }
+
+.sheet__cell { min-width: 0; }
+
+.sheet__plate {
+    display: block;
+    overflow: hidden;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+}
+
+.sheet__plate img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
+.sheet__no {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    color: var(--ink-3);
+}
+
+/* Index-driven, and only once the travelling plate is live — otherwise
+   the strip would sit permanently marking project 01 on a window that
+   has no way to change which project is active. */
+.sheet.is-live .sheet__cell {
+    opacity: 0.42;
+    transition: opacity var(--t-mid) var(--ease-io);
+}
+
+.sheet.is-live .sheet__cell.is-on { opacity: 1; }
+.sheet.is-live .sheet__cell.is-on .sheet__no { color: var(--signal); }
+.sheet.is-live .sheet__cell.is-on .sheet__plate { border-color: var(--rule-2); }
 
 .index {
     position: relative;
@@ -1564,6 +1890,47 @@ html:not(.js) .menu__foot { display: none; }
 .about__portrait { max-width: 22rem; }
 .about__portrait .frame__media img { aspect-ratio: 4 / 5; }
 
+/* --- The one annotated phrase ----------------------------------------
+   `disciplines` is the word the statement turns on, and the only word
+   on the site that is marked by hand. Two strokes that do not quite
+   retrace each other, in the site's orange: one clean sweep would read
+   as an underline the interface drew, which is the opposite of the
+   point. The mark only means something while it is the only one.
+
+   The finished mark is the resting state. Drawing it is an override —
+   see src/animations/annotation.js — so a reader who has asked for
+   less motion, and a document whose script never arrives, both still
+   get the annotation. */
+.mark {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.mark__draw {
+    position: absolute;
+    left: -0.08em;
+    right: -0.1em;
+    bottom: -0.3em;
+    width: auto;
+    height: 0.42em;
+    overflow: visible;
+    color: var(--signal);
+    pointer-events: none;
+}
+
+.mark__draw path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* --- The statement the reading reveal plays across --------------------
+   The words are already spans in the markup (src/components/Words.jsx).
+   They need no rule of their own: full weight is the resting state, and
+   src/animations/wordReveal.js only ever brings them up to it. */
 .about__lede {
     font-family: var(--font-display);
     font-size: var(--t-sub);
@@ -1634,6 +2001,55 @@ html:not(.js) .menu__foot { display: none; }
 
 
 /* ====== 11. CAPABILITIES ============================================ */
+
+/* --- The cut panel ---------------------------------------------------
+   The section's own header, standing on a tinted panel whose top and
+   bottom edges are cut on a slant. Nothing is added and nothing is
+   repeated: the tag, the statement and the note are the ones that were
+   already here.
+
+   The ground is a layer taller than the panel that clips it. That
+   overflow is the room the two slanted edges are given to travel in
+   (src/animations/panelCut.js moves the ground and the type at
+   different rates, which is the whole effect) and it is also what
+   stops the band behind ever showing through when they do. The slant
+   is measured against the viewport rather than the panel's height, so
+   a tall narrow panel on a phone gets a shallow cut rather than a
+   dramatic one.
+
+   At rest — a phone, reduced motion, no script — the slant is still
+   there. It is the slant that composes the section; the movement only
+   keeps it from being a sticker. */
+.cut {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(2.75rem, 6vw, 5rem);
+    --cut-slant: clamp(0.5rem, 1.4vw, 1.75rem);
+}
+
+.cut__ground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14%;
+    bottom: -14%;
+    z-index: 0;
+    background: var(--paper-2);
+    clip-path: polygon(
+        0 calc(14% + var(--cut-slant)),
+        100% 14%,
+        100% calc(86% - var(--cut-slant)),
+        0 86%
+    );
+}
+
+.cut__type { position: relative; z-index: 1; }
+
+/* Shifted baselines, set in the markup so the offsets are content
+   rather than script. `top` on a relative box moves the word without
+   moving the line it sits in, so the statement still wraps and
+   balances exactly as it did. */
+.set__word { position: relative; top: var(--o, 0); }
 
 .caps__tag { grid-column: 1 / -1; }
 .caps__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -1885,9 +2301,29 @@ html:not(.js) .menu__foot { display: none; }
     .exp__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 4vw, 3rem); }
 }
 
+/* --- The plate beside each role ---------------------------------------
+   Two plates in the space the meta column leaves empty, one per role,
+   each standing for work the section already describes. Only above the
+   breakpoint where that space exists: below it the roles stack, and a
+   plate between the meta and the contribution areas would be a scroll
+   to get past rather than a support to read beside — which also means
+   the browser never fetches either image on a narrow window.
+
+   Because the column is sticky, each plate holds beside its role for
+   as long as that role is being read. src/animations/driftCards.js
+   only decides how far each one travels to get here. */
+.exp__figure {
+    display: none;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 20rem;
+}
+
+.exp__figure .frame__media img { aspect-ratio: 16 / 10; }
+
 @media (min-width: 62rem) {
     .exp { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); column-gap: clamp(2rem, 5vw, 5rem); }
     .exp__meta { position: sticky; top: calc(var(--bar) + 2rem); }
+    .exp__figure { display: grid; }
 }
 
 /* --- Selected impact -------------------------------------------------- */
@@ -1944,6 +2380,35 @@ html:not(.js) .menu__foot { display: none; }
 
 
 /* ====== 13. CONTACT & FOOTER ======================================== */
+
+/* --- The close -------------------------------------------------------
+   The last band's ground is lifted into a layer of its own so that it
+   can arrive as a contained panel and open out to the edges. The
+   section itself is painted in the page's ground rather than the
+   zone's, which is the only thing the ink can arrive *over*.
+
+   Full bleed is the resting state, declared here with no clip at all,
+   so a phone, a reader who has asked for less motion and a document
+   whose script never arrives get the band exactly as it has always
+   been. The starting inset is added only where the scroll system is
+   running — a wide window, and a reader who has not asked for less
+   motion — and it is kept smaller than the shell's own left offset at
+   every width in that range, so the composition is never read through
+   a moving edge. */
+.close { position: relative; background: var(--paper-base); }
+
+.close__ground {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--paper);
+}
+
+.close__type { position: relative; z-index: 1; }
+
+@media (min-width: 62rem) and (prefers-reduced-motion: no-preference) {
+    .js:not(.motion-off) .close__ground { clip-path: inset(var(--close-inset)); }
+}
 
 .contact__tag { grid-column: 1 / -1; }
 .contact__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -2553,9 +3018,18 @@ html:not(.js) .menu__foot { display: none; }
     .js [data-reveal-rule] { transform: none; }
     /* The plate stays where it rests rather than tucking up on scroll. */
     .masthead.is-solid .masthead__inner { transform: none; }
-    /* The work index is not listed here: it reads the same preference
-       itself, through Framer Motion, and drops its positional work at
-       source rather than having it overridden. Section 9. */
+    /* Two systems are not listed here, and for the same reason: they
+       read this preference themselves rather than being overridden
+       after the fact.
+
+       The work index asks Framer Motion, and drops its positional work
+       at source (section 9). The scroll system asks the stylesheet —
+       every rule it owns is written into a
+       `(prefers-reduced-motion: no-preference)` query, and every
+       timeline into the matching gsap.matchMedia condition — so when
+       this preference is set, the runway is never reserved, the panels
+       are never clipped, the stage never sticks and no timeline is
+       ever built. There is nothing here to undo. */
     .btn:hover svg,
     .breadcrumb:hover svg,
     .case-next a:hover .case-next__title,
@@ -2567,6 +3041,17 @@ html:not(.js) .menu__foot { display: none; }
     .masthead__inner, .menu { background: Canvas; }
     .zone-invert { background: Canvas; color: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
+    .sheet__plate, .hero__frag-in { border: 1px solid CanvasText; }
+
+    /* Grounds carry no information once colour is flattened: the cut
+       panel and the closing panel both become Canvas, so their edges
+       say nothing and their clips would only risk cropping what is in
+       front of them. The hero's field of plates goes for the same
+       reason its column lines already do — it is atmosphere, and there
+       is no atmosphere in forced colours. */
+    .hero__scatter { display: none; }
+    .cut__ground { display: none; }
+    .close__ground, .opening__panel { clip-path: none !important; }
     .masthead__inner, .menu-btn, .wordmark__initials { border: 1px solid CanvasText; }
     /* Backgrounds are flattened here, so the travelling ground would read
        as a block over the label. The underline carries the state. */
@@ -2582,6 +3067,18 @@ html:not(.js) .menu__foot { display: none; }
 @media print {
     .masthead, .menu, .hero__field, .theme-toggle, .skip-link,
     .case-next, .progress, .hero__scroll, .intro { display: none !important; }
+
+    /* The scroll system, on paper. The opening is a transition between
+       two sections that are both printed anyway; the hero's field and
+       the figure index are both second views of work the index below
+       already sets out in full. None of the three survives losing the
+       scroll that gave it its point. */
+    .opening, .hero__scatter, .sheet { display: none !important; }
+
+    /* The grounds are only grounds. Printed, they would be a sheet of
+       ink around the last page. */
+    .cut__ground, .close__ground { display: none !important; }
+    .cut { padding-block: 0 !important; }
 
     body { background: #fff; color: #000; font-size: 11pt; }
     .zone-invert { background: #fff; color: #000; }
