@@ -1158,150 +1158,56 @@ html:not(.js) .menu__foot { display: none; }
 
 /* ====== 8. HERO ===================================================== */
 
+/* One screen, one statement.
+
+   The stage takes whatever height is left between the navigation and the
+   floor of the screen, so the headline sits on the centre of the first
+   view at any window height rather than at a fixed distance from the
+   top. Everything that used to share the screen with it is gone and the
+   space is left open: that space is the composition now, not a gap
+   waiting to be filled.
+
+   Two quiet registers stay on the floor — the discipline strip and the
+   scroll cue — and both keep their own height whatever the stage does. */
 .hero {
     position: relative;
-    padding-top: calc(var(--bar) + clamp(2.5rem, 9vh, 6rem));
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: calc(var(--bar) + clamp(1.5rem, 5vh, 3rem));
     padding-bottom: 0;
     overflow: hidden;
 }
 
-/* The grid, allowed to be seen once. Twelve real column lines, not a
-   gradient, so they land exactly where the content lands. Static: it
-   states the system, it does not perform. */
-.hero__field {
-    position: absolute;
-    inset: 0;
-    padding-inline: var(--gutter);
-    pointer-events: none;
-    z-index: 0;
-    display: none;
-}
-
-.hero__field > span {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--gap);
-    width: 100%;
-    height: 100%;
-    max-width: calc(var(--shell) - 2 * var(--gutter));
-    margin-inline: auto;
-}
-
-.hero__field i {
-    border-left: 1px solid var(--rule);
-    opacity: 0.75;
-}
-
-.hero__field i:last-child { border-right: 1px solid var(--rule); }
-
-@media (min-width: 48rem) { .hero__field { display: block; } }
-
-/* --- Scatter: three plates on the hero's own columns ------------------
-   Real covers from the index below, placed with the same arithmetic
-   the twelve-column grid uses everywhere else — --start is the column
-   line a plate begins on, --span how many columns wide it is — so the
-   field lands *on* the grid rather than over it. Vertical placement is
-   a percentage of the hero, which holds its proportions as the type
-   scale clamps between breakpoints.
-
-   Behind the content and one step back in tone: this is the field, and
-   the headline is the subject. Where they move to is
-   src/animations/heroScatter.js; where they rest is here, which is
-   also the whole composition for a narrow window, a reader who has
-   asked for less motion, and a document whose script never arrives. */
-.hero__scatter {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    padding-inline: var(--gutter);
-    pointer-events: none;
-    display: none;
-}
-
-.hero__scatter-in {
+.hero__inner {
     position: relative;
-    width: 100%;
-    height: 100%;
-    max-width: calc(var(--shell) - 2 * var(--gutter));
-    margin-inline: auto;
+    z-index: 1;
+    display: flex;
+    flex: 1;
 }
 
-.hero__frag {
-    position: absolute;
-    top: var(--y);
-    left: calc(var(--start) * (var(--col) + var(--gap)));
-    width: calc(var(--span) * var(--col) + (var(--span) - 1) * var(--gap));
-    /* Fixed for the life of the page. Two of these overlap at a corner
-       and rise at different rates, so the arrangement keeps changing —
-       but which plate is in front does not. A stack that reshuffles its
-       own order is a card trick, not a composition. */
-    z-index: var(--z, 1);
+/* Three rows: the stage takes the slack, the strip and the foot keep
+   their content height. Below 48rem `.grid` is a single column, which
+   changes nothing here — all three children still span it in order. */
+.hero__grid {
+    flex: 1;
+    grid-template-rows: 1fr auto auto;
 }
 
-.hero__frag-in {
-    overflow: hidden;
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
-}
-
-.hero__frag img {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    opacity: 0.92;
-}
-
-/* The narrow hero is already a dense column of type. Fragments in its
-   margins would be clutter, so there are none — and because they are
-   never displayed, the browser never fetches them either. */
-@media (min-width: 62rem) { .hero__scatter { display: block; } }
-
-.hero__inner { position: relative; z-index: 1; }
-
-/* --- Top line: who, and in what -------------------------------------- */
-
-.hero__rule {
-    grid-column: 1 / -1;
-    height: 1px;
-    background: var(--ink);
-    margin-top: 0.875rem;
-}
-
-.hero__name {
+.hero__stage {
     grid-column: 1 / -1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    color: var(--ink);
-    font-weight: 500;
-}
-
-.hero__name::before {
-    content: '';
-    flex: none;
-    width: clamp(1rem, 2vw, 2rem);
-    height: 1px;
-    margin-right: 0.75rem;
-    background: var(--signal);
-}
-
-.hero__where {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    margin-top: 0.5rem;
-}
-
-@media (min-width: 48rem) {
-    .hero__name  { grid-column: 1 / span 6; }
-    .hero__where { grid-column: 8 / -1; margin-top: 0; justify-content: flex-end; }
+    justify-content: center;
+    text-align: center;
+    padding-block: clamp(2rem, 7vh, 5.5rem);
 }
 
 /* --- The statement ---------------------------------------------------- */
 
 .hero__title {
-    grid-column: 1 / -1;
-    margin-top: clamp(1.5rem, 4.5vh, 3rem);
     font-family: var(--font-display);
     font-size: var(--t-hero);
     font-weight: 400;
@@ -1310,71 +1216,22 @@ html:not(.js) .menu__foot { display: none; }
     color: var(--ink);
 }
 
+/* Two lines, broken where the sense breaks rather than where the box
+   runs out — which is why each is its own block and nothing here
+   balances or re-wraps them. */
 .hero__title span { display: block; }
 .hero__title em { font-style: italic; letter-spacing: -0.03em; }
 .hero__stop { color: var(--signal); display: inline !important; }
 
-@media (min-width: 62rem) { .hero__title { grid-column: 1 / span 10; } }
-
-/* --- Two-column body under the statement ----------------------------- */
-
-.hero__body {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(1.75rem, 4vw, 3rem);
-    margin-top: clamp(1.75rem, 5vh, 3.25rem);
-}
-
 .hero__said {
+    margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
     font-family: var(--font-display);
     font-size: clamp(1.1875rem, 1.9vw, 1.875rem);
     line-height: 1.3;
     letter-spacing: -0.02em;
     color: var(--ink);
-    max-width: 26ch;
-}
-
-.hero__dot {
-    width: 0.4375rem;
-    height: 0.4375rem;
-    background: var(--signal);
-    flex: none;
-}
-
-.hero__support {
-    font-size: var(--t-small);
-    line-height: 1.75;
-    color: var(--ink-2);
-    max-width: 46ch;
-}
-
-.hero__actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.625rem;
-    margin-top: clamp(1.5rem, 3vw, 2rem);
-}
-
-@media (min-width: 34rem) {
-    .hero__actions { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 30rem; }
-}
-
-@media (min-width: 48rem) {
-    .hero__body {
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        column-gap: var(--gap);
-        align-items: end;
-    }
-    .hero__said-wrap { grid-column: 1 / span 6; }
-    .hero__aside     { grid-column: 7 / span 6; }
-    .hero__actions   { grid-template-columns: minmax(0, 1fr); max-width: none; }
-}
-
-@media (min-width: 62rem) {
-    .hero__said-wrap { grid-column: 1 / span 5; }
-    .hero__aside     { grid-column: 8 / span 5; }
-    .hero__actions   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    max-width: 34ch;
+    text-wrap: balance;
 }
 
 /* --- Discipline strip: the floor of the first screen ----------------- */
@@ -1383,7 +1240,7 @@ html:not(.js) .menu__foot { display: none; }
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-top: clamp(2.5rem, 8vh, 5.5rem);
+    margin-top: clamp(2rem, 5vh, 3.5rem);
     border-top: 1px solid var(--ink);
 }
 
@@ -1419,8 +1276,6 @@ html:not(.js) .menu__foot { display: none; }
     .hero__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .hero__cell {
         border-bottom: 0;
-        /* One step stronger than the field lines behind it, so the strip
-           reads as an element rather than part of the grid drawing. */
         border-right: 1px solid var(--rule-2);
         padding: 1rem 1rem 1.25rem 0;
         min-height: 5.5rem;
@@ -3041,15 +2896,12 @@ html:not(.js) .menu__foot { display: none; }
     .masthead__inner, .menu { background: Canvas; }
     .zone-invert { background: Canvas; color: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
-    .sheet__plate, .hero__frag-in { border: 1px solid CanvasText; }
+    .sheet__plate { border: 1px solid CanvasText; }
 
     /* Grounds carry no information once colour is flattened: the cut
        panel and the closing panel both become Canvas, so their edges
        say nothing and their clips would only risk cropping what is in
-       front of them. The hero's field of plates goes for the same
-       reason its column lines already do — it is atmosphere, and there
-       is no atmosphere in forced colours. */
-    .hero__scatter { display: none; }
+       front of them. */
     .cut__ground { display: none; }
     .close__ground, .opening__panel { clip-path: none !important; }
     .masthead__inner, .menu-btn, .wordmark__initials { border: 1px solid CanvasText; }
@@ -3058,22 +2910,29 @@ html:not(.js) .menu__foot { display: none; }
     .nav__pill { display: none; }
     .nav__link[aria-current] { forced-color-adjust: none; text-decoration: underline; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
-    .hero__field { display: none; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }
     .js .idx__figure { opacity: 1 !important; visibility: visible !important; }
 }
 
 @media print {
-    .masthead, .menu, .hero__field, .theme-toggle, .skip-link,
+    .masthead, .menu, .theme-toggle, .skip-link,
     .case-next, .progress, .hero__scroll, .intro { display: none !important; }
 
     /* The scroll system, on paper. The opening is a transition between
-       two sections that are both printed anyway; the hero's field and
-       the figure index are both second views of work the index below
-       already sets out in full. None of the three survives losing the
-       scroll that gave it its point. */
-    .opening, .hero__scatter, .sheet { display: none !important; }
+       two sections that are both printed anyway, and the figure index is
+       a second view of work the index below already sets out in full.
+       Neither survives losing the scroll that gave it its point. */
+    .opening, .sheet { display: none !important; }
+
+    /* The first screen is a screen. On paper it is a heading and a line,
+       and reserving a viewport for it would print a blank first page. */
+    .hero {
+        min-height: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .hero__stage { padding-block: 0 1.5rem !important; }
 
     /* The grounds are only grounds. Printed, they would be a sheet of
        ink around the last page. */
