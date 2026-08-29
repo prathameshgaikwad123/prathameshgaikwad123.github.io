@@ -68,15 +68,14 @@ block in the stylesheet, and one section of the page.
 
 | # | Section | Effect | File |
 |---|---|---|---|
-| 1 | Hero | Three covers on the hero's own columns, at three rates, two of them overlapping | `heroScatter.js` |
-| 2 | Hero → Work | The statement parts and an inverted panel opens between the halves until it is the Work band's ground | `openingSplit.js` |
-| 3 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
-| 4 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
-| 5 | Work | Six covers arriving loose and settling into the figure index above the list | `scatterToGrid.js` |
-| 6 | Work | The active project, driven by the index that was already there — now including the figure index above it | *(Framer Motion)* |
-| 7 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
-| 8 | Experience | One plate per role, arriving at its own rate into the space the meta column leaves | `driftCards.js` |
-| 9 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
+| 1 | Hero → Work | The statement parts and an inverted panel opens between the halves until it is the Work band's ground | `openingSplit.js` |
+| 2 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
+| 3 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
+| 4 | Work | Six covers arriving loose and settling into the figure index above the list | `scatterToGrid.js` |
+| 5 | Work | The active project, driven by the index that was already there — now including the figure index above it | *(Framer Motion)* |
+| 6 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
+| 7 | Experience | One plate per role, arriving at its own rate into the space the meta column leaves | `driftCards.js` |
+| 8 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
 
 Three rules hold the whole thing together, and they are worth knowing before
 changing any of it:
