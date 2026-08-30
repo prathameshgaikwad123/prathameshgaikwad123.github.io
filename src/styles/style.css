@@ -25,16 +25,16 @@
 
 :root {
     /* --- Colour: light -----------------------------------------------
-       Ratios against --paper (#F2F0EA): --ink 16.2:1 · --ink-2 7.1:1
-       --ink-3 4.7:1 · --signal 4.5:1                                  */
-    --paper:       #F2F0EA;
+       Ratios against --paper (#FFFFFF): --ink 18.2:1 · --ink-2 8.2:1
+       --ink-3 5.3:1 · --signal 5.2:1                                  */
+    --paper:       #FFFFFF;
     --paper-2:     #E8E5DD;
     /* The page's own ground, kept out of reach of the inverted zones —
        every other colour token is re-declared inside one, so this is
        the only way a component *within* a zone can still ask what the
        document's ground is. The closing panel needs exactly that: the
        ink has to arrive over something. */
-    --paper-base:  #F2F0EA;
+    --paper-base:  #FFFFFF;
     --ink:         #16150F;
     --ink-2:       #514F46;
     --ink-3:       #6E6B60;
@@ -50,9 +50,9 @@
        so it keeps the same weight on either ground. --nav-chip is the
        ground under the monogram and the active link; --nav-ghost is the
        whisper under a hovered one.                                     */
-    --nav-plate:   rgba(242, 240, 234, 0.66);
-    --nav-plate-2: rgba(242, 240, 234, 0.90);
-    --nav-opaque:  rgba(242, 240, 234, 0.97);
+    --nav-plate:   rgba(255, 255, 255, 0.66);
+    --nav-plate-2: rgba(255, 255, 255, 0.90);
+    --nav-opaque:  rgba(255, 255, 255, 0.97);
     --nav-edge:    rgba(22, 21, 15, 0.09);
     --nav-chip:    rgba(22, 21, 15, 0.075);
     --nav-chip-2:  rgba(22, 21, 15, 0.12);
@@ -947,7 +947,7 @@ em { font-style: italic; }
 
 .nav__link:hover:not([aria-current]),
 .nav__link:focus-visible:not([aria-current]) {
-    color: var(--ink);
+    color: var(--signal);
     background: var(--nav-ghost);
 }
 
@@ -1214,7 +1214,13 @@ html:not(.js) .menu__foot { display: none; }
     line-height: 0.94;
     letter-spacing: -0.035em;
     color: var(--ink);
+    transition: color var(--t-fast) var(--ease-io);
 }
+
+/* The statement answers the cursor in the accent the site already uses.
+   The stop is that colour to begin with, so it holds while the rest of
+   the line comes up to meet it. */
+.hero__title:hover { color: var(--signal); }
 
 /* Two lines, broken where the sense breaks rather than where the box
    runs out — which is why each is its own block and nothing here
@@ -1276,13 +1282,11 @@ html:not(.js) .menu__foot { display: none; }
     .hero__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .hero__cell {
         border-bottom: 0;
-        border-right: 1px solid var(--rule-2);
         padding: 1rem 1rem 1.25rem 0;
         min-height: 5.5rem;
         align-items: flex-start;
     }
     .hero__cell:nth-child(odd) { padding-right: 1rem; }
-    .hero__cell:last-child { border-right: 0; }
 }
 
 .hero__foot {
@@ -2009,11 +2013,9 @@ html:not(.js) .menu__foot { display: none; }
     .approach { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 0; }
     .step {
         border-bottom: 0;
-        border-right: 1px solid var(--rule);
         padding: 1.25rem clamp(1rem, 1.6vw, 1.5rem) 0 0;
         min-height: 11rem;
     }
-    .step:last-child { border-right: 0; }
 }
 
 /* --- Tools ----------------------------------------------------------- */
@@ -2050,10 +2052,8 @@ html:not(.js) .menu__foot { display: none; }
     .tools { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
     .tools__group {
         border-bottom: 0;
-        border-right: 1px solid var(--rule);
         padding: 1.25rem clamp(1rem, 1.6vw, 1.5rem) 0 0;
     }
-    .tools__group:last-child { border-right: 0; }
 }
 
 
@@ -2227,10 +2227,8 @@ html:not(.js) .menu__foot { display: none; }
     .impact { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 0; }
     .impact__item {
         border-bottom: 0;
-        border-right: 1px solid var(--rule);
         padding-right: clamp(1.25rem, 3vw, 2.5rem);
     }
-    .impact__item:last-child { border-right: 0; }
 }
 
 
@@ -2522,10 +2520,8 @@ html:not(.js) .menu__foot { display: none; }
     .case-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
     .case-facts__item {
         border-bottom: 0;
-        border-right: 1px solid var(--rule);
         padding-right: clamp(1.25rem, 2.5vw, 2rem);
     }
-    .case-facts__item:last-child { border-right: 0; }
 }
 
 /* --- Figures ---------------------------------------------------------- */
@@ -2732,7 +2728,6 @@ html:not(.js) .menu__foot { display: none; }
 
 @media (min-width: 48rem) {
     .case-impact { grid-template-columns: minmax(0, 1fr); }
-    .case-impact .impact__item { border-right: 0; }
     .case-impact .impact__label { max-width: 44ch; }
 }
 
