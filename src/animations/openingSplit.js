@@ -3,10 +3,10 @@
    The signature transition, and the only place on the site where one
    section becomes another rather than following it.
 
-   The statement returns at full scale, parts, and an inverted panel
+   The statement returns at full scale, parts, and a warm panel
    opens between the two halves until it is the whole screen — at which
    point it is already the Selected Work ground, because the panel
-   carries `zone-invert` and is therefore painted in the same tokens
+   carries `zone-warm` and is therefore painted in the same tokens
    the Work band re-declares for itself. There is no cut. The reader
    watches the paper become the ink.
 

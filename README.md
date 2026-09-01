@@ -29,9 +29,14 @@ the stylesheet holds the resting composition, and the effect may only move
 things away from it and back. Nothing on the page depends on an animation
 having run.
 
-The two libraries never touch the same element. Where the boundary matters it
-is written down at the point it matters — `src/animations/scatterToGrid.js`
-and the top of stylesheet section 9.
+**WebGL2, by hand**, draws one thing: the glass carousel at the top of Selected
+Work. It is in `src/carousel/`, it pulls in no library, and every constant in
+it was measured off a recording rather than chosen — `src/carousel/config.js`
+says what each number was fitted against, and `src/carousel/warp.js` explains
+the one piece of the maths that is not obvious.
+
+No two of the three ever touch the same element. Where the boundary matters it
+is written down at the point it matters — the top of stylesheet section 9.
 
 ## Structure
 
@@ -41,7 +46,8 @@ and the top of stylesheet section 9.
 | `src/App.jsx` | The home page: hero, then five bands — Selected Work, About, Capabilities, Experience, Contact. One scrolling document; each band is an anchor (`/#work`, `/#about`, …). |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The five bands of the home page. |
-| `src/components/` | Navigation, the overlay menu, the loader, a work-index row, the image lightbox, the shared page furniture. |
+| `src/components/` | Navigation, the overlay menu, the loader, a work-index row, the glass carousel's document half, the image lightbox, the shared page furniture. |
+| `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
 | `src/hooks/` | Theme, scroll chrome, entrance reveals, active navigation, the work-index preview plate, the cross-document cover transition. |
@@ -71,8 +77,8 @@ block in the stylesheet, and one section of the page.
 | 1 | Hero → Work | The statement parts and an inverted panel opens between the halves until it is the Work band's ground | `openingSplit.js` |
 | 2 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
 | 3 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
-| 4 | Work | Six covers arriving loose and settling into the figure index above the list | `scatterToGrid.js` |
-| 5 | Work | The active project, driven by the index that was already there — now including the figure index above it | *(Framer Motion)* |
+| 4 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
+| 5 | Work | The active project, driven both ways — scrolling the strip moves the list, hovering the list brings the strip round | *(Framer Motion)* |
 | 6 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
 | 7 | Experience | One plate per role, arriving at its own rate into the space the meta column leaves | `driftCards.js` |
 | 8 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
