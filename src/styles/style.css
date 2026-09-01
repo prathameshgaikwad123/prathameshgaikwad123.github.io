@@ -84,7 +84,14 @@
 
     /* --- Grid --------------------------------------------------------- */
     --shell:  92rem;             /* 1472px */
-    --gutter: clamp(1.25rem, 4.2vw, 4rem);
+    /* The display cutout is folded in here rather than at each of the
+       nine places the gutter is spent, so a phone held sideways clears
+       its notch everywhere at once. Both edges take the larger of the
+       two insets: an even margin still reads as the composition, an
+       uneven one reads as a fault. */
+    --gutter: max(clamp(1.25rem, 4.2vw, 4rem),
+                  env(safe-area-inset-left, 0px),
+                  env(safe-area-inset-right, 0px));
     --gap:    clamp(0.875rem, 1.5vw, 1.5rem);
     --col:    calc((100% - 11 * var(--gap)) / 12);
     --span-5: calc(5 * var(--col) + 4 * var(--gap));
@@ -94,8 +101,16 @@
        plus its own padding and hairline. --bar stays what it has always
        been — the space the page keeps clear at the top — only now it is
        measured from the floating control rather than from a full-width
-       header.                                                            */
-    --nav-item: 1.875rem;
+       header.
+
+       The square is sized for the thumb first. Below the desktop
+       breakpoint this plate holds the only three controls a phone is
+       given — the monogram, the theme switch and the menu — and a chip
+       small enough for a cursor is not a target for a finger. The
+       cursor takes it back at 62rem, where the plate also picks up the
+       five section links and has to stay a control rather than grow
+       into a header.                                                   */
+    --nav-item: 2.5rem;
     --nav-pad:  0.375rem;
     --nav-h:    calc(var(--nav-item) + var(--nav-pad) * 2 + 2px);
     --nav-top:  clamp(0.75rem, 1.8vh, 1.25rem);   /* resting offset */
@@ -181,6 +196,13 @@
 
 @media (min-width: 62rem) and (prefers-reduced-motion: no-preference) {
     .js:not(.motion-off) { --run-opening: 110svh; }
+}
+
+/* The plate returns to its cursor-sized geometry. --nav-h and --bar are
+   both written against --nav-item, so the page's top clearance follows
+   it without being restated. */
+@media (min-width: 62rem) {
+    :root { --nav-item: 1.875rem; }
 }
 
 /* Dark via system preference — never when light is explicitly chosen. */
@@ -291,6 +313,10 @@
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* A tap otherwise paints a grey box over whatever was pressed —
+       a whole index row, in the one place it would be most visible.
+       Every control here already answers a press in its own terms. */
+    -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
     /* On the scroll container rather than each target, so a fragment in the
        URL on first load clears the floating navigation too. */
@@ -883,11 +909,15 @@ em { font-style: italic; }
     border-radius: var(--nav-r-in);
     background: var(--nav-chip);
     font-family: var(--font-display);
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     line-height: 1;
     letter-spacing: 0.015em;
     transition: background-color var(--t-fast) var(--ease-io),
                 color var(--t-fast) var(--ease-io);
+}
+
+@media (min-width: 62rem) {
+    .wordmark__initials { font-size: 0.8125rem; }
 }
 
 .wordmark:hover .wordmark__initials,
@@ -1008,7 +1038,14 @@ em { font-style: italic; }
 }
 
 .theme-toggle:hover { color: var(--ink); background: var(--nav-chip); }
-.theme-toggle svg { width: 0.875rem; height: 0.875rem; }
+.theme-toggle svg { width: 1.0625rem; height: 1.0625rem; }
+
+/* Both marks are drawn as a fraction of the chip, so they hold the same
+   proportion on either side of the breakpoint rather than sitting adrift
+   in the middle of the larger square. */
+@media (min-width: 62rem) {
+    .theme-toggle svg { width: 0.875rem; height: 0.875rem; }
+}
 
 .theme-toggle .icon-moon { display: none; }
 :root[data-theme="dark"] .theme-toggle .icon-sun  { display: none; }
@@ -1317,18 +1354,35 @@ html:not(.js) .menu__foot { display: none; }
 
    Read this section top to bottom: everything above the final media
    query is the composition — a statement, an inverted plate, the rest
-   of the statement, stacked in one column. That is what a phone shows,
-   what a reader who has asked for less motion shows, and what a
-   document whose script never arrives shows. The transition at the
-   bottom is a set of overrides on that composition, never something
-   the composition depends on.
+   of the statement, stacked in one column. That is what a reader who
+   has asked for less motion shows, and what a document whose script
+   never arrives shows. The transition at the bottom is a set of
+   overrides on that composition, never something the composition
+   depends on.
 
    The panel carries `zone-invert`, so it is painted in the same tokens
    Selected Work re-declares for itself. When the transition opens it
    to the full screen, the ground the reader is looking at is already
-   the next section's ground — which is the whole trick. */
+   the next section's ground — which is the whole trick.
 
-.opening { position: relative; background: var(--paper); }
+   A phone is not given the seam at all. The refrain earns its
+   repetition by being the thing that parts, and nothing parts below
+   62rem: what is left is the hero's own sentence set a second time,
+   directly under the hero, over the cover of project 01 — which is
+   itself the first row of the index a screen further down. Three
+   duplications, half a screen of scrolling and an image request, for
+   a stage with nothing standing on it. The section is `aria-hidden`
+   for the same reason it is dropped here: it was never carrying
+   anything a reader had not already been given.
+
+   Gated on width alone, so a wide window that is not going to animate
+   — reduced motion, no script — still gets the editorial stack. */
+
+.opening { display: none; }
+
+@media (min-width: 62rem) {
+    .opening { display: block; position: relative; background: var(--paper); }
+}
 
 .opening__stage {
     display: grid;
@@ -2377,7 +2431,12 @@ html:not(.js) .menu__foot { display: none; }
 
 /* Case-study pages carry a page footer rather than living in a zone. */
 .page-foot {
-    padding: 1.5rem var(--gutter) clamp(2rem, 5vh, 3rem);
+    /* The home indicator sits about 34px up from the bottom edge and
+       the resting padding here is 32px, so the last line of the page is
+       the one place on the site a phone could crop. The home page's
+       bands are already deeper than the inset and ask for nothing. */
+    padding: 1.5rem var(--gutter)
+             calc(clamp(2rem, 5vh, 3rem) + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--rule);
 }
 
@@ -2885,6 +2944,52 @@ html:not(.js) .menu__foot { display: none; }
     .case-next a:hover .case-next__title,
     .case-next a:hover .case-next__go svg,
     .menu__link:hover { transform: none; padding-left: 0; }
+}
+
+/* A finger is not a cursor. The quiet registers on the site are set
+   small on purpose — the scroll cue, the case-study breadcrumb, the
+   footer's return, the Elsewhere links, a caption's source — and at
+   that size they are a line of type before they are a target. Not one
+   of them changes size here: each only takes its target out of the
+   space it already sits in, so the composition is where the type left
+   it and the box around it is a thumb's.
+
+   The two that would otherwise move the page give the height back
+   where they took it — the breadcrumb out of the margin below it, the
+   Elsewhere links out of the gap between them — so the gap to the case
+   title, and the rhythm of the list, are the ones the type set. */
+@media (pointer: coarse) {
+    .hero__scroll,
+    .site-foot a,
+    .page-foot a { padding-block: 0.8125rem; }
+
+    .breadcrumb {
+        padding-block: 0.8125rem;
+        margin-top: -0.8125rem;
+        margin-bottom: calc(clamp(1.75rem, 4vw, 3rem) - 0.8125rem);
+    }
+
+    /* The rhythm the gap was keeping is now kept by the rows
+       themselves, so it is spent rather than added to. */
+    .contact__links { gap: 0; }
+
+    .contact__links a,
+    .contact__links span { min-height: 2.75rem; }
+
+    /* Areas of interest is not a list of targets, and takes the step
+       anyway: from 40rem the two lists stand side by side under
+       matching labels and matching rules, and a column that kept the
+       tighter rhythm would read as the pair coming apart. */
+    .contact__interests li {
+        display: flex;
+        align-items: center;
+        min-height: 2.75rem;
+    }
+
+    /* A caption's link is the one place padding is free: it is inline,
+       so the box grows around the text without the line it sits on
+       giving up a pixel. */
+    .cap a { padding-block: 0.5rem; }
 }
 
 @media (forced-colors: active) {
