@@ -305,6 +305,65 @@
 }
 
 
+/* --- Warm zone --------------------------------------------------------
+   The work section's own ground: the muted warm greige the reference
+   carousel is set on, measured off the recording at #D3C4B3 and lifted
+   a shade so the ink still has its full contrast on it. Every colour
+   token is re-declared, so nothing inside the zone has to know it is
+   in one — including the canvas, which reads this ground back off the
+   element and clears to it, or the lens would magnify a seam at the
+   rim.
+
+   The signal is pulled down from the page's #C0431E, which only makes
+   3.3:1 against a ground this warm. The values below hold 11.7, 7.1,
+   4.8 and 4.8 against --paper.                                        */
+.zone-warm {
+    --paper:       #D8CBBA;
+    --paper-2:     #CFC0AC;
+    --ink:         #14130E;
+    --ink-2:       #3E3B34;
+    --ink-3:       #57534A;
+    --rule:        #C0AF98;
+    --rule-2:      #A8977E;
+    --signal:      #983014;
+    --signal-soft: rgba(152, 48, 20, 0.12);
+    --on-signal:   #F6F1E8;
+    --glass-pill:  rgba(20, 19, 14, 0.085);
+    background: var(--paper);
+    color: var(--ink);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .zone-warm {
+        --paper:   #1C1A14;
+        --paper-2: #26241B;
+        --ink:     #F1ECE1;
+        --ink-2:   #A9A395;
+        --ink-3:   #8C8779;
+        --rule:    #35322A;
+        --rule-2:  #4C493E;
+        --signal:  #FF6A3D;
+        --signal-soft: rgba(255, 106, 61, 0.14);
+        --on-signal:   #1C1A14;
+        --glass-pill:  rgba(241, 236, 225, 0.09);
+    }
+}
+
+:root[data-theme="dark"] .zone-warm {
+    --paper:   #1C1A14;
+    --paper-2: #26241B;
+    --ink:     #F1ECE1;
+    --ink-2:   #A9A395;
+    --ink-3:   #8C8779;
+    --rule:    #35322A;
+    --rule-2:  #4C493E;
+    --signal:  #FF6A3D;
+    --signal-soft: rgba(255, 106, 61, 0.14);
+    --on-signal:   #1C1A14;
+    --glass-pill:  rgba(241, 236, 225, 0.09);
+}
+
+
 /* ====== 2. RESET & BASE ============================================= */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -432,7 +491,9 @@ em { font-style: italic; }
 
 .band + .band { border-top: 1px solid var(--rule); }
 .band.zone-invert + .band,
-.band + .band.zone-invert { border-top: 0; }
+.band + .band.zone-invert,
+.band.zone-warm + .band,
+.band + .band.zone-warm { border-top: 0; }
 
 /* A sub-block inside a band: same rules, smaller step. */
 .sub {
@@ -1353,14 +1414,14 @@ html:not(.js) .menu__foot { display: none; }
 /* The seam between the first screen and the work.
 
    Read this section top to bottom: everything above the final media
-   query is the composition — a statement, an inverted plate, the rest
-   of the statement, stacked in one column. That is what a reader who
+   query is the composition — a statement, a warm plate, the rest of
+   the statement, stacked in one column. That is what a reader who
    has asked for less motion shows, and what a document whose script
    never arrives shows. The transition at the bottom is a set of
    overrides on that composition, never something the composition
    depends on.
 
-   The panel carries `zone-invert`, so it is painted in the same tokens
+   The panel carries `zone-warm`, so it is painted in the same tokens
    Selected Work re-declares for itself. When the transition opens it
    to the full screen, the ground the reader is looking at is already
    the next section's ground — which is the whole trick.
@@ -1521,62 +1582,175 @@ html:not(.js) .menu__foot { display: none; }
     .work__statement { grid-column: 1 / span 7; }
 }
 
-/* --- The figure index ------------------------------------------------
-   The same six covers, in the same order, as one ruled row above the
-   list. The row is the layout; the loose arrangement it settles from is
-   the animation, and only the animation — see
-   src/animations/scatterToGrid.js, which uses `gsap.from`, so this
-   strip cannot end up anywhere but here.
+/* --- The glass carousel -----------------------------------------------
+   The six covers as one rigid row behind a pane of glass: neutral
+   across the middle, refracting hard at the rims. The picture itself is
+   WebGL — src/carousel/ — and everything below is the frame around it:
+   the stage the canvas is measured against, the label and counter that
+   ride over it, and the plain strip a reader gets before the canvas
+   arrives or in place of it if it never does.
 
-   Below 48rem it is not displayed, which also means the browser never
-   fetches its six images: on a narrow window every row of the list
-   already carries its own plate, and a second set of the same six
-   would be a scroll to get past rather than a map to read. */
-.sheet {
-    grid-column: 1 / -1;
-    display: none;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    column-gap: var(--gap);
-    margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
-}
+   The ratios the renderer reads back out of this stylesheet are the
+   reference's own, taken from the recording: a card is 22.5% of the
+   stage's width — capped so it can never be more than 46% of its
+   height — the gap between two cards is 12.2% of a card, and the row's
+   centre line sits at 50.5%. Width, not height, because how many cards
+   reach across the rim is what the rhythm is made of.
 
-@media (min-width: 48rem) { .sheet { display: grid; } }
+   They are declared here rather than in the module so a breakpoint can
+   change the rhythm without changing the code. */
+.glass {
+    --glass-card-w: 0.225;
+    --glass-card-h: 0.46;
+    --glass-gap: 0.122;
+    --glass-strip-y: 0.505;
+    --glass-label: 1;
 
-.sheet__cell { min-width: 0; }
-
-.sheet__plate {
-    display: block;
-    overflow: hidden;
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
-}
-
-.sheet__plate img {
+    position: relative;
+    /* Full bleed. The element is a child of the band rather than of the
+       shell, so this is already the page's content box — no viewport
+       unit, and therefore no scrollbar counted into the width and no
+       few pixels of drift between the lens's centre and the reader's. */
     width: 100%;
+    margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
     aspect-ratio: 16 / 10;
-    object-fit: cover;
+    max-height: 82svh;
+    overflow: hidden;
+    background: var(--paper);
+    /* Vertical panning still belongs to the page. */
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.sheet__no {
+.glass[data-live] { cursor: grab; }
+.glass[data-live].is-held { cursor: grabbing; }
+.glass:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+.glass__canvas {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glass[data-live] .glass__canvas { display: block; }
+
+/* The label. Crossfaded through zero rather than dissolved — the
+   opacity is written per frame by the loop, because the fade has to be
+   able to turn round mid-way when the reader flicks past three cards
+   in a row.
+
+   Deliberately not promoted with will-change. The fade is six frames
+   long and text opacity is cheap; a permanent compositor layer for it
+   costs the type its subpixel rendering for the other fifty-four. */
+.glass__label {
+    position: absolute;
+    left: 50%;
+    top: calc(15.1% - 0.35em);
+    translate: -50% 0;
+    width: min(90vw, 30rem);
+    text-align: center;
+    opacity: var(--glass-label);
+    pointer-events: none;
+}
+
+.glass__title {
     display: block;
-    margin-top: 0.5rem;
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.13em;
+    font-family: var(--font-display);
+    font-size: clamp(0.9375rem, 1.12vw, 1.125rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.008em;
+    color: var(--ink);
+}
+
+.glass__sub {
+    display: block;
+    margin-top: 0.06em;
+    font-size: clamp(0.75rem, 0.95vw, 0.875rem);
+    line-height: 1.25;
     color: var(--ink-3);
 }
 
-/* Index-driven, and only once the travelling plate is live — otherwise
-   the strip would sit permanently marking project 01 on a window that
-   has no way to change which project is active. */
-.sheet.is-live .sheet__cell {
-    opacity: 0.42;
-    transition: opacity var(--t-mid) var(--ease-io);
+/* The counter, as the reference has it: a small translucent plate a
+   little darker than the ground, no border, no shadow. */
+/* 80 × 39 at the reference's scale, radius 7, on a fill nine per cent
+   darker than the ground. The padding is in em so it holds at any
+   size. */
+.glass__count {
+    position: absolute;
+    left: 50%;
+    top: 83.9%;
+    translate: -50% -50%;
+    padding: 1em 1.45em;
+    border-radius: 0.54em;
+    background: var(--glass-pill, var(--nav-chip));
+    font-size: clamp(0.6875rem, 0.9vw, 0.8125rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--ink);
+    pointer-events: none;
 }
 
-.sheet.is-live .sheet__cell.is-on { opacity: 1; }
-.sheet.is-live .sheet__cell.is-on .sheet__no { color: var(--signal); }
-.sheet.is-live .sheet__cell.is-on .sheet__plate { border-color: var(--rule-2); }
+/* What is in the document before the canvas exists, and what stays if
+   WebGL never answers: the same six covers, the same rhythm, still
+   scrollable sideways. No glass, and no apology for it. */
+.glass__strip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--glass-strip-y) * 100%);
+    translate: 0 -50%;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2.8vw, 2.5rem);
+    padding-inline: max(var(--gutter), 12vw);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    list-style: none;
+}
+
+.glass__strip::-webkit-scrollbar { display: none; }
+.glass__strip:focus { outline: none; }
+
+.glass__cell {
+    flex: 0 0 auto;
+    height: calc(var(--glass-card-w) * 100vw);
+    max-height: calc(var(--glass-card-h) * 100%);
+    scroll-snap-align: center;
+}
+
+.glass__cell img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    object-fit: cover;
+}
+
+.glass__cell:nth-child(odd) img { aspect-ratio: 4 / 3; }
+.glass__cell:nth-child(even) img { aspect-ratio: 4 / 5; }
+
+.glass[data-live] .glass__strip { display: none; }
+
+/* Narrower windows keep the reference's proportions by changing the
+   stage's shape rather than the strip's: a card stays 36% of whatever
+   height it is given, so the rhythm holds and only the count of cards
+   across the rim changes. */
+@media (max-width: 62rem) {
+    .glass { aspect-ratio: 4 / 3; --glass-card-w: 0.34; }
+}
+
+@media (max-width: 40rem) {
+    .glass { aspect-ratio: 4 / 5; --glass-card-w: 0.62; }
+    .glass__label { top: calc(11% - 0.35em); }
+    .glass__count { top: 88%; }
+}
 
 .index {
     position: relative;
@@ -2994,9 +3168,9 @@ html:not(.js) .menu__foot { display: none; }
 
 @media (forced-colors: active) {
     .masthead__inner, .menu { background: Canvas; }
-    .zone-invert { background: Canvas; color: CanvasText; }
+    .zone-invert, .zone-warm { background: Canvas; color: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
-    .sheet__plate { border: 1px solid CanvasText; }
+    .glass__cell img { border: 1px solid CanvasText; }
 
     /* Grounds carry no information once colour is flattened: the cut
        panel and the closing panel both become Canvas, so their edges
@@ -3023,7 +3197,7 @@ html:not(.js) .menu__foot { display: none; }
        two sections that are both printed anyway, and the figure index is
        a second view of work the index below already sets out in full.
        Neither survives losing the scroll that gave it its point. */
-    .opening, .sheet { display: none !important; }
+    .opening, .glass { display: none !important; }
 
     /* The first screen is a screen. On paper it is a heading and a line,
        and reserving a viewport for it would print a blank first page. */
@@ -3040,7 +3214,7 @@ html:not(.js) .menu__foot { display: none; }
     .cut { padding-block: 0 !important; }
 
     body { background: #fff; color: #000; font-size: 11pt; }
-    .zone-invert { background: #fff; color: #000; }
+    .zone-invert, .zone-warm { background: #fff; color: #000; }
 
     .band { padding-block: 1.25rem; break-inside: avoid; }
 

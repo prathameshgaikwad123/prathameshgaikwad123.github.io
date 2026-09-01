@@ -33,7 +33,7 @@ export default function Opening() {
             <div className="opening__stage">
                 <p className="opening__line opening__line--a">Multidisciplinary</p>
 
-                <div className="opening__panel zone-invert">
+                <div className="opening__panel zone-warm">
                     <div className="opening__panel-in">
                         <div className="opening__plate">
                             <figure className="frame">
