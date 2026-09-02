@@ -88,9 +88,16 @@ export default function useChrome({ pillReady }) {
                 if (bottom || offsetTop(spy[i]) <= line) active = spy[i];
             }
 
+            /* Above the first section nothing is in view, and the
+               navigation panel has a link for exactly that — the top of
+               the page. It is marked by attribute rather than by href
+               because #top is the body, which is not a section and is
+               not spied on. */
             const id = active ? active.id : null;
             navLinks.forEach((link) => {
-                const on = id && link.getAttribute('href') === `#${id}`;
+                const on = id
+                    ? link.getAttribute('href') === `#${id}`
+                    : link.hasAttribute('data-nav-home');
                 if (on) link.setAttribute('aria-current', 'true');
                 else link.removeAttribute('aria-current');
             });

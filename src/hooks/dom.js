@@ -52,3 +52,14 @@ export function useEnhanced() {
     useEffect(() => setEnhanced(true), []);
     return enhanced;
 }
+
+/* The document's own path, and — for the same reason as above — only
+   once the page is running: the prerendered pass has no location, and
+   the first client render has to match what it wrote. Which of the case
+   studies is open is read from here rather than handed down, so a page
+   never has to be told which page it is. */
+export function usePathname() {
+    const [path, setPath] = useState('');
+    useEffect(() => setPath(window.location.pathname), []);
+    return path;
+}

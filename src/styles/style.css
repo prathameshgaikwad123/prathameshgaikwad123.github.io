@@ -118,6 +118,37 @@
     --nav-r:    0.875rem;
     --nav-r-in: calc(var(--nav-r) - var(--nav-pad));
 
+    /* --- The underlay navigation ----------------------------------------
+       One measure, spent twice: the width of the panel fixed under the
+       page, and — read back off that panel by the timeline rather than
+       restated there — the distance the page travels to uncover it.
+       Everything that has to agree with the reveal is written against
+       it, so the three steps below are the only place it is set.
+
+       On a phone the page keeps a hand's width of itself on screen, so
+       a reader can see what they are still on and reach back to it.
+       From the tablet step it is a measure rather than a fraction: a
+       panel that grows with the window stops being a panel and becomes
+       half the page.
+
+       The type follows the panel, not the viewport. The overlay menu
+       this replaces was set at 8vw, which is a headline that fits the
+       screen it was measured against and overruns a column three
+       tenths of its width.                                            */
+    --menu-width: min(80vw, 21rem);
+    --menu-type:  clamp(1.625rem, 7.4vw, 2rem);
+    --menu-pad:   clamp(1.25rem, 5vw, 1.5rem);
+    --menu-frame: 0.75rem;
+    /* The page does not go dark, it goes quiet. A scrim heavy enough to
+       read as "switched off" turns a white page into a grey slab and
+       takes the composition with it; this is the least that still says
+       the page is behind something. */
+    --menu-scrim: rgba(22, 21, 15, 0.22);
+    /* And the page is above the panel, so it falls on it. This is the
+       only thing that makes the seam read in dark, where the page and
+       the panel are two dark surfaces a few levels apart. */
+    --menu-cast:  0 0 2.5rem rgba(22, 21, 15, 0.3);
+
     /* --- Space -------------------------------------------------------- */
     --bar:      calc(var(--nav-top) + var(--nav-h) + clamp(0.5rem, 1.4vh, 1rem));
     --band-y:   clamp(4rem, 8.5vw, 8rem);
@@ -205,6 +236,30 @@
     :root { --nav-item: 1.875rem; }
 }
 
+/* The panel's two steps up. Both are measures: the panel is the same
+   width on a 1280 window as on a 2560 one, because what it holds is a
+   list of six words and two columns of small links, and none of them
+   gets better for being spread. */
+@media (min-width: 48rem) {
+    :root {
+        --menu-width: 26rem;
+        --menu-type:  2.25rem;
+        --menu-pad:   1.75rem;
+    }
+}
+
+@media (min-width: 62rem) {
+    :root {
+        --menu-width: 30rem;
+        --menu-type:  2.5rem;
+        --menu-pad:   2rem;
+    }
+}
+
+@media (min-width: 75rem) {
+    :root { --menu-type: 2.75rem; }
+}
+
 /* Dark via system preference — never when light is explicitly chosen. */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -220,6 +275,8 @@
         --signal-soft: rgba(255, 106, 61, 0.13);
         --on-signal:   #14130E;
         --scrim:       rgba(4, 4, 3, 0.72);
+        --menu-scrim:  rgba(4, 4, 3, 0.4);
+        --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
         --nav-plate:   rgba(26, 25, 19, 0.62);
         --nav-plate-2: rgba(26, 25, 19, 0.86);
         --nav-opaque:  rgba(20, 19, 14, 0.97);
@@ -249,6 +306,8 @@
     --signal-soft: rgba(255, 106, 61, 0.13);
     --on-signal:   #14130E;
     --scrim:       rgba(4, 4, 3, 0.72);
+    --menu-scrim:  rgba(4, 4, 3, 0.4);
+    --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
     --nav-plate:   rgba(26, 25, 19, 0.62);
     --nav-plate-2: rgba(26, 25, 19, 0.86);
     --nav-opaque:  rgba(20, 19, 14, 0.97);
@@ -302,6 +361,30 @@
     --ink-3:   #8A8679;
     --rule:    #33322A;
     --rule-2:  #4A493E;
+}
+
+/* In dark an inverted zone lifts one step off the page. That is right for
+   a band in the flow of the page, and not enough for a panel the page is
+   meant to be lying on top of: two surfaces four levels apart do not read
+   as one being in front of the other, however cleanly the seam is cut.
+
+   So the panel takes two steps, and the frame takes them with it — the
+   frame is the panel's ground drawn on the overlay, and the two have to
+   agree. The hover ground moves up to stay a step above its own.
+
+   After the zone's own declarations, and it has to be: these carry the
+   same specificity as the two rules above, so the order is the whole of
+   the argument.                                                        */
+:root[data-theme="dark"] .menu,
+:root[data-theme="dark"] .underlay__frame { --paper: #221F18; }
+
+:root[data-theme="dark"] .menu { --paper-2: #2C2A21; }
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .menu,
+    :root:not([data-theme="light"]) .underlay__frame { --paper: #221F18; }
+
+    :root:not([data-theme="light"]) .menu { --paper-2: #2C2A21; }
 }
 
 
@@ -377,6 +460,13 @@ html {
        Every control here already answers a press in its own terms. */
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    /* The menu locks the document's scroll while it is open, and on a
+       platform whose scrollbar takes up room that would take the
+       page's width back and shift every line on it by a few pixels
+       mid-animation. The gutter is kept whether it is in use or not.
+       Where scrollbars are drawn over the page — every phone, and the
+       Mac — this is nothing. */
+    scrollbar-gutter: stable;
     /* On the scroll container rather than each target, so a fragment in the
        URL on first load clears the floating navigation too. */
     scroll-padding-top: var(--bar);
@@ -396,7 +486,7 @@ body {
     overflow-x: hidden;
 }
 
-body.is-locked { overflow: hidden; }
+body[data-menu-status="open"] { overflow: hidden; }
 
 img, svg, video { display: block; max-width: 100%; }
 img { height: auto; }
@@ -887,7 +977,10 @@ em { font-style: italic; }
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100;
+    /* Above the overlay rather than below it: the plate is centred, so
+       at every width it straddles the edge the overlay travels to, and
+       the toggle that closes the menu is on the wrong side of it. */
+    z-index: 110;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -1119,9 +1212,73 @@ em { font-style: italic; }
     :root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 }
 
-/* --- Menu button (below 62rem) ----------------------------------------
-   Below the desktop breakpoint the sections leave the plate rather than
-   crowd it, and this becomes the one filled affordance on the bar. */
+/* --- The two layers --------------------------------------------------
+   The whole effect is these two rules. The navigation is fixed to the
+   right of the screen at z-index 1; everything else the page consists
+   of lives in one layer above it at z-index 2. At rest the page is
+   simply covering the navigation, which is why the panel needs no
+   entrance of its own: opening the menu slides the page off it.
+
+   The page layer carries a ground of its own because it has to be
+   opaque — --paper-base rather than --paper, since half the sections
+   on the page re-declare --paper for their own zone and one of them
+   would otherwise let the panel show through at rest.
+
+   Nothing else moves. The floating plate, the reading-progress line,
+   the intro and the skip link all stay where they are, and the layer
+   below is the only thing that travels.                              */
+
+[data-main] {
+    position: relative;
+    z-index: 2;
+    background: var(--paper-base);
+    /* Declared at rest as well as in motion, and it costs nothing there:
+       the layer covers the viewport exactly, so all four edges of the
+       cast fall outside it. The only edge that ever comes into view is
+       the right one, and only once the page has moved off the panel. */
+    box-shadow: var(--menu-cast);
+}
+
+/* Before the timeline arrives — and, for a reader who has asked for
+   less motion, where it never will — the page still has to move. This
+   is that, in one declaration. The global reduced-motion rule in
+   section 21 shortens it to nothing, which is exactly right: the menu
+   opens, it just does not travel to get there.
+
+   Every rule here is behind :not(.nav-live), and the transform has to
+   be: the page carries no transform at rest, so on the first frame of
+   an open this rule is the only thing saying where the page is — and
+   the timeline reads the page to find out where to start from. Left
+   live, it would read a page this rule has already moved the whole way
+   and animate it from there to there. */
+html:not(.nav-live) [data-main],
+html:not(.nav-live) .underlay {
+    transition: transform var(--t-slow) var(--ease);
+}
+
+html:not(.nav-live) body[data-menu-status="open"] [data-main],
+html:not(.nav-live) body[data-menu-status="open"] .underlay {
+    transform: translateX(calc(var(--menu-width) * -1));
+}
+
+html:not(.nav-live) body[data-menu-status="open"] .underlay {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; }
+
+
+/* --- The menu toggle -------------------------------------------------
+   The plate's one filled affordance, and now at every width rather
+   than only below the desktop breakpoint: what it opens is the whole
+   index of the site, not the phone's substitute for the section list.
+
+   Two labels stacked in a window one line tall, and two bars — both
+   real elements rather than the pseudo-elements they were, because the
+   timeline has to be able to reach them. What is declared here is what
+   a reader without that timeline gets: the same swap and the same
+   cross, done in CSS off aria-expanded.                              */
 
 .menu-btn {
     display: inline-flex;
@@ -1137,10 +1294,38 @@ em { font-style: italic; }
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink);
-    transition: background-color var(--t-fast) var(--ease-io);
+    transition: background-color var(--t-fast) var(--ease-io),
+                color var(--t-fast) var(--ease-io);
 }
 
 .menu-btn:hover { background: var(--nav-chip-2); }
+
+/* Open, the toggle takes the signal — the same mark the current link in
+   the panel carries. Here rather than in the timeline: a colour written
+   inline would have to be captured before a theme change and cleared
+   after the close, and this follows both for nothing. */
+.menu-btn[aria-expanded="true"] {
+    color: var(--signal);
+    background: var(--signal-soft);
+}
+
+.menu-btn__text {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 1.25em;
+    overflow: hidden;
+}
+
+.menu-btn__label {
+    flex: none;
+    height: 1.25em;
+    line-height: 1.25;
+    transition: transform var(--t-fast) var(--ease-io);
+}
+
+.menu-btn[aria-expanded="true"] .menu-btn__label { transform: translateY(-100%); }
 
 .menu-btn__bars {
     position: relative;
@@ -1149,9 +1334,7 @@ em { font-style: italic; }
     flex: none;
 }
 
-.menu-btn__bars::before,
-.menu-btn__bars::after {
-    content: '';
+.menu-btn__bar {
     position: absolute;
     left: 0;
     width: 100%;
@@ -1160,96 +1343,321 @@ em { font-style: italic; }
     transition: transform var(--t-fast) var(--ease-io), top var(--t-fast) var(--ease-io);
 }
 
-.menu-btn__bars::before { top: 0; }
-.menu-btn__bars::after  { top: calc(100% - 1px); }
+.menu-btn__bar:first-child { top: 0; }
+.menu-btn__bar:last-child  { top: calc(100% - 1px); }
 
-.menu-btn[aria-expanded="true"] .menu-btn__bars::before { top: 3.5px; transform: rotate(45deg); }
-.menu-btn[aria-expanded="true"] .menu-btn__bars::after  { top: 3.5px; transform: rotate(-45deg); }
+.menu-btn[aria-expanded="true"] .menu-btn__bar:first-child { top: 3.5px; transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 3.5px; transform: rotate(-45deg); }
 
-/* Narrow phones: the plate tightens, keeping every part of its make-up. */
-@media (max-width: 26rem) {
-    .masthead__inner { gap: 0.1875rem; }
-    .menu-btn { padding-inline: 0.5rem; gap: 0.4375rem; letter-spacing: 0.08em; }
+html.nav-live .menu-btn__label,
+html.nav-live .menu-btn__bar { transition: none; }
+
+/* The label and the bars are put at their resting values inline by the
+   timeline, which is enough to keep these two rules out of its way. The
+   page is not, which is why its own fallback above is written the other
+   way round. */
+html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__label { transform: none; }
+
+html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:first-child,
+html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child {
+    top: 0;
+    transform: none;
 }
 
-/* --- Menu overlay ---------------------------------------------------- */
+html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
+
+
+/* --- The navigation ---------------------------------------------------
+   Fixed to the right of the screen, full height, one measure wide, and
+   underneath the page at every moment — including this one, before
+   anything has been opened. It does not slide, fade or resize; the page
+   in front of it does the moving.
+
+   The ground is an inverted zone: the same one Selected Work and
+   Contact are set on, so the panel reads as a field the page has been
+   lifted off rather than a drawer that has arrived from somewhere. Every
+   component inside it works untouched, in either theme.
+
+   The links are the site's own: the five sections above, the six case
+   studies and the elsewhere links below. The section links keep the
+   .menu__link class they have always had, which is what the scroll spy
+   in useChrome already looks for — so the current section marks itself
+   here exactly as it does on the plate, with nothing added to either.  */
 
 .menu {
     position: fixed;
-    inset: 0;
-    z-index: 90;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: var(--menu-width);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: calc(var(--bar) + 2rem) var(--gutter) calc(var(--bar) + 1rem);
-    background: var(--paper);
-    overflow-y: auto;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--t-mid) var(--ease),
-                visibility 0s linear var(--t-mid);
 }
 
-.menu.is-open {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity var(--t-mid) var(--ease),
-                visibility 0s linear 0s;
+/* Clipped across, scrolling down: the large links arrive from beyond
+   the right edge, and an inner box that let that count as width would
+   hand the panel a horizontal scrollbar for the length of the
+   entrance. */
+.menu__inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 4vh, 2.5rem);
+    padding: calc(var(--bar) + clamp(0.5rem, 2vh, 1.25rem)) var(--menu-pad) var(--menu-pad);
+    overflow: clip auto;
+    overscroll-behavior: contain;
 }
 
-.menu__list { border-top: 1px solid var(--rule); }
+.menu__list {
+    display: flex;
+    flex-direction: column;
+}
 
 .menu__link {
     display: flex;
     align-items: baseline;
-    gap: 1rem;
-    padding-block: clamp(0.75rem, 2.2vh, 1.375rem);
-    border-bottom: 1px solid var(--rule);
+    gap: 0.75rem;
+    padding: 0.4375rem 0.625rem;
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 8vw, 2.75rem);
+    font-size: var(--menu-type);
     line-height: 1;
     letter-spacing: -0.03em;
     color: var(--ink);
-    transition: color var(--t-fast) var(--ease-io), padding-left var(--t-mid) var(--ease);
+    transition: color var(--t-fast) var(--ease-io),
+                background-color var(--t-fast) var(--ease-io);
+}
+
+/* A full-bleed row has no margin for a ring drawn outside it, and the
+   inner box would clip the outer edge of one. Inset, as the skip link
+   is. */
+.menu__link:focus-visible { outline-offset: -3px; }
+
+.menu__link:hover:not([aria-current]),
+.menu__link:focus-visible:not([aria-current]) {
+    color: var(--signal);
+    background: var(--paper-2);
+}
+
+/* The current page or section, filled. The one place on the site where
+   the signal is a ground rather than a mark, and it is the reference's
+   own detail: at this size a coloured word is a word, and a coloured
+   row is where you are. */
+.menu__link[aria-current] {
+    color: var(--on-signal);
+    background: var(--signal);
 }
 
 .menu__link .nav__num {
+    flex: none;
     font-family: var(--font-text);
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
     color: var(--rule-2);
+    transition: color var(--t-fast) var(--ease-io);
 }
 
-.menu__link:hover { padding-left: 0.5rem; }
-.menu__link[aria-current] { color: var(--signal); }
-.menu__link[aria-current] .nav__num { color: var(--signal); }
+.menu__link:hover:not([aria-current]) .nav__num,
+.menu__link:focus-visible:not([aria-current]) .nav__num { color: var(--signal); }
+.menu__link[aria-current] .nav__num { color: var(--on-signal); opacity: 0.6; }
+
+/* --- The foot ---------------------------------------------------------
+   Two registers of small links under one hairline: the six case
+   studies, which are the only other pages the site has, and the
+   elsewhere links, which are the same four the contact band carries.
+   The rule is drawn in with the rest of the choreography rather than
+   being there from the start — it is the last thing to arrive.       */
+
+/* The list is held to the top of the panel and this to the floor of it,
+   so the two registers and the meta line stay together as the panel
+   grows rather than being spread down it. */
+.menu__bottom { flex: none; }
 
 .menu__foot {
-    margin-top: clamp(1.75rem, 5vh, 3rem);
-    display: grid;
+    position: relative;
+    display: flex;
+    gap: clamp(1.25rem, 4vw, 2.5rem);
+    padding-top: clamp(1rem, 2.5vh, 1.5rem);
+}
+
+.menu__rule {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.18;
+    transform-origin: left;
+}
+
+.menu__col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6875rem;
+    min-width: 0;
+}
+
+.menu__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4375rem;
+    width: 100%;
+}
+
+.menu__small {
+    display: flex;
+    align-items: baseline;
     gap: 0.5rem;
+    font-size: var(--t-small);
+    line-height: 1.25;
+    color: var(--ink-2);
+    transition: color var(--t-fast) var(--ease-io);
 }
 
-@media (min-width: 62rem) {
-    .menu-btn { display: none; }
-    .menu { display: none; }
+.menu__small .nav__num {
+    flex: none;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    color: var(--rule-2);
+    transition: color var(--t-fast) var(--ease-io);
 }
 
-/* Without JavaScript the button cannot open anything, so the overlay is
-   laid out in the document as an ordinary navigation block. */
+.menu__small:hover .nav__num,
+.menu__small:focus-visible .nav__num,
+.menu__small[aria-current] .nav__num { color: var(--signal); }
+
+.menu__small:hover,
+.menu__small:focus-visible { color: var(--signal); }
+.menu__small[aria-current] { color: var(--signal); }
+
+.menu__meta {
+    display: grid;
+    gap: 0.25rem;
+    padding-top: clamp(1rem, 2.5vh, 1.5rem);
+}
+
+/* Side by side needs room for two measures. Below that the registers
+   stack, and the panel scrolls to whichever of them the reader is
+   after. */
+@media (max-width: 40rem) {
+    .menu__foot { flex-direction: column; gap: 1.5rem; }
+}
+
+/* A finger, again: the large rows are already a thumb's height from
+   their own type, and only the small links need the box built out
+   around them — taken out of the gap they already sit in, so the
+   rhythm of each register is the one the type set. */
+@media (pointer: coarse) {
+    /* The large rows are within a pixel of a target from their own type,
+       and a pixel is not a rounding error on a finger. */
+    .menu__link { padding-block: 0.5625rem; }
+    .menu__links { gap: 0; }
+    .menu__small { align-items: center; min-height: 2.75rem; }
+}
+
+
+/* --- The overlay ------------------------------------------------------
+   One fixed layer that travels with the page and does three jobs at
+   once: it takes the click that closes the menu, it carries the
+   dimming the page goes under, and it draws the frame that turns the
+   page into a plate lifted off the panel's ground.
+
+   The frame is a bar on the top and bottom edges of the screen and a
+   fillet at the right-hand end of each — the bars slide in from off
+   screen, the fillets scale up from nothing, so the corner arrives
+   rather than being cut. The -1px on the right closes a subpixel seam
+   that otherwise shows as a hairline of page between the frame and the
+   panel at some window widths.
+
+   It sits above the page and below the plate. The plate is centred, so
+   at any width it straddles the edge this layer travels to: putting it
+   under the overlay would hand the overlay the clicks meant for the
+   toggle that closes the menu.                                       */
+
+.underlay {
+    position: fixed;
+    inset: 0 -1px 0 0;
+    z-index: 102;
+    visibility: hidden;
+    pointer-events: none;
+    cursor: pointer;
+    overflow: clip;
+}
+
+.underlay__dark {
+    position: absolute;
+    inset: 0;
+    background: var(--menu-scrim);
+    opacity: 0;
+}
+
+/* The frame is set on the panel's own ground, and the surest way to
+   know that colour in every theme is to stand the frame in the same
+   zone the panel is in and read --paper back out of it. The zone's own
+   ground is turned off here: what paints is the two bars and the two
+   fillets, never the box that holds them. */
+.underlay__frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: none;
+}
+
+.underlay__row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.underlay__row:last-child { flex-direction: column-reverse; }
+
+.underlay__bar {
+    width: 100%;
+    height: var(--menu-frame);
+    background: var(--paper);
+}
+
+.underlay__fillet {
+    width: calc(var(--menu-frame) * 2);
+    height: calc(var(--menu-frame) * 2);
+    background: radial-gradient(circle farthest-side at 0 100%,
+                                transparent 99%, var(--paper));
+    transform-origin: 100% 0;
+}
+
+.underlay__row:last-child .underlay__fillet {
+    background: radial-gradient(circle farthest-side at 0 0,
+                                transparent 99%, var(--paper));
+    transform-origin: 100% 100%;
+}
+
+
+/* Without JavaScript the toggle cannot open anything, and the panel is
+   under a page that is never going to move off it. So the panel takes
+   its place in the document instead — a plain navigation block at the
+   top, which is what it was before any of this. Above the desktop
+   breakpoint the plate already carries the sections and the block would
+   only be a second copy of them. */
 html:not(.js) .menu-btn { display: none; }
 
 html:not(.js) .menu {
     position: static;
-    opacity: 1;
-    visibility: visible;
-    overflow: visible;
+    z-index: auto;
+    width: auto;
     padding: calc(var(--bar) + 1.5rem) var(--gutter) 0;
 }
 
-html:not(.js) .menu__foot { display: none; }
+html:not(.js) .menu__inner { padding: 0; overflow: visible; }
+html:not(.js) .menu__foot,
+html:not(.js) .menu__meta { display: none; }
 
 @media (min-width: 62rem) { html:not(.js) .menu { display: none; } }
 
@@ -3099,6 +3507,15 @@ html:not(.js) .menu__foot { display: none; }
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal], .js [data-reveal-soft] { opacity: 1; transform: none; }
     .js [data-reveal-rule] { transform: none; }
+    /* The navigation's travel is positional too, and this is the one place
+       where shortening is not enough: a hundredth of a millisecond is
+       still a transition, with a frame to start it and a frame to finish
+       it, and a main thread with a canvas awake on it can make a reader
+       wait for both. Removed, the page is simply where it belongs — which
+       is what the timeline would never be asked to do here anyway, since
+       it is never loaded for a reader who has set this. */
+    html:not(.nav-live) [data-main],
+    html:not(.nav-live) .underlay { transition: none; }
     /* The plate stays where it rests rather than tucking up on scroll. */
     .masthead.is-solid .masthead__inner { transform: none; }
     /* Two systems are not listed here, and for the same reason: they
@@ -3116,8 +3533,7 @@ html:not(.js) .menu__foot { display: none; }
     .btn:hover svg,
     .breadcrumb:hover svg,
     .case-next a:hover .case-next__title,
-    .case-next a:hover .case-next__go svg,
-    .menu__link:hover { transform: none; padding-left: 0; }
+    .case-next a:hover .case-next__go svg { transform: none; }
 }
 
 /* A finger is not a cursor. The quiet registers on the site are set
@@ -3168,6 +3584,17 @@ html:not(.js) .menu__foot { display: none; }
 
 @media (forced-colors: active) {
     .masthead__inner, .menu { background: Canvas; }
+
+    /* The menu's frame and its dimming are both colour standing in for
+       an edge, and neither survives the flattening: the bars keep the
+       edge as a border, the fillets and the scrim have nothing left to
+       say. */
+    .underlay__dark, .underlay__fillet { display: none; }
+    .underlay__bar { background: Canvas; border-bottom: 1px solid CanvasText; }
+    .underlay__row:last-child .underlay__bar {
+        border-bottom: 0;
+        border-top: 1px solid CanvasText;
+    }
     .zone-invert, .zone-warm { background: Canvas; color: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
     .glass__cell img { border: 1px solid CanvasText; }
