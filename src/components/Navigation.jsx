@@ -4,8 +4,13 @@ import { IconMoon, IconSun } from './Icons.jsx';
 import useTheme from '../hooks/useTheme.js';
 
 /* The masthead: the one rounded thing on the site. A single floating plate
-   carrying the monogram, the section list, the theme control and — below the
-   desktop breakpoint — the menu button.
+   carrying the monogram, the section list, the theme control and the menu
+   button.
+
+   The plate sits above the layer the menu travels, and has to: it is
+   centred, so at every width it straddles the edge the page slides to,
+   and the toggle that closes the menu would otherwise be under the
+   overlay that takes the clicks.
 
    `home` and `base` differ per page because the site is a set of documents:
    the home page links to its own anchors, a case study links back up to the
@@ -77,17 +82,37 @@ export default function Navigation({
                         <IconMoon />
                     </button>
 
+                    {/* The one control that opens the navigation, and
+                        now at every width: what is behind it is the whole
+                        index of the site rather than the phone's
+                        substitute for the section list.
+
+                        Both labels are in the document at once, stacked
+                        in a window one line tall, and both bars are real
+                        elements — the timeline in useUnderlayNav has to
+                        be able to reach them, and a pseudo-element
+                        cannot be reached. Which means the button's own
+                        text now reads "MenuClose", so the whole of it is
+                        hidden and the name is given outright. */}
                     <button
                         className="menu-btn"
                         id="menu-btn"
                         type="button"
                         aria-expanded={menuOpen}
                         aria-controls="menu"
+                        aria-label={menuOpen ? 'Close the menu' : 'Open the menu'}
                         onClick={onMenuToggle}
                         ref={menuButtonRef}
+                        data-menu-toggle=""
                     >
-                        <span className="menu-btn__label">Menu</span>
-                        <span className="menu-btn__bars" aria-hidden="true" />
+                        <span className="menu-btn__text" aria-hidden="true">
+                            <span className="menu-btn__label">Menu</span>
+                            <span className="menu-btn__label">Close</span>
+                        </span>
+                        <span className="menu-btn__bars" aria-hidden="true">
+                            <span className="menu-btn__bar" />
+                            <span className="menu-btn__bar" />
+                        </span>
                     </button>
                 </div>
             </div>

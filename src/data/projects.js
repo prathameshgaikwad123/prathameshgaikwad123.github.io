@@ -12,11 +12,17 @@
    text next to it. */
 const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
 
+/* `short` is the index label — the name this project answers to in a
+   list rather than on a page. It is the category for four of the six;
+   the two VOEPL projects need their own, because a reader choosing
+   between two rows both reading VOEPL is not choosing anything. */
+
 export const projects = [
     {
         slug: 'voepl-website',
         no: '01',
         category: 'VOEPL',
+        short: 'Corporate Website',
         title: 'Building a Corporate Digital Presence',
         /* The index entry on the home page. */
         summary:
@@ -58,6 +64,7 @@ export const projects = [
         slug: 'voepl-brand-system',
         no: '02',
         category: 'VOEPL',
+        short: 'Visual System',
         title: 'Designing a Connected Corporate Visual System',
         summary:
             'Designing consistent visual communication across multiple touchpoints ' +
@@ -101,6 +108,7 @@ export const projects = [
         slug: 'safety-dojo',
         no: '03',
         category: 'Safety Dojo',
+        short: 'Safety Dojo',
         title: 'Making Safety Communication More Memorable',
         summary:
             'Developing a modern visual safety awareness system designed to make ' +
@@ -143,6 +151,7 @@ export const projects = [
         slug: 'digital-communication',
         no: '04',
         category: 'Digital Communication',
+        short: 'Digital Communication',
         title: "Growing a Manufacturing Brand's Digital Presence",
         summary:
             "Contributed to the growth of VOEPL's LinkedIn audience from approximately " +
@@ -183,6 +192,7 @@ export const projects = [
         slug: 'web-ai-discovery',
         no: '05',
         category: 'The Evolving Web',
+        short: 'The Evolving Web',
         title: 'Designing for Search and AI Discovery',
         summary:
             'Exploring how websites can be structured for traditional search while ' +
@@ -224,6 +234,7 @@ export const projects = [
         slug: 'archive',
         no: '06',
         category: 'Selected Archive',
+        short: 'Selected Archive',
         title: 'Websites, Digital Projects & Earlier Work',
         summary:
             'Selected earlier work across websites, digital projects, graphic design ' +

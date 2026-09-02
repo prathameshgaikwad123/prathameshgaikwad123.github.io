@@ -50,13 +50,22 @@ export default defineConfig({
                             name: 'motion',
                             test: /node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/,
                         },
-                        /* GSAP is the scroll choreography, and it is asked
-                           for only once the home page has decided it is
-                           going to move — a wide enough window, and a
-                           reader who has not asked for less motion. Naming
-                           it keeps that visible in the network panel
-                           rather than hiding it inside vendor. */
-                        { name: 'scroll', test: /node_modules[\\/]gsap[\\/]/ },
+                        /* GSAP has two callers now, and they ask on
+                           different terms. The scroll choreography wants it
+                           only once the home page has decided it is going
+                           to move — a wide enough window, and a reader who
+                           has not asked for less motion. The navigation
+                           wants it on every page at every width, still only
+                           for a reader who wants motion, and without
+                           ScrollTrigger — which is why the two loaders are
+                           separate and why six case studies do not pay for
+                           a scroll system they never scrub.
+
+                           One chunk serves both, because both ask for it
+                           at run time. Naming it keeps that visible in the
+                           network panel rather than hiding it inside
+                           vendor. */
+                        { name: 'gsap', test: /node_modules[\\/]gsap[\\/]/ },
                         { name: 'vendor', test: /node_modules/ },
                     ],
                 },
