@@ -43,6 +43,23 @@ export function rafOnce() {
 export const motionOK = () =>
     !(typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
+/* The theme actually on screen, whether it came from a stored choice or
+   from the operating system. Declared once, here, because three callers
+   need the same answer and were each working it out for themselves: the
+   toggle, which has to know what to switch away from; the carousel,
+   which paints a canvas CSS cannot reach into; and the browser-chrome
+   colour, which is a meta tag rather than a rule. Three copies of this
+   is three places for the fallback to disagree with the stylesheet. */
+export const activeTheme = () => {
+    if (typeof document === 'undefined') return 'light';
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'light' || attr === 'dark') return attr;
+    return typeof window !== 'undefined'
+        && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+};
+
 /* The same preference, as state, for the one thing that has to follow it
    while the page is open rather than decide once: the carousel keeps its
    lens either way and gives up only the coasting, so a reader who changes

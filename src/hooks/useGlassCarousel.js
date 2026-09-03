@@ -3,6 +3,7 @@ import { createGlass } from '../carousel/glass.js';
 import Scroller from '../carousel/scroll.js';
 import { buildStrip, visible, activeIndex, cardAt, nearestSnap, snapTo, pitch } from '../carousel/layout.js';
 import { CARD_W, CARD_H, GAP, STRIP_Y, FADE_IN, FADE_OUT, SURGE_SPEED } from '../carousel/config.js';
+import { activeTheme } from './dom.js';
 
 /* ===================================================================
    THE LOOP
@@ -35,13 +36,39 @@ const num = (value, fallback) => {
     return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+/* The theme's own ground, for the two cases below where the element
+   cannot supply one. Read off the ramp rather than written out again,
+   so a change to section 1 of the stylesheet reaches the canvas too
+   and there is no fourth place a colour has to be kept in step. */
+function themeGround() {
+    return activeTheme() === 'dark' ? [0, 0, 0] : [1, 1, 1];
+}
+
 /* The ground the cards sit on has to be the ground the lens magnifies,
    or the rim would reveal a seam. It is read back off the element so
-   the canvas follows the theme without knowing anything about it. */
+   the canvas follows the theme without knowing anything about it.
+
+   Two ways that read can fail, and both used to end in the same warm
+   tan literal — a colour that belongs to neither theme now:
+
+     · it does not parse at all. A detached element gives an empty
+       string; a ground written in a syntax whose serialisation carries
+       a `none` component gives something the digits do not survive.
+
+     · it parses perfectly and means nothing. `transparent` serialises
+       as `rgba(0, 0, 0, 0)`, which yields four numbers, passes a
+       `length < 3` guard, and reads as pure black — so a stage that
+       happened to have no ground of its own would clear the canvas to
+       black in the middle of a white page. That is the failure this
+       whole section is about, and it was one CSS edit away.
+
+   So the alpha is parsed rather than ignored, and anything short of
+   opaque is refused in favour of the theme's ground. */
 function readGround(element) {
     const declared = getComputedStyle(element).backgroundColor;
     const parts = declared.match(/[\d.]+/g);
-    if (!parts || parts.length < 3) return [0.835, 0.776, 0.706];
+    if (!parts || parts.length < 3) return themeGround();
+    if (parts.length > 3 && Number.parseFloat(parts[3]) < 1) return themeGround();
     return [parts[0] / 255, parts[1] / 255, parts[2] / 255];
 }
 
@@ -280,7 +307,15 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
             glass.setGround(readGround(stage));
             wake();
         });
-        theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        /* `style` is in the list because the theme can also arrive as
+           an inline custom property on <html> — a devtools edit, or a
+           future toggle that writes the ramp rather than an attribute
+           — and a ground the canvas did not hear about is a seam at
+           the rim. The three together are every route there is. */
+        theme.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme', 'class', 'style'],
+        });
 
         const scheme = window.matchMedia('(prefers-color-scheme: dark)');
         const onScheme = () => {

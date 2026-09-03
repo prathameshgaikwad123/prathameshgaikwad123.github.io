@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250" width="1000" height="1250" role="img" aria-label="Placeholder image: Portrait">
-  <rect width="1000" height="1250" fill="#E4E1DA"/>
-  <rect x="12" y="12" width="976" height="1226" fill="none" stroke="#CFCAC0" stroke-width="2" stroke-dasharray="10 8"/>
+  <rect width="1000" height="1250" fill="#EDEDED"/>
+  <rect x="12" y="12" width="976" height="1226" fill="none" stroke="#D4D4D4" stroke-width="2" stroke-dasharray="10 8"/>
   <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">
-    <text x="500" y="571" font-size="14" font-weight="600" letter-spacing="3.1" fill="#A93F24">PLACEHOLDER IMAGE</text>
-    <text x="500" y="637.6" font-size="36" font-weight="500" fill="#3F3D38">Portrait</text>
-    <text x="500" y="682.6" font-size="14" fill="#6F6B64" font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">assets/images/portrait.jpg</text>
-    <text x="500" y="715" font-size="14" fill="#8A867E">1000 &#215; 1250 &#183; optional, 4:5</text>
+    <text x="500" y="571" font-size="14" font-weight="600" letter-spacing="3.1" fill="#000000">PLACEHOLDER IMAGE</text>
+    <text x="500" y="637.6" font-size="36" font-weight="500" fill="#1A1A1A">Portrait</text>
+    <text x="500" y="682.6" font-size="14" fill="#4F4F4F" font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">assets/images/portrait.jpg</text>
+    <text x="500" y="715" font-size="14" fill="#6B6B6B">1000 &#215; 1250 &#183; optional, 4:5</text>
   </g>
 </svg>

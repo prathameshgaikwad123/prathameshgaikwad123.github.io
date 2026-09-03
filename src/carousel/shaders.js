@@ -44,14 +44,43 @@ void main() {
     float left  = 1.0 - smoothstep(0.0, uHair.x, vUv.x);
     float base  = 1.0 - smoothstep(0.0, uHair.y, 1.0 - vUv.y);
     float right = 1.0 - smoothstep(0.0, uHair.x, 1.0 - vUv.x);
-    float lift  = uEdge * clamp(max(top, left) + max(base, right) * 0.55, 0.0, 1.0);
 
-    /* Additive rather than a blend toward a colour, because that is
-       what the reference measures as: the boundary pixels of its centre
-       card run about +10 green and +25 blue over a plain ground-to-card
-       mix, whichever way round the contrast happens to go. A light
-       refracting at the edge of a plate, not a stroke around a box. */
-    colour = min(colour + lift * vec3(0.040, 0.076, 0.125), vec3(1.0));
+    /* Which ground the card is on, from the ground itself. */
+    float lit = step(0.5, dot(uGround, vec3(0.2126, 0.7152, 0.0722)));
+
+    /* The reference's light sits at the upper left, and the 1.0 / 0.55
+       split across these two pairs is the whole of how that reads. It
+       held while the edge was always a lift. Once the edge has to
+       darken instead — see below — the split has to turn over with it,
+       or the heavier mark lands on the upper left as a *shadow* and the
+       light silently moves to the lower right.
+
+       So the emphasis follows the sign: whichever way the edge is
+       going, the upper left is the lit pair and the lower right is the
+       shaded one. Geometry, hairline width and the smoothsteps above
+       are untouched — only which pair carries the weight. */
+    float lift  = uEdge * clamp(max(top, left)  * mix(1.0, 0.55, lit)
+                              + max(base, right) * mix(0.55, 1.0, lit), 0.0, 1.0);
+
+    /* A hairline lift along the card's edge — the one thing that stops
+       a card reading as a hole cut in the ground. Two changes from the
+       measured reference, both forced by a two-tone ground:
+
+       It is neutral. The reference measures a cool near-white, about
+       +10 green and +25 blue over a plain ground-to-card mix, which is
+       a hue and the only one left anywhere on the site. The scalar
+       below is that tint's Rec.709 luminance, so the edge keeps the
+       weight it was fitted at and loses only its colour.
+
+       And it is signed against the ground rather than always additive.
+       Lightening was free on the reference's mid greige; on a #FFFFFF
+       ground it clamps at 1.0 and the edge vanishes at exactly the
+       moment the cards need it most — a white card on a white ground
+       with nothing between them. So on a light ground the edge darkens
+       instead. Same magnitude, same geometry, the direction taken from
+       the ground the card is actually sitting on. */
+    float dir = mix(1.0, -1.0, lit);
+    colour = clamp(colour + lift * dir * 0.072, 0.0, 1.0);
     fragColor = vec4(mix(uGround, colour, uFade), 1.0);
 }`;
 
