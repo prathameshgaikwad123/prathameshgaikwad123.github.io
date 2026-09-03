@@ -127,7 +127,15 @@ export function createGlass(canvas, sources, onTextureReady) {
     const textures = createTextureSet(gl, sources, onTextureReady);
 
     const size = { w: 0, h: 0, dpr: 1 };
-    let ground = [0.835, 0.776, 0.706];
+    /* Seeded white rather than the warm tan this used to hold. The
+       renderer is built before the stage is measured, so on the paths
+       where measure() takes an early return — a stage inside a
+       collapsed or display:none ancestor — this is the colour the
+       first frames actually clear to. White is the light ground, which
+       is what an unresolved theme falls back to everywhere else on the
+       site; setGround() replaces it as soon as the stage can be read.
+       See readGround() in src/hooks/useGlassCarousel.js. */
+    let ground = [1, 1, 1];
     const uniform = {
         quad: QUAD, mag: STRENGTH, disp: DISPERSION, dispX: DISPERSION_X, lod: LOD_MAX,
         pivotNear: PIVOT_NEAR, pivotRim: PIVOT_RIM,

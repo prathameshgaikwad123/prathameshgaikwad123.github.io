@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="PG monogram">
   <style>
-    .bg { fill: #121211; }
-    .fg { fill: #F6F5F2; }
+    .bg { fill: #000000; }
+    .fg { fill: #FFFFFF; }
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #F2F1EC; }
-      .fg { fill: #0D0D0C; }
+      .bg { fill: #FFFFFF; }
+      .fg { fill: #000000; }
     }
   </style>
   <rect class="bg" width="64" height="64"/>

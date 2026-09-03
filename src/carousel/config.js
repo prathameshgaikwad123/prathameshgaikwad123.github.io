@@ -107,10 +107,26 @@ export const SURGE = 0;
    strength. The reference's hardest flick peaks at about four. */
 export const SURGE_SPEED = 4;
 
-/* Faint darkening toward the horizontal centre, about 1.5% at its
-   deepest. Barely above the recording's noise floor, but the ground
-   reads flat and dead without it. */
-export const VIGNETTE = 0.02;
+/* Faint darkening toward the horizontal centre — a multiply, about 2%
+   at its deepest. Measured off the recording, and off at zero, which
+   is a decision the two-tone ground forces rather than a correction to
+   the measurement.
+
+   A multiply needs a mid ground to act on. It had one: the reference's
+   greige, where 2% is a shading you feel and cannot point to. Against
+   the two grounds this site has now it does the opposite of that at
+   both ends. On #000000 it is arithmetically nothing — 98% of black is
+   black — so dark mode never had it anyway. On #FFFFFF it is the only
+   thing on the page that is not white: a 250-grey smudge across the
+   middle of the stage, and because the canvas is full-bleed and the
+   band above it is a flat #FFFFFF, its top edge lands as a soft
+   horizontal step exactly where the two meet. A seam, which is the one
+   thing the ground is here to avoid.
+
+   So the ground is flat, and on a white page and a black page flat is
+   what it is meant to read as. Restore this to 0.02 along with a mid
+   ground if one ever comes back. */
+export const VIGNETTE = 0;
 
 /* A hairline lift along the edges of every card, heavier on the top
    and left, consistent with a light source at the upper left. It is

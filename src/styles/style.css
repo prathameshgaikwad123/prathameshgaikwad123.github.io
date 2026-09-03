@@ -2,11 +2,19 @@
    PRATHAMESH GAIKWAD — MULTIDISCIPLINARY DIGITAL DESIGNER
    Design system: "REGISTER"
 
-   Identity   An editorial register: warm paper, a 12-column grid that
-              is allowed to show itself, hairline rules, tabular index
-              numerals, crop-mark ticks on every image frame, and two
-              inverted zones (Selected Work, Contact) that carry the
-              rhythm of the page.
+   Identity   An editorial register: a 12-column grid that is allowed
+              to show itself, hairline rules, tabular index numerals
+              and crop-mark ticks on every image frame — set in two
+              tones and no more. White page, black type, greys between
+              them; in dark, the same ramp read from the other end.
+
+              It used to be warm paper with two inverted zones — the
+              work and the contact band — carrying the rhythm. The
+              zones are gone: a two-tone system has no third ground to
+              put one on, and a zone that inverts is only the other
+              theme showing through the middle of this one. What
+              carried the rhythm now is the hairline at the top of each
+              band and the index numeral beside it.
    Type       Castoro is rationed — hero, section statements, project
               titles, quoted figures, the mail address. Everything that
               is interface (labels, metadata, navigation, body copy,
@@ -18,35 +26,81 @@
               right — rather than a header the page wears. The
               navigation itself is the panel fixed under the page, and
               it is the only one. Section 7.
-   Themes     Light is the base; dark is declared twice so the system
-              preference and an explicit choice both resolve. Inverted
-              zones re-declare the same token names, so every component
-              inside them works untouched.
+   Themes     One ramp, declared four times: light at :root, dark under
+              the system preference and again under an explicit choice
+              — so both resolve, and the choice wins in either
+              direction — and reset once more for print. Nothing on the
+              site names a colour of its own; every rule reads the ramp,
+              which is what makes the two modes whole rather than
+              nearly whole. Section 1 is the only place a hex appears.
+
+              --signal and --mark are written as references into the
+              ramp rather than as values, so they cannot fall out of
+              step with it, and they follow it into the two surfaces
+              that re-declare it.
    =================================================================== */
 
 /* ====== 1. TOKENS =================================================== */
 
 :root {
     /* --- Colour: light -----------------------------------------------
-       Ratios against --paper (#FFFFFF): --ink 18.2:1 · --ink-2 8.2:1
-       --ink-3 5.3:1 · --signal 5.2:1                                  */
+       The system is strictly two-tone: one neutral ramp from paper to
+       ink, and nothing with a hue in it anywhere. Every grey below is
+       the luminance-faithful neutral of the warm value it replaces, so
+       the contrast relationships the layout was set against are the
+       ones it still has.
+
+       Ratios against --paper (#FFFFFF): --ink 21:1 · --ink-2 8.1:1
+       --ink-3 5.4:1                                                   */
     --paper:       #FFFFFF;
-    --paper-2:     #E8E5DD;
+    /* One step off the page, and the only thing that separates a
+       surface from the ground now that neither has a hue: the two
+       panels that arrive by opening out (the cut and the close), the
+       menu's hovered row, the lightbox and the contribution plate.
+       Kept light enough to still read as white — a section is white,
+       a surface is a shade of it. */
+    --paper-2:     #F2F2F2;
     /* The page's own ground, kept out of reach of the inverted zones —
        every other colour token is re-declared inside one, so this is
        the only way a component *within* a zone can still ask what the
        document's ground is. The closing panel needs exactly that: the
        ink has to arrive over something. */
     --paper-base:  #FFFFFF;
-    --ink:         #16150F;
-    --ink-2:       #514F46;
-    --ink-3:       #6E6B60;
-    --rule:        #D9D5CB;
-    --rule-2:      #BEB9AC;
-    --signal:      #C0431E;
-    --signal-soft: rgba(192, 67, 30, 0.10);
-    --on-signal:   #FFFFFF;
-    --scrim:       rgba(22, 21, 15, 0.6);
+    --ink:         #000000;
+    --ink-2:       #4F4F4F;
+    --ink-3:       #6B6B6B;
+    --rule:        #D5D5D5;
+    --rule-2:      #B9B9B9;
+    /* The accent was the one colour on the site. Monochrome, it is not
+       a colour any more, so it stops being a value of its own and
+       becomes the ink — written as a reference rather than a literal so
+       it cannot desync from it at any of the declaration sites below,
+       and so it is still correct inside a surface that re-declares the
+       ramp. Its companion is the ground for the same reason.
+
+       What the accent used to carry, it no longer can: a mark that was
+       orange to be *distinct* would now be the same black as the type
+       beside it. Those marks are on --ink-3 instead — see section 4 —
+       and this token is left to the two jobs that want the strongest
+       ink there is: the focus ring, and the selection fill. */
+    --signal:      var(--ink);
+    --signal-soft: rgba(0, 0, 0, 0.06);
+    --on-signal:   var(--paper);
+    /* The other half of what the accent used to do. Every tabular
+       index numeral on the site — the section eyebrows, the figure
+       numbers, the experience and capability counters, the case-study
+       block numbers — was orange in order to be *subordinate but
+       distinct*: a numeral you can find without reading. Pointed at
+       the ink it would simply be the type beside it. So it is pointed
+       one step down the ramp instead, which is the monochrome way of
+       saying the same thing. The decorative stops and the short
+       hairline ticks come with it.
+
+       A reference, not a literal, so it follows the ramp into a
+       surface that re-declares one, and so the whole register moves
+       from here rather than from forty-odd selectors. */
+    --mark:        var(--ink-3);
+    --scrim:       rgba(0, 0, 0, 0.6);
 
     /* --- The header's plates -------------------------------------------
        Two translucent plates that ride over the page, sharing one set of
@@ -57,13 +111,13 @@
     --nav-plate:   rgba(255, 255, 255, 0.66);
     --nav-plate-2: rgba(255, 255, 255, 0.90);
     --nav-opaque:  rgba(255, 255, 255, 0.97);
-    --nav-edge:    rgba(22, 21, 15, 0.09);
-    --nav-chip:    rgba(22, 21, 15, 0.075);
-    --nav-chip-2:  rgba(22, 21, 15, 0.12);
-    --nav-cast:    0 1px 1px rgba(22, 21, 15, 0.03),
-                   0 6px 18px -10px rgba(22, 21, 15, 0.18);
-    --nav-cast-2:  0 1px 1px rgba(22, 21, 15, 0.04),
-                   0 12px 30px -14px rgba(22, 21, 15, 0.28);
+    --nav-edge:    rgba(0, 0, 0, 0.09);
+    --nav-chip:    rgba(0, 0, 0, 0.075);
+    --nav-chip-2:  rgba(0, 0, 0, 0.12);
+    --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.03),
+                   0 6px 18px -10px rgba(0, 0, 0, 0.18);
+    --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.04),
+                   0 12px 30px -14px rgba(0, 0, 0, 0.28);
 
     /* --- Type --------------------------------------------------------- */
     --font-display: 'Castoro', 'Iowan Old Style', 'Palatino Linotype',
@@ -161,11 +215,11 @@
        read as "switched off" turns a white page into a grey slab and
        takes the composition with it; this is the least that still says
        the page is behind something. */
-    --menu-scrim: rgba(22, 21, 15, 0.22);
+    --menu-scrim: rgba(0, 0, 0, 0.22);
     /* And the page is above the panel, so it falls on it. This is the
        only thing that makes the seam read in dark, where the page and
        the panel are two dark surfaces a few levels apart. */
-    --menu-cast:  0 0 2.5rem rgba(22, 21, 15, 0.3);
+    --menu-cast:  0 0 2.5rem rgba(0, 0, 0, 0.3);
 
     /* --- Space -------------------------------------------------------- */
     --bar:      calc(var(--nav-top) + var(--nav-h) + clamp(0.5rem, 1.4vh, 1rem));
@@ -288,26 +342,41 @@
 /* Dark via system preference — never when light is explicitly chosen. */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-        --paper:       #100F0B;
-        --paper-2:     #191811;
-        --paper-base:  #100F0B;
-        --ink:         #F0EEE7;
-        --ink-2:       #A5A196;
-        --ink-3:       #8A8679;
-        --rule:        #27261F;
-        --rule-2:      #3E3D34;
-        --signal:      #FF6A3D;
-        --signal-soft: rgba(255, 106, 61, 0.13);
-        --on-signal:   #14130E;
-        --scrim:       rgba(4, 4, 3, 0.72);
-        --menu-scrim:  rgba(4, 4, 3, 0.4);
+        --paper:       #000000;
+        --paper-2:     #121212;
+        --paper-base:  #000000;
+        --ink:         #FFFFFF;
+        --ink-2:       #A1A1A1;
+        --ink-3:       #868686;
+        /* Rules are a white transparency rather than a grey, so a
+           hairline drawn on an elevated surface reads as strongly as
+           one drawn on the page. Both are also used as a solid fill
+           for the short ticks in Experience and the case captions,
+           which sit on the page ground and composite correctly. */
+        --rule:        rgba(255, 255, 255, 0.15);
+        --rule-2:      rgba(255, 255, 255, 0.24);
+        /* --signal and --on-signal are not restated here. They are
+           written at :root as var(--ink) and var(--paper), so they
+           follow whichever ramp is in force — including inside a
+           surface that re-declares it — and cannot fall out of step
+           with the theme the way eight literal copies could. */
+        --signal-soft: rgba(255, 255, 255, 0.10);
+        --scrim:       rgba(0, 0, 0, 0.72);
+        /* The one token whose polarity has to turn over. The scrim
+           says the page behind the panel is not the one being read,
+           and it said it by darkening — which a black wash over a
+           black page cannot do at any alpha. So on this ground the
+           page is lifted instead of sunk. Same cue, same weight
+           (~18 sRGB units, as the warm pair carried), opposite
+           direction, because the ground left it no other one. */
+        --menu-scrim:  rgba(255, 255, 255, 0.07);
         --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
-        --nav-plate:   rgba(26, 25, 19, 0.62);
-        --nav-plate-2: rgba(26, 25, 19, 0.86);
-        --nav-opaque:  rgba(20, 19, 14, 0.97);
-        --nav-edge:    rgba(240, 238, 231, 0.10);
-        --nav-chip:    rgba(240, 238, 231, 0.095);
-        --nav-chip-2:  rgba(240, 238, 231, 0.155);
+        --nav-plate:   rgba(26, 26, 26, 0.62);
+        --nav-plate-2: rgba(26, 26, 26, 0.86);
+        --nav-opaque:  rgba(20, 20, 20, 0.97);
+        --nav-edge:    rgba(255, 255, 255, 0.10);
+        --nav-chip:    rgba(255, 255, 255, 0.09);
+        --nav-chip-2:  rgba(255, 255, 255, 0.155);
         --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                        0 8px 22px -12px rgba(0, 0, 0, 0.6);
         --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -318,26 +387,41 @@
 
 /* Dark via explicit choice — wins in both directions. */
 :root[data-theme="dark"] {
-    --paper:       #100F0B;
-    --paper-2:     #191811;
-    --paper-base:  #100F0B;
-    --ink:         #F0EEE7;
-    --ink-2:       #A5A196;
-    --ink-3:       #8A8679;
-    --rule:        #27261F;
-    --rule-2:      #3E3D34;
-    --signal:      #FF6A3D;
-    --signal-soft: rgba(255, 106, 61, 0.13);
-    --on-signal:   #14130E;
-    --scrim:       rgba(4, 4, 3, 0.72);
-    --menu-scrim:  rgba(4, 4, 3, 0.4);
+    --paper:       #000000;
+    --paper-2:     #121212;
+    --paper-base:  #000000;
+    --ink:         #FFFFFF;
+    --ink-2:       #A1A1A1;
+    --ink-3:       #868686;
+    /* Rules are a white transparency rather than a grey, so a
+       hairline drawn on an elevated surface reads as strongly as
+       one drawn on the page. Both are also used as a solid fill
+       for the short ticks in Experience and the case captions,
+       which sit on the page ground and composite correctly. */
+    --rule:        rgba(255, 255, 255, 0.15);
+    --rule-2:      rgba(255, 255, 255, 0.24);
+    /* --signal and --on-signal are not restated here. They are
+       written at :root as var(--ink) and var(--paper), so they
+       follow whichever ramp is in force — including inside a
+       surface that re-declares it — and cannot fall out of step
+       with the theme the way eight literal copies could. */
+    --signal-soft: rgba(255, 255, 255, 0.10);
+    --scrim:       rgba(0, 0, 0, 0.72);
+    /* The one token whose polarity has to turn over. The scrim
+       says the page behind the panel is not the one being read,
+       and it said it by darkening — which a black wash over a
+       black page cannot do at any alpha. So on this ground the
+       page is lifted instead of sunk. Same cue, same weight
+       (~18 sRGB units, as the warm pair carried), opposite
+       direction, because the ground left it no other one. */
+    --menu-scrim:  rgba(255, 255, 255, 0.07);
     --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
-    --nav-plate:   rgba(26, 25, 19, 0.62);
-    --nav-plate-2: rgba(26, 25, 19, 0.86);
-    --nav-opaque:  rgba(20, 19, 14, 0.97);
-    --nav-edge:    rgba(240, 238, 231, 0.10);
-    --nav-chip:    rgba(240, 238, 231, 0.095);
-    --nav-chip-2:  rgba(240, 238, 231, 0.155);
+    --nav-plate:   rgba(26, 26, 26, 0.62);
+    --nav-plate-2: rgba(26, 26, 26, 0.86);
+    --nav-opaque:  rgba(20, 20, 20, 0.97);
+    --nav-edge:    rgba(255, 255, 255, 0.10);
+    --nav-chip:    rgba(255, 255, 255, 0.09);
+    --nav-chip-2:  rgba(255, 255, 255, 0.155);
     --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                    0 8px 22px -12px rgba(0, 0, 0, 0.6);
     --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -345,129 +429,75 @@
     color-scheme: dark;
 }
 
-/* --- Inverted zone ---------------------------------------------------
-   The same token names, re-declared. In light the ground goes to ink; in
-   dark it lifts one step instead of blinding the reader. Every component
-   inside a zone is unchanged.                                          */
-.zone-invert {
-    --paper:       #14130E;
-    --paper-2:     #1D1C15;
-    --ink:         #F2F0EA;
-    --ink-2:       #ADA99C;
-    --ink-3:       #8E8A7D;
-    --rule:        #2C2B22;
-    --rule-2:      #45443A;
-    --signal:      #FF6A3D;
-    --signal-soft: rgba(255, 106, 61, 0.14);
-    --on-signal:   #14130E;
-    background: var(--paper);
-    color: var(--ink);
-}
+/* --- Zones, and what became of them ----------------------------------
+   The site carried two: an inverted zone that turned its ground to ink
+   in light — Contact and the footer inside it, the navigation panel,
+   the frame drawn under it, a case study's closing block — and a warm
+   zone that stood Selected Work and the opening panel on a greige
+   plate. Both re-declared the whole ramp for themselves, and between
+   them they are the reason the footer stayed black and the carousel
+   stayed off-white when the page was asked to be light.
 
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .zone-invert {
-        --paper:   #1A1913;
-        --paper-2: #23221A;
-        --ink:     #F0EEE7;
-        --ink-2:   #A5A196;
-        --ink-3:   #8A8679;
-        --rule:    #33322A;
-        --rule-2:  #4A493E;
-    }
-}
+   A two-tone system has nowhere to put them. There is no third ground
+   between white and black for a zone to be, and a zone that inverts is
+   only the other theme showing through in the middle of this one. So
+   they no longer invert: each paints the ramp that is in force, which
+   is what makes the work, the carousel, the contact band and the
+   footer the same white in light and the same black in dark.
 
-:root[data-theme="dark"] .zone-invert {
-    --paper:   #1A1913;
-    --paper-2: #23221A;
-    --ink:     #F0EEE7;
-    --ink-2:   #A5A196;
-    --ink-3:   #8A8679;
-    --rule:    #33322A;
-    --rule-2:  #4A493E;
-}
-
-/* In dark an inverted zone lifts one step off the page. That is right for
-   a band in the flow of the page, and not enough for a panel the page is
-   meant to be lying on top of: two surfaces four levels apart do not read
-   as one being in front of the other, however cleanly the seam is cut.
-
-   So the panel takes two steps, and the frame takes them with it — the
-   frame is the panel's ground drawn on the overlay, and the two have to
-   agree. The hover ground moves up to stay a step above its own.
-
-   After the zone's own declarations, and it has to be: these carry the
-   same specificity as the two rules above, so the order is the whole of
-   the argument.                                                        */
-:root[data-theme="dark"] .menu,
-:root[data-theme="dark"] .underlay__frame { --paper: #221F18; }
-
-:root[data-theme="dark"] .menu { --paper-2: #2C2A21; }
-
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .menu,
-    :root:not([data-theme="light"]) .underlay__frame { --paper: #221F18; }
-
-    :root:not([data-theme="light"]) .menu { --paper-2: #2C2A21; }
-}
-
-
-/* --- Warm zone --------------------------------------------------------
-   The work section's own ground: the muted warm greige the reference
-   carousel is set on, measured off the recording at #D3C4B3 and lifted
-   a shade so the ink still has its full contrast on it. Every colour
-   token is re-declared, so nothing inside the zone has to know it is
-   in one — including the canvas, which reads this ground back off the
-   element and clears to it, or the lens would magnify a seam at the
-   rim.
-
-   The signal is pulled down from the page's #C0431E, which only makes
-   3.3:1 against a ground this warm. The values below hold 11.7, 7.1,
-   4.8 and 4.8 against --paper.                                        */
+   The classes stay in the markup rather than being stripped out of it,
+   because painting is still their job and one component depends on
+   their doing it: the carousel reads `.glass`'s own computed
+   backgroundColor back off the element and clears its canvas to it
+   (section 9), so that ground has to be explicit and opaque rather
+   than merely inherited. Inverting is what they stopped doing. */
+.zone-invert,
 .zone-warm {
-    --paper:       #D8CBBA;
-    --paper-2:     #CFC0AC;
-    --ink:         #14130E;
-    --ink-2:       #3E3B34;
-    --ink-3:       #57534A;
-    --rule:        #C0AF98;
-    --rule-2:      #A8977E;
-    --signal:      #983014;
-    --signal-soft: rgba(152, 48, 20, 0.12);
-    --on-signal:   #F6F1E8;
-    --glass-pill:  rgba(20, 19, 14, 0.085);
     background: var(--paper);
     color: var(--ink);
 }
 
+
+/* --- Surfaces ---------------------------------------------------------
+   What the zones used to supply by inverting, three things still
+   genuinely need: a panel the page lies on top of, a plate that
+   arrives by opening out, and a dialog over a dimmed page. One step of
+   the ramp does it, declared in both directions — that is --paper-2,
+   in section 1.
+
+   The navigation panel takes two steps rather than one, and did before
+   this change. It is not a band in the flow of the page: the page is a
+   layer above it that slides aside to uncover it, and two surfaces one
+   step apart do not read as one being in front of the other, however
+   cleanly the seam is cut. The frame goes with the panel because the
+   frame is the panel's ground drawn on the overlay, and the two have
+   to agree.
+
+   Declared as tokens rather than literals so the pair is written once
+   for each theme instead of once for each selector in each theme,
+   which is how the ladders below fell out of step with one another
+   before. */
+:root {
+    --surface-2: #F7F7F7;
+    --surface-3: #EFEFEF;
+}
+
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .zone-warm {
-        --paper:   #1C1A14;
-        --paper-2: #26241B;
-        --ink:     #F1ECE1;
-        --ink-2:   #A9A395;
-        --ink-3:   #8C8779;
-        --rule:    #35322A;
-        --rule-2:  #4C493E;
-        --signal:  #FF6A3D;
-        --signal-soft: rgba(255, 106, 61, 0.14);
-        --on-signal:   #1C1A14;
-        --glass-pill:  rgba(241, 236, 225, 0.09);
+    :root:not([data-theme="light"]) {
+        --surface-2: #1A1A1A;
+        --surface-3: #262626;
     }
 }
 
-:root[data-theme="dark"] .zone-warm {
-    --paper:   #1C1A14;
-    --paper-2: #26241B;
-    --ink:     #F1ECE1;
-    --ink-2:   #A9A395;
-    --ink-3:   #8C8779;
-    --rule:    #35322A;
-    --rule-2:  #4C493E;
-    --signal:  #FF6A3D;
-    --signal-soft: rgba(255, 106, 61, 0.14);
-    --on-signal:   #1C1A14;
-    --glass-pill:  rgba(241, 236, 225, 0.09);
+:root[data-theme="dark"] {
+    --surface-2: #1A1A1A;
+    --surface-3: #262626;
 }
+
+.menu,
+.underlay__frame { --paper: var(--surface-2); }
+
+.menu { --paper-2: var(--surface-3); }
 
 
 /* ====== 2. RESET & BASE ============================================= */
@@ -599,14 +629,18 @@ em { font-style: italic; }
 }
 
 /* Bands are the vertical unit. The rule at the top of each one is the
-   only divider the page needs; an inverted zone divides itself. */
+   only divider the page needs.
+
+   Four selectors used to stand here suppressing that rule around the
+   two zones, on the grounds that a zone divides itself: where the
+   ground changed from paper to ink, a hairline as well would have been
+   saying the same thing twice. The grounds no longer change, so the
+   hairline is the only thing left to say it, and the two seams that
+   suppression used to remove — Work into About, Experience into
+   Contact — are back to being the same rule as every other. */
 .band { padding-block: var(--band-y); }
 
 .band + .band { border-top: 1px solid var(--rule); }
-.band.zone-invert + .band,
-.band + .band.zone-invert,
-.band.zone-warm + .band,
-.band + .band.zone-warm { border-top: 0; }
 
 /* A sub-block inside a band: same rules, smaller step. */
 .sub {
@@ -659,7 +693,7 @@ em { font-style: italic; }
 .tag__no {
     display: inline-flex;
     align-items: center;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.1em;
 }
@@ -804,7 +838,7 @@ em { font-style: italic; }
 }
 
 .cap__no {
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     flex: none;
 }
@@ -841,8 +875,11 @@ em { font-style: italic; }
 }
 
 .btn--primary { background: var(--ink); color: var(--paper); }
+/* The fill is the ink, so the state cannot be "take the accent" any
+   more — it is a step along the ramp: the button lightens in light and
+   dims in dark, by the same one step either way. */
 .btn--primary:hover,
-.btn--primary:focus-visible { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn--primary:focus-visible { background: var(--ink-2); border-color: var(--ink-2); color: var(--paper); }
 
 .btn--ghost { color: var(--ink); border-color: var(--rule-2); }
 .btn--ghost:hover,
@@ -872,7 +909,7 @@ em { font-style: italic; }
     border: 1px dashed var(--rule-2);
 }
 
-.tbd::before { content: '⌇ '; color: var(--signal); }
+.tbd::before { content: '⌇ '; color: var(--mark); }
 
 /* Applied for one frame while the palette is swapped. */
 .theme-switch *,
@@ -950,7 +987,7 @@ em { font-style: italic; }
 
 .intro__phrase { animation: intro-say 0.32s var(--ease-io) both; }
 
-.intro__stop { color: var(--signal); }
+.intro__stop { color: var(--mark); }
 
 /* The scroll indicator's own language: the same orange, scaled from its
    left edge, and — like that one — at a constant rate. An eased fill
@@ -1039,8 +1076,8 @@ em { font-style: italic; }
     border-radius: var(--nav-r);
     background: var(--nav-plate);
     box-shadow: var(--nav-cast);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
-    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
     transition: background-color var(--t-mid) var(--ease-io),
                 border-color var(--t-mid) var(--ease-io),
                 box-shadow var(--t-mid) var(--ease-io),
@@ -1310,8 +1347,8 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
    inline would have to be captured before a theme change and cleared
    after the close, and this follows both for nothing. */
 .menu-btn[aria-expanded="true"] {
-    color: var(--signal);
-    background: var(--signal-soft);
+    color: var(--paper);
+    background: var(--ink);
 }
 
 .menu-btn__text {
@@ -1444,7 +1481,7 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 
 .menu__link:hover:not([aria-current]),
 .menu__link:focus-visible:not([aria-current]) {
-    color: var(--signal);
+    color: var(--ink);
     background: var(--paper-2);
 }
 
@@ -1703,6 +1740,13 @@ html:not(.js) .menu {
     padding: calc(var(--bar) + 1.5rem)
              max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)))
              0;
+    /* Static, this is a block at the top of the document rather than a
+       layer beneath it, and its ground used to be inverted — which was
+       the whole of the separation from the page below. One step off the
+       paper is not, so the seam is stated. A box-shadow rather than a
+       border, so the block's height and the page's first line are
+       exactly where they were. */
+    box-shadow: 0 1px 0 var(--rule);
 }
 
 html:not(.js) .menu__inner { padding: 0; overflow: visible; }
@@ -1799,17 +1843,20 @@ html:not(.js) [data-main] { box-shadow: none; }
     transition: color var(--t-fast) var(--ease-io);
 }
 
-/* The statement answers the cursor in the accent the site already uses.
-   The stop is that colour to begin with, so it holds while the rest of
-   the line comes up to meet it. */
-.hero__title:hover { color: var(--signal); }
+/* The statement answered the cursor by taking the stop's colour, the
+   stop holding still while the line came up to meet it. The line is at
+   full ink to begin with now and has nowhere to travel, so the journey
+   is made from the other end: the stop comes up to the line. The same
+   two marks meeting on the same gesture, in the one direction a
+   two-tone ramp leaves open. */
+.hero__title:hover .hero__stop { color: var(--ink); }
 
 /* Two lines, broken where the sense breaks rather than where the box
    runs out — which is why each is its own block and nothing here
    balances or re-wraps them. */
 .hero__title span { display: block; }
 .hero__title em { font-style: italic; letter-spacing: -0.03em; }
-.hero__stop { color: var(--signal); display: inline !important; }
+.hero__stop { color: var(--mark); display: inline !important; }
 
 .hero__said {
     margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
@@ -1846,7 +1893,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.1em;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     flex: none;
 }
@@ -1891,7 +1938,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     color: var(--ink-3);
 }
 
-.hero__scroll svg { width: 0.625rem; height: 0.625rem; color: var(--signal); }
+.hero__scroll svg { width: 0.625rem; height: 0.625rem; color: currentColor; }
 
 
 /* ====== 8.1 THE OPENING ============================================ */
@@ -1905,10 +1952,18 @@ html:not(.js) [data-main] { box-shadow: none; }
    overrides on that composition, never something the composition
    depends on.
 
-   The panel carries `zone-warm`, so it is painted in the same tokens
-   Selected Work re-declares for itself. When the transition opens it
-   to the full screen, the ground the reader is looking at is already
-   the next section's ground — which is the whole trick.
+   The panel and Selected Work are painted in the same ground, so when
+   the transition opens the panel to the full screen the ground the
+   reader is looking at is already the next section's — which is the
+   whole trick, and it now holds by identity rather than by two zones
+   agreeing: both are simply the page.
+
+   The cost of that is the ground no longer *changes* as it opens. The
+   panel used to be a warm plate arriving over paper, and there is no
+   second ground in a two-tone system for it to be. What the reader
+   watches now is the plate and its caption arriving on the run the
+   words leave along — the geometry of the transition, untouched, minus
+   the colour it used to carry.
 
    A phone is not given the seam at all. The refrain earns its
    repetition by being the thing that parts, and nothing parts below
@@ -1949,7 +2004,7 @@ html:not(.js) [data-main] { box-shadow: none; }
 }
 
 .opening__line em { font-style: italic; letter-spacing: -0.03em; }
-.opening__stop { color: var(--signal); }
+.opening__stop { color: var(--mark); }
 
 .opening__panel {
     width: 100%;
@@ -2119,6 +2174,12 @@ html:not(.js) [data-main] { box-shadow: none; }
     inset: 0;
     width: 100%;
     height: 100%;
+    /* The element exists for a beat before the renderer presents its
+       first frame, and an unpainted canvas is transparent. Costs
+       nothing — the frames that follow are opaque and cover it — and
+       it means the gap shows the page's ground rather than whatever
+       the compositor had there. */
+    background: var(--paper);
 }
 
 .glass[data-live] .glass__canvas { display: block; }
@@ -2347,7 +2408,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     width: auto;
     height: 0.42em;
     overflow: visible;
-    color: var(--signal);
+    color: var(--mark);
     pointer-events: none;
 }
 
@@ -2404,12 +2465,18 @@ html:not(.js) [data-main] { box-shadow: none; }
     max-width: 46ch;
 }
 
-/* The contribution chart draws its empty days in a very light grey, so
-   the panel stays light in both themes rather than being inverted. */
+/* The contribution chart is a third-party image — ghchart.rshah.org —
+   with its own light ground and its own green scale baked into the
+   bytes. Neither reads the page, so this is the one plate on the site
+   that is deliberately the same in both themes: a light panel, because
+   the picture inside it is a light picture, and a fixed neutral border
+   because --rule-2 is a white transparency in dark and would not read
+   on it. The image is desaturated on the way in, so the last hue the
+   site had goes with the rest of them. */
 .chart {
     min-width: 0;
-    background: #EFEDE7;
-    border: 1px solid var(--rule-2);
+    background: #F2F2F2;
+    border: 1px solid #D4D4D4;
     padding: clamp(0.875rem, 2.5vw, 1.5rem);
 }
 
@@ -2421,11 +2488,22 @@ html:not(.js) [data-main] { box-shadow: none; }
     height: auto;
     aspect-ratio: 663 / 104;
     background: none;
+    filter: grayscale(1);
 }
 
-.chart .cap { color: #55534A; }
-.chart .cap__no { color: #B03D1B; }
-.chart .cap a { color: #B03D1B; }
+/* Pinned rather than tokenised, for the same reason as the panel: this
+   caption sits on a plate that does not follow the theme. */
+.chart .cap { color: #4F4F4F; }
+.chart .cap__no { color: #000000; }
+.chart .cap a { color: #000000; }
+
+/* The plate does not follow the theme, so the two rules that are
+   written in terms of the ink's polarity — the focus ring in section 2
+   and the selection fill above it — have to be pinned here too. In dark
+   both resolve to white, which on this one light panel is a ring and a
+   highlight that are not there. */
+.chart .cap a:focus-visible { outline-color: #000000; }
+.chart ::selection { background: #000000; color: #FFFFFF; }
 
 @media (min-width: 62rem) {
     .practice { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: start; }
@@ -2523,7 +2601,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.1em;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     flex: none;
 }
@@ -2558,7 +2636,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.12em;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
 }
 
@@ -2660,7 +2738,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.12em;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     margin-bottom: 0.25rem;
 }
@@ -2867,10 +2945,14 @@ html:not(.js) [data-main] { box-shadow: none; }
     background-size: 0% 1px;
     background-position: 0 100%;
     padding-bottom: 0.1em;
-    transition: background-size var(--t-slow) var(--ease), color var(--t-mid) var(--ease-io);
+    transition: background-size var(--t-slow) var(--ease);
 }
 
-.contact__mail:hover { color: var(--signal); background-size: 100% 1px; }
+/* The rule drawing itself under the address is the whole of the state.
+   A colour change went with it, from the ink to the accent; monochrome
+   that is the ink to the ink, so it is gone and its transition segment
+   with it. */
+.contact__mail:hover { background-size: 100% 1px; }
 
 .contact__cols {
     grid-column: 1 / -1;
@@ -2911,8 +2993,10 @@ html:not(.js) [data-main] { box-shadow: none; }
 }
 
 .contact__links span { color: var(--ink-2); }
+/* These sit at full ink already, so the hover is carried by a rule
+   under the word rather than by a colour that cannot change. */
 .contact__links a { transition: color var(--t-fast) var(--ease-io); }
-.contact__links a:hover { color: var(--signal); }
+.contact__links a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 .contact__links svg { width: 0.9375rem; height: 0.9375rem; flex: none; color: var(--ink-3); }
 
 @media (min-width: 40rem) {
@@ -3018,7 +3102,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.1em;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
 }
 
@@ -3176,7 +3260,10 @@ html:not(.js) [data-main] { box-shadow: none; }
     max-height: 94dvh;
     padding: 0;
     border: 1px solid var(--rule-2);
-    background: var(--paper);
+    /* One step off the page rather than the page itself: a dialog
+       covering the document has to be distinguishable from it, and on
+       a #000000 ground --paper is the same black as what it covers. */
+    background: var(--paper-2);
     color: var(--ink);
 }
 
@@ -3203,8 +3290,10 @@ html:not(.js) [data-main] { box-shadow: none; }
     color: var(--ink-3);
 }
 
-.lightbox__close { color: var(--ink); }
-.lightbox__close:hover { color: var(--signal); }
+/* One step down at rest so the hover has a step to make. */
+.lightbox__close { color: var(--ink-2); }
+.lightbox__close:hover,
+.lightbox__close:focus-visible { color: var(--ink); }
 
 /* --- Case body ------------------------------------------------------- */
 
@@ -3235,7 +3324,7 @@ html:not(.js) [data-main] { box-shadow: none; }
 .case-block__label::before {
     content: counter(caseblock, decimal-leading-zero);
     flex: none;
-    color: var(--signal);
+    color: var(--mark);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.1em;
     padding-right: calc(clamp(1rem, 2vw, 2rem) + 1.25rem);
@@ -3293,7 +3382,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     width: 0.5rem;
     height: 1px;
     margin-top: 0.72em;
-    background: var(--signal);
+    background: var(--mark);
 }
 
 @media (min-width: 62rem) {
@@ -3330,7 +3419,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     flex: none;
     width: clamp(1rem, 2vw, 2rem);
     height: 1px;
-    background: var(--signal);
+    background: var(--mark);
     margin-right: 0.625rem;
 }
 
@@ -3359,7 +3448,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     color: var(--ink);
 }
 
-.case-next__go svg { width: 1rem; height: 0.75rem; color: var(--signal); transition: transform var(--t-mid) var(--ease); }
+.case-next__go svg { width: 1rem; height: 0.75rem; color: currentColor; transition: transform var(--t-mid) var(--ease); }
 .case-next a:hover .case-next__go svg { transform: translateX(0.3rem); }
 
 
@@ -3413,6 +3502,13 @@ html:not(.js) [data-main] { box-shadow: none; }
 
 @media (prefers-reduced-motion: no-preference) {
     .case-figure--cover img { view-transition-name: project-cover; }
+
+    /* Both snapshots carry the document's own ground. Without it the
+       cross-fade happens over whatever the browser puts behind them,
+       which between two pages of a themed site is a frame of the wrong
+       colour — the one place a navigation could still flash. */
+    ::view-transition-old(root),
+    ::view-transition-new(root) { background: var(--paper-base); }
 
     ::view-transition-old(root) { animation: vt-out 0.2s var(--ease-io) both; }
     ::view-transition-new(root) { animation: vt-in  0.36s var(--ease) both; }
@@ -3554,6 +3650,14 @@ html:not(.js) [data-main] { box-shadow: none; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }
+
+    /* The short ticks are drawn as backgrounds rather than borders, and
+       a background is exactly what this mode flattens away. Repainted
+       in the system's ink so the idiom survives. */
+    .exp__areas li::before,
+    .case-figure figcaption::before,
+    .case-list li::before,
+    .case-next__label::before { background: CanvasText; }
 }
 
 @media print {
@@ -3574,7 +3678,7 @@ html:not(.js) [data-main] { box-shadow: none; }
         aspect-ratio: auto !important;
         max-height: none !important;
         overflow: visible !important;
-        background: #fff !important;
+        background: var(--paper) !important;
     }
 
     .glass__canvas, .glass__count, .glass__label { display: none !important; }
@@ -3630,12 +3734,36 @@ html:not(.js) [data-main] { box-shadow: none; }
     .cut__ground, .close__ground { display: none !important; }
     .cut { padding-block: 0 !important; }
 
+    /* The ramp is reset once, at every site that declares it, rather
+       than each ground being overridden where it is painted: a sheet
+       of paper is white however the screen was set, and everything on
+       the site now reads its colour from these eight names. */
+    :root,
+    :root[data-theme="dark"],
+    :root[data-theme="light"],
+    .zone-invert,
+    .zone-warm {
+        --paper:      #FFFFFF;
+        --paper-2:    #FFFFFF;
+        --paper-base: #FFFFFF;
+        --surface-2:  #FFFFFF;
+        --surface-3:  #FFFFFF;
+        --ink:        #000000;
+        --ink-2:      #333333;
+        --ink-3:      #555555;
+        --rule:       #BBBBBB;
+        --rule-2:     #999999;
+        /* Declared light and dark at the three sites above; on paper it
+           is neither, and leaving it dark asks the UA to render form
+           controls and any UA-painted surface for a dark ground. */
+        color-scheme: light;
+    }
+
     body { background: #fff; color: #000; font-size: 11pt; }
-    .zone-invert, .zone-warm { background: #fff; color: #000; }
 
     .band { padding-block: 1.25rem; break-inside: avoid; }
 
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
 
-    a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+    a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: var(--ink-3); }
 }
