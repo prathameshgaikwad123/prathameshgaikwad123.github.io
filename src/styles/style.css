@@ -12,9 +12,12 @@
               is interface (labels, metadata, navigation, body copy,
               numerals) is Inter.
    Model      One scrolling document. Sections are anchors, not slides.
-   Chrome     The one rounded thing on the site: the navigation is a
-              floating translucent plate, centred over the page, rather
-              than a header the page wears. Section 7.
+   Chrome     The only rounded things on the site: two floating
+              translucent plates pinned to the gutters — the identity at
+              the left edge, the theme switch and the menu toggle at the
+              right — rather than a header the page wears. The
+              navigation itself is the panel fixed under the page, and
+              it is the only one. Section 7.
    Themes     Light is the base; dark is declared twice so the system
               preference and an explicit choice both resolve. Inverted
               zones re-declare the same token names, so every component
@@ -45,18 +48,18 @@
     --on-signal:   #FFFFFF;
     --scrim:       rgba(22, 21, 15, 0.6);
 
-    /* --- The floating navigation ---------------------------------------
-       One translucent plate that rides over the page, declared per theme
-       so it keeps the same weight on either ground. --nav-chip is the
-       ground under the monogram and the active link; --nav-ghost is the
-       whisper under a hovered one.                                     */
+    /* --- The header's plates -------------------------------------------
+       Two translucent plates that ride over the page, sharing one set of
+       tokens, declared per theme so they keep the same weight on either
+       ground. --nav-chip is the ground under the monogram, under a
+       hovered theme switch and under the menu toggle at rest;
+       --nav-chip-2 is that toggle hovered.                             */
     --nav-plate:   rgba(255, 255, 255, 0.66);
     --nav-plate-2: rgba(255, 255, 255, 0.90);
     --nav-opaque:  rgba(255, 255, 255, 0.97);
     --nav-edge:    rgba(22, 21, 15, 0.09);
     --nav-chip:    rgba(22, 21, 15, 0.075);
     --nav-chip-2:  rgba(22, 21, 15, 0.12);
-    --nav-ghost:   rgba(22, 21, 15, 0.03);
     --nav-cast:    0 1px 1px rgba(22, 21, 15, 0.03),
                    0 6px 18px -10px rgba(22, 21, 15, 0.18);
     --nav-cast-2:  0 1px 1px rgba(22, 21, 15, 0.04),
@@ -96,21 +99,36 @@
     --col:    calc((100% - 11 * var(--gap)) / 12);
     --span-5: calc(5 * var(--col) + 4 * var(--gap));
 
-    /* --- The navigation's geometry --------------------------------------
-       Every chip in the bar is one --nav-item square; the plate is that
-       plus its own padding and hairline. --bar stays what it has always
-       been — the space the page keeps clear at the top — only now it is
-       measured from the floating control rather than from a full-width
-       header.
+    /* --- The header's geometry ------------------------------------------
+       Every chip in either plate is one --nav-item square; a plate is
+       that plus its own padding and hairline. --bar stays what it has
+       always been — the space the page keeps clear at the top — only
+       now it is measured from a floating plate rather than from a
+       full-width header. Both plates are one --nav-h tall, so there is
+       still one clearance to keep and the split does not touch it.
 
-       The square is sized for the thumb first. Below the desktop
-       breakpoint this plate holds the only three controls a phone is
-       given — the monogram, the theme switch and the menu — and a chip
-       small enough for a cursor is not a target for a finger. The
-       cursor takes it back at 62rem, where the plate also picks up the
-       five section links and has to stay a control rather than grow
-       into a header.                                                   */
+       The square is sized for the thumb first. The header holds three
+       controls and that is all it holds — the monogram, the theme
+       switch and the menu toggle — and since the toggle is now the only
+       way into the navigation, a chip small enough for a cursor is not
+       a target this can afford to leave to a finger. So the step down
+       to the cursor's size is asked of the pointer rather than of the
+       window: a wide screen someone is touching keeps the larger chip.
+
+       The first three move together, and the step below is the only
+       place any of them is set: the monogram and the theme mark are
+       drawn as a fraction of the chip, so a chip that changes without
+       them leaves a letterform adrift in the middle of it.
+
+       The name is not one of the three, deliberately. It is not chrome
+       sized to a pointer, it is the identity — set on one measure and
+       the same on every screen that shows it, so the lockup's
+       proportion follows the chip rather than the name shrinking to
+       chase it.                                                      */
     --nav-item: 2.5rem;
+    --nav-mark: 0.9375rem;                        /* the monogram in its chip */
+    --nav-icon: 1.0625rem;                        /* the theme mark in its chip */
+    --nav-name: 0.9375rem;                        /* the name, at one size */
     --nav-pad:  0.375rem;
     --nav-h:    calc(var(--nav-item) + var(--nav-pad) * 2 + 2px);
     --nav-top:  clamp(0.75rem, 1.8vh, 1.25rem);   /* resting offset */
@@ -229,11 +247,18 @@
     .js:not(.motion-off) { --run-opening: 110svh; }
 }
 
-/* The plate returns to its cursor-sized geometry. --nav-h and --bar are
-   both written against --nav-item, so the page's top clearance follows
-   it without being restated. */
-@media (min-width: 62rem) {
-    :root { --nav-item: 1.875rem; }
+/* Both plates return to their cursor-sized geometry — a wide window
+   being pointed at with something precise. A wide window being touched
+   is not, so the query asks for both: the menu toggle is the whole
+   navigation now, and 30px of it is a target for a mouse, not a thumb.
+   --nav-h and --bar are written against --nav-item, so the page's top
+   clearance follows without being restated. */
+@media (min-width: 62rem) and (pointer: fine) {
+    :root {
+        --nav-item: 1.875rem;
+        --nav-mark: 0.8125rem;
+        --nav-icon: 0.875rem;
+    }
 }
 
 /* The panel's two steps up. Both are measures: the panel is the same
@@ -283,7 +308,6 @@
         --nav-edge:    rgba(240, 238, 231, 0.10);
         --nav-chip:    rgba(240, 238, 231, 0.095);
         --nav-chip-2:  rgba(240, 238, 231, 0.155);
-        --nav-ghost:   rgba(240, 238, 231, 0.04);
         --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                        0 8px 22px -12px rgba(0, 0, 0, 0.6);
         --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -314,7 +338,6 @@
     --nav-edge:    rgba(240, 238, 231, 0.10);
     --nav-chip:    rgba(240, 238, 231, 0.095);
     --nav-chip-2:  rgba(240, 238, 231, 0.155);
-    --nav-ghost:   rgba(240, 238, 231, 0.04);
     --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                    0 8px 22px -12px rgba(0, 0, 0, 0.6);
     --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -965,26 +988,51 @@ em { font-style: italic; }
 }
 
 
-/* ====== 7. THE FLOATING NAVIGATION ================================== */
-/* Not a header the page wears, but a single control that floats over it:
-   one translucent plate, centred, shrink-to-fit, with the monogram on the
-   left, the sections in the middle and the theme switch on the right.
-   The strip it hangs in spans the viewport so the plate can centre, and
-   takes no pointer events, so the page beneath it stays live.          */
+/* ====== 7. THE HEADER, AND THE NAVIGATION =========================== */
+/* Not a header the page wears, but two shrink-to-fit translucent plates
+   that float over it, one pinned to each gutter: the identity at the
+   left edge, the theme switch and the menu toggle at the right, and
+   nothing between them. The navigation itself is not here — it is the
+   panel further down this section, fixed under the page.
+
+   The strip the plates hang in spans the viewport so the two can be
+   pushed to opposite ends of it, and takes no pointer events, so the
+   open span between them leaves the page beneath live.
+
+   Both plates carry the same .masthead__inner, deliberately: the
+   ground, the hairline, the blur, the cast, the tuck on scroll, the
+   opaque fallback where there is no backdrop filter, the forced-colours
+   hairline and the print rule are each written once against that class
+   and apply to both without being restated. Give either plate a class
+   of its own and it silently loses all seven.                        */
 
 .masthead {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    /* Above the overlay rather than below it: the plate is centred, so
-       at every width it straddles the edge the overlay travels to, and
-       the toggle that closes the menu is on the wrong side of it. */
+    /* Above the overlay, which is the one thing here that has to be
+       stated rather than inherited: .underlay covers the viewport and
+       takes pointer events for the whole of the reveal, and it is the
+       right-hand plate — the one carrying the toggle that closes the
+       menu — that it would otherwise be sitting on top of. */
     z-index: 110;
     display: flex;
-    justify-content: center;
+    /* Two plates, two ends. With one child this would pin it left
+       rather than centre it, which is why the controls plate also
+       claims the space itself below. */
+    justify-content: space-between;
     align-items: flex-start;
-    padding: var(--nav-top) var(--gutter) 0;
+    gap: var(--gap);
+    /* The plates align to the site's own grid, not to the raw edge of
+       the window. Below the shell's full measure the two are the same
+       thing; above it the viewport gutter is outboard of the column the
+       hero, the statement and the work index are all set against, and a
+       plate hanging out there reads as chrome the page forgot. Same
+       idiom as .opening__stage, for the same reason. */
+    padding: var(--nav-top)
+             max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)))
+             0;
     pointer-events: none;
 }
 
@@ -1008,16 +1056,29 @@ em { font-style: italic; }
                 transform var(--t-mid) var(--ease);
 }
 
-/* Scrolled: the plate gathers a little more ground and tucks up by a
-   couple of pixels. Enough to register, never enough to jump. */
+/* The brand plate holds one thing at the narrow end and a lockup at the
+   wide one; the controls plate holds two chips and sets them tighter
+   than the lockup wants. `margin-left: auto` is belt and braces for the
+   space-between above: it pins the controls plate to the right edge
+   even if it is ever the only plate rendered. */
+.masthead__inner--brand { gap: 0.5625rem; }
+
+.masthead__inner--actions {
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+/* Scrolled: both plates gather a little more ground and tuck up by a
+   couple of pixels, in unison — the class is written on the strip, not
+   on either plate. Enough to register, never enough to jump. */
 .masthead.is-solid .masthead__inner {
     background: var(--nav-plate-2);
     box-shadow: var(--nav-cast-2);
     transform: translateY(calc(var(--nav-rise) * -1));
 }
 
-/* Without a backdrop filter the plate cannot be translucent and legible
-   at once, so it takes the ground instead. */
+/* Without a backdrop filter a plate cannot be translucent and legible
+   at once, so both take the ground instead. */
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
     .masthead__inner,
     .masthead.is-solid .masthead__inner { background: var(--nav-opaque); }
@@ -1043,10 +1104,19 @@ em { font-style: italic; }
     transform: scaleX(var(--p, 0));
 }
 
-/* --- Monogram --------------------------------------------------------
-   The initials already in the identity, set in the display face and given
-   one square of ground. The full name stays in the accessibility tree so
-   the link keeps its name.                                             */
+/* --- The identity ----------------------------------------------------
+   The initials already in the identity, set in the display face and
+   given one square of ground, with the name beside them from the tablet
+   step up. The header has nothing else in it now, and a single small
+   square at the end of an empty strip reads as a fragment rather than a
+   signature; the name is what makes the left end of the header a
+   deliberate thing.
+
+   Below that step the name is still in the document, only unpainted, by
+   the same clip it has always been hidden with. Which is the point: the
+   span is in the accessibility tree on both sides of the breakpoint, so
+   the link is called the same thing at every width and needs no label
+   of its own to say so.                                              */
 
 .wordmark {
     display: inline-flex;
@@ -1058,20 +1128,17 @@ em { font-style: italic; }
 .wordmark__initials {
     display: grid;
     place-items: center;
+    flex: none;
     width: var(--nav-item);
     height: var(--nav-item);
     border-radius: var(--nav-r-in);
     background: var(--nav-chip);
     font-family: var(--font-display);
-    font-size: 0.9375rem;
+    font-size: var(--nav-mark);
     line-height: 1;
     letter-spacing: 0.015em;
     transition: background-color var(--t-fast) var(--ease-io),
                 color var(--t-fast) var(--ease-io);
-}
-
-@media (min-width: 62rem) {
-    .wordmark__initials { font-size: 0.8125rem; }
 }
 
 .wordmark:hover .wordmark__initials,
@@ -1092,95 +1159,41 @@ em { font-style: italic; }
     border: 0;
 }
 
-.wordmark__role { display: none; }
-
-/* --- Sections --------------------------------------------------------- */
-
-.nav { display: none; }
-
-.nav__list {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.125rem;
-}
-
-.nav__link {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    height: var(--nav-item);
-    padding-inline: clamp(0.5rem, 0.95vw, 0.8125rem);
-    border-radius: var(--nav-r-in);
-    font-size: var(--t-micro);
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    color: var(--ink-3);
-    transition: color var(--t-fast) var(--ease-io),
-                background-color var(--t-fast) var(--ease-io);
-}
-
-/* The index numerals belong to the editorial registers — section tags,
-   the work index, the overlay menu. Inside a compact control they are
-   noise, so the plate carries labels alone. */
-.nav .nav__num { display: none; }
-
-.nav__link:hover:not([aria-current]),
-.nav__link:focus-visible:not([aria-current]) {
-    color: var(--signal);
-    background: var(--nav-ghost);
-}
-
-/* Active: stronger ink, and one restrained ground. Where the script is
-   running that ground is the travelling plate below, so the static one
-   stands down and the change reads as a movement rather than a swap. */
-.nav__link[aria-current] {
-    color: var(--ink);
-    background: var(--nav-chip);
-}
-
-.nav.has-pill .nav__link[aria-current] { background: transparent; }
-
-.nav__pill {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--w, 0);
-    border-radius: var(--nav-r-in);
-    background: var(--nav-chip);
-    transform: translateX(var(--x, 0));
-    opacity: 0;
-    pointer-events: none;
-    transition: transform var(--t-mid) var(--ease),
-                width var(--t-mid) var(--ease),
-                opacity var(--t-fast) var(--ease-io);
-}
-
-.nav__pill.is-on { opacity: 1; }
-
-/* The first placement is a fade in position, never a slide from the
-   left edge of the list. */
-.nav__pill.is-first { transition: opacity var(--t-mid) var(--ease-io); }
-
-@media (min-width: 62rem) { .nav { display: block; } }
-
-.masthead__actions {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    flex: none;
+/* Painted from the tablet step: every hidden property handed back, or
+   the span stays a clipped pixel and reads as a layout fault. It is
+   absolutely positioned while hidden, so it is out of flow and the
+   plate's gap does not pay for it below this width. */
+@media (min-width: 48rem) {
+    .wordmark__full {
+        position: static;
+        width: auto;
+        height: auto;
+        margin: 0;
+        /* The chip is a filled box and sits flush in the plate's own
+           padding; the name is type and wants more air at the closed
+           end than a box does. */
+        padding-right: 0.3125rem;
+        overflow: visible;
+        clip-path: none;
+        font-family: var(--font-display);
+        font-size: var(--nav-name);
+        /* A little leading, so centring the box centres the type
+           rather than hanging it off its own cap height. */
+        line-height: 1.2;
+        letter-spacing: 0.005em;
+    }
 }
 
 /* --- Theme switch ---------------------------------------------------- */
 
+/* Both chips hold their size. The wrapper that used to carry the group
+   was flex: none; the plate that replaced it is a .masthead__inner and
+   inherits min-width: 0, so under width pressure the plate overflows as
+   one object rather than squeezing the chips out of square. */
 .theme-toggle {
     display: grid;
     place-items: center;
+    flex: none;
     width: var(--nav-item);
     height: var(--nav-item);
     border: 0;
@@ -1192,14 +1205,11 @@ em { font-style: italic; }
 }
 
 .theme-toggle:hover { color: var(--ink); background: var(--nav-chip); }
-.theme-toggle svg { width: 1.0625rem; height: 1.0625rem; }
 
 /* Both marks are drawn as a fraction of the chip, so they hold the same
-   proportion on either side of the breakpoint rather than sitting adrift
-   in the middle of the larger square. */
-@media (min-width: 62rem) {
-    .theme-toggle svg { width: 0.875rem; height: 0.875rem; }
-}
+   proportion whichever size the chip is, rather than sitting adrift in
+   the middle of the larger square. One token, set with --nav-item. */
+.theme-toggle svg { width: var(--nav-icon); height: var(--nav-icon); }
 
 .theme-toggle .icon-moon { display: none; }
 :root[data-theme="dark"] .theme-toggle .icon-sun  { display: none; }
@@ -1224,9 +1234,10 @@ em { font-style: italic; }
    on the page re-declare --paper for their own zone and one of them
    would otherwise let the panel show through at rest.
 
-   Nothing else moves. The floating plate, the reading-progress line,
-   the intro and the skip link all stay where they are, and the layer
-   below is the only thing that travels.                              */
+   Nothing else moves. The header's two plates, the reading-progress
+   line, the intro and the skip link all stay where they are; the page
+   layer and the overlay that travels with it are the only things that
+   go anywhere.                                                       */
 
 [data-main] {
     position: relative;
@@ -1235,14 +1246,17 @@ em { font-style: italic; }
     /* Declared at rest as well as in motion, and it costs nothing there:
        the layer covers the viewport exactly, so all four edges of the
        cast fall outside it. The only edge that ever comes into view is
-       the right one, and only once the page has moved off the panel. */
+       the right one, and only once the page has moved off the panel.
+       True while the panel is fixed, which is every case but one — the
+       no-JS fallback makes it static and pushes this layer down, and
+       takes the cast back off at the end of section 7. */
     box-shadow: var(--menu-cast);
 }
 
 /* Before the timeline arrives — and, for a reader who has asked for
    less motion, where it never will — the page still has to move. This
    is that, in one declaration. The global reduced-motion rule in
-   section 21 shortens it to nothing, which is exactly right: the menu
+   section 17 shortens it to nothing, which is exactly right: the menu
    opens, it just does not travel to get there.
 
    Every rule here is behind :not(.nav-live), and the transform has to
@@ -1270,9 +1284,8 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
 
 
 /* --- The menu toggle -------------------------------------------------
-   The plate's one filled affordance, and now at every width rather
-   than only below the desktop breakpoint: what it opens is the whole
-   index of the site, not the phone's substitute for the section list.
+   The controls plate's one filled affordance, and the only navigation
+   control on the site: what is behind it is the whole index.
 
    Two labels stacked in a window one line tall, and two bars — both
    real elements rather than the pseudo-elements they were, because the
@@ -1283,6 +1296,7 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
 .menu-btn {
     display: inline-flex;
     align-items: center;
+    flex: none;
     gap: 0.5rem;
     height: var(--nav-item);
     padding-inline: 0.6875rem;
@@ -1378,11 +1392,14 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
    lifted off rather than a drawer that has arrived from somewhere. Every
    component inside it works untouched, in either theme.
 
-   The links are the site's own: the five sections above, the six case
-   studies and the elsewhere links below. The section links keep the
-   .menu__link class they have always had, which is what the scroll spy
-   in useChrome already looks for — so the current section marks itself
-   here exactly as it does on the plate, with nothing added to either.  */
+   The links are the site's own: the top of the page and the five
+   sections above — six rows, and the first of them is load-bearing, as
+   the only thing the spy can mark before the first section is reached —
+   then the six case studies and the elsewhere links below. The section
+   links keep the .menu__link class they have always had, and
+   `.menu__link[href^="#"]` is now the whole of what the scroll spy in
+   useChrome looks for, so every aria-current on the site is written
+   into this panel.                                                    */
 
 .menu {
     position: fixed;
@@ -1449,6 +1466,12 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
+/* The index numerals belong to the editorial registers — the section
+   tags, the work index, and this panel. The name is the last thing left
+   of the plate's copy of the section list, and it is kept rather than
+   renamed because every row of the only navigation the site has is
+   marked with it: .nav__num has no rule of its own anywhere, only the
+   two descendant blocks here and under .menu__small. */
 .menu__link .nav__num {
     flex: none;
     font-family: var(--font-text);
@@ -1575,10 +1598,12 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
    that otherwise shows as a hairline of page between the frame and the
    panel at some window widths.
 
-   It sits above the page and below the plate. The plate is centred, so
-   at any width it straddles the edge this layer travels to: putting it
-   under the overlay would hand the overlay the clicks meant for the
-   toggle that closes the menu.                                       */
+   It sits above the page and below the header. This layer covers the
+   viewport and takes the pointer for the whole of the reveal, and it
+   sweeps out over the right-hand edge — which is where the controls
+   plate is pinned. Above the overlay is therefore where the header has
+   to be, or the layer takes the clicks meant for the toggle that
+   closes the menu.                                                   */
 
 .underlay {
     position: fixed;
@@ -1640,26 +1665,86 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 }
 
 
-/* Without JavaScript the toggle cannot open anything, and the panel is
-   under a page that is never going to move off it. So the panel takes
-   its place in the document instead — a plain navigation block at the
-   top, which is what it was before any of this. Above the desktop
-   breakpoint the plate already carries the sections and the block would
-   only be a second copy of them. */
+/* --- Without JavaScript ----------------------------------------------
+   The toggle cannot open anything and the panel is under a page that is
+   never going to move off it, so the panel takes its place in the
+   document instead: a plain index at the top, which is what a
+   navigation is when nothing can be revealed. At every width now — the
+   header no longer carries a copy of the section list to stand in for
+   this above the desktop breakpoint, so this block is the whole of the
+   navigation a reader without a script is given, and hiding it there
+   would leave them none.
+
+   Which is also why the panel's inert is written on the client rather
+   than into the markup (src/components/Menu.jsx): the prerendered
+   document is rendered closed, and an inert attribute shipped in the
+   HTML would hand this reader a navigation they can read and cannot
+   follow.
+
+   Laid across rather than down. The panel's own type is a measure for a
+   column of six headlines; the same six words in a band at the top of a
+   page want a line, not half a screen.
+
+   And the foot comes with them, which it did not before. Off the home
+   page the six case studies are otherwise reachable only through the
+   work index — and one of them has no next-case link either, so from
+   there the rest of the work was a page away. Nine small links is the
+   price of every page being able to reach every other one. The meta
+   line stays out: it is two lines of decoration, and the contact band
+   carries the same words.                                            */
 html:not(.js) .menu-btn { display: none; }
+
+/* The switch is JavaScript too — useTheme binds the click — so without
+   it the chip is a control that does nothing, wearing a label that is
+   wrong half the time. It goes, and with the toggle already gone the
+   plate that held them both is an empty translucent nub at the right
+   edge, so it goes too. What is left is the identity, which is a link
+   and works. */
+html:not(.js) .theme-toggle,
+html:not(.js) .masthead__inner--actions { display: none; }
 
 html:not(.js) .menu {
     position: static;
     z-index: auto;
     width: auto;
-    padding: calc(var(--bar) + 1.5rem) var(--gutter) 0;
+    /* The same edge the plate above it and the page below it are set
+       against, not the raw edge of the window. */
+    padding: calc(var(--bar) + 1.5rem)
+             max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)))
+             0;
 }
 
 html:not(.js) .menu__inner { padding: 0; overflow: visible; }
-html:not(.js) .menu__foot,
 html:not(.js) .menu__meta { display: none; }
 
-@media (min-width: 62rem) { html:not(.js) .menu { display: none; } }
+html:not(.js) .menu__list {
+    flex-flow: row wrap;
+    gap: 0.125rem clamp(0.25rem, 1.6vw, 1.25rem);
+}
+
+/* The inline padding is cut back rather than to nothing: on a case study
+   one of these rows is filled with the signal to say where the reader
+   is, and a ground that stops at the letterforms is not a row. What
+   comes off here goes back into the list's column gap above. */
+html:not(.js) .menu__link {
+    font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+    padding-inline: 0.25rem;
+    gap: 0.4375rem;
+}
+
+/* The foot's own two registers lay themselves out unchanged — side by
+   side from 40rem, stacked below it. All it wants here is a little more
+   room above its hairline, which was measured against a panel with a
+   screen of height to spend and is tight under a band. */
+html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
+
+/* The page layer's cast is declared at rest because the layer covers
+   the viewport exactly, so every edge of it falls off screen. Here it
+   does not: the panel pushes the page down, and the cast's top edge
+   lands across the seam between them — forty pixels of dark gradient
+   over the panel's ground, in dark theme, for the one reader who
+   cannot have been shown the effect it is there for. */
+html:not(.js) [data-main] { box-shadow: none; }
 
 
 /* ====== 8. HERO ===================================================== */
@@ -3516,7 +3601,7 @@ html:not(.js) .menu__meta { display: none; }
        it is never loaded for a reader who has set this. */
     html:not(.nav-live) [data-main],
     html:not(.nav-live) .underlay { transition: none; }
-    /* The plate stays where it rests rather than tucking up on scroll. */
+    /* Both plates stay where they rest rather than tucking up on scroll. */
     .masthead.is-solid .masthead__inner { transform: none; }
     /* Two systems are not listed here, and for the same reason: they
        read this preference themselves rather than being overridden
@@ -3606,10 +3691,12 @@ html:not(.js) .menu__meta { display: none; }
     .cut__ground { display: none; }
     .close__ground, .opening__panel { clip-path: none !important; }
     .masthead__inner, .menu-btn, .wordmark__initials { border: 1px solid CanvasText; }
-    /* Backgrounds are flattened here, so the travelling ground would read
-       as a block over the label. The underline carries the state. */
-    .nav__pill { display: none; }
-    .nav__link[aria-current] { forced-color-adjust: none; text-decoration: underline; }
+    /* Backgrounds are flattened here, so the filled row that says "you
+       are here" in the panel becomes every other row. The underline
+       carries the state instead — and it has to, because the panel is
+       the only place on the site that marks a current anything. */
+    .menu__link[aria-current],
+    .menu__small[aria-current] { text-decoration: underline; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }

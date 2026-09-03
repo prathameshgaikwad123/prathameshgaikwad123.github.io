@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { onMedia, rafOnce } from './dom.js';
+import { useEffect } from 'react';
+import { rafOnce } from './dom.js';
 
 function offsetTop(el) {
     let y = 0;
@@ -11,31 +11,26 @@ function offsetTop(el) {
     return y;
 }
 
-/* The floating plate gathers ground, the scroll progress fills, and the
-   active section's ground travels with the reader. Which band the reader is
-   in is decided once per frame, from a single line three tenths of the way
-   down the viewport.
+/* The floating plates gather ground, the scroll progress fills, and the
+   section the reader is in marks itself in the navigation panel. Which
+   band that is gets decided once per frame, from a single line three
+   tenths of the way down the viewport.
 
    All of this is written straight to the DOM rather than held in state: it
    runs on every scroll frame, and re-rendering the whole page for it would
    be both slower and — for aria-current — a change of behaviour.
 
-   `pillReady` is the flag that says the travelling ground has been rendered.
-   Without JavaScript there is no plate to move and the current link keeps
-   the ground CSS draws under it instead, so the state is never lost. */
-export default function useChrome({ pillReady }) {
-    const placed = useRef(false);
-
+   There is one navigation now, so there is one place to mark. The plate
+   used to carry a copy of the section list with a travelling ground under
+   the current link, and this hook used to place it; both are gone, and
+   what is left is the panel's own links, found by the .menu__link class
+   they have always carried. */
+export default function useChrome() {
     useEffect(() => {
         const masthead = document.getElementById('masthead');
         const progress = document.getElementById('progress');
-        const navBar = document.getElementById('nav');
-        const navList = navBar ? navBar.querySelector('.nav__list') : null;
-        const navPill = navList ? navList.querySelector('.nav__pill') : null;
 
-        const navLinks = [].slice.call(
-            document.querySelectorAll('.nav__link[href^="#"], .menu__link[href^="#"]'),
-        );
+        const navLinks = [].slice.call(document.querySelectorAll('.menu__link[href^="#"]'));
 
         const spy = [];
         navLinks.forEach((link) => {
@@ -46,35 +41,7 @@ export default function useChrome({ pillReady }) {
             if (spy.indexOf(section) === -1) spy.push(section);
         });
 
-        if (!masthead && !progress && !spy.length && !navPill) return undefined;
-
-        const placeNavPill = () => {
-            if (!navPill) return;
-
-            const link = navList.querySelector('.nav__link[aria-current]');
-
-            /* Below the desktop breakpoint the list is not laid out at all,
-               and on a page with no section in view there is nothing to
-               mark. */
-            if (!link || !navList.offsetWidth) {
-                navPill.classList.remove('is-on');
-                placed.current = false;
-                return;
-            }
-
-            /* The first placement arrives in position and fades; only later
-               changes travel. */
-            if (!placed.current) navPill.classList.add('is-first');
-
-            navPill.style.setProperty('--x', `${link.offsetLeft}px`);
-            navPill.style.setProperty('--w', `${link.offsetWidth}px`);
-            navPill.classList.add('is-on');
-
-            if (!placed.current) {
-                placed.current = true;
-                requestAnimationFrame(() => navPill.classList.remove('is-first'));
-            }
-        };
+        if (!masthead && !progress && !spy.length) return undefined;
 
         const paintSpy = () => {
             if (!spy.length) return;
@@ -119,7 +86,6 @@ export default function useChrome({ pillReady }) {
             }
 
             paintSpy();
-            placeNavPill();
         };
 
         const onScroll = () => schedule(paintChrome);
@@ -129,20 +95,18 @@ export default function useChrome({ pillReady }) {
         window.addEventListener('load', onScroll);
         paintChrome();
 
-        /* Label widths settle when the interface face arrives, and the list
-           is only measurable once the desktop breakpoint is met. */
+        /* The interface face changes the metrics of every line on the page,
+           which moves every section's offsetTop and the scroll height the
+           progress bar divides by. One more pass once it lands. */
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(() => schedule(paintChrome));
         }
-        const wide = window.matchMedia('(min-width: 62rem)');
-        const offWide = onMedia(wide, onScroll);
 
         return () => {
             schedule.cancel();
             window.removeEventListener('scroll', onScroll);
             window.removeEventListener('resize', onScroll);
             window.removeEventListener('load', onScroll);
-            offWide();
         };
-    }, [pillReady]);
+    }, []);
 }

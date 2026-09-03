@@ -12,7 +12,6 @@ import Capabilities from './sections/Capabilities.jsx';
 import Experience from './sections/Experience.jsx';
 import Contact from './sections/Contact.jsx';
 
-import { useEnhanced } from './hooks/dom.js';
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
 import useChrome from './hooks/useChrome.js';
@@ -26,16 +25,15 @@ import useCaseTransition from './hooks/useCaseTransition.js';
    Two layers. The navigation is fixed under everything; the page is the
    one layer above it, and opening the menu slides that layer off the
    navigation rather than bringing anything in over it. Everything that
-   floats — the intro, the skip link, the plate, the reading-progress
-   line and the overlay that travels with the page — stays outside the
-   layer that moves. */
+   floats — the intro, the skip link, the header's two plates, the
+   reading-progress line and the overlay that travels with the page —
+   stays outside the layer that moves. */
 export default function App() {
-    const enhanced = useEnhanced();
     const intro = useIntro();
     const menu = useMenu();
     const index = useWorkIndex();
 
-    useChrome({ pillReady: enhanced });
+    useChrome();
     useUnderlayNav(menu.open);
     useReveal(intro.done);
     useCaseTransition(index.indexRef, index.setActive);
@@ -47,8 +45,6 @@ export default function App() {
 
             <Navigation
                 home="#top"
-                base=""
-                pill={enhanced}
                 menuOpen={menu.open}
                 onMenuToggle={menu.toggle}
                 menuButtonRef={menu.buttonRef}

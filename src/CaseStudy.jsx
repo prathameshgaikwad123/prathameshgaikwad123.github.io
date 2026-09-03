@@ -11,7 +11,6 @@ import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
 import { projectBySlug } from './data/projects.js';
 import { caseBlocks } from './case-studies/index.js';
 
-import { useEnhanced } from './hooks/dom.js';
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
 import useChrome from './hooks/useChrome.js';
@@ -45,12 +44,11 @@ function Fact({ label, value }) {
    src/case-studies/, and everything else is read from the project record. */
 export default function CaseStudy({ slug }) {
     const project = projectBySlug(slug);
-    const enhanced = useEnhanced();
     const intro = useIntro();
     const menu = useMenu();
     const [zoomed, setZoomed] = useState(null);
 
-    useChrome({ pillReady: enhanced });
+    useChrome();
     useUnderlayNav(menu.open);
 
     const blocks = caseBlocks[slug](project, setZoomed);
@@ -62,9 +60,6 @@ export default function CaseStudy({ slug }) {
 
             <Navigation
                 home={HOME}
-                base={HOME}
-                current="work"
-                pill={enhanced}
                 menuOpen={menu.open}
                 onMenuToggle={menu.toggle}
                 menuButtonRef={menu.buttonRef}

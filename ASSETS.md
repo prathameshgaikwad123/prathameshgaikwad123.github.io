@@ -108,10 +108,11 @@ block in `src/sections/About.jsx`.
 
 ## Not provided, and deliberately so
 
-**A CV.** There is no CV file, so there is no CV button — a button leading to a
-404 is worse than no button. To enable it: save your PDF as
-`public/assets/prathamesh-gaikwad-cv.pdf`, then uncomment the block marked
-`CV BUTTON` in `src/components/Navigation.jsx`.
+**A CV.** There is no CV file, so there is no CV link — a link leading to a
+404 is worse than no link. To enable it: save your PDF as
+`public/assets/prathamesh-gaikwad-cv.pdf`, then uncomment the row marked
+`CV` in the **Elsewhere** list in `src/components/Menu.jsx` — the navigation
+panel, which is where every link on the site now lives.
 
 ---
 

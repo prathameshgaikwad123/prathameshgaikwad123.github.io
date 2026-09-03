@@ -46,11 +46,11 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/App.jsx` | The home page: hero, then five bands — Selected Work, About, Capabilities, Experience, Contact. One scrolling document; each band is an anchor (`/#work`, `/#about`, …). |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The five bands of the home page. |
-| `src/components/` | Navigation, the overlay menu, the loader, a work-index row, the glass carousel's document half, the image lightbox, the shared page furniture. |
+| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, a work-index row, the glass carousel's document half, the image lightbox, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome, entrance reveals, active navigation, the work-index preview plate, the cross-document cover transition. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, entrance reveals, the work-index preview plate, the cross-document cover transition. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
@@ -66,6 +66,12 @@ Every page is written to static HTML at build time and picked up again in the
 browser, so with JavaScript disabled the page is still a complete, readable
 document — the entrance motion and the travelling preview plate are
 enhancements, and each project keeps its preview image in the flow.
+
+Navigable, too, and that rests on one attribute: the panel's `inert` is
+written on the client rather than into the markup, so the prerendered
+document ships a navigation whose links work. Without it the panel would
+arrive readable and dead, and since the header carries no section list of its
+own, that would be the whole of the site's navigation gone. `src/components/Menu.jsx`.
 
 ## The scroll system
 
@@ -93,7 +99,9 @@ changing any of it:
 2. **One condition, in one place.** `RUNS` in `core.js` is the only answer to
    "does the scroll system exist here", and the stylesheet asks the same
    question in the same words. Below 62rem, or for a reader who has asked for
-   less motion, GSAP is never even fetched.
+   less motion, no timeline is built and ScrollTrigger is never fetched. GSAP
+   core still is, on every page at every width, because the navigation's own
+   loader asks for it — which is why the two loaders are separate.
 3. **One file per effect, and `mm.revert()` cleans up after it.** Every
    timeline is built inside a `gsap.matchMedia` scoped to its own section, so
    unmounting — or the condition ceasing to match — removes every trigger and
