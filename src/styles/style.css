@@ -896,15 +896,6 @@ em { font-style: italic; }
                 transform var(--t-slow) var(--ease) var(--d, 0s);
 }
 
-/* Opacity only. Used where a transform would create a containing block
-   for an absolutely positioned child — the work index rows. */
-.js [data-reveal-soft] { opacity: 0; }
-
-.js [data-reveal-soft].is-in {
-    opacity: 1;
-    transition: opacity var(--t-slow) var(--ease-io) var(--d, 0s);
-}
-
 .js [data-reveal-rule] { transform: scaleX(0); transform-origin: left; }
 
 .js [data-reveal-rule].is-in {
@@ -1027,7 +1018,7 @@ em { font-style: italic; }
     /* The plates align to the site's own grid, not to the raw edge of
        the window. Below the shell's full measure the two are the same
        thing; above it the viewport gutter is outboard of the column the
-       hero, the statement and the work index are all set against, and a
+       hero and the statement are both set against, and a
        plate hanging out there reads as chrome the page forgot. Same
        idiom as .opening__stage, for the same reason. */
     padding: var(--nav-top)
@@ -1467,7 +1458,7 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 }
 
 /* The index numerals belong to the editorial registers — the section
-   tags, the work index, and this panel. The name is the last thing left
+   tags, the carousel's counter, and this panel. The name is the last thing left
    of the plate's copy of the section list, and it is kept rather than
    renamed because every row of the only navigation the site has is
    marked with it: .nav__num has no rule of its own anywhere, only the
@@ -1687,7 +1678,7 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 
    And the foot comes with them, which it did not before. Off the home
    page the six case studies are otherwise reachable only through the
-   work index — and one of them has no next-case link either, so from
+   work carousel — and one of them has no next-case link either, so from
    there the rest of the work was a page away. Nine small links is the
    price of every page being able to reach every other one. The meta
    line stays out: it is two lines of decoration, and the contact band
@@ -1968,7 +1959,7 @@ html:not(.js) [data-main] { box-shadow: none; }
 
 /* Held to the right of the panel, and capped: the plate is a figure in
    a composition here, not the composition itself. The transition below
-   widens it to the five columns the index's own plate occupies. */
+   widens it to the right five columns. */
 .opening__plate {
     width: 100%;
     max-width: 34rem;
@@ -2020,9 +2011,9 @@ html:not(.js) [data-main] { box-shadow: none; }
         clip-path: inset(var(--opening-inset));
     }
 
-    /* The plate is held in the right five columns — where the index's
-       own preview plate lives — so that when the panel is the whole
-       screen the reader is already looking at the right place. */
+    /* The plate is held in the right five columns, so the cover the
+       panel opens on has a place on the grid rather than sitting in the
+       middle of the screen like a splash. */
     .js:not(.motion-off) .opening__panel-in {
         position: absolute;
         inset: 0;
@@ -2038,18 +2029,15 @@ html:not(.js) [data-main] { box-shadow: none; }
 }
 
 
-/* ====== 9. WORK INDEX ============================================== */
-/* The visual centre. An index on an inverted ground: one large numeral
-   per project, a Castoro title, discipline metadata, one line of copy —
-   and a single preview plate that travels down the right five columns to
-   meet whichever project is active.
+/* ====== 9. SELECTED WORK =========================================== */
+/* The visual centre: a heading on a warm ground, and the six covers as
+   one rigid row behind a pane of glass.
 
-   This is the one section whose interaction is on Framer Motion rather
-   than on CSS transitions. Everything static is here; everything that
-   moves in response to a pointer, a focus ring or a press is in
-   src/components/ProjectItem.jsx, timed from src/motion/variants.js. The
-   rules below are the resting state, which is also what the prerendered
-   document shows and what the reader sees if the script never arrives. */
+   There is no second list under it. The numbered index that used to
+   stand here said the same six things the strip already says, and the
+   height it needed — most of it the empty columns its travelling plate
+   moved through — was a screen and a half of ground between the work
+   and the next section. The links it carried are on the covers now. */
 
 .work__tag { grid-column: 1 / -1; }
 
@@ -2117,7 +2105,12 @@ html:not(.js) [data-main] { box-shadow: none; }
 }
 
 .glass[data-live] { cursor: grab; }
-.glass[data-live].is-held { cursor: grabbing; }
+/* Over a card there is something to open; over the ground between two
+   there is only the strip to throw. Written by the pointer handler in
+   src/hooks/useGlassCarousel.js, which hit-tests through the lens. */
+.glass[data-live].is-over { cursor: pointer; }
+.glass[data-live].is-held,
+.glass[data-live].is-held.is-over { cursor: grabbing; }
 .glass:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
 
 .glass__canvas {
@@ -2138,15 +2131,38 @@ html:not(.js) [data-main] { box-shadow: none; }
    Deliberately not promoted with will-change. The fade is six frames
    long and text opacity is cheap; a permanent compositor layer for it
    costs the type its subpixel rendering for the other fifty-four. */
+/* It is also the section's one visible link: the project in the middle
+   of the glass, named and openable, which is what gives a keyboard
+   something to land on. Shrink-wrapped rather than given a width, so the
+   box a click lands in is the text and not the six centimetres of glass
+   either side of it — the cards there are the canvas's to answer for. */
 .glass__label {
     position: absolute;
     left: 50%;
     top: calc(15.1% - 0.35em);
     translate: -50% 0;
-    width: min(90vw, 30rem);
+    width: max-content;
+    max-width: min(90vw, 30rem);
     text-align: center;
     opacity: var(--glass-label);
-    pointer-events: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+.glass__label:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 0.4em;
+    border-radius: 2px;
+}
+
+/* The one thing a resting page does not say, said on approach rather
+   than printed across the picture. */
+.glass__label:hover .glass__title,
+.glass__label:focus-visible .glass__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: var(--rule-2);
 }
 
 .glass__title {
@@ -2190,7 +2206,12 @@ html:not(.js) [data-main] { box-shadow: none; }
 
 /* What is in the document before the canvas exists, and what stays if
    WebGL never answers: the same six covers, the same rhythm, still
-   scrollable sideways. No glass, and no apology for it. */
+   scrollable sideways. No glass, and no apology for it.
+
+   It is also where the six links live as markup — one per cover — so
+   the prerendered document a crawler or a reader without a script is
+   handed lists the whole of the work, and the canvas is an enhancement
+   on top of it rather than the only way in. */
 .glass__strip {
     position: absolute;
     left: 0;
@@ -2218,6 +2239,18 @@ html:not(.js) [data-main] { box-shadow: none; }
     scroll-snap-align: center;
 }
 
+.glass__cell-link {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.glass__cell-link:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+}
+
 .glass__cell img {
     display: block;
     height: 100%;
@@ -2228,6 +2261,22 @@ html:not(.js) [data-main] { box-shadow: none; }
 
 .glass__cell:nth-child(odd) img { aspect-ratio: 4 / 3; }
 .glass__cell:nth-child(even) img { aspect-ratio: 4 / 5; }
+
+/* Each cover's project, and what the label opens: both are in the
+   document for the reasons the visible text cannot carry them — an
+   image whose alt is empty because the link around it is what is being
+   named, and a title that says which project without saying what
+   following it does. Print takes the first of them back. */
+.glass__name,
+.glass__hint {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
 
 .glass[data-live] .glass__strip { display: none; }
 
@@ -2245,203 +2294,6 @@ html:not(.js) [data-main] { box-shadow: none; }
     .glass__count { top: 88%; }
 }
 
-.index {
-    position: relative;
-    margin-top: var(--head-gap);
-}
-
-.index__list { border-top: 1px solid var(--rule-2); }
-
-.idx { border-bottom: 1px solid var(--rule); transition: border-color var(--t-mid) var(--ease-io); }
-
-.idx__link {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline;
-    column-gap: 1rem;
-    padding-block: clamp(1.25rem, 3vw, 2rem);
-}
-
-.idx__no {
-    grid-column: 1;
-    font-size: var(--t-index);
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--ink-3);
-    font-variant-numeric: tabular-nums;
-    transition: color var(--t-mid) var(--ease-io);
-}
-
-.idx__cat {
-    grid-column: 2;
-    justify-self: end;
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-}
-
-.idx__title {
-    grid-column: 1 / -1;
-    margin-top: 0.75rem;
-    font-family: var(--font-display);
-    font-size: var(--t-title);
-    font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    max-width: 30ch;
-    /* Colour only. The step forward is Framer Motion's — see
-       src/components/ProjectItem.jsx. */
-    transition: color var(--t-mid) var(--ease-io);
-}
-
-.idx__figure { grid-column: 1 / -1; margin-top: 1.25rem; }
-
-.idx__figure .frame__media img { aspect-ratio: 16 / 10; }
-
-.idx__desc {
-    grid-column: 1 / -1;
-    margin-top: 1rem;
-    font-size: var(--t-small);
-    line-height: 1.6;
-    color: var(--ink-2);
-    max-width: 48ch;
-}
-
-.idx__meta { grid-column: 1 / -1; margin-top: 0.875rem; }
-
-.idx__go {
-    grid-column: 1 / -1;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    margin-top: 1.25rem;
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink);
-}
-
-/* The tick is wrapped so Framer Motion can move it — on hover, on focus and
-   on a press — without touching the icon's own geometry, which is shared with
-   every other arrow on the site. */
-.idx__go-tick { display: inline-flex; }
-
-.idx__go svg {
-    width: 1rem;
-    height: 0.75rem;
-    color: var(--signal);
-}
-
-/* --- Tablet: the plate sits beside the copy, still in the row -------- */
-
-@media (min-width: 40rem) {
-    .idx__link {
-        grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 0.85fr);
-        column-gap: clamp(1.25rem, 3vw, 2.5rem);
-        align-items: start;
-    }
-    .idx__no    { grid-column: 1; grid-row: 1 / span 5; }
-    .idx__cat   { grid-column: 2; grid-row: 1; justify-self: start; }
-    .idx__title { grid-column: 2; grid-row: 2; margin-top: 0.5rem; }
-    .idx__desc  { grid-column: 2; grid-row: 3; }
-    .idx__meta  { grid-column: 2; grid-row: 4; }
-    .idx__go    { grid-column: 2; grid-row: 5; }
-    .idx__figure { grid-column: 3; grid-row: 1 / span 5; margin-top: 0.25rem; }
-}
-
-/* --- Desktop: one travelling plate ---------------------------------- */
-
-@media (min-width: 62rem) and (hover: hover) and (pointer: fine) {
-
-    .js .index__list { width: calc(7 * var(--col) + 6 * var(--gap)); }
-
-    .js .idx__link {
-        grid-template-columns: 5.5rem minmax(0, 1fr) auto;
-        column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
-        padding-block: clamp(1.5rem, 3.2vw, 2.5rem);
-    }
-
-    .js .idx__no {
-        grid-row: 1 / span 4;
-        font-size: clamp(2rem, 3.4vw, 3rem);
-    }
-
-    .js .idx__cat   { grid-column: 2; grid-row: 1; justify-self: start; }
-    .js .idx__title { grid-column: 2; grid-row: 2; }
-    .js .idx__desc  { grid-column: 2; grid-row: 3; max-width: 48ch; }
-    .js .idx__meta  { grid-column: 2; grid-row: 4; }
-
-    /* The arrow tick rides in the third column, centred on the row. */
-    .js .idx__go {
-        grid-column: 3;
-        grid-row: 1 / span 4;
-        align-self: center;
-        margin-top: 0;
-        gap: 0;
-    }
-
-    .js .idx__go-label {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-    }
-
-    .js .idx__go svg { width: 1.25rem; height: 0.875rem; }
-
-    /* All six plates share one containing block, so the outgoing plate
-       travels with the incoming one instead of jumping.
-
-       From here the section is Framer Motion's: the offset, the crossfade,
-       the image settling off its overscan, the step forward and the tick are
-       all in src/components/ProjectItem.jsx, with the timing in
-       src/motion/variants.js. What is left below is the resting state.
-       Nothing Framer Motion writes carries a CSS transition, or the two
-       would fight over every frame.
-
-       Opacity in particular is Framer Motion's outright, and only its: a
-       rule still declaring it would decide the value a fade is read to start
-       from, and the crossfade would collapse into a swap. What conceals an
-       inactive plate here is visibility, which an opacity of Framer
-       Motion's cannot contradict — so the prerendered document shows one
-       plate whether or not the script ever arrives. It is the better tool
-       anyway: it takes the plate out of the reading order as well as out of
-       sight, and it cannot be interpolated. The delay holds a plate visible
-       until its fade is through. */
-    .js .idx__figure {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: var(--span-5);
-        margin: 0;
-        visibility: hidden;
-        transition: visibility 0s linear var(--t-mid);
-    }
-
-    .js .idx.is-on .idx__figure {
-        visibility: visible;
-        transition: visibility 0s linear 0s;
-    }
-
-    /* The tick is concealed the same way, and for the same reason. */
-    .js .idx__go-tick { visibility: hidden; transition: visibility 0s linear var(--t-mid); }
-    .js .idx.is-on .idx__go-tick { visibility: visible; transition: visibility 0s linear 0s; }
-
-    .js .idx.is-on { border-bottom-color: var(--rule-2); }
-    .js .idx.is-on .idx__no { color: var(--signal); }
-    .js .idx:not(.is-on) .idx__title { color: var(--ink-2); }
-
-    .js .idx.is-on .idx__figure::before,
-    .js .idx.is-on .idx__figure::after { border-color: var(--signal); }
-}
 
 
 /* ====== 10. ABOUT =================================================== */
@@ -3590,7 +3442,7 @@ html:not(.js) [data-main] { box-shadow: none; }
     }
 
     /* Anything positional is removed outright rather than shortened. */
-    .js [data-reveal], .js [data-reveal-soft] { opacity: 1; transform: none; }
+    .js [data-reveal] { opacity: 1; transform: none; }
     .js [data-reveal-rule] { transform: none; }
     /* The navigation's travel is positional too, and this is the one place
        where shortening is not enough: a hundredth of a millisecond is
@@ -3607,8 +3459,10 @@ html:not(.js) [data-main] { box-shadow: none; }
        read this preference themselves rather than being overridden
        after the fact.
 
-       The work index asks Framer Motion, and drops its positional work
-       at source (section 9). The scroll system asks the stylesheet —
+       The carousel asks the media query itself and drops the coasting
+       at source, keeping the lens — which is a static optical field
+       rather than movement (section 9). The scroll system asks the
+       stylesheet —
        every rule it owns is written into a
        `(prefers-reduced-motion: no-preference)` query, and every
        timeline into the matching gsap.matchMedia condition — so when
@@ -3700,18 +3554,67 @@ html:not(.js) [data-main] { box-shadow: none; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }
-    .js .idx__figure { opacity: 1 !important; visibility: visible !important; }
 }
 
 @media print {
     .masthead, .menu, .theme-toggle, .skip-link,
     .case-next, .progress, .hero__scroll, .intro { display: none !important; }
 
-    /* The scroll system, on paper. The opening is a transition between
-       two sections that are both printed anyway, and the figure index is
-       a second view of work the index below already sets out in full.
-       Neither survives losing the scroll that gave it its point. */
-    .opening, .glass { display: none !important; }
+    /* The opening is a transition between two sections that are both
+       printed anyway, and it does not survive losing the scroll that
+       gave it its point. */
+    .opening { display: none !important; }
+
+    /* The carousel does: it is the whole of the work now, so on paper it
+       becomes what it already is underneath — the six covers in a row,
+       each under its own title. The lens, the counter and the label are
+       the parts that needed a screen. */
+    .glass {
+        position: static !important;
+        aspect-ratio: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        background: #fff !important;
+    }
+
+    .glass__canvas, .glass__count, .glass__label { display: none !important; }
+
+    .glass[data-live] .glass__strip { display: flex !important; }
+
+    .glass__strip {
+        position: static !important;
+        translate: none !important;
+        flex-wrap: wrap;
+        gap: 1rem 1.5rem;
+        overflow: visible !important;
+        padding-inline: 0 !important;
+    }
+
+    .glass__cell {
+        flex: 0 0 calc(33.333% - 1rem);
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .glass__cell img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 4 / 3 !important;
+        object-fit: cover;
+    }
+
+    /* The one place the covers are named, so the row is a list of
+       projects on paper rather than six pictures. */
+    .glass__name {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        margin: 0.5rem 0 0 !important;
+        clip-path: none !important;
+        white-space: normal !important;
+        display: block;
+        font-size: 9pt;
+    }
 
     /* The first screen is a screen. On paper it is a heading and a line,
        and reserving a viewport for it would print a blank first page. */
@@ -3732,17 +3635,7 @@ html:not(.js) [data-main] { box-shadow: none; }
 
     .band { padding-block: 1.25rem; break-inside: avoid; }
 
-    .js [data-reveal], .js [data-reveal-soft] { opacity: 1 !important; transform: none !important; }
-
-    .js .idx__figure {
-        position: static !important;
-        width: auto !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-    }
-
-    .js .index__list { width: auto !important; }
+    .js [data-reveal] { opacity: 1 !important; transform: none !important; }
 
     a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
 }

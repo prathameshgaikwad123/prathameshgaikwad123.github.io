@@ -1,4 +1,5 @@
 import { CARD_W, CARD_H, GAP, STRIP_Y, ASPECT_WIDE, ASPECT_TALL } from './config.js';
+import { unwarpPoint } from './warp.js';
 
 /* ===================================================================
    THE VIRTUAL AXIS
@@ -115,8 +116,8 @@ export function nearestSnap(strip, scroll) {
 }
 
 /* The scroll value that centres one particular card, by the shortest
-   way round. Used when the index below the carousel is hovered and the
-   strip has to come and meet it. */
+   way round. What Home and End are: the first or the last project,
+   fetched from wherever the strip happens to be standing. */
 export function snapTo(strip, scroll, index) {
     const card = strip.cards[index];
     if (!card) return scroll;
@@ -128,4 +129,29 @@ export function snapTo(strip, scroll, index) {
    the snap tidies up the remainder on settle. */
 export function pitch(strip) {
     return strip.width / strip.cards.length;
+}
+
+/* Which card is under a point on the glass, or -1 for the ground
+   between two of them. `x` and `y` are stage pixels off the element,
+   which is to say a point on the picture rather than on the strip — so
+   the lens is undone first, and only then is the result matched
+   against the rigid row. Every card is the same height, so the
+   vertical test is one comparison against the row rather than six.
+
+   The scratch object is reused: this runs on every pointer move, to
+   decide whether the cursor is over something openable. */
+const under = { x: 0, y: 0 };
+
+export function cardAt(strip, scroll, x, y) {
+    if (!strip || !(strip.stageW > 0) || !(strip.stageH > 0)) return -1;
+
+    unwarpPoint(x / strip.stageW, y / strip.stageH, under);
+    const px = under.x * strip.stageW;
+    const py = under.y * strip.stageH;
+
+    if (Math.abs(py - strip.centreY) > strip.height / 2) return -1;
+    for (const card of strip.cards) {
+        if (Math.abs(px - screenCentre(card, strip, scroll)) <= card.w / 2) return card.index;
+    }
+    return -1;
 }

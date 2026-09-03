@@ -17,8 +17,6 @@ import useMenu from './hooks/useMenu.js';
 import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
 import useReveal from './hooks/useReveal.js';
-import useWorkIndex from './hooks/useWorkIndex.js';
-import useCaseTransition from './hooks/useCaseTransition.js';
 
 /* The home page: one scrolling document, five anchored sections.
 
@@ -31,12 +29,10 @@ import useCaseTransition from './hooks/useCaseTransition.js';
 export default function App() {
     const intro = useIntro();
     const menu = useMenu();
-    const index = useWorkIndex();
 
     useChrome();
     useUnderlayNav(menu.open);
     useReveal(intro.done);
-    useCaseTransition(index.indexRef, index.setActive);
 
     return (
         <>
@@ -65,7 +61,7 @@ export default function App() {
                 <main id="main">
                     <Hero />
                     <Opening />
-                    <Work index={index} />
+                    <Work />
                     <About />
                     <Capabilities />
                     <Experience />

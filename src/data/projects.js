@@ -1,6 +1,6 @@
 /* ===================================================================
    SELECTED WORK
-   One record per project. The work index on the home page and the case
+   One record per project. The carousel on the home page and the case
    study pages are both built from this, so a project is described once —
    including the path of every plate, which is where you change a
    placeholder's extension when you replace it. See ASSETS.md.
@@ -13,7 +13,8 @@
 const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
 
 /* `short` is the index label — the name this project answers to in a
-   list rather than on a page. It is the category for four of the six;
+   list rather than on a page: the navigation panel's work list is set
+   from it. It is the category for four of the six;
    the two VOEPL projects need their own, because a reader choosing
    between two rows both reading VOEPL is not choosing anything. */
 

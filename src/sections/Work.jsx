@@ -1,33 +1,26 @@
-import { LazyMotion, domAnimation, useReducedMotion } from 'framer-motion';
-import ProjectItem from '../components/ProjectItem.jsx';
 import WorkCarousel from '../components/WorkCarousel.jsx';
+import { useReducedMotion } from '../hooks/dom.js';
 import { projects } from '../data/projects.js';
-import { workTiming, workTimingStill } from '../motion/variants.js';
 
-/* The centre of the site. An index on a warm ground: one large numeral
-   per project, and a single preview plate that travels down the right five
-   columns to meet the active row.
+/* The centre of the site, and now one thing rather than two: the
+   heading, and the six covers as a single rigid row behind a pane of
+   glass.
 
-   The interaction is one system, held in useWorkIndex and animated in
-   ProjectItem. Two things decide whether it moves: a reader who has asked
-   for less motion, and the frame before hydration — in both cases the states
-   are identical and the transitions are simply gone, so the same information
-   arrives without the movement.
+   It used to carry a second view of the same six projects below the
+   carousel — a numbered index with a preview plate travelling down the
+   right five columns. The carousel had made it a repetition: the same
+   projects, in the same order, in the same section, offering the same
+   six destinations twice. What it cost was height, and the height was
+   the problem: a screen and a half of it between the strip and the next
+   section, most of that the empty right-hand columns the travelling
+   plate needed to move through.
 
-   Above the header sits the carousel: the same six covers, in the same
-   order, as one rigid row behind a pane of glass. It is the section's
-   `Index 01 — 06` shown rather than stated, and it is index-driven both
-   ways — scrolling the strip moves the list's active project, and hovering
-   or focusing a row of the list brings the strip round to meet it, by the
-   shortest way. What it does not carry is a second set of links: every
-   project in it is named, described and linked by the list below, and
-   offering the same six destinations twice would only make the section
-   longer to get through. */
-export default function Work({ index }) {
-    const { indexRef, active, engaged, stage, plateY, ready, indexProps, onRowEnter, onRowFocus, setActive } = index;
-
+   So the links moved into the carousel, where the covers already were.
+   Every card opens its case study — by click, by tap, and by Enter on
+   the project the label is naming — and the section ends where the
+   strip does. */
+export default function Work() {
     const reduced = useReducedMotion();
-    const timing = ready && !reduced ? workTiming : workTimingStill;
 
     return (
         <section className="band zone-warm" id="work" aria-labelledby="work-title">
@@ -52,38 +45,7 @@ export default function Work({ index }) {
                 page's content box, so full bleed here is `width: 100%`
                 and never the viewport unit that would also count the
                 scrollbar and push the strip a few pixels off centre. */}
-            <WorkCarousel items={projects} active={active} onActive={setActive} reduced={!!reduced} />
-
-            <div className="shell">
-                <div className="index" id="work-index" ref={indexRef} {...indexProps}>
-                    {/* domAnimation is animation, variants and the hover,
-                        focus and press gestures — everything this section asks
-                        for and nothing else. Paired with the `m` components in
-                        ProjectItem it keeps layout projection and drag out of
-                        the build: 26kB gzipped rather than 39, and, because of
-                        the chunk it is given in vite.config.js, only on this
-                        page. */}
-                    <LazyMotion features={domAnimation}>
-                        <ul className="index__list">
-                            {projects.map((project, i) => (
-                                <ProjectItem
-                                    key={project.slug}
-                                    project={project}
-                                    index={i}
-                                    active={active === project.slug}
-                                    stage={stage}
-                                    engaged={engaged}
-                                    plateY={plateY}
-                                    reduced={!!reduced}
-                                    timing={timing}
-                                    onEnter={onRowEnter}
-                                    onFocus={onRowFocus}
-                                />
-                            ))}
-                        </ul>
-                    </LazyMotion>
-                </div>
-            </div>
+            <WorkCarousel items={projects} reduced={reduced} />
         </section>
     );
 }

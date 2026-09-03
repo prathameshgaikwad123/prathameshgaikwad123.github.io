@@ -19,8 +19,9 @@ npm run preview  # serve the production build
 React with Vite, and two animation systems that never overlap.
 
 **Framer Motion** handles component motion — anything that answers a pointer,
-a focus ring or a press. Its shared patterns live in `src/motion/`, and the
-work index is the section built on them.
+a focus ring or a press. Its shared patterns live in `src/motion/`. No section
+is built on them at the moment; they are there so the next one that needs them
+does not have to invent its own timing.
 
 **GSAP with ScrollTrigger** handles scroll choreography — anything whose
 progress is the reader's own progress down the page. Every effect is one file
@@ -46,11 +47,11 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/App.jsx` | The home page: hero, then five bands — Selected Work, About, Capabilities, Experience, Contact. One scrolling document; each band is an anchor (`/#work`, `/#about`, …). |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The five bands of the home page. |
-| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, a work-index row, the glass carousel's document half, the image lightbox, the shared page furniture. |
+| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, entrance reveals, the work-index preview plate, the cross-document cover transition. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, entrance reveals, the carousel's frame loop and input. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
@@ -84,7 +85,7 @@ block in the stylesheet, and one section of the page.
 | 2 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
 | 3 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
 | 4 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
-| 5 | Work | The active project, driven both ways — scrolling the strip moves the list, hovering the list brings the strip round | *(Framer Motion)* |
+| 5 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
 | 6 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
 | 7 | Experience | One plate per role, arriving at its own rate into the space the meta column leaves | `driftCards.js` |
 | 8 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
