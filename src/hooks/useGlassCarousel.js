@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createGlass } from '../carousel/glass.js';
 import Scroller from '../carousel/scroll.js';
-import { buildStrip, visible, activeIndex, nearestSnap, snapTo, pitch } from '../carousel/layout.js';
+import { buildStrip, visible, activeIndex, cardAt, nearestSnap, snapTo, pitch } from '../carousel/layout.js';
 import { CARD_W, CARD_H, GAP, STRIP_Y, FADE_IN, FADE_OUT, SURGE_SPEED } from '../carousel/config.js';
 
 /* ===================================================================
@@ -19,13 +19,16 @@ import { CARD_W, CARD_H, GAP, STRIP_Y, FADE_IN, FADE_OUT, SURGE_SPEED } from '..
    there is nothing to draw until the next event.
    =================================================================== */
 
-/* Layout on the client, plain effect on the server — the same guard the
-   work index uses, for the same reason: useLayoutEffect has nothing to
-   do on a render that never paints, and warns if asked. */
+/* Layout on the client, plain effect on the server: useLayoutEffect has
+   nothing to do on a render that never paints, and warns if asked. */
 const useLatest =
     typeof window === 'undefined'
         ? (fn) => useEffect(fn)
         : (fn) => useLayoutEffect(fn);
+
+/* How far a pointer may travel between press and release and still be
+   read as a click on a card rather than as a drag of the strip. */
+const DRAG_SLOP = 6;
 
 const num = (value, fallback) => {
     const parsed = Number.parseFloat(value);
@@ -42,7 +45,7 @@ function readGround(element) {
     return [parts[0] / 255, parts[1] / 255, parts[2] / 255];
 }
 
-export default function useGlassCarousel({ items, active, onActive, reduced }) {
+export default function useGlassCarousel({ items, reduced, onOpen }) {
     const stageRef = useRef(null);
     const canvasRef = useRef(null);
     const labelRef = useRef(null);
@@ -71,8 +74,17 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         pending: 0,
         current: 0,
         reduced: false,
-        external: false,
         arrived: false,
+        /* The gesture in progress, so a drag that happens to end where
+           it started does not also open a project. */
+        startX: 0,
+        startY: 0,
+        moved: false,
+        open: null,
+        /* The card the label is naming, beside the state that renders it:
+           what a click on the label opens has to be what the label says,
+           not what the strip has since moved on to. */
+        shown: 0,
     }).current;
 
     const measure = useCallback(() => {
@@ -127,10 +139,10 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         scroller.velocity = 0;
         engine.current = activeIndex(strip, scroller.current);
         engine.pending = engine.current;
-        engine.external = false;
         engine.phase = 'in';
         engine.fade = 1;
         if (labelRef.current) labelRef.current.style.setProperty('--glass-label', '1');
+        engine.shown = engine.current;
         setShown(engine.current);
     }, []);
 
@@ -159,13 +171,7 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             engine.current = index;
             engine.pending = index;
             if (engine.phase !== 'out') engine.phase = 'out';
-            /* The cards the strip passes through on its way to one the
-               index below asked for are not choices the reader made, so
-               they are not reported back as such — that would turn one
-               hover into a fight between the two halves of the section. */
-            if (!engine.external && onActive) onActive(index);
         }
-        if (engine.external && scroller.settled) engine.external = false;
 
         /* The label leaves in a frame and returns over five, and never
            dissolves through the outgoing text: if the active project
@@ -175,6 +181,7 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             engine.fade = 1;
             if (engine.phase === 'out') {
                 engine.phase = 'in';
+                engine.shown = engine.pending;
                 setShown(engine.pending);
             }
         } else if (engine.phase === 'out') {
@@ -182,6 +189,7 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             if (engine.fade <= 0) {
                 engine.fade = 0;
                 engine.phase = 'in';
+                engine.shown = engine.pending;
                 setShown(engine.pending);
             }
         } else if (engine.fade < 1) {
@@ -212,6 +220,11 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
            fading. */
         engine.reduced = !!reduced;
         engine.tick = tick;
+        /* Held rather than closed over: the component hands down a new
+           function on every label change, and re-binding the pointer
+           listeners six times a lap — possibly mid-drag — to learn
+           nothing new would be the wrong trade. */
+        engine.open = onOpen || null;
     });
 
     /* --- mount ------------------------------------------------------ */
@@ -318,6 +331,20 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         if (!stage || !live) return undefined;
         const { scroller } = engine;
 
+        /* Which project is under a point on the glass. Everything that
+           opens something asks this — the click, and the pointer that
+           only wants to know whether to change the cursor. */
+        const under = (event) => {
+            const rect = stage.getBoundingClientRect();
+            if (!(rect.width > 0) || !(rect.height > 0)) return -1;
+            return cardAt(
+                engine.strip,
+                scroller.current,
+                event.clientX - rect.left,
+                event.clientY - rect.top,
+            );
+        };
+
         /* Horizontal deltas only. A page section may not eat the
            vertical wheel: the reader is on their way down the document
            and a carousel that swallows that is a trap. Shift plus wheel
@@ -326,7 +353,6 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             const dx = Math.abs(event.deltaX) > 0.5 ? event.deltaX : event.shiftKey ? event.deltaY : 0;
             if (!dx) return;
             event.preventDefault();
-            engine.external = false;
             const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stage.clientWidth : 1;
             scroller.push(dx * unit);
             wake();
@@ -335,7 +361,9 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         const onDown = (event) => {
             if (event.button !== undefined && event.button !== 0) return;
             engine.pointer = event.pointerId;
-            engine.external = false;
+            engine.startX = event.clientX;
+            engine.startY = event.clientY;
+            engine.moved = false;
             /* A pointer that has already gone by the time this runs —
                a synthetic event, a lifted finger — cannot be captured,
                and the drag works without it. */
@@ -348,7 +376,23 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         };
 
         const onMove = (event) => {
-            if (engine.pointer !== event.pointerId) return;
+            if (engine.pointer !== event.pointerId) {
+                /* Not a drag: the cursor is only passing over, and the
+                   one thing to decide is whether it is over a card. */
+                if (engine.pointer === null && event.pointerType !== 'touch') {
+                    stage.classList.toggle('is-over', under(event) >= 0);
+                }
+                return;
+            }
+            /* Past this, the gesture is a drag rather than a click —
+               including a drag that comes back to where it began. The
+               threshold is the few pixels a hand moves while pressing. */
+            if (
+                Math.abs(event.clientX - engine.startX) > DRAG_SLOP ||
+                Math.abs(event.clientY - engine.startY) > DRAG_SLOP
+            ) {
+                engine.moved = true;
+            }
             scroller.dragMove(event.clientX, event.timeStamp / 1000);
             wake();
         };
@@ -362,9 +406,57 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             wake();
         };
 
+        const onLeave = () => stage.classList.remove('is-over');
+
+        /* The cards are a picture inside a canvas, so this is the one
+           place on the site where a link has to be found rather than
+           followed. The click is where it is done rather than the
+           pointer release: it is the event that carries the modifier
+           keys, the one a browser's own "activate" produces, and the one
+           a drag can be told apart from. */
+        const onClick = (event) => {
+            if (engine.moved) {
+                /* A drag that ended over the label would otherwise
+                   follow it. */
+                event.preventDefault();
+                return;
+            }
+
+            /* The anchor was handed the click itself, which happens when
+               the press was never captured — a keyboard's own activation,
+               most of all. Following a link is the browser's job. */
+            if (event.target.closest && event.target.closest('a')) return;
+
+            /* Otherwise the click arrived here retargeted: the drag needs
+               pointer capture, and capture redirects the compatibility
+               mouse events to the element holding it. So what the reader
+               pressed is looked up rather than read off the event. The
+               only link the live carousel shows is the label, and the
+               label names the card in the middle. */
+            const at = document.elementFromPoint(event.clientX, event.clientY);
+            const link = at && at.closest ? at.closest('a[href]') : null;
+            const index = link ? engine.shown : under(event);
+
+            if (index < 0 || !engine.open) return;
+            event.preventDefault();
+            engine.open(index, event);
+        };
+
         const onKey = (event) => {
             const strip = engine.strip;
             if (!strip) return;
+
+            /* Enter opens whatever the label is naming, which is the
+               project in the middle of the glass. The label itself is an
+               anchor and does its own work. */
+            if (event.key === 'Enter') {
+                if (event.target.closest && event.target.closest('a')) return;
+                if (!engine.open) return;
+                event.preventDefault();
+                engine.open(engine.shown, event);
+                return;
+            }
+
             const step = pitch(strip);
             if (event.key === 'ArrowRight') scroller.push(step);
             else if (event.key === 'ArrowLeft') scroller.push(-step);
@@ -372,7 +464,6 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             else if (event.key === 'End') scroller.to(snapTo(strip, scroller.current, items.length - 1));
             else return;
             event.preventDefault();
-            engine.external = false;
             wake();
         };
 
@@ -381,6 +472,8 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
         stage.addEventListener('pointermove', onMove);
         stage.addEventListener('pointerup', onUp);
         stage.addEventListener('pointercancel', onUp);
+        stage.addEventListener('pointerleave', onLeave);
+        stage.addEventListener('click', onClick);
         stage.addEventListener('keydown', onKey);
         return () => {
             stage.removeEventListener('wheel', onWheel);
@@ -388,22 +481,12 @@ export default function useGlassCarousel({ items, active, onActive, reduced }) {
             stage.removeEventListener('pointermove', onMove);
             stage.removeEventListener('pointerup', onUp);
             stage.removeEventListener('pointercancel', onUp);
+            stage.removeEventListener('pointerleave', onLeave);
+            stage.removeEventListener('click', onClick);
             stage.removeEventListener('keydown', onKey);
+            stage.classList.remove('is-over');
         };
     }, [live, items.length, wake]);
-
-    /* --- the index below -------------------------------------------- */
-    /* Hovering or focusing a row of the work index asks the strip to
-       come and meet it, by the shortest way round. The flag keeps the
-       two from arguing: a move the carousel started does not get
-       echoed back at it. */
-    useEffect(() => {
-        const strip = engine.strip;
-        if (!live || !strip || active == null || active === engine.current) return;
-        engine.external = true;
-        engine.scroller.to(snapTo(strip, engine.scroller.current, active));
-        wake();
-    }, [active, live, wake]);
 
     return { stageRef, canvasRef, labelRef, shown, live };
 }

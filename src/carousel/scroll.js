@@ -54,8 +54,8 @@ export default class Scroller {
         if (this.instant) this.current = this.target;
     }
 
-    /* An absolute destination — the snap, or a row of the index below
-       asking the strip to come and meet it. */
+    /* An absolute destination — the snap, or Home and End asking for
+       the first or the last project. */
     to(value) {
         this.target = value;
         this._settled = false;

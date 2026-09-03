@@ -58,16 +58,14 @@ Six projects, each with one cover and three gallery images.
 | `public/assets/images/projects/archive/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
 | `public/assets/images/projects/archive/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
 
-Each cover appears three times. In the **glass carousel** at the top of
+Each cover appears twice. In the **glass carousel** that is the whole of
 Selected Work it is cropped from the centre to 4:3 or 4:5 — the strip
 alternates, which is where its rhythm comes from — and drawn up to about
 500 px tall, so keep the subject away from the left and right thirds or a
-portrait slot will cut it. On the **work index** it fills the preview panel
-beside the project list — roughly 500 px wide on a laptop — and swaps as the
-visitor moves between projects, so it has to read instantly at that size. On
-the **case study** it runs the full content width, up to 1264 px. Choose it for
-both: a cropped detail usually survives the small size better than a whole
-squeezed-down screen.
+portrait slot will cut it. It is also the link to the project, so it has to
+read instantly at that size. On the **case study** it runs the full content
+width, up to 1264 px. Choose it for both: a cropped detail usually survives
+the small size better than a whole squeezed-down screen.
 
 ### What each cover wants to be
 

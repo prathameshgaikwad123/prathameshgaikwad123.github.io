@@ -1,15 +1,16 @@
+import { useCallback } from 'react';
 import useGlassCarousel from '../hooks/useGlassCarousel.js';
 
 /* ===================================================================
    THE WORK CAROUSEL
    -------------------------------------------------------------------
-   The section's figure index, rebuilt as the interaction it was
-   standing in for: one rigid row of covers behind a pane of glass that
-   is optically neutral across its middle and refracts hard at the
-   rims. Everything about the effect is measured in src/carousel/ and
-   drawn in WebGL; this file is the part of it that has to be a
-   document — the label, the counter, and the strip a reader gets when
-   there is no canvas to draw into.
+   The section's index, and now the whole of it: one rigid row of
+   covers behind a pane of glass that is optically neutral across its
+   middle and refracts hard at the rims. Everything about the effect is
+   measured in src/carousel/ and drawn in WebGL; this file is the part
+   of it that has to be a document — the label, the counter, the six
+   links, and the strip a reader gets when there is no canvas to draw
+   into.
 
    Three states, in the order they arrive:
 
@@ -24,13 +25,36 @@ import useGlassCarousel from '../hooks/useGlassCarousel.js';
 
 const pad = (n) => String(n + 1).padStart(2, '0');
 
-export default function WorkCarousel({ items, active, onActive, reduced }) {
-    const index = items.findIndex((item) => item.slug === active);
+/* Relative, like every other link to a case study on this page: the
+   site is a multi-page build served from the domain root, and the home
+   page is its index. */
+const href = (item) => `work/${item.slug}.html`;
+
+export default function WorkCarousel({ items, reduced }) {
+    /* Opening a project from the canvas. Every card is a destination
+       now — the strip is the only place the six projects are listed —
+       and inside the lens there is no element to be an anchor, so the
+       one the reader is pointing at is worked out from the layout and
+       followed here. Modified clicks are left to mean what they mean
+       everywhere else. */
+    const open = useCallback(
+        (index, event) => {
+            const item = items[index];
+            if (!item) return;
+            const url = href(item);
+            if (event && (event.metaKey || event.ctrlKey || event.shiftKey)) {
+                window.open(url, '_blank', 'noopener');
+                return;
+            }
+            window.location.href = url;
+        },
+        [items],
+    );
+
     const { stageRef, canvasRef, labelRef, shown, live } = useGlassCarousel({
         items,
-        active: index < 0 ? null : index,
-        onActive: (i) => onActive && onActive(items[i].slug),
         reduced,
+        onOpen: open,
     });
 
     const on = items[shown] || items[0];
@@ -38,15 +62,14 @@ export default function WorkCarousel({ items, active, onActive, reduced }) {
     /* Two accessibility states, because there are two components here.
 
        Live, it is a widget: a group with a roledescription, one tab
-       stop, arrow keys, and a polite region saying where in the set the
-       reader is. What it deliberately does not carry is a second set of
-       links — every project in it is named, described and linked by the
-       index directly below, and offering the same six destinations
-       twice only makes the section longer to get through.
+       stop, arrow keys, Enter to open what is in the middle, and a
+       polite region saying where in the set the reader is. The label
+       under it is a real anchor to that same project, so the keyboard
+       has a link to land on rather than a gesture to guess at.
 
-       Not live, it is the strip: a picture of six covers that the same
-       index already accounts for, so it is taken out of the tree
-       entirely, exactly as the row it replaces was. */
+       Not live, it is the strip: six covers, each one a link. It is
+       what the prerendered document carries, so a crawler and a reader
+       without a script are given the whole of the work either way. */
     const shell = live
         ? {
               role: 'group',
@@ -54,7 +77,16 @@ export default function WorkCarousel({ items, active, onActive, reduced }) {
               'aria-label': 'Selected work — cover previews',
               tabIndex: 0,
           }
-        : { 'aria-hidden': true, tabIndex: -1 };
+        : {};
+
+    /* Live, the label is the section's one visible link — the project in
+       the middle of the glass, which is the only one the canvas cannot
+       offer as an element. Not live, the strip below is showing all six
+       as links itself, and a seventh naming whichever happens to be
+       first would be the same destination twice: it goes back to being
+       what it was, a caption over a picture. */
+    const Label = live ? 'a' : 'p';
+    const labelProps = live ? { href: href(on), draggable: 'false' } : { 'aria-hidden': true };
 
     return (
         <div className="glass" ref={stageRef} data-live={live ? '' : undefined} {...shell}>
@@ -62,10 +94,13 @@ export default function WorkCarousel({ items, active, onActive, reduced }) {
                 by everything around it, so it carries nothing itself. */}
             <canvas className="glass__canvas" ref={canvasRef} aria-hidden="true" />
 
-            <p className="glass__label" ref={labelRef} aria-hidden="true">
+            {/* `draggable` is off because a link the browser offers to
+                drag away is a link that cannot be the start of a flick. */}
+            <Label className="glass__label" ref={labelRef} {...labelProps}>
                 <b className="glass__title">{on.title}</b>
                 <span className="glass__sub">{on.category}</span>
-            </p>
+                {live ? <span className="glass__hint">{on.go}</span> : null}
+            </Label>
 
             <p className="glass__count num" aria-hidden="true">
                 {`${pad(shown)}/${pad(items.length - 1)}`}
@@ -79,20 +114,21 @@ export default function WorkCarousel({ items, active, onActive, reduced }) {
                 </p>
             ) : null}
 
-            {/* tabIndex on a scroll container that is hidden from the
-                tree, or the browser would offer it as a tab stop that
-                announces nothing. */}
-            <ul className="glass__strip" aria-hidden="true" tabIndex={-1}>
+            <ul className="glass__strip">
                 {items.map((item) => (
                     <li className="glass__cell" key={item.slug}>
-                        <img
-                            src={item.cover}
-                            alt=""
-                            width="1600"
-                            height="1000"
-                            loading="lazy"
-                            decoding="async"
-                        />
+                        <a className="glass__cell-link" href={href(item)} draggable="false">
+                            <img
+                                src={item.cover}
+                                alt=""
+                                width="1600"
+                                height="1000"
+                                loading="lazy"
+                                decoding="async"
+                                draggable="false"
+                            />
+                            <span className="glass__name">{item.title}</span>
+                        </a>
                     </li>
                 ))}
             </ul>

@@ -43,6 +43,24 @@ export function rafOnce() {
 export const motionOK = () =>
     !(typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
+/* The same preference, as state, for the one thing that has to follow it
+   while the page is open rather than decide once: the carousel keeps its
+   lens either way and gives up only the coasting, so a reader who changes
+   the setting mid-visit is answered without a reload. False on the server
+   and on the first client render, which is what the prerendered document
+   assumes. */
+export function useReducedMotion() {
+    const [reduced, setReduced] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setReduced(query.matches);
+        return onMedia(query, () => setReduced(query.matches));
+    }, []);
+
+    return reduced;
+}
+
 /* False during the prerendered pass and on the very first client render, so
    markup that only makes sense with JavaScript running — the zoom control
    on a case-study image — is added afterwards rather than shipped dead in

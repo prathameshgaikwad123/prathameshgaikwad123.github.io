@@ -12,10 +12,9 @@ import openingSplit from '../animations/openingSplit.js';
    sentence once, as the page's heading, and nothing here is new
    information or reachable by keyboard.
 
-   The plate is project 01, which is also the project the index below
-   opens on. By the time the panel is the whole screen the reader is
-   already looking at the right five columns, where the index's own
-   travelling plate lives.
+   The plate is project 01, which is also the project the carousel
+   below opens on: by the time the panel is the whole screen the reader
+   has already been shown the cover the strip is about to arrive at.
 
    Without the scroll system — a narrow window, a reader who has asked
    for less motion, a script that never arrives — this is a plain

@@ -6,7 +6,7 @@ import { motionOK } from './dom.js';
    animation itself is declared in CSS — this only decides when each element
    has arrived, so nothing about the entrance changed in the migration.
 
-   `data-reveal-draw` is the fourth variant and the odd one: the hand-drawn
+   `data-reveal-draw` is the third variant and the odd one: the hand-drawn
    annotation in About, which is a stroke being drawn rather than a block
    arriving. It is here rather than in src/animations/ because it is an
    entrance, not choreography — it happens once, at one point on the page,
@@ -20,7 +20,7 @@ export default function useReveal(ready) {
     useEffect(() => {
         const revealed = [].slice.call(
             document.querySelectorAll(
-                '[data-reveal], [data-reveal-soft], [data-reveal-rule], [data-reveal-draw]',
+                '[data-reveal], [data-reveal-rule], [data-reveal-draw]',
             ),
         );
         if (!revealed.length) return undefined;

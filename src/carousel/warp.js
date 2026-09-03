@@ -1,4 +1,4 @@
-import { ONSET, POWER, QUAD, STRENGTH, LUT_SIZE } from './config.js';
+import { ONSET, POWER, QUAD, STRENGTH, PIVOT_NEAR, PIVOT_RIM, LUT_SIZE } from './config.js';
 
 /* ===================================================================
    THE WARP TABLE
@@ -78,4 +78,49 @@ export function buildWarpTable(size = LUT_SIZE) {
         data[i * 2 + 1] = fieldAt((x - 0.5) * 2);
     }
     return data;
+}
+
+/* ===================================================================
+   ONE POINT, BACKWARDS
+   -------------------------------------------------------------------
+   A reader clicks the picture, and the picture is the strip seen
+   through the lens: a card at the rim is drawn wider than it is, and
+   its top edge is a hundred and sixty pixels above where it was laid
+   out. So a click has to be taken back through the same map the
+   fragment shader reads before it can be matched against the rigid
+   strip — otherwise every card but the middle one is found a little to
+   the side of where it plainly looks.
+
+   The map is already the screen-to-source direction, so this is the
+   shader's own arithmetic in JavaScript rather than an inversion of
+   it. Two simplifications, both far below the size of a fingertip: the
+   green channel only, because dispersion is a fringe a few pixels
+   wide, and no surge term, because SURGE is off.
+
+   The table is built once, on the first click anyone makes, and is the
+   same table the renderer builds per resize — it holds displacements
+   normalised to the stage, so it does not care what size the stage is.
+   =================================================================== */
+
+let lookup = null;
+
+export function unwarpPoint(nx, ny, out = {}) {
+    if (!lookup) lookup = buildWarpTable(LUT_SIZE);
+
+    /* The same fetch the shader's LINEAR sampler does: values sit at
+       texel centres, and anything outside the table clamps to its end. */
+    const size = lookup.length / 2;
+    const at = Math.min(Math.max(nx * size - 0.5, 0), size - 1);
+    const lo = Math.floor(at);
+    const hi = Math.min(lo + 1, size - 1);
+    const dx = lookup[lo * 2] + (lookup[hi * 2] - lookup[lo * 2]) * (at - lo);
+
+    const u = (nx - 0.5) * 2;
+    const e = fieldAt(u);
+    const m = 1 + QUAD * u * u + STRENGTH * e;
+    const pivot = PIVOT_NEAR + (PIVOT_RIM - PIVOT_NEAR) * Math.sqrt(e);
+
+    out.x = nx + dx;
+    out.y = pivot + (ny - pivot) / m;
+    return out;
 }

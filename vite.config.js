@@ -31,11 +31,14 @@ export default defineConfig({
                 /* Otherwise the shared chunk is named after whichever module
                    happened to pull it in.
 
-                   Framer Motion gets a chunk of its own. Only the work index
-                   on the home page animates, and vendor is loaded by every
-                   page — including six case studies that would otherwise pay
-                   for an animation library they never call. Its two internal
-                   packages go with it, or vendor ends up importing them back.
+                   Framer Motion gets a chunk of its own so that no page
+                   pays for an animation library inside vendor, which every
+                   page loads. Nothing on the site calls it at the moment —
+                   src/motion/ is the scaffolding for a section that wants
+                   it next — and the group stays because the split has to be
+                   in place before the first caller, not after. Its two
+                   internal packages go with it, or vendor ends up importing
+                   them back.
 
                    React is named first, and named vendor, only so that the
                    motion group cannot claim it: the first matching group wins,
