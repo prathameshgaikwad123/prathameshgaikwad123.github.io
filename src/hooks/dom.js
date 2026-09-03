@@ -44,9 +44,16 @@ export const motionOK = () =>
     !(typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 /* False during the prerendered pass and on the very first client render, so
-   markup that only makes sense with JavaScript running — the travelling
-   ground under the navigation, the zoom control on a case-study image — is
-   added afterwards rather than shipped dead in the HTML. */
+   markup that only makes sense with JavaScript running — the zoom control
+   on a case-study image — is added afterwards rather than shipped dead in
+   the HTML.
+
+   It is also read the other way round, to WITHHOLD an attribute: the
+   navigation panel's `inert` (src/components/Menu.jsx) must not reach the
+   prerendered document, because there it would never be taken off again
+   and the panel is the whole of the navigation a reader without a script
+   is given. Either way the first client render matches the markup, which
+   is what keeps hydration quiet. */
 export function useEnhanced() {
     const [enhanced, setEnhanced] = useState(false);
     useEffect(() => setEnhanced(true), []);

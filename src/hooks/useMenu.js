@@ -23,9 +23,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
                              sentence for the keyboard and the screen
                              reader.
 
-   The panel is no longer retired at the desktop breakpoint, because it
-   is no longer the phone's substitute for the section list: it is the
-   navigation, at every width. */
+   The panel is the navigation, at every width and on every page —
+   there is no second copy of it in the header to defer to, and nothing
+   retires it at a breakpoint. */
 export default function useMenu() {
     const [open, setOpen] = useState(false);
     const buttonRef = useRef(null);

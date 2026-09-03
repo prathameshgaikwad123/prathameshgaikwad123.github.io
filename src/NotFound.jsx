@@ -5,18 +5,16 @@ import Underlay from './components/Underlay.jsx';
 import { PageFoot, SkipLink } from './components/Chrome.jsx';
 import { ArrowRight } from './components/Icons.jsx';
 
-import { useEnhanced } from './hooks/dom.js';
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
 import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
 
 export default function NotFound() {
-    const enhanced = useEnhanced();
     const intro = useIntro();
     const menu = useMenu();
 
-    useChrome({ pillReady: enhanced });
+    useChrome();
     useUnderlayNav(menu.open);
 
     return (
@@ -26,8 +24,6 @@ export default function NotFound() {
 
             <Navigation
                 home="/"
-                base="/"
-                pill={enhanced}
                 menuOpen={menu.open}
                 onMenuToggle={menu.toggle}
                 menuButtonRef={menu.buttonRef}
