@@ -44,7 +44,7 @@ export const behance = [
         cover: plate('02-web-ui.svg'),
         alt: 'Placeholder for a Behance project of web and interface explorations.',
         span: 5,
-        drop: 4,
+        drop: 5,
     },
     {
         id: 'social-systems',
@@ -55,7 +55,7 @@ export const behance = [
         cover: plate('03-social-systems.svg'),
         alt: 'Placeholder for a Behance project of social media design systems.',
         span: 5,
-        drop: 0,
+        drop: 4,
     },
     {
         id: 'print-collateral',
@@ -65,8 +65,8 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
         alt: 'Placeholder for a Behance project of print and corporate collateral.',
-        span: 6,
-        drop: 3,
+        span: 7,
+        drop: 0,
     },
     {
         id: 'visual-studies',
@@ -88,6 +88,6 @@ export const behance = [
         cover: plate('06-motion-concepts.svg'),
         alt: 'Placeholder for a Behance project of motion and concept work.',
         span: 6,
-        drop: 5,
+        drop: 3,
     },
 ];

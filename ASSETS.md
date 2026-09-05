@@ -32,7 +32,7 @@ grep -rn "REPLACE:" src/
 The Behance spread and the Side Quests wall name their images the same way,
 from their own records: `src/data/behance.js` and `src/data/sideQuests.js`.
 Their plates live in `public/assets/images/behance/` (1600×1200, 4:3) and
-`public/assets/images/side-quests/` (1200×1200, 1:1).
+`public/assets/images/side-quests/` (1600×1200, 4:3).
 
 **Formats.** Prefer WebP for photography and screenshots (smaller than JPEG at
 the same quality); JPEG is a fine fallback. Use PNG only for images that need
