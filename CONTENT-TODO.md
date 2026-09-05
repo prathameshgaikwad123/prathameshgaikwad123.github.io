@@ -34,8 +34,9 @@ needs rebalancing after the real covers go in.
 
 `src/data/sideQuests.js` ships six records describing the *kind* of thing that
 belongs there, with placeholder plates and `href: null`. Replace each with a
-real one: a title, a one-line note, a 1200×1200 image, and a link if the thing
-was ever published. A record with `href: null` renders as a plate with no link
+real one: a title, a one-line note, a `family` (the rail above the grid is built
+from them), a 1600×1200 image, and a link if the thing was ever
+published. A record with `href: null` renders as a plate with no link
 rather than a dead one, so leaving that field null is a valid answer.
 
 ---

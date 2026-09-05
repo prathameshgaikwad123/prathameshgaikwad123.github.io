@@ -2984,26 +2984,20 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 
 /* ====== 12. SIDE QUESTS ============================================= */
-/* The wall. Everything above this section answered to somebody; these
-   did not, and the section is set the way such things actually pile up
-   — pinned, a degree or two off true, in whatever order they happened.
+/* A rail, and a grid that answers it.
 
-   The tilt is the only thing that separates this from a grid of
-   pictures, and it is small on purpose: two degrees reads as pinned,
-   five reads as a template with a rotation in it. It is authored per
-   quest in src/data/sideQuests.js rather than generated, for the same
-   reason the scatter in Selected Work is — no two neighbours lean the
-   same way — and it is carried on the plate rather than on the row or
-   the figure. On the row it would fight the entrance animation, which
-   is already a transform there; on the figure it would take the
-   caption with it, and a line of type set a degree off true reads as
-   a mistake rather than as a manner. The plate leans, its label does
-   not.
+   The section used to be a wall of plates pinned a degree or two off
+   true, and the tilt was doing all the work of saying "these are
+   different" — which is the wrong kind of different: a grid that has
+   been knocked rather than a section that is playful. What is playful
+   now is what the reader does. The grid never goes ragged; the rail
+   is where the character is.
 
-   Below 48rem it is not applied at all. A phone shows one plate at a
-   time at nearly the full measure, where a tilt is not a manner, it is
-   a plate that is crooked — and the rotation would take its corners
-   into a gutter that has nothing to spare. */
+   Nothing here is a new idiom. The chips are the interface voice the
+   whole site is set in, the counts are the tabular numerals every
+   index on the page uses, the plates are .frame with its two crop
+   ticks, and the accent arrives the way it arrives everywhere else —
+   under the cursor, never at rest. */
 
 .quests__tag { grid-column: 1 / -1; }
 .quests__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -3015,12 +3009,116 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .quests__lead      { grid-column: 4 / span 6; margin-top: 1.5rem; }
 }
 
+/* --- The rail ---------------------------------------------------------
+   One hairline across the measure with the families sitting on it, so
+   it reads as the top rule of the grid below rather than as a widget
+   parked above it. */
+.quests__rail {
+    grid-column: 1 / -1;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--rule);
+}
+
+/* The chips scroll rather than wrap on a narrow screen: a control that
+   reflows to two lines stops being a rail. The scrollbar is left to the
+   platform, and the row keeps a little end padding so the last chip is
+   not flush against the edge it scrolls to. */
+.quests__chips {
+    position: relative;
+    display: flex;
+    gap: clamp(0.25rem, 2vw, 1.5rem);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.quests__chips::-webkit-scrollbar { display: none; }
+
+.quests__chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex: none;
+    padding: 0.75rem 0.25rem 0.875rem;
+    font-family: var(--font-text);
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-3);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color var(--t-mid) var(--ease);
+}
+
+.quests__chip:hover { color: var(--ink); }
+.quests__chip[aria-pressed='true'] { color: var(--ink); }
+
+.quests__count {
+    font-size: var(--t-micro);
+    letter-spacing: 0.1em;
+    color: var(--mark);
+    transition: color var(--t-mid) var(--ease);
+}
+
+.quests__chip[aria-pressed='true'] .quests__count { color: var(--flow); }
+
+/* The rule that travels. Both edges are written as insets, and each is
+   given its own duration: the edge going towards the destination
+   arrives first and the one behind it catches up, so the rule stretches
+   across the gap and settles at the far end instead of sliding over as
+   a rigid block. Two durations, no library, and the direction is the
+   only thing script has to say.
+
+   It is 2px rather than a hairline because it sits on one: a 1px mark
+   on a 1px rule is a rule that changed colour.
+
+   --ease-io rather than --ease, and this is the one place on the site
+   that wants the difference. --ease spends nine tenths of its travel
+   in the first third of its time, which collapses the gap between the
+   two edges into about fifty milliseconds — the stretch happens, but
+   it reads as a flicker rather than as a rule crossing a gap. The
+   in-out curve spreads both edges over the whole duration, so the lag
+   between them is legible for as long as the travel lasts. */
+.quests__marker {
+    position: absolute;
+    bottom: -1px;
+    height: 2px;
+    left: var(--ml, 0px);
+    right: var(--mr, 100%);
+    background: var(--flow);
+    opacity: 0;
+    transition: left var(--t-mid) var(--ease-io),
+                right var(--t-mid) var(--ease-io),
+                opacity var(--t-fast) var(--ease-io);
+}
+
+/* Only once script has measured it. Before that the chip's own colour
+   is the whole of the state, and an unplaced rule would sit at the
+   left edge at full width. */
+.quests__rail[data-placed] .quests__marker { opacity: 1; }
+
+.quests__rail[data-dir='fwd'] .quests__marker {
+    transition-duration: calc(var(--t-mid) * 1.45), var(--t-mid), var(--t-fast);
+}
+
+.quests__rail[data-dir='back'] .quests__marker {
+    transition-duration: var(--t-mid), calc(var(--t-mid) * 1.45), var(--t-fast);
+}
+
+/* --- The grid ---------------------------------------------------------
+   Three columns, then two, then one, and every card the same width and
+   the same ratio in all three. The families are sized so each state of
+   the rail fills the columns exactly, which is what lets the content
+   change without the composition going ragged. */
 .quests {
     grid-column: 1 / -1;
-    margin-top: var(--head-gap);
+    margin-top: clamp(2rem, 4vw, 3rem);
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2.5rem, 6vw, 4rem) var(--gap);
+    gap: clamp(2.5rem, 5vw, 3.5rem) var(--gap);
 }
 
 @media (min-width: 40rem) {
@@ -3033,68 +3131,45 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .quest { min-width: 0; }
 
-/* The link is the plate, so it carries no colour of its own — the
-   caption inside it is what changes. */
-.quest__link { display: block; color: inherit; }
+/* The whole tile is the target, and it carries no colour of its own:
+   what answers the cursor is the plate, the title and the rule.
 
-.quest__plate { display: grid; transition: transform var(--t-mid) var(--ease); }
+   Four rows, and the note's is the one that takes the slack: the tile
+   is stretched to its row by the grid above, so a note that runs to
+   three lines beside one that runs to two leaves the difference under
+   the note rather than pushing its rule down past its neighbour's.
+   The rules across a row read as one line because they are one. */
+.quest__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    height: 100%;
+    gap: 0.875rem 0;
+    padding-bottom: 1.125rem;
+    color: inherit;
+}
 
-.quest__figure .frame__media img {
-    aspect-ratio: 1 / 1;
+/* A quest with nowhere to go is the same tile without the pointer. */
+.quest__link--flat { cursor: default; }
+
+.quest__plate {
+    display: grid;
+    transition: transform var(--t-mid) var(--ease);
+}
+
+.quest__plate .frame__media img {
+    aspect-ratio: 4 / 3;
     display: block;
+    object-fit: cover;
     transition: transform var(--t-slow) var(--ease);
 }
 
-/* Pinned, and straightening under the cursor: the one thing a plate
-   that is a degree off true can do that is worth doing. */
-@media (min-width: 48rem) {
-    .quest__plate { transform: rotate(var(--tilt, 0deg)); }
-
-    .quest:hover .quest__plate,
-    .quest:focus-within .quest__plate {
-        transform: rotate(0deg) translateY(-0.375rem);
-    }
-}
-
-/* The drop that keeps the wall off the shelf, and it is a property of
-   the column rather than of the position in the list. Written as
-   nth-child(even) it meant "every second plate", which is one column
-   while there are two of them and a moving target once there are
-   three: in a three-column grid the second row inherited the opposite
-   pattern to the first, so two plates dropped in one row and one in
-   the next, and the captions under them landed on three different
-   lines for no reason a reader could see.
-
-   Pinned to the column instead, the same column steps down in every
-   row. The stagger reads as the wall being hung that way, and the
-   caption of every plate in a row sits where its neighbour's does. */
-@media (min-width: 40rem) {
-    .quest:nth-child(2n) { margin-top: clamp(1rem, 3vw, 2.5rem); }
-}
-
-@media (min-width: 62rem) {
-    .quest:nth-child(2n) { margin-top: 0; }
-    .quest:nth-child(3n + 2) { margin-top: clamp(1rem, 3vw, 2.5rem); }
-}
-
-.quest:hover .frame__media img,
-.quest:focus-within .frame__media img { transform: scale(1.03); }
-
-.quest:hover .frame::before,
-.quest:hover .frame::after,
-.quest:focus-within .frame::before,
-.quest:focus-within .frame::after { border-color: var(--flow); }
-
-.quest__cap {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.375rem;
-    margin-top: 0.875rem;
-}
-
-.quest__type {
+.quest__meta {
     display: flex;
     align-items: baseline;
+    gap: 0.625rem;
+    margin-top: -0.125rem;
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.14em;
@@ -3102,12 +3177,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     color: var(--ink-3);
 }
 
-.quest__no {
-    color: var(--mark);
-    letter-spacing: 0.1em;
-    margin-right: 0.625rem;
-    flex: none;
-}
+.quest__no { color: var(--mark); letter-spacing: 0.1em; flex: none; }
 
 .quest__title {
     font-family: var(--font-display);
@@ -3118,19 +3188,79 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     transition: color var(--t-mid) var(--ease);
 }
 
-.quest:hover .quest__title,
-.quest:focus-within .quest__title { color: var(--flow); }
-
-.quest__go { display: inline-block; transition: transform var(--t-mid) var(--ease); }
-
-.quest:hover .quest__go,
-.quest:focus-within .quest__go { transform: translate(0.2rem, -0.2rem); }
-
 .quest__note {
     font-size: var(--t-meta);
     line-height: 1.6;
     color: var(--ink-2);
-    max-width: 34ch;
+    max-width: 36ch;
+}
+
+.quest__go { display: inline-block; transition: transform var(--t-mid) var(--ease); }
+
+/* The rule under the tile, drawn from the left on the gesture. Two
+   layers on one element: the hairline is the border, the accent is the
+   scaled pseudo-element over it, so nothing moves and nothing reflows. */
+.quest__rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--rule);
+}
+
+.quest__rule::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--flow);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--t-slow) var(--ease);
+}
+
+/* One gesture, four answers: the plate lifts, its picture eases in
+   behind the crop, the ticks and the title take the accent, and the
+   rule draws itself across. :focus-within carries the whole of it for
+   a reader arriving by keyboard. */
+.quest__link:hover .quest__plate,
+.quest__link:focus-visible .quest__plate { transform: translateY(-0.375rem); }
+
+.quest__link:hover .frame__media img,
+.quest__link:focus-visible .frame__media img { transform: scale(1.04); }
+
+.quest__link:hover .frame::before,
+.quest__link:hover .frame::after,
+.quest__link:focus-visible .frame::before,
+.quest__link:focus-visible .frame::after { border-color: var(--flow); }
+
+.quest__link:hover .quest__title,
+.quest__link:focus-visible .quest__title { color: var(--flow); }
+
+.quest__link:hover .quest__go,
+.quest__link:focus-visible .quest__go { transform: translate(0.2rem, -0.2rem); }
+
+.quest__link:hover .quest__rule::after,
+.quest__link:focus-visible .quest__rule::after { transform: scaleX(1); }
+
+/* --- The settle -------------------------------------------------------
+   What the cards do when the rail changes under them. It is the
+   entrance in section 6 with a shorter rise and a stagger read off the
+   card's own index, and it plays on mount because the key changes with
+   the family — so a card that was already on screen arrives again with
+   the ones that are new, which is what makes the grid read as one
+   thing re-composing rather than as items being added to a list.
+
+   Capped at the sixth so a long family never ends on a card that waits
+   half a second to appear. */
+@keyframes quest-settle {
+    from { opacity: 0; transform: translateY(0.75rem); }
+    to   { opacity: 1; transform: none; }
+}
+
+.js .quest[data-settle] {
+    animation: quest-settle var(--t-slow) var(--ease) both;
+    animation-delay: calc(min(var(--i), 5) * 55ms);
 }
 
 
@@ -3783,13 +3913,11 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
         scroll-behavior: auto !important;
     }
 
-    /* The wall's plates are pinned a degree or two off true. That is a
-       manner rather than information, and it is the one transform on
-       the site a reader could be sitting in front of indefinitely, so
-       it goes rather than being shortened to nothing. */
-    .quest__plate,
-    .quest:hover .quest__plate,
-    .quest:focus-within .quest__plate { transform: none; }
+    /* The grid re-composing under the rail (section 12) is shortened to
+       nothing by the rule above, which leaves the stagger: a card
+       waiting its turn in front of a change that no longer takes any
+       time. The wait goes with it, so the new set is simply there. */
+    .js .quest[data-settle] { animation-delay: 0s; }
 
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal] { opacity: 1; transform: none; }
