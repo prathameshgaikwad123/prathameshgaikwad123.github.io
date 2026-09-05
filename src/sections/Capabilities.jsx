@@ -65,13 +65,11 @@ export default function Capabilities() {
 
     return (
         <section className="band" id="capabilities" aria-labelledby="capabilities-title" ref={ref}>
-            {/* The section's own header, standing on a cut panel. The
-                ground is a layer taller than the panel that clips it, so
-                the two slanted edges have somewhere to travel without
-                ever exposing the band behind — see
+            {/* The section's own header. It used to stand on a tinted,
+                slant-cut ground travelling behind it; the ground is gone
+                and the type keeps its drift — see
                 src/animations/panelCut.js. */}
             <div className="cut">
-                <div className="cut__ground" aria-hidden="true" />
                 <div className="shell cut__type">
                     <div className="grid">
                         <p className="tag caps__tag" data-reveal="">
