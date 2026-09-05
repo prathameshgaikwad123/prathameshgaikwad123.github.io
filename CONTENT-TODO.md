@@ -40,58 +40,27 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ---
 
-## 2. Safety Dojo — who owns it
+## 2. Case studies for the new carousel projects
 
-| `data-todo` | File |
+Six of the seven projects in `src/data/projects.js` are covers and captions:
+they carry no `href`, so the carousel shows them without making them links,
+and nothing about them is published as a page.
+
+Giving one a case study is three edits made together:
+
+| File | What to add |
 |---|---|
-| `safety-dojo-owner` | `src/data/projects.js` — the Safety Dojo `facts` |
+| `src/data/projects.js` | the `href`, plus `lead`, `meta`, `go`, `facts`, `gallery`, `coverCaption`, `next` — copy the shape from `voepl-website` |
+| `src/case-studies/index.js` | the written body, keyed by slug |
+| `src/data/pages.js` | the slug, so the page is built and prerendered |
 
-Your brief listed Safety Dojo as its own category rather than under VOEPL, but
-your VOEPL role includes *"internal communication and safety awareness
-campaigns"*. Rather than assume they are the same thing, the organisation is
-left blank.
+A project can also be pointed at something that already exists instead —
+an external URL is a valid `href` — in which case only the first edit is
+needed.
 
-If it is VOEPL work, replace the placeholder with
-`Virtuoso Optoelectronics Limited (VOEPL)`.
-
----
-
-## 3. Project outcomes
-
-| `data-todo` | Project |
-|---|---|
-| `outcome-voepl-website` | 01 — VOEPL website |
-| `outcome-voepl-brand-system` | 02 — VOEPL visual system |
-| `outcome-safety-dojo` | 03 — Safety Dojo |
-| `outcome-web-ai-discovery` | 05 — Search & AI discovery |
-
-Each one is the last block in `src/case-studies/<project>.jsx`.
-
-Only project **04** has a verified outcome (the LinkedIn figure), so it is the
-only one with numbers on it.
-
-For the other four, you have three honest options:
-
-1. **Give a real, verifiable outcome.** Best if you have one.
-2. **Give a qualitative outcome.** "The system is still in use for new
-   collateral" is a legitimate outcome and needs no metrics.
-3. **Delete the section.** Remove the `Outcome` entry from the blocks that file
-   returns. An absent section reads better than an empty one.
-
-Do not fill these with estimates. A single unverifiable number undermines the
-one figure on the site that is real.
-
----
-
-## 4. Archive entries
-
-| `data-todo` | File |
-|---|---|
-| `archive-entries` | `src/case-studies/archive.jsx` |
-
-The archive lists categories of work but names no projects or clients, because
-none were provided. Add real names and dates, and check you have permission to
-publish client work.
+Replace the placeholder cover in `public/assets/images/projects/<slug>/`
+at the same time. The six new ones ship labelled placeholders, exactly as
+the projects before them did.
 
 ---
 
@@ -132,7 +101,7 @@ Two things to know about it:
 
 To remove it, delete the `<section className="sub" id="practice">` block in
 `src/sections/About.jsx`. Nothing else needs renumbering — the bands are numbered
-01–05 by navigation order, not by how many blocks each one holds.
+01–06 in page order, not by how many blocks each one holds.
 
 ---
 

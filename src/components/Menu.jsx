@@ -98,7 +98,15 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                 Selected Work
                             </p>
                             <ul className="menu__links" aria-labelledby="menu-work">
-                                {projects.map((project) => (
+                                {/* The projects with somewhere to go. A
+                                    carousel card without a case study is
+                                    a cover and a caption, and a panel row
+                                    that cannot be followed is worse than
+                                    no row — so the list is the linked
+                                    ones, and it grows as they do. */}
+                                {projects
+                                    .filter((project) => project.href)
+                                    .map((project) => (
                                     <li data-menu-reveal="s" key={project.slug}>
                                         <a
                                             className="menu__small"
@@ -115,7 +123,7 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                             {project.short}
                                         </a>
                                     </li>
-                                ))}
+                                    ))}
                             </ul>
                         </div>
 
