@@ -44,9 +44,9 @@ is written down at the point it matters — the top of stylesheet section 9.
 | Path | What it is |
 |---|---|
 | `index.html`, `work/*.html`, `404.html` | One HTML entry per published page. Each carries its own `<head>` — title, description, canonical, Open Graph, structured data — and the small script that settles the theme and the intro before the first paint. The body is a mount point. |
-| `src/App.jsx` | The home page: hero, then five bands — Selected Work, About, Capabilities, Experience, Contact. One scrolling document; each band is an anchor (`/#work`, `/#about`, …). |
+| `src/App.jsx` | The home page: hero, then six bands — Selected Work, Selected Behance Work, About, Capabilities, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the six are in the navigation panel; Behance and Capabilities are arrived at by reading. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
-| `src/sections/` | The five bands of the home page. |
+| `src/sections/` | The six bands of the home page. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
@@ -87,7 +87,6 @@ block in the stylesheet, and one section of the page.
 | 4 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
 | 5 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
 | 6 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
-| 7 | Experience | One plate per role, arriving at its own rate into the space the meta column leaves | `driftCards.js` |
 | 8 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
 
 Three rules hold the whole thing together, and they are worth knowing before

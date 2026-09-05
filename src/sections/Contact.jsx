@@ -27,7 +27,7 @@ export default function Contact() {
             <div className="shell close__type">
                 <div className="grid">
                     <p className="tag contact__tag" data-reveal="">
-                        <span className="tag__no num">05</span>Contact
+                        <span className="tag__no num">06</span>Contact
                     </p>
                     <h2 className="statement contact__statement" id="contact-title" data-reveal="">
                         Open to <em>Opportunities</em>.

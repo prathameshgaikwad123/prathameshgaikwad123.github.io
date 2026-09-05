@@ -11,12 +11,16 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    what was always there is uncovered. The choreography is in
    src/hooks/useUnderlayNav.js; this file is only the document.
 
-   Everything the site can be reached by is in here, which is what earns
-   it the width: the top of the page and the five sections above — six
-   rows — then the six case studies and the elsewhere links below.
-   `home`, `base` and `work` differ per page because the site is a set of
-   documents, so the home page links to its own anchors and a case study
-   links back up to the index.
+   Everything the site is navigated by is in here, which is what earns
+   it the width: four sections, then the six case studies and the
+   elsewhere links below. `base` and `work` differ per page because the
+   site is a set of documents, so the home page links to its own anchors
+   and a case study links back up to the index.
+
+   There is no row for the top of the page. The wordmark at the left of
+   the masthead is that link, on every page and without opening
+   anything, and a panel the reader has just opened over the page does
+   not need to offer them the page back.
 
    Two kinds of current, and neither is passed in as a fact about the
    page. A section is marked by the scroll spy in useChrome, which finds
@@ -30,7 +34,7 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    It is named Primary because it is: the header's copy of the section
    list is gone, and there is no second navigation to distinguish this
    one from. */
-export default function Menu({ home, base, work, current = null, open, panelRef, onClick }) {
+export default function Menu({ base, work, current = null, open, panelRef, onClick }) {
     const path = usePathname();
     const enhanced = useEnhanced();
 
@@ -60,22 +64,6 @@ export default function Menu({ home, base, work, current = null, open, panelRef,
         >
             <div className="menu__inner">
                 <ul className="menu__list">
-                    {/* The top of the page, numbered like everything else
-                        in the index — and marked by useChrome when no
-                        section has been reached yet. On the home page
-                        this href has to stay a bare hash: the spy only
-                        collects .menu__link[href^="#"], and
-                        data-nav-home is the only thing it can mark
-                        above the first section. */}
-                    <li data-menu-reveal="l">
-                        <a className="menu__link" href={home} data-nav-home="">
-                            <span className="nav__num" aria-hidden="true">
-                                00
-                            </span>
-                            Home
-                        </a>
-                    </li>
-
                     {SECTIONS.map((section) => (
                         <li data-menu-reveal="l" key={section.id}>
                             <a

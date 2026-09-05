@@ -60,7 +60,7 @@ export default function About() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag about__tag" data-reveal="">
-                        <span className="tag__no num">02</span>About
+                        <span className="tag__no num">03</span>About
                     </p>
                     <h2 className="statement about__statement" id="about-title" data-reveal="">
                         A designer who works across{' '}
@@ -151,7 +151,7 @@ export default function About() {
                                 I build what I design.
                             </h3>
                             <p className="tag">
-                                <span className="tag__no num">02.1</span>In Practice
+                                <span className="tag__no num">03.1</span>In Practice
                             </p>
                         </header>
 

@@ -65,7 +65,6 @@ export default function CaseStudy({ slug }) {
                 menuButtonRef={menu.buttonRef}
             />
             <Menu
-                home={HOME}
                 base={HOME}
                 work=""
                 current="work"

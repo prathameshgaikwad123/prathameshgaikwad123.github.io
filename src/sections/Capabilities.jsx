@@ -73,7 +73,7 @@ export default function Capabilities() {
                 <div className="shell cut__type">
                     <div className="grid">
                         <p className="tag caps__tag" data-reveal="">
-                            <span className="tag__no num">03</span>Capabilities
+                            <span className="tag__no num">04</span>Capabilities
                         </p>
                         <h2 className="statement caps__statement set" id="capabilities-title" data-reveal="">
                             {SET.map(([word, offset], i) => (
@@ -110,7 +110,7 @@ export default function Capabilities() {
                                 From understanding a problem to improving the result.
                             </h3>
                             <p className="tag">
-                                <span className="tag__no num">03.1</span>My Approach
+                                <span className="tag__no num">04.1</span>My Approach
                             </p>
                         </header>
 
@@ -132,7 +132,7 @@ export default function Capabilities() {
                                 What I work in, day to day.
                             </h3>
                             <p className="tag">
-                                <span className="tag__no num">03.2</span>Tools
+                                <span className="tag__no num">04.2</span>Tools
                             </p>
                         </header>
 

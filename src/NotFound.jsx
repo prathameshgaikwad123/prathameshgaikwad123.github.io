@@ -29,7 +29,6 @@ export default function NotFound() {
                 menuButtonRef={menu.buttonRef}
             />
             <Menu
-                home="/"
                 base="/"
                 work="/work/"
                 open={menu.open}
