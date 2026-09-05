@@ -1,6 +1,6 @@
 # Content still needed
 
-Eight visible placeholders are live on the site. Each is marked in the page with
+Several visible placeholders are live on the site. Each is marked in the page with
 a dashed outline and a `⌇` symbol, and carries a `data-todo` attribute so you
 can find it:
 
@@ -12,26 +12,31 @@ Nothing on this list has been guessed or filled in on your behalf.
 
 ---
 
-## 1. Employment dates — blocking
+## 1. Behance projects — blocking
 
-The brief was explicit about not inventing these, so they are placeholders.
+The Behance spread ships with six labelled placeholders and no real project
+URLs, because a project URL cannot be guessed. Both halves of each record are
+replaced together in `src/data/behance.js`:
 
-| `data-todo` | File | What to write |
-|---|---|---|
-| `voepl-dates` | `src/sections/Experience.jsx` | Start date at VOEPL, e.g. `April 2024 — Present` |
-| `soch-dates` | `src/sections/Experience.jsx` | Dates at Soch Business Mentors LLP |
+| Field | What to write |
+|---|---|
+| `href` | That project's own Behance URL. Until it is replaced every plate points at the profile, which is a link that works but is not the one the plate is offering. |
+| `cover` | A 1600×1200 export saved beside the placeholder in `public/assets/images/behance/`, with the extension changed here. |
+| `title`, `type`, `alt` | The project's real name, its disciplines, and a real description of the image. |
 
-Put the real dates on the role's `todo` line in that file, and replace the
-whole `<span className="tbd">…</span>` with the date itself:
+`span` and `drop` are the composition rather than content — how wide the plate
+is and how far down the spread it starts. Leave them alone unless the spread
+needs rebalancing after the real covers go in.
 
-```jsx
-<p className="exp__dates">April 2024 — Present</p>
-```
+---
 
-> The old repository claimed *"April 2024 – Present"* for a **Senior Executive**
-> role at VOEPL. Since that job title was wrong, I did not carry the date over
-> either — it may or may not be right for the Digital Marketing Executive role.
-> Confirm before using it.
+## 1b. Side quests — blocking
+
+`src/data/sideQuests.js` ships six records describing the *kind* of thing that
+belongs there, with placeholder plates and `href: null`. Replace each with a
+real one: a title, a one-line note, a 1200×1200 image, and a link if the thing
+was ever published. A record with `href: null` renders as a plate with no link
+rather than a dead one, so leaving that field null is a valid answer.
 
 ---
 

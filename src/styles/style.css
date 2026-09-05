@@ -109,10 +109,13 @@
        thing a two-tone system genuinely cannot say: that a phrase is
        being touched right now.
 
-       It is spent in exactly one place, on the statement in section 8,
-       and only while the cursor is on it. A colour that exists only in
-       motion is not a third tone, which is what lets the register stay
-       two-tone with this in it.                                      */
+       It is never at rest anywhere. The statement takes it under the
+       cursor (section 8); a Behance plate and a side quest take it the
+       same way, on the same gesture (sections 9.1 and 12). That is the
+       whole of its use, and the rule it is under: a colour that only
+       ever appears while something is being touched is not a third
+       tone, which is what lets the register stay two-tone with this
+       in it.                                                         */
     --flow:        #C0431E;
     --scrim:       rgba(0, 0, 0, 0.6);
 
@@ -2493,6 +2496,146 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 
 
+/* ====== 9.1 SELECTED BEHANCE WORK =================================== */
+/* The other half of the same practice, and deliberately not set like
+   the half above it. Selected Work is an index — six rows, each with a
+   case study behind it and a plate that answers to the row. Nothing
+   here has anything to read at the end of it, so a list would be six
+   links pretending to be an argument. It is a spread instead.
+
+   What makes it a spread rather than six cards is that no two plates
+   agree: four widths across the twelve columns and five starting
+   heights, carried on the row as --span and --drop and authored in
+   src/data/behance.js, because a composition is authored or it is
+   noise. --drop is spent in vw so the stagger holds its proportion as
+   the window changes rather than collapsing at one end of the range.
+
+   Below the tablet step neither is read. One column, one width, no
+   stagger: a phone has room for one plate at a time, and the order
+   they are written in is the order they should arrive in.
+
+   Every plate leaves the site, and every plate says so — the same
+   arrow the elsewhere links in the panel carry, with the accent
+   arriving on the same gesture it arrives on everywhere else.      */
+
+.beh__tag { grid-column: 1 / -1; }
+.beh__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
+.beh__count { grid-column: 1 / -1; margin-top: 1rem; }
+
+@media (min-width: 48rem) {
+    .beh__tag       { grid-column: 1 / span 3; }
+    .beh__statement { grid-column: 4 / span 6; margin-top: 0; }
+    .beh__count     { grid-column: 11 / span 2; margin-top: 0; }
+}
+
+.beh {
+    grid-column: 1 / -1;
+    margin-top: var(--head-gap);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 4.5rem) var(--gap);
+}
+
+@media (min-width: 48rem) {
+    .beh { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+    .beh__item {
+        grid-column: span var(--span, 6);
+        margin-top: calc(var(--drop, 0) * 1vw);
+    }
+}
+
+.beh__item { min-width: 0; }
+
+/* The link is the whole plate, and takes no colour of its own: what
+   answers the cursor is the caption under it and the ticks around it. */
+.beh__link { display: block; color: inherit; }
+
+.beh__figure .frame__media img {
+    aspect-ratio: 4 / 3;
+    display: block;
+    transition: transform var(--t-slow) var(--ease);
+}
+
+.beh__link:hover .frame__media img,
+.beh__link:focus-visible .frame__media img { transform: scale(1.03); }
+
+.beh__link:hover .frame::before,
+.beh__link:hover .frame::after,
+.beh__link:focus-visible .frame::before,
+.beh__link:focus-visible .frame::after { border-color: var(--flow); }
+
+/* The caption is the site's, with one column added: the numeral it has
+   always had, the name and the discipline in the middle, and the mark
+   that says this one leaves the site pinned to the far end. */
+.beh__cap {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 0.75rem;
+}
+
+.beh__names { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+
+.beh__title {
+    font-family: var(--font-display);
+    font-size: var(--t-sub);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    text-transform: none;
+    color: var(--ink);
+    transition: color var(--t-mid) var(--ease);
+}
+
+.beh__type {
+    font-size: var(--t-micro);
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+}
+
+.beh__link:hover .beh__title,
+.beh__link:focus-visible .beh__title { color: var(--flow); }
+
+.beh__go {
+    color: var(--mark);
+    transition: transform var(--t-mid) var(--ease), color var(--t-mid) var(--ease);
+}
+
+.beh__link:hover .beh__go,
+.beh__link:focus-visible .beh__go { transform: translate(0.2rem, -0.2rem); color: var(--flow); }
+
+/* The way out of the section, and the only thing in it that is not a
+   plate: the profile itself, set as a rule the whole measure wide so
+   it closes the spread rather than sitting under one corner of it. */
+.beh__all {
+    grid-column: 1 / -1;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: clamp(1.25rem, 2.5vw, 2rem);
+    border-top: 1px solid var(--ink);
+}
+
+.beh__cta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: color var(--t-mid) var(--ease);
+}
+
+.beh__cta span { transition: transform var(--t-mid) var(--ease); }
+
+.beh__cta:hover,
+.beh__cta:focus-visible { color: var(--flow); }
+
+.beh__cta:hover span,
+.beh__cta:focus-visible span { transform: translate(0.2rem, -0.2rem); }
+
+
 /* ====== 10. ABOUT =================================================== */
 
 .about__tag { grid-column: 1 / -1; }
@@ -2832,178 +2975,136 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 12. EXPERIENCE ============================================== */
+/* ====== 12. SIDE QUESTS ============================================= */
+/* The wall. Everything above this section answered to somebody; these
+   did not, and the section is set the way such things actually pile up
+   — pinned, a degree or two off true, in whatever order they happened.
 
-.exp__tag { grid-column: 1 / -1; }
-.exp__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
+   The tilt is the only thing that separates this from a grid of
+   pictures, and it is small on purpose: two degrees reads as pinned,
+   five reads as a template with a rotation in it. It is authored per
+   quest in src/data/sideQuests.js rather than generated, for the same
+   reason the scatter in Selected Work is — no two neighbours lean the
+   same way — and it is carried on the plate rather than on the row or
+   the figure. On the row it would fight the entrance animation, which
+   is already a transform there; on the figure it would take the
+   caption with it, and a line of type set a degree off true reads as
+   a mistake rather than as a manner. The plate leans, its label does
+   not.
+
+   Below 48rem it is not applied at all. A phone shows one plate at a
+   time at nearly the full measure, where a tilt is not a manner, it is
+   a plate that is crooked — and the rotation would take its corners
+   into a gutter that has nothing to spare. */
+
+.quests__tag { grid-column: 1 / -1; }
+.quests__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
+.quests__lead { grid-column: 1 / -1; margin-top: 1.25rem; max-width: 46ch; }
 
 @media (min-width: 48rem) {
-    .exp__tag       { grid-column: 1 / span 3; }
-    .exp__statement { grid-column: 4 / span 8; margin-top: 0; }
+    .quests__tag       { grid-column: 1 / span 3; }
+    .quests__statement { grid-column: 4 / span 6; margin-top: 0; }
+    .quests__lead      { grid-column: 4 / span 6; margin-top: 1.5rem; }
 }
 
-.exp-list {
+.quests {
     grid-column: 1 / -1;
     margin-top: var(--head-gap);
-    border-top: 1px solid var(--rule-2);
-}
-
-.exp {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
-    padding-block: clamp(1.75rem, 4vw, 3rem);
-    border-bottom: 1px solid var(--rule);
+    gap: clamp(2.5rem, 6vw, 4rem) var(--gap);
 }
 
-.exp__meta { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.5rem; align-content: start; }
-
-.exp__index {
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--mark);
-    font-variant-numeric: tabular-nums;
-    margin-bottom: 0.25rem;
+@media (min-width: 40rem) {
+    .quests { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.exp__role {
-    font-size: var(--t-sub);
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.014em;
-    color: var(--ink);
+@media (min-width: 62rem) {
+    .quests { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-.exp__org { font-size: var(--t-small); color: var(--ink-2); }
+.quest { min-width: 0; }
 
-.exp__dates {
+/* The link is the plate, so it carries no colour of its own — the
+   caption inside it is what changes. */
+.quest__link { display: block; color: inherit; }
+
+.quest__plate { display: grid; transition: transform var(--t-mid) var(--ease); }
+
+.quest__figure .frame__media img {
+    aspect-ratio: 1 / 1;
+    display: block;
+    transition: transform var(--t-slow) var(--ease);
+}
+
+/* Pinned, and straightening under the cursor: the one thing a plate
+   that is a degree off true can do that is worth doing. The second
+   row of the wall starts lower than the first, so the three columns
+   do not read as a shelf. */
+@media (min-width: 48rem) {
+    .quest__plate { transform: rotate(var(--tilt, 0deg)); }
+    .quest:nth-child(even) { margin-top: clamp(1rem, 3vw, 2.5rem); }
+
+    .quest:hover .quest__plate,
+    .quest:focus-within .quest__plate {
+        transform: rotate(0deg) translateY(-0.375rem);
+    }
+}
+
+.quest:hover .frame__media img,
+.quest:focus-within .frame__media img { transform: scale(1.03); }
+
+.quest:hover .frame::before,
+.quest:hover .frame::after,
+.quest:focus-within .frame::before,
+.quest:focus-within .frame::after { border-color: var(--flow); }
+
+.quest__cap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+}
+
+.quest__type {
+    display: flex;
+    align-items: baseline;
     font-size: var(--t-micro);
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-top: 0.25rem;
 }
 
-.exp__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-
-.exp__summary {
-    font-size: var(--t-body);
-    line-height: 1.65;
-    color: var(--ink-2);
-    max-width: 46ch;
-}
-
-.exp__areas-label {
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--rule);
-    margin-bottom: 0.25rem;
-}
-
-.exp__areas { display: grid; grid-template-columns: minmax(0, 1fr); }
-
-.exp__areas li {
-    display: flex;
-    gap: 0.75rem;
-    padding-block: 0.5rem;
-    font-size: var(--t-small);
-    line-height: 1.5;
-    color: var(--ink-2);
-    border-bottom: 1px solid var(--rule);
-}
-
-.exp__areas li::before {
-    content: '';
+.quest__no {
+    color: var(--mark);
+    letter-spacing: 0.1em;
+    margin-right: 0.625rem;
     flex: none;
-    width: 0.5rem;
-    height: 1px;
-    margin-top: 0.7em;
-    background: var(--rule-2);
 }
 
-@media (min-width: 40rem) {
-    .exp__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 4vw, 3rem); }
-}
-
-/* --- The plate beside each role ---------------------------------------
-   Two plates in the space the meta column leaves empty, one per role,
-   each standing for work the section already describes. Only above the
-   breakpoint where that space exists: below it the roles stack, and a
-   plate between the meta and the contribution areas would be a scroll
-   to get past rather than a support to read beside — which also means
-   the browser never fetches either image on a narrow window.
-
-   Because the column is sticky, each plate holds beside its role for
-   as long as that role is being read. src/animations/driftCards.js
-   only decides how far each one travels to get here. */
-.exp__figure {
-    display: none;
-    margin-top: clamp(1.5rem, 3vw, 2.25rem);
-    max-width: 20rem;
-}
-
-.exp__figure .frame__media img { aspect-ratio: 16 / 10; }
-
-@media (min-width: 62rem) {
-    .exp { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); column-gap: clamp(2rem, 5vw, 5rem); }
-    .exp__meta { position: sticky; top: calc(var(--bar) + 2rem); }
-    .exp__figure { display: grid; }
-}
-
-/* --- Selected impact -------------------------------------------------- */
-
-.impact {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    border-top: 1px solid var(--rule);
-}
-
-.impact__item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.75rem;
-    align-content: start;
-    padding: clamp(1.25rem, 3vw, 2rem) 0;
-    border-bottom: 1px solid var(--rule);
-}
-
-.impact__figure {
+.quest__title {
     font-family: var(--font-display);
-    font-size: var(--t-figure);
-    line-height: 0.95;
-    letter-spacing: -0.035em;
+    font-size: var(--t-sub);
+    line-height: 1.2;
+    letter-spacing: -0.018em;
     color: var(--ink);
-    font-variant-numeric: tabular-nums;
+    transition: color var(--t-mid) var(--ease);
 }
 
-.impact__label {
-    font-size: var(--t-meta);
-    line-height: 1.55;
-    color: var(--ink-2);
-    max-width: 26ch;
-}
+.quest:hover .quest__title,
+.quest:focus-within .quest__title { color: var(--flow); }
 
-.impact__note {
-    margin-top: 1.5rem;
+.quest__go { display: inline-block; transition: transform var(--t-mid) var(--ease); }
+
+.quest:hover .quest__go,
+.quest:focus-within .quest__go { transform: translate(0.2rem, -0.2rem); }
+
+.quest__note {
     font-size: var(--t-meta);
     line-height: 1.6;
-    color: var(--ink-3);
-    max-width: 56ch;
-}
-
-@media (min-width: 48rem) {
-    .impact { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 0; }
-    .impact__item {
-        border-bottom: 0;
-        padding-right: clamp(1.25rem, 3vw, 2.5rem);
-    }
+    color: var(--ink-2);
+    max-width: 34ch;
 }
 
 
@@ -3515,6 +3616,60 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 /* A single figure quoted inside a case study. */
+/* --- Figures ---------------------------------------------------------
+   Written for the Experience band, which the site no longer has. Its
+   one remaining reader is the digital communication case study, so the
+   block lives here now rather than under a section heading that was
+   about somewhere else. */
+
+.impact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
+    border-top: 1px solid var(--rule);
+}
+
+.impact__item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    align-content: start;
+    padding: clamp(1.25rem, 3vw, 2rem) 0;
+    border-bottom: 1px solid var(--rule);
+}
+
+.impact__figure {
+    font-family: var(--font-display);
+    font-size: var(--t-figure);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.impact__label {
+    font-size: var(--t-meta);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 26ch;
+}
+
+.impact__note {
+    margin-top: 1.5rem;
+    font-size: var(--t-meta);
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 56ch;
+}
+
+@media (min-width: 48rem) {
+    .impact { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 0; }
+    .impact__item {
+        border-bottom: 0;
+        padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    }
+}
+
 .case-impact { border-top: 1px solid var(--rule); margin-bottom: 1.5rem; }
 
 @media (min-width: 48rem) {
@@ -3661,6 +3816,14 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
         scroll-behavior: auto !important;
     }
 
+    /* The wall's plates are pinned a degree or two off true. That is a
+       manner rather than information, and it is the one transform on
+       the site a reader could be sitting in front of indefinitely, so
+       it goes rather than being shortened to nothing. */
+    .quest__plate,
+    .quest:hover .quest__plate,
+    .quest:focus-within .quest__plate { transform: none; }
+
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal] { opacity: 1; transform: none; }
     .js [data-reveal-rule] { transform: none; }
@@ -3782,7 +3945,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     /* The short ticks are drawn as backgrounds rather than borders, and
        a background is exactly what this mode flattens away. Repainted
        in the system's ink so the idiom survives. */
-    .exp__areas li::before,
     .case-figure figcaption::before,
     .case-list li::before,
     .case-next__label::before { background: CanvasText; }

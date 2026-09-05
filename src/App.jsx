@@ -7,9 +7,10 @@ import { Progress, SkipLink } from './components/Chrome.jsx';
 import Hero from './sections/Hero.jsx';
 import Opening from './sections/Opening.jsx';
 import Work from './sections/Work.jsx';
+import Behance from './sections/Behance.jsx';
 import About from './sections/About.jsx';
 import Capabilities from './sections/Capabilities.jsx';
-import Experience from './sections/Experience.jsx';
+import SideQuests from './sections/SideQuests.jsx';
 import Contact from './sections/Contact.jsx';
 
 import useIntro from './hooks/useIntro.js';
@@ -18,7 +19,11 @@ import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
 import useReveal from './hooks/useReveal.js';
 
-/* The home page: one scrolling document, five anchored sections.
+/* The home page: one scrolling document, six bands under the hero —
+   Selected Work, Selected Behance Work, About, Capabilities, Side Quests
+   and Contact. Four of the six are in the navigation panel; the other
+   two are arrived at by reading, which is the difference between a
+   destination and a section.
 
    Two layers. The navigation is fixed under everything; the page is the
    one layer above it, and opening the menu slides that layer off the
@@ -48,7 +53,6 @@ export default function App() {
             <Progress />
 
             <Menu
-                home="#top"
                 base=""
                 work="work/"
                 open={menu.open}
@@ -62,9 +66,10 @@ export default function App() {
                     <Hero />
                     <Opening />
                     <Work />
+                    <Behance />
                     <About />
                     <Capabilities />
-                    <Experience />
+                    <SideQuests />
                     <Contact />
                 </main>
             </div>

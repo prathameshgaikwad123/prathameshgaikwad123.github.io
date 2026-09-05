@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" role="img" aria-label="Placeholder image: Print &amp; Corporate Collateral">
+  <rect width="1600" height="1200" fill="#EDEDED"/>
+  <rect x="12" y="12" width="1576" height="1176" fill="none" stroke="#D4D4D4" stroke-width="2" stroke-dasharray="10 8"/>
+  <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">
+    <text x="800" y="496" font-size="22" font-weight="600" letter-spacing="4.8" fill="#000000">PLACEHOLDER IMAGE</text>
+    <text x="800" y="628" font-size="52" font-weight="500" fill="#1A1A1A">Print &amp; Corporate Collateral</text>
+    <text x="800" y="715" font-size="22" fill="#4F4F4F" font-family="ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace">assets/images/behance/04-print-collateral.jpg</text>
+    <text x="800" y="780" font-size="22" fill="#6B6B6B">1600 &#215; 1200 &#183; behance plate, 4:3</text>
+  </g>
+</svg>
