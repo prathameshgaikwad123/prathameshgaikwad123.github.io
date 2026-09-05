@@ -100,6 +100,20 @@
        surface that re-declares one, and so the whole register moves
        from here rather than from forty-odd selectors. */
     --mark:        var(--ink-3);
+    /* The one hue left on the site, and the only token that is never
+       painted at rest. --signal gave up being a colour when the ramp
+       went to two tones, because an accent that is only ever decoration
+       has nowhere to sit on a monochrome page. This is the same orange
+       it used to be — the burnt value on paper, the brighter one on the
+       dark ground, each already sized to its own ramp — kept for the one
+       thing a two-tone system genuinely cannot say: that a phrase is
+       being touched right now.
+
+       It is spent in exactly one place, on the statement in section 8,
+       and only while the cursor is on it. A colour that exists only in
+       motion is not a third tone, which is what lets the register stay
+       two-tone with this in it.                                      */
+    --flow:        #C0431E;
     --scrim:       rgba(0, 0, 0, 0.6);
 
     /* --- The header's plates -------------------------------------------
@@ -216,10 +230,6 @@
        takes the composition with it; this is the least that still says
        the page is behind something. */
     --menu-scrim: rgba(0, 0, 0, 0.22);
-    /* And the page is above the panel, so it falls on it. This is the
-       only thing that makes the seam read in dark, where the page and
-       the panel are two dark surfaces a few levels apart. */
-    --menu-cast:  0 0 2.5rem rgba(0, 0, 0, 0.3);
 
     /* --- Space -------------------------------------------------------- */
     --bar:      calc(var(--nav-top) + var(--nav-h) + clamp(0.5rem, 1.4vh, 1rem));
@@ -233,6 +243,12 @@
     --t-slow:  0.7s;
     --t-mid:   0.42s;
     --t-fast:  0.18s;
+    /* The statement's sweep (section 8), and the only duration on the
+       site measured in seconds rather than fractions of one. It is long
+       on purpose: the colour has to read as travelling through the
+       phrase rather than arriving on it, and anything near --t-slow
+       reads as a switch that was slow rather than as a crossing. */
+    --t-flow:  1.35s;
 
     /* Intro (section 6): the line fills, then the overlay clears. */
     --intro-fill: 0.85s;
@@ -361,6 +377,11 @@
            surface that re-declares it — and cannot fall out of step
            with the theme the way eight literal copies could. */
         --signal-soft: rgba(255, 255, 255, 0.10);
+        /* The one token that does restate here, because it is the one
+           that is a colour rather than a reference into the ramp: the
+           value that reads on paper is mud on a black ground, and the
+           value that reads on black is neon on paper. */
+        --flow:        #FF6A3D;
         --scrim:       rgba(0, 0, 0, 0.72);
         /* The one token whose polarity has to turn over. The scrim
            says the page behind the panel is not the one being read,
@@ -370,7 +391,6 @@
            (~18 sRGB units, as the warm pair carried), opposite
            direction, because the ground left it no other one. */
         --menu-scrim:  rgba(255, 255, 255, 0.07);
-        --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
         --nav-plate:   rgba(26, 26, 26, 0.62);
         --nav-plate-2: rgba(26, 26, 26, 0.86);
         --nav-opaque:  rgba(20, 20, 20, 0.97);
@@ -406,6 +426,11 @@
        surface that re-declares it — and cannot fall out of step
        with the theme the way eight literal copies could. */
     --signal-soft: rgba(255, 255, 255, 0.10);
+    /* The one token that does restate here, because it is the one that
+       is a colour rather than a reference into the ramp: the value that
+       reads on paper is mud on a black ground, and the value that reads
+       on black is neon on paper. */
+    --flow:        #FF6A3D;
     --scrim:       rgba(0, 0, 0, 0.72);
     /* The one token whose polarity has to turn over. The scrim
        says the page behind the panel is not the one being read,
@@ -415,7 +440,6 @@
        (~18 sRGB units, as the warm pair carried), opposite
        direction, because the ground left it no other one. */
     --menu-scrim:  rgba(255, 255, 255, 0.07);
-    --menu-cast:   0 0 2.5rem rgba(0, 0, 0, 0.8);
     --nav-plate:   rgba(26, 26, 26, 0.62);
     --nav-plate-2: rgba(26, 26, 26, 0.86);
     --nav-opaque:  rgba(20, 20, 20, 0.97);
@@ -1267,18 +1291,15 @@ em { font-style: italic; }
    layer and the overlay that travels with it are the only things that
    go anywhere.                                                       */
 
+/* The page layer carries no cast. It used to drop one onto the panel it
+   slides off, to say which of the two surfaces was in front; the seam
+   the two make is enough to say that on its own, and a shadow the width
+   of the screen is a heavier thing to put on the page than the
+   distinction it was drawing. */
 [data-main] {
     position: relative;
     z-index: 2;
     background: var(--paper-base);
-    /* Declared at rest as well as in motion, and it costs nothing there:
-       the layer covers the viewport exactly, so all four edges of the
-       cast fall outside it. The only edge that ever comes into view is
-       the right one, and only once the page has moved off the panel.
-       True while the panel is fixed, which is every case but one — the
-       no-JS fallback makes it static and pushes this layer down, and
-       takes the cast back off at the end of section 7. */
-    box-shadow: var(--menu-cast);
 }
 
 /* Before the timeline arrives — and, for a reader who has asked for
@@ -1773,14 +1794,6 @@ html:not(.js) .menu__link {
    screen of height to spend and is tight under a band. */
 html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
-/* The page layer's cast is declared at rest because the layer covers
-   the viewport exactly, so every edge of it falls off screen. Here it
-   does not: the panel pushes the page down, and the cast's top edge
-   lands across the seam between them — forty pixels of dark gradient
-   over the panel's ground, in dark theme, for the one reader who
-   cannot have been shown the effect it is there for. */
-html:not(.js) [data-main] { box-shadow: none; }
-
 
 /* ====== 8. HERO ===================================================== */
 
@@ -1857,6 +1870,129 @@ html:not(.js) [data-main] { box-shadow: none; }
 .hero__title span { display: block; }
 .hero__title em { font-style: italic; letter-spacing: -0.03em; }
 .hero__stop { color: var(--mark); display: inline !important; }
+
+/* --- The statement under the cursor ----------------------------------
+   The colour is not switched, it is poured. One gradient — the site's
+   orange behind the ink — is laid across the heading three times its
+   own width and clipped to the glyphs, so the phrase is a window onto
+   it rather than a thing with a colour. At rest the window sits over
+   the far end of the image, which is ink from edge to edge and is
+   therefore indistinguishable from the heading before this rule
+   existed. Hovered, the window travels to the near end, and the seam
+   between the two colours crosses the phrase from left to right,
+   arriving letter by letter in the order the phrase is read.
+
+   Only the seam moves, which is why the two ends are flat: the first
+   40% of the image is orange and the last 40% is ink, with the blend
+   confined to the middle fifth — one box-width of soft edge. The
+   margin that leaves at either extreme is what keeps the resting state
+   honestly ink and the hovered state honestly orange at any window
+   size, and what lets the gradient be raked slightly off the
+   horizontal (100deg) so the second line takes the colour a beat after
+   the first, rather than the two changing as one bar.
+
+   The ramp is read, not restated: --ink is whichever end of it the
+   theme is at, so light stays black-to-orange and dark stays
+   white-to-orange with nothing here to keep in step.
+
+   The stop is not in the sweep and cannot be: it carries its own
+   colour, one step down the ramp, and a gradient sized to a box the
+   width of a full stop has nowhere to travel. It is timed into the sweep
+   instead — held at --mark until the seam has all but reached it, then
+   given the same orange, so the one mark the phrase ends on lands with
+   the phrase rather than ahead of it.
+
+   Its two numbers are read off the curve rather than off the clock,
+   which is the whole reason they are not halves. --ease is a quintic
+   settle: it spends nine tenths of its travel in the first third of
+   its time, so the seam reaches the end of the phrase around a sixth
+   of the way in and the last of the ink is gone by around four tenths
+   — not at the end. A stop timed to the duration would come up most of
+   a second after the phrase it belongs to had finished. Leaving, the
+   ink returns from the right and the stop is the first thing it
+   reaches, so the wait is in the hovered rule alone.
+
+   Gated on the clip: without it, `color: transparent` is a heading
+   that is not there. The rule above this one — the stop coming up to
+   the ink — is the whole effect in a browser that cannot do this, and
+   is left standing for exactly that reason.                          */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .hero__title {
+        /* The image is sized to the box, and the box is not the ink. The
+           line box is 0.94 of the em and Castoro's is a full one, so the
+           ascenders stand about 0.03em above the first line and the
+           italic g hangs about 0.04em below the second, and the final y
+           of the first line carries a negative right sidebearing past
+           the fitted width. Painted through the glyphs, anything the
+           image does not reach is not drawn at all — the descenders
+           come off the statement.
+
+           So the painting area is grown to hold the ink and the growth
+           is handed straight back: background-origin is the padding
+           box, and an equal negative margin leaves the margin box the
+           size it was. The heading is a flex item centred in a column,
+           laid out by that margin box, so nothing above or below it
+           moves and nothing about the line is different. */
+        padding: 0.1em 0.14em;
+        margin: -0.1em -0.14em;
+        background-image: linear-gradient(100deg,
+                                          var(--flow) 0%,
+                                          var(--flow) 40%,
+                                          var(--ink) 60%,
+                                          var(--ink) 100%);
+        background-repeat: no-repeat;
+        background-size: 300% 100%;
+        background-position: 100% 50%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: background-position var(--t-flow) var(--ease);
+    }
+
+    /* `transition` is a shorthand and this element's is already spoken
+       for: the entrance in section 6 declares it on `[data-reveal].is-in`,
+       which is three classes to this rule's one and so takes the whole
+       list — the sweep included, leaving a heading that changes colour
+       in a single frame. It cannot be added to the entrance's rule
+       either, which is every revealed element on the site.
+
+       So the list is stated once more, here, at a specificity that
+       clears it and in one place rather than two: the sweep, and the
+       entrance's own fade and rise written from the same three tokens
+       the entrance writes them from. The rule above is what a reader
+       without JavaScript gets, where there is no entrance to share
+       with. */
+    .js .hero__title[data-reveal] {
+        transition: background-position var(--t-flow) var(--ease),
+                    opacity var(--t-slow) var(--ease-io) var(--d, 0s),
+                    transform var(--t-slow) var(--ease) var(--d, 0s);
+    }
+
+    .hero__title:hover { background-position: 0% 50%; }
+
+    .hero__stop {
+        color: var(--mark);
+        transition: color calc(var(--t-flow) * 0.42) var(--ease);
+    }
+
+    .hero__title:hover .hero__stop {
+        color: var(--flow);
+        transition: color calc(var(--t-flow) * 0.21) var(--ease)
+                    calc(var(--t-flow) * 0.17);
+    }
+
+    /* Text painted through its own glyphs has no fill of its own, and a
+       selection drawn over it would otherwise be a band of --signal
+       with nothing legible in it. The fill is given back for the length
+       of the selection, on both sites: the heading's own text, and the
+       text of the spans inside it. */
+    .hero__title::selection,
+    .hero__title ::selection {
+        background: var(--signal);
+        color: var(--on-signal);
+        -webkit-text-fill-color: var(--on-signal);
+    }
+}
 
 .hero__said {
     margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
@@ -2530,30 +2666,18 @@ html:not(.js) [data-main] { box-shadow: none; }
    At rest — a phone, reduced motion, no script — the slant is still
    there. It is the slant that composes the section; the movement only
    keeps it from being a sticker. */
+/* The band the section header stands on used to be a tinted, slant-cut
+   ground travelling at its own rate behind the type. It is gone: on a
+   two-tone ramp the tint was the one surface on the page that was a
+   shade rather than a statement, and a slab of --paper-2 behind a
+   heading reads as a panel the heading did not ask for. What is left
+   is the header on the page, like every other section's. */
 .cut {
     position: relative;
-    overflow: hidden;
     padding-block: clamp(2.75rem, 6vw, 5rem);
-    --cut-slant: clamp(0.5rem, 1.4vw, 1.75rem);
 }
 
-.cut__ground {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -14%;
-    bottom: -14%;
-    z-index: 0;
-    background: var(--paper-2);
-    clip-path: polygon(
-        0 calc(14% + var(--cut-slant)),
-        100% 14%,
-        100% calc(86% - var(--cut-slant)),
-        0 86%
-    );
-}
-
-.cut__type { position: relative; z-index: 1; }
+.cut__type { position: relative; }
 
 /* Shifted baselines, set in the markup so the offsets are content
    rather than script. `top` on a relative box moves the word without
@@ -3540,6 +3664,12 @@ html:not(.js) [data-main] { box-shadow: none; }
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal] { opacity: 1; transform: none; }
     .js [data-reveal-rule] { transform: none; }
+    /* The statement's sweep (section 8) is shortened to nothing by the
+       rule above, which leaves its stop waiting most of a second in
+       front of a change that no longer takes any time. A delay is the
+       only part of that gesture the rule above does not reach, so it is
+       taken here. */
+    .hero__title:hover .hero__stop { transition-delay: 0s; }
     /* The navigation's travel is positional too, and this is the one place
        where shortening is not enough: a hundredth of a millisecond is
        still a transition, with a frame to start it and a frame to finish
@@ -3634,11 +3764,9 @@ html:not(.js) [data-main] { box-shadow: none; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
     .glass__cell img { border: 1px solid CanvasText; }
 
-    /* Grounds carry no information once colour is flattened: the cut
-       panel and the closing panel both become Canvas, so their edges
-       say nothing and their clips would only risk cropping what is in
-       front of them. */
-    .cut__ground { display: none; }
+    /* Grounds carry no information once colour is flattened: the closing
+       panel becomes Canvas, so its edges say nothing and its clip would
+       only risk cropping what is in front of it. */
     .close__ground, .opening__panel { clip-path: none !important; }
     .masthead__inner, .menu-btn, .wordmark__initials { border: 1px solid CanvasText; }
     /* Backgrounds are flattened here, so the filled row that says "you
@@ -3729,9 +3857,26 @@ html:not(.js) [data-main] { box-shadow: none; }
 
     .hero__stage { padding-block: 0 1.5rem !important; }
 
+    /* On screen the statement is painted through its own glyphs, which
+       makes it a background — and a background is precisely the thing a
+       printer is entitled not to lay down. Left as it is, the page
+       prints a heading-shaped hole. The image is dropped and the ink
+       handed back, so what is printed is the ramp above like everything
+       else on the sheet.
+
+       The fill is deliberately not named here. -webkit-text-fill-color
+       inherits, and the stop carries its own colour as `color` alone —
+       so naming the fill on the heading would reach past it and print
+       the full stop at full ink instead of one step down the ramp,
+       which is the one thing about this heading that is not the ink. */
+    .hero__title {
+        background-image: none !important;
+        color: var(--ink) !important;
+    }
+
     /* The grounds are only grounds. Printed, they would be a sheet of
        ink around the last page. */
-    .cut__ground, .close__ground { display: none !important; }
+    .close__ground { display: none !important; }
     .cut { padding-block: 0 !important; }
 
     /* The ramp is reset once, at every site that declares it, rather

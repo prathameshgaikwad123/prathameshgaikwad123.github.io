@@ -1,50 +1,36 @@
 /* ===================================================================
-   06 · CAPABILITIES — THE CUT PANEL
-   The plainest band on the page becomes the one that is composed: a
-   tinted panel whose top and bottom edges are cut on a slant, carrying
-   the section's own statement set on shifted baselines.
+   06 · CAPABILITIES — THE SECTION HEADER'S DRIFT
+   The section header used to stand on a tinted panel cut on a slant,
+   and the effect was the rate mismatch between the two: the ground
+   travelling one way, the type the other and less. The ground is gone
+   — a slab of the off-white behind a heading was the one surface on
+   the page that was a shade rather than a statement — and what is left
+   is the half of it that was never about the panel: the header moving
+   against the scroll, a little, so it settles into the band rather
+   than arriving with it.
 
-   Nothing is added and nothing is repeated — the tag, the statement
-   and the note are the ones that were already here. What changes is
-   that they are now standing on something.
-
-   The rate mismatch is the whole effect, and it needs two things that
-   can disagree. The ground is a layer taller than the panel that clips
-   it, so moving it moves the two slanted edges without ever exposing
-   what is behind; the type moves the other way, and less. One trigger,
-   two speeds — which is all any parallax has ever been. Anything
-   faster than this would be the panel performing rather than settling.
-
-   Wide windows only. On a phone the panel is a still composition: the
-   slant is in the stylesheet, and it is the slant that does the work.
+   Wide windows only. On a phone the header is simply where it is.
    =================================================================== */
 
 export default function panelCut({ gsap, mm, root, CONDITIONS, SCRUB }) {
     mm.add(CONDITIONS.wide, () => {
         const panel = root.querySelector('.cut');
-        const ground = root.querySelector('.cut__ground');
         const type = root.querySelector('.cut__type');
-        if (!panel || !ground || !type) return;
-
-        const trigger = {
-            trigger: panel,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: SCRUB,
-        };
-
-        /* Kept well inside the overflow the ground is given in CSS, so
-           the slanted edges travel but the band behind never shows. */
-        gsap.fromTo(
-            ground,
-            { yPercent: -2.5 },
-            { yPercent: 2.5, ease: 'none', scrollTrigger: trigger },
-        );
+        if (!panel || !type) return;
 
         gsap.fromTo(
             type,
             { yPercent: 4 },
-            { yPercent: -4, ease: 'none', scrollTrigger: trigger },
+            {
+                yPercent: -4,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: panel,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: SCRUB,
+                },
+            },
         );
     });
 }
