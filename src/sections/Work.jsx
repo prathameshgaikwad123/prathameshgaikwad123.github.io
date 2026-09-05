@@ -3,7 +3,7 @@ import { useReducedMotion } from '../hooks/dom.js';
 import { projects } from '../data/projects.js';
 
 /* The centre of the site, and now one thing rather than two: the
-   heading, and the six covers as a single rigid row behind a pane of
+   heading, and the covers as a single rigid row behind a pane of
    glass.
 
    It used to carry a second view of the same six projects below the
@@ -34,7 +34,10 @@ export default function Work() {
                     </h2>
                     <p className="tag tag--end work__count" data-reveal="">
                         <span className="tag__no num">Index</span>
-                        <b className="num">01 — 06</b>
+                        {/* Counted from the data, like the carousel's own
+                            counter, so the two cannot disagree and adding
+                            a project is one edit rather than three. */}
+                        <b className="num">{`01 — ${String(projects.length).padStart(2, '0')}`}</b>
                     </p>
                 </div>
             </div>

@@ -2,14 +2,12 @@
    HTML entry per page) and the prerender step (which needs to know which
    React tree belongs to which built file). */
 
-const slugs = [
-    'voepl-website',
-    'voepl-brand-system',
-    'safety-dojo',
-    'digital-communication',
-    'web-ai-discovery',
-    'archive',
-];
+/* The projects that have a case study behind them, which is not every
+   project in src/data/projects.js — a project there without an `href`
+   is a card in the carousel and nothing else, and publishes no page.
+   Adding one here means adding its written body to
+   src/case-studies/index.js and its `href` to the project record. */
+const slugs = ['voepl-website'];
 
 export const PAGES = [
     { id: 'home', file: 'index.html', kind: 'home' },

@@ -8,9 +8,17 @@ import useGlassCarousel from '../hooks/useGlassCarousel.js';
    covers behind a pane of glass that is optically neutral across its
    middle and refracts hard at the rims. Everything about the effect is
    measured in src/carousel/ and drawn in WebGL; this file is the part
-   of it that has to be a document — the label, the counter, the six
+   of it that has to be a document — the label, the counter, the
    links, and the strip a reader gets when there is no canvas to draw
    into.
+
+   Not every project has somewhere to go. A card whose record carries
+   no `href` is a cover and a caption: it still sits in the row, still
+   takes its turn in the counter, still comes to the middle and is
+   still named by the label — it simply is not an anchor, and clicking
+   it does nothing rather than going nowhere. The moment a destination
+   is added to the record it becomes a link again, here and in the
+   strip, with no other change.
 
    Three states, in the order they arrive:
 
@@ -25,10 +33,10 @@ import useGlassCarousel from '../hooks/useGlassCarousel.js';
 
 const pad = (n) => String(n + 1).padStart(2, '0');
 
-/* Relative, like every other link to a case study on this page: the
-   site is a multi-page build served from the domain root, and the home
-   page is its index. */
-const href = (item) => `work/${item.slug}.html`;
+/* The destination a card carries, or nothing. Relative, like every
+   other link on this page: the site is a multi-page build served from
+   the domain root, and the home page is its index. */
+const href = (item) => item?.href || null;
 
 export default function WorkCarousel({ items, reduced }) {
     /* Opening a project from the canvas. Every card is a destination
@@ -42,6 +50,10 @@ export default function WorkCarousel({ items, reduced }) {
             const item = items[index];
             if (!item) return;
             const url = href(item);
+            /* Nothing to open. Left deliberately silent: a card with no
+               destination is not a broken one, and a click that does
+               nothing is the honest answer to it. */
+            if (!url) return;
             if (event && (event.metaKey || event.ctrlKey || event.shiftKey)) {
                 window.open(url, '_blank', 'noopener');
                 return;
@@ -67,9 +79,10 @@ export default function WorkCarousel({ items, reduced }) {
        under it is a real anchor to that same project, so the keyboard
        has a link to land on rather than a gesture to guess at.
 
-       Not live, it is the strip: six covers, each one a link. It is
-       what the prerendered document carries, so a crawler and a reader
-       without a script are given the whole of the work either way. */
+       Not live, it is the strip: one cover per project, each one a
+       link if its project has a destination. It is what the prerendered
+       document carries, so a crawler and a reader without a script are
+       given the whole of the work either way. */
     const shell = live
         ? {
               role: 'group',
@@ -81,12 +94,19 @@ export default function WorkCarousel({ items, reduced }) {
 
     /* Live, the label is the section's one visible link — the project in
        the middle of the glass, which is the only one the canvas cannot
-       offer as an element. Not live, the strip below is showing all six
-       as links itself, and a seventh naming whichever happens to be
-       first would be the same destination twice: it goes back to being
-       what it was, a caption over a picture. */
-    const Label = live ? 'a' : 'p';
-    const labelProps = live ? { href: href(on), draggable: 'false' } : { 'aria-hidden': true };
+       offer as an element. Not live, the strip below is showing the
+       linked projects itself, and one more naming whichever happens to
+       be first would be the same destination twice: it goes back to
+       being what it was, a caption over a picture.
+
+       And it is a link only while the project under it has somewhere to
+       go. On one that does not, it is the same caption at the same size
+       in the same place — the only difference is that there is nothing
+       to follow. */
+    const onHref = href(on);
+    const Label = live && onHref ? 'a' : 'p';
+    const labelProps =
+        live && onHref ? { href: onHref, draggable: 'false' } : { 'aria-hidden': !live || undefined };
 
     return (
         <div className="glass" ref={stageRef} data-live={live ? '' : undefined} {...shell}>
@@ -99,7 +119,7 @@ export default function WorkCarousel({ items, reduced }) {
             <Label className="glass__label" ref={labelRef} {...labelProps}>
                 <b className="glass__title">{on.title}</b>
                 <span className="glass__sub">{on.category}</span>
-                {live ? <span className="glass__hint">{on.go}</span> : null}
+                {live && on.go ? <span className="glass__hint">{on.go}</span> : null}
             </Label>
 
             <p className="glass__count num" aria-hidden="true">
@@ -115,22 +135,33 @@ export default function WorkCarousel({ items, reduced }) {
             ) : null}
 
             <ul className="glass__strip">
-                {items.map((item) => (
-                    <li className="glass__cell" key={item.slug}>
-                        <a className="glass__cell-link" href={href(item)} draggable="false">
-                            <img
-                                src={item.cover}
-                                alt=""
-                                width="1600"
-                                height="1000"
-                                loading="lazy"
-                                decoding="async"
-                                draggable="false"
-                            />
-                            <span className="glass__name">{item.title}</span>
-                        </a>
-                    </li>
-                ))}
+                {items.map((item) => {
+                    /* Same cell either way, so the strip keeps its
+                       rhythm: the anchor is swapped for a span when
+                       there is nothing to follow, and the class it
+                       carries — which is what the stylesheet sizes and
+                       crops — is the same one. */
+                    const to = href(item);
+                    const Cell = to ? 'a' : 'span';
+                    const cellProps = to ? { href: to, draggable: 'false' } : {};
+
+                    return (
+                        <li className="glass__cell" key={item.slug}>
+                            <Cell className="glass__cell-link" {...cellProps}>
+                                <img
+                                    src={item.cover}
+                                    alt=""
+                                    width="1600"
+                                    height="1000"
+                                    loading="lazy"
+                                    decoding="async"
+                                    draggable="false"
+                                />
+                                <span className="glass__name">{item.title}</span>
+                            </Cell>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );
