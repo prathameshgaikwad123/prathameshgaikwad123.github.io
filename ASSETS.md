@@ -46,24 +46,22 @@ around while images load.
 
 ## Project images
 
-Six projects, each with one cover and three gallery images.
+Seven projects. One of them has a case study and so has gallery plates
+as well; the other six are covers only, and gain a gallery if and when
+they gain a case study.
 
 | Path | Size | Ratio | Used on |
 |---|---|---|---|
 | `public/assets/images/projects/voepl-website/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
 | `public/assets/images/projects/voepl-website/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/voepl-brand-system/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/voepl-brand-system/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/safety-dojo/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/safety-dojo/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/digital-communication/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/digital-communication/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/web-ai-discovery/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/web-ai-discovery/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/archive/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/archive/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
+| `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/amanoya-mascot/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/flowid-collateral/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/wordpress-japan/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/nft-projects/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/ai-video/cover.*` | 1600 × 1000 | 16:10 | Home |
 
-Each cover appears twice. In the **glass carousel** that is the whole of
+Each cover appears in the **glass carousel** that is the whole of
 Selected Work it is cropped from the centre to 4:3 or 4:5 — the strip
 alternates, which is where its rhythm comes from — and drawn up to about
 500 px tall, so keep the subject away from the left and right thirds or a

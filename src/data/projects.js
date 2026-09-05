@@ -1,9 +1,23 @@
 /* ===================================================================
    SELECTED WORK
-   One record per project. The carousel on the home page and the case
-   study pages are both built from this, so a project is described once —
-   including the path of every plate, which is where you change a
-   placeholder's extension when you replace it. See ASSETS.md.
+   One record per project, in carousel order. The carousel on the home
+   page and the case study pages are both built from this, so a project
+   is described once — including the path of every plate, which is where
+   you change a placeholder's extension when you replace it. See
+   ASSETS.md.
+
+   A record needs seven fields to be a card: slug, no, category, short,
+   title, summary and cover. Everything past `href` is the case study,
+   and only a project that has one carries it.
+
+   `href` is what makes a card a link, and it is the only thing that
+   does. A project with a case study points at its page; a project
+   without one is `null`, and the carousel renders it as a cover and a
+   caption rather than as a link to nowhere — the card, the counter,
+   the label and the strip all behave exactly as they do for a linked
+   project, minus the anchor. Giving one a destination later is one
+   line here and nothing anywhere else: a case study page, or an
+   external URL, or a Behance project.
    =================================================================== */
 
 /* REPLACE: every path below points at a labelled SVG placeholder in
@@ -13,10 +27,10 @@
 const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
 
 /* `short` is the index label — the name this project answers to in a
-   list rather than on a page: the navigation panel's work list is set
-   from it. It is the category for four of the six;
-   the two VOEPL projects need their own, because a reader choosing
-   between two rows both reading VOEPL is not choosing anything. */
+   list rather than on a page. The navigation panel's work list is set
+   from it, and that list carries only the projects that have somewhere
+   to go, so a `short` on an unlinked project is what it would be
+   called once it does. */
 
 export const projects = [
     {
@@ -34,6 +48,11 @@ export const projects = [
         go: 'Read the case study',
         cover: img('voepl-website', 'cover.svg'),
         coverAlt: 'Placeholder for the VOEPL corporate website case study cover image.',
+        /* The one project with a case study, so the one card that is a
+           link. The URL is the one the carousel used to build from the
+           slug, written out rather than derived now that not every card
+           has one. */
+        href: 'work/voepl-website.html',
         /* The case study page. */
         lead:
             'Contributing to the digital presence of an Indian OEM/ODM manufacturing ' +
@@ -54,219 +73,100 @@ export const projects = [
             [img('voepl-website', '02.svg'), 'Placeholder for a VOEPL website product or capability page.'],
             [img('voepl-website', '03.svg'), 'Placeholder for VOEPL website responsive layouts.'],
         ],
-        next: {
-            href: 'voepl-brand-system.html',
-            label: 'Next project — 02',
-            title: 'Designing a Connected Corporate Visual System',
-        },
-    },
-
-    {
-        slug: 'voepl-brand-system',
-        no: '02',
-        category: 'VOEPL',
-        short: 'Visual System',
-        title: 'Designing a Connected Corporate Visual System',
-        summary:
-            'Designing consistent visual communication across multiple touchpoints ' +
-            'of a manufacturing organisation.',
-        meta: ['Brand Systems', 'Visual Design', 'Corporate Communication'],
-        go: 'Read the case study',
-        cover: img('voepl-brand-system', 'cover.svg'),
-        coverAlt: 'Placeholder for the VOEPL corporate visual system case study cover image.',
-        lead:
-            'Designing consistent visual communication across multiple touchpoints of a ' +
-            'manufacturing organisation.',
-        coverCaption: 'Placeholder — replace with an overview showing several touchpoints together.',
-        facts: [
-            ['Role', 'Digital Marketing Executive — visual design and corporate communication'],
-            ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
-            ['Disciplines', 'Brand Systems · Visual Design · Corporate Communication'],
-            [
-                'Areas of work',
-                'Presentations, product communication, print collateral, internal and HR materials, event design',
-            ],
-        ],
-        gallery: [
-            [
-                img('voepl-brand-system', '01.svg'),
-                'Placeholder for corporate presentation and product communication design.',
-            ],
-            [img('voepl-brand-system', '02.svg'), 'Placeholder for brochure, catalogue and fact sheet design.'],
-            [
-                img('voepl-brand-system', '03.svg'),
-                'Placeholder for internal communication and HR induction material.',
-            ],
-        ],
-        next: {
-            href: 'safety-dojo.html',
-            label: 'Next project — 03',
-            title: 'Making Safety Communication More Memorable',
-        },
-    },
-
-    {
-        slug: 'safety-dojo',
-        no: '03',
-        category: 'Safety Dojo',
-        short: 'Safety Dojo',
-        title: 'Making Safety Communication More Memorable',
-        summary:
-            'Developing a modern visual safety awareness system designed to make ' +
-            'important workplace messages clearer, more engaging and easier to remember.',
-        meta: ['Creative Direction', 'Campaign Design', 'Visual Communication'],
-        go: 'Read the case study',
-        cover: img('safety-dojo', 'cover.svg'),
-        coverAlt: 'Placeholder for the Safety Dojo campaign case study cover image.',
-        lead:
-            'Developing a modern visual safety awareness system designed to make important ' +
-            'workplace messages clearer, more engaging and easier to remember.',
-        coverCaption: 'Placeholder — replace with the series shown together, so the system reads first.',
-        facts: [
-            ['Role', 'Creative direction and design'],
-            /* The owning organisation is still to be confirmed; the marker is
-               carried through rather than filled in. */
-            [
-                'Programme',
-                { text: 'Safety Dojo — ', tbd: 'confirm the owning organisation', todo: 'safety-dojo-owner' },
-            ],
-            ['Disciplines', 'Creative Direction · Campaign Design · Visual Communication'],
-            ['Format', 'A connected series of industrial safety posters'],
-        ],
-        gallery: [
-            [img('safety-dojo', '01.svg'), 'Placeholder for the Safety Dojo poster series shown together.'],
-            [img('safety-dojo', '02.svg'), 'Placeholder for an individual Safety Dojo poster.'],
-            [
-                img('safety-dojo', '03.svg'),
-                'Placeholder for Safety Dojo illustration and visual language detail.',
-            ],
-        ],
-        next: {
-            href: 'digital-communication.html',
-            label: 'Next project — 04',
-            title: "Growing a Manufacturing Brand's Digital Presence",
-        },
-    },
-
-    {
-        slug: 'digital-communication',
-        no: '04',
-        category: 'Digital Communication',
-        short: 'Digital Communication',
-        title: "Growing a Manufacturing Brand's Digital Presence",
-        summary:
-            "Contributed to the growth of VOEPL's LinkedIn audience from approximately " +
-            '300 to 1,600+ followers through consistent visual communication and content.',
-        meta: ['Content Design', 'Social Media', 'Visual Communication'],
-        go: 'Read the case study',
-        cover: img('digital-communication', 'cover.svg'),
-        coverAlt: 'Placeholder for the digital communication case study cover image.',
-        lead:
-            "Contributed to the growth of VOEPL's LinkedIn audience from approximately " +
-            '300 to 1,600+ followers through consistent visual communication and content.',
-        coverCaption: 'Placeholder — replace with a grid of posts showing the visual consistency.',
-        facts: [
-            ['Role', 'Digital Marketing Executive — content design and visual communication'],
-            ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
-            ['Disciplines', 'Content Design · Social Media · Visual Communication'],
-            ['Channel', 'LinkedIn'],
-        ],
-        gallery: [
-            [
-                img('digital-communication', '01.svg'),
-                'Placeholder for a grid of LinkedIn posts showing visual consistency.',
-            ],
-            [
-                img('digital-communication', '02.svg'),
-                'Placeholder for an individual product communication post.',
-            ],
-            [img('digital-communication', '03.svg'), 'Placeholder for a recurring post format.'],
-        ],
-        next: {
-            href: 'web-ai-discovery.html',
-            label: 'Next project — 05',
-            title: 'Designing for Search and AI Discovery',
-        },
-    },
-
-    {
-        slug: 'web-ai-discovery',
-        no: '05',
-        category: 'The Evolving Web',
-        short: 'The Evolving Web',
-        title: 'Designing for Search and AI Discovery',
-        summary:
-            'Exploring how websites can be structured for traditional search while ' +
-            'adapting to emerging AI-driven discovery experiences.',
-        meta: ['SEO', 'Web Strategy', 'AEO Research'],
-        go: 'Read the case study',
-        cover: img('web-ai-discovery', 'cover.svg'),
-        coverAlt: 'Placeholder for the search and AI discovery case study cover image.',
-        lead:
-            'Exploring how websites can be structured for traditional search while ' +
-            'adapting to emerging AI-driven discovery experiences.',
-        coverCaption:
-            'Placeholder — a diagram of site structure or content hierarchy suits this page better than a screenshot.',
-        facts: [
-            ['Role', 'Digital Marketing Executive — SEO, web strategy and research'],
-            ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
-            ['Disciplines', 'SEO · Web Strategy · AEO Research'],
-            ['Nature of the work', 'Ongoing optimisation work plus independent research — not a finished product'],
-        ],
-        gallery: [
-            [img('web-ai-discovery', '01.svg'), 'Placeholder for a site structure or sitemap diagram.'],
-            [
-                img('web-ai-discovery', '02.svg'),
-                'Placeholder for a content hierarchy or structured data example.',
-            ],
-            [
-                img('web-ai-discovery', '03.svg'),
-                'Placeholder for technical optimisation notes or research findings.',
-            ],
-        ],
-        next: {
-            href: 'archive.html',
-            label: 'Next project — 06',
-            title: 'Websites, Digital Projects & Earlier Work',
-        },
-    },
-
-    {
-        slug: 'archive',
-        no: '06',
-        category: 'Selected Archive',
-        short: 'Selected Archive',
-        title: 'Websites, Digital Projects & Earlier Work',
-        summary:
-            'Selected earlier work across websites, digital projects, graphic design ' +
-            'and social media — including work from Soch Business Mentors LLP.',
-        meta: ['Web Design', 'Graphic Design', 'Social Media'],
-        go: 'View the archive',
-        cover: img('archive', 'cover.svg'),
-        coverAlt: 'Placeholder for the selected archive case study cover image.',
-        /* The archive cover carries its own alt text on the case page. */
-        caseCoverAlt: 'Placeholder for the selected archive cover image.',
-        lead:
-            'Selected earlier work across websites, digital projects, graphic design and ' +
-            'social media — including work from Soch Business Mentors LLP.',
-        coverCaption: 'Placeholder — a composite of several earlier pieces works well here.',
-        facts: [
-            ['Role', 'Graphic Designer & Social Media Manager'],
-            ['Organisation', 'Soch Business Mentors LLP'],
-            ['Disciplines', 'Web Design · Graphic Design · Social Media'],
-            ['Nature of this page', 'An archive rather than a single case study'],
-        ],
-        gallery: [
-            [img('archive', '01.svg'), 'Placeholder for an earlier website project.'],
-            [img('archive', '02.svg'), 'Placeholder for earlier graphic design work.'],
-            [img('archive', '03.svg'), 'Placeholder for earlier social media design work.'],
-        ],
+        /* The only line of this record that had to change. It pointed
+           at the second case study, and there is no second case study
+           any more — so it points where the last project's pointer
+           always pointed, which is the way out of the work. */
         next: {
             href: '../index.html#contact',
             label: 'Next',
             title: 'Open to Opportunities — get in touch',
             aria: 'Continue',
         },
+    },
+
+    {
+        slug: 'gem-opalus-identity',
+        no: '02',
+        category: 'Brand Identity / Logo Design',
+        short: 'Gem Opalus',
+        title: 'Logo Design & Brand Identity — Gem Opalus',
+        summary:
+            'Created the logo and overall brand identity, establishing a cohesive ' +
+            'visual presence for the brand.',
+        cover: img('gem-opalus-identity', 'cover.svg'),
+        coverAlt: 'Placeholder for the Gem Opalus logo and brand identity project.',
+        href: null,
+    },
+
+    {
+        slug: 'amanoya-mascot',
+        no: '03',
+        category: 'Character Design / Brand Identity',
+        short: 'Amanoya Mascot',
+        title: 'Mascot Creation — Amanoya, Japan',
+        summary:
+            'Designed and developed a mascot concept, contributing to the brand\u2019s ' +
+            'visual identity and character development.',
+        cover: img('amanoya-mascot', 'cover.svg'),
+        coverAlt: 'Placeholder for the Amanoya mascot creation project.',
+        href: null,
+    },
+
+    {
+        slug: 'flowid-collateral',
+        no: '04',
+        category: 'Graphic Design / Marketing Collateral',
+        short: 'FlowID Collateral',
+        title: 'Brochure & Banner Design — FlowID, Netherlands',
+        summary:
+            'Created brochures and banners aligned with the company\u2019s branding and ' +
+            'communication requirements.',
+        cover: img('flowid-collateral', 'cover.svg'),
+        coverAlt: 'Placeholder for the FlowID brochure and banner design project.',
+        href: null,
+    },
+
+    {
+        slug: 'wordpress-japan',
+        no: '05',
+        category: 'Web Development / WordPress',
+        short: 'WordPress Development',
+        title: 'WordPress Website Development — Japan',
+        summary:
+            'Developed WordPress websites from provided Figma designs, translating UI ' +
+            'designs into functional and responsive websites.',
+        cover: img('wordpress-japan', 'cover.svg'),
+        coverAlt: 'Placeholder for the WordPress website development project.',
+        href: null,
+    },
+
+    {
+        slug: 'nft-projects',
+        no: '06',
+        category: 'Creative Direction / Web3',
+        short: 'NFT Projects',
+        title: 'NFT Projects — End-to-End Creation & Management',
+        summary:
+            'Contributed to concept development, creative direction, project setup, ' +
+            'execution, management, and coordination of NFT projects.',
+        cover: img('nft-projects', 'cover.svg'),
+        coverAlt: 'Placeholder for the NFT projects creation and management work.',
+        href: null,
+    },
+
+    {
+        slug: 'ai-video',
+        no: '07',
+        category: 'AI / Video Production',
+        short: 'AI-Assisted Video',
+        title: 'AI-Assisted Video Creation',
+        summary:
+            'Created videos using AI-powered tools for concept development, visual ' +
+            'creation, and video production.',
+        cover: img('ai-video', 'cover.svg'),
+        coverAlt: 'Placeholder for the AI-assisted video creation work.',
+        href: null,
     },
 ];
 
