@@ -4,7 +4,7 @@ import { onMedia } from './dom.js';
 
 /* The one way a section gets scroll choreography.
 
-       const ref = useScrollEffect(openingSplit);
+       const ref = useScrollEffect(panelCut);
        return <section ref={ref}>…</section>;
 
    What the effect is handed:

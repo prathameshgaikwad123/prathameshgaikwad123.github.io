@@ -1,9 +1,9 @@
 /* ===================================================================
    08 · CONTACT — THE CLOSE
    The last band arrives as a contained panel and opens out to the
-   edges of the screen. It is the opening transition read backwards —
-   there, the paper gave way to the ink; here, the ink takes the page.
-   Two moments, one idea, at either end of the document.
+   edges of the screen. It is the one transition the document ends on
+   rather than passes through, and the only one left that opens a
+   ground instead of moving type across it.
 
    The panel is the section's ground, and only the ground: the
    composition inside it never moves outward with it. That is the

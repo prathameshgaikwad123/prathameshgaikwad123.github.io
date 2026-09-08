@@ -82,13 +82,12 @@ block in the stylesheet, and one section of the page.
 
 | # | Section | Effect | File |
 |---|---|---|---|
-| 1 | Hero → Work | The statement parts and an inverted panel opens between the halves until it is the Work band's ground | `openingSplit.js` |
-| 2 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
-| 3 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
-| 4 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
-| 5 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
-| 6 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
-| 8 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
+| 1 | About | One paragraph filling word by word as it is read | `wordReveal.js` |
+| 2 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
+| 3 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
+| 4 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
+| 5 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
+| 6 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
 
 Three rules hold the whole thing together, and they are worth knowing before
 changing any of it:

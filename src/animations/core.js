@@ -39,16 +39,13 @@
    that read as if it were doing the opposite. */
 export const EASE = 'power4.out';
 
-/* One effect on the page needs scrolling of its own to play across:
-   the opening transition, which holds a screen while it happens. That
-   run is layout, so the stylesheet owns it (--run-opening, section 1)
-   and the timeline simply ends where the run does — `end: 'bottom
-   bottom'` — rather than repeating the number here where the two could
-   drift apart. Every other effect plays across scrolling the page was
-   going to do anyway. */
-
 /* Scrub is a lag, not a switch. 1 is roughly a beat behind the wheel —
-   enough to feel considered, not enough to feel disconnected. */
+   enough to feel considered, not enough to feel disconnected.
+
+   Every effect plays across scrolling the page was going to do anyway:
+   not one of them holds a screen while it runs, so there is no run of
+   empty scrolling for the stylesheet to reserve and no distance the
+   two have to be kept from drifting apart. */
 export const SCRUB = 1;
 
 /* When the scroll system exists at all: a window wide enough for the
@@ -138,11 +135,10 @@ export function loadMotion() {
             })
             .catch(() => {
                 /* The stylesheet has already laid the page out for a
-                   scroll system that is now never going to arrive: a
-                   run of empty scrolling reserved, and two panels held
-                   at the inset they were meant to open from. This is
-                   the one signal that stands those rules down —
-                   `.js:not(.motion-off)` in sections 8.1 and 13 — so a
+                   scroll system that is now never going to arrive: the
+                   closing panel held at the inset it was meant to open
+                   from. This is the one signal that stands that rule
+                   down — `.js:not(.motion-off)` in section 13 — so a
                    chunk that fails to load costs the choreography and
                    nothing else. The page it leaves behind is the same
                    one a phone gets. */
