@@ -5,7 +5,6 @@ import Underlay from './components/Underlay.jsx';
 import { Progress, SkipLink } from './components/Chrome.jsx';
 
 import Hero from './sections/Hero.jsx';
-import Opening from './sections/Opening.jsx';
 import Work from './sections/Work.jsx';
 import Behance from './sections/Behance.jsx';
 import About from './sections/About.jsx';
@@ -64,7 +63,6 @@ export default function App() {
             <div data-main="" inert={menu.open || undefined}>
                 <main id="main">
                     <Hero />
-                    <Opening />
                     <Work />
                     <Behance />
                     <About />
