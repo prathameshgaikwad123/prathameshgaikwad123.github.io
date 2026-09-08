@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SITE } from '../data/site.js';
 import { ArrowUpInline } from './Icons.jsx';
+import Presence from './Presence.jsx';
 
 /* The small pieces of page furniture that every page shares. */
 
@@ -37,11 +38,16 @@ export const BackToTop = () => (
     </a>
 );
 
-/* The footer inside the contact band on the home page. */
+/* The footer inside the contact band on the home page. Presence is
+   last in both footers because it is last on the page: the row above
+   it is what the site says about itself, and this is the one line that
+   is about the moment it is being read. It rules itself out of the
+   markup until it has something true to say — src/components/Presence.jsx. */
 export const SiteFoot = () => (
     <footer className="site-foot">
         <Colophon />
         <BackToTop />
+        <Presence />
     </footer>
 );
 
@@ -51,6 +57,7 @@ export const PageFoot = ({ backToTop = true }) => (
         <div className="page-foot__inner">
             <Colophon />
             {backToTop && <BackToTop />}
+            <Presence />
         </div>
     </footer>
 );

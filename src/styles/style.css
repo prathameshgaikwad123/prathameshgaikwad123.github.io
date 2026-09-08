@@ -3446,6 +3446,118 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .page-foot a:hover { color: var(--ink); }
 
 
+/* --- Who else is here -------------------------------------------------
+   The live count, and the count of everyone who ever got this far. Both
+   footers take it — the one inside the contact band and the one that
+   closes a case study — and it is the same element in each, because
+   what it says does not change with the page it is on.
+
+   It sits on a line of its own rather than as a fourth thing in the
+   footer's row. That row is three fixed statements spread edge to edge
+   by space-between, and a figure that changes while it is being read
+   cannot be one of them without pushing the other two around every
+   time it does. `flex-basis: 100%` is the whole of how it gets that
+   line: a wrapping flex row hands a full-width item the next one down,
+   which puts this under the colophon at the bottom left — the last
+   thing on the page, below the sentence that says who built it.
+
+   No box, no rule and no heading. It is set in the type the footer
+   already declares for its paragraphs, one step of the ramp louder on
+   the two numerals and no louder anywhere else.
+
+   Nothing is rendered at all until a real number arrives — see
+   src/components/Presence.jsx — so a reader without JavaScript, a page
+   whose endpoint is not there and a first request still in the air all
+   get the footer exactly as it has always been rather than a
+   placeholder or a zero. Which is also what lets the entrance be an
+   animation rather than a transition: the element is inserted, and an
+   animation on a newly inserted element plays, where a transition
+   between two states the element was never in does not.            */
+.presence {
+    flex-basis: 100%;
+    margin-top: clamp(0.375rem, 1.2vw, 0.75rem);
+    min-width: 0;
+    animation: presence-arrive var(--t-slow) var(--ease-io) both;
+}
+
+@keyframes presence-arrive { from { opacity: 0; } }
+
+.presence__line + .presence__line { margin-top: 0.25rem; }
+
+/* Everything in this footer is one step off the ink already, which
+   leaves nowhere below for a numeral to be subordinate — the register
+   the site puts index numerals in (--mark, section 1) is the colour
+   the label beside it is wearing. So it goes the other way: the two
+   figures are the only things down here at full ink, which is what
+   makes them findable without making them loud at this size.
+
+   Everything else about it is the site's numeral idiom: tabular, and
+   tracked one notch tighter than the words beside it. Tabular matters
+   more here than anywhere else it is used — this is the only numeral
+   on the site that changes while it is being looked at, and
+   proportional digits would shuffle the sentence after it every time
+   it did.                                                          */
+.presence__no {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.1em;
+}
+
+/* Inline rather than a flex row, so the line wraps like the sentence
+   it is if a five-figure count ever makes it too long for a phone, and
+   so the space after the numeral is a word space rather than a gap
+   that has to be guessed at.
+
+   Nudged up off the baseline: a circle centred on the x-height of
+   uppercase micro type sits optically low if it is left on it.
+
+   It rests at the fainter of the two hairline values, which is where
+   it stays if a heartbeat fails — the last good numbers stay exactly
+   where they are, and the dot is the only thing that admits the
+   connection has gone. Live, it comes up one step, to the register
+   every index numeral on the site is in.                          */
+.presence__dot {
+    display: inline-block;
+    width: 0.375rem;
+    height: 0.375rem;
+    margin-right: 0.5rem;
+    vertical-align: 0.08em;
+    border-radius: 50%;
+    background-color: var(--rule-2);
+}
+
+.presence[data-state='live'] .presence__dot { background-color: var(--mark); }
+
+/* --- The breath -------------------------------------------------------
+   The accent is not allowed to rest anywhere on this site (section 1),
+   and a live indicator is exactly the kind of thing that would ask to
+   be the exception. It does not get to be one: the dot is declared in
+   the ramp and is in the ramp whenever nothing is animating it —
+   reduced motion, a stale connection, a printed page, a forced-colours
+   ground. The orange exists only in the middle of a four-second
+   crossing and is never where the dot comes to rest, which is the same
+   bargain the statement's sweep makes under the cursor.
+
+   Four seconds and an in-out curve, because the point is a pulse
+   rather than a blink: at --t-slow it would flash, and on the site's
+   default ease it would spend nine tenths of the crossing at one end
+   and read as a switch. It is also the only repeating animation on the
+   site, which is the other reason it asks the preference itself rather
+   than leaning on section 17 to stop it. Colour only — nothing moves,
+   nothing is laid out again, and the whole of it is a six-pixel
+   repaint.                                                          */
+@media (prefers-reduced-motion: no-preference) {
+    .presence[data-state='live'] .presence__dot {
+        animation: presence-beat 4s var(--ease-io) infinite;
+    }
+}
+
+@keyframes presence-beat {
+    0%, 100% { background-color: var(--mark); }
+    50%      { background-color: var(--flow); }
+}
+
+
 /* ====== 14. CASE STUDY PAGES ======================================== */
 
 .page { padding-top: var(--bar); }
@@ -4043,6 +4155,23 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .case-figure figcaption::before,
     .case-list li::before,
     .case-next__label::before { background: CanvasText; }
+
+    /* And so is the live dot, for the same reason. Its two states were
+       two steps of a ramp that no longer exists here, and its breath
+       crossed to an accent that does not either, so what is left is
+       the mark itself.
+
+       Both selectors, and the animation off with them: the live state
+       is written one level deeper than the resting one, and an
+       animation outranks any declaration whatever its selector. A
+       single-class rule here would lose to both and leave the dot
+       painted in a ramp this mode then flattens to the ground it is
+       drawn on — which is to say, invisible. */
+    .presence__dot,
+    .presence[data-state='live'] .presence__dot {
+        background-color: CanvasText;
+        animation: none;
+    }
 }
 
 @media print {
@@ -4067,6 +4196,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     }
 
     .glass__canvas, .glass__count, .glass__label { display: none !important; }
+
+    /* Who was reading at the moment the sheet was printed is not a
+       fact about the page. The footer keeps its colophon and loses
+       this, the same way the carousel keeps its covers and loses its
+       counter. */
+    .presence { display: none !important; }
 
     .glass[data-live] .glass__strip { display: flex !important; }
 

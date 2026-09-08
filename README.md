@@ -57,6 +57,7 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
 | `public/` | Assets served as-is: images, fonts, `robots.txt`, `sitemap.xml`. |
 | `scripts/prerender.js` | Writes each page's markup into its built HTML file. |
+| `api/presence.js` | The only server-side code the site has: the live-presence counter behind the footer. See below. |
 
 The site is built as separate documents rather than one client-routed page.
 That keeps the published URLs exactly as they are, and it keeps the
@@ -112,8 +113,68 @@ distances in the tokens at the top of the stylesheet. To add an effect: a new
 file in `src/animations/`, a `useScrollEffect(...)` call in its section, and a
 resting state in the stylesheet first.
 
+## The presence line
+
+The last line of both footers says how many people are reading the site
+right now and how many have ever opened it. It is the only thing on the
+site that is not a static file, and the only thing that changes without
+a gesture.
+
+| Piece | What it does |
+|---|---|
+| `api/presence.js` | One serverless function. One `EVAL` per request against Upstash Redis: sweep the sessions older than the window, refresh this one, count what is left, and claim a footstep if this session has never been seen. |
+| `src/hooks/usePresence.js` | The browser half. An anonymous id per tab, a heartbeat every twelve seconds, and nothing at all while the tab is not being looked at. |
+| `src/components/Presence.jsx` | Two lines of the footer's own micro type, rendered only once there is a real answer. |
+| stylesheet §13 | `.presence`, and the one repeating animation on the site. |
+
+**It is off until it is configured, and off is not broken.** Without the
+two Upstash variables the endpoint answers 503, the hook's first request
+fails, and the footer renders exactly as it always has — no placeholder,
+no zero, no gap. The same is true of a build served from somewhere with
+no `/api` at all, which is what GitHub Pages is.
+
+**No personal data is involved.** The id is sixteen random bytes the
+browser makes up for itself and forgets when the tab closes. No address,
+no header and no fingerprint is read, stored or logged, and the two
+numbers the endpoint returns are the whole of what comes back.
+
+Copy `.env.example` for the variable names. `UPSTASH_REDIS_REST_URL` and
+`UPSTASH_REDIS_REST_TOKEN` are the two that matter; the other two are for
+the arrangement where the pages and the function are not on the same
+origin.
+
 ## Deployment
 
 `.github/workflows/deploy.yml` builds on every push to `main` and publishes
 `dist/`. GitHub Pages must be set to **Settings → Pages → Build and deployment
 → Source: GitHub Actions** for it to take effect.
+
+GitHub Pages serves files and nothing else, so the presence endpoint cannot
+run there. `vercel.json` is what makes the same repository deploy on Vercel,
+where it can. Three lines, and each of them is load-bearing:
+
+- `buildCommand` — Vercel's Vite preset would run `vite build` alone, which
+  is the client bundle without the SSR pass or the prerender step behind it.
+  The published pages would arrive as an empty mount point.
+- `outputDirectory` — the same value the preset would infer, written down.
+- `cleanUrls: false` — the default, written down because it is the setting
+  most likely to be flipped by someone who has not read this. Turning it on
+  redirects `/work/<slug>.html` to `/work/<slug>`, which invalidates every
+  page's own canonical, every `<loc>` in `sitemap.xml` and every inbound
+  link at once.
+
+The two arrangements that work, and what each needs:
+
+**Everything on Vercel.** Set `UPSTASH_REDIS_REST_URL` and
+`UPSTASH_REDIS_REST_TOKEN` in the project's environment variables and
+redeploy — Vercel does not hand new variables to a function that was built
+before them. Nothing else is needed: the pages and `/api/presence` are on
+one origin. If Vercel becomes the site's real home, the canonical URL,
+`og:url`, both JSON-LD `@id`s, `robots.txt` and `sitemap.xml` all name
+`prathameshgaikwad123.github.io` and would have to be rewritten with it.
+
+**Pages here, endpoint on Vercel.** Add `PRESENCE_ALLOWED_ORIGIN` to the
+Vercel project so the function answers this origin, and set the repository
+variable `VITE_PRESENCE_ENDPOINT` (Settings → Secrets and variables →
+Actions → Variables) to the function's absolute URL so the Pages build
+knows where to ask. Both are already wired; they are simply unset.

@@ -32,7 +32,19 @@ jobs:
 
       - run: npm ci
 
+      # The live-presence footer asks a serverless function for its two
+      # numbers, and where that function is has to be decided at build
+      # time — src/hooks/usePresence.js reads it through import.meta.env,
+      # so Vite inlines it. Unset, it compiles to the same-origin
+      # /api/presence, which is right when the pages and the function are
+      # deployed together and is simply a path that answers 404 here — in
+      # which case the footer renders without it and nothing else changes.
+      # Set the repository variable to the function's absolute URL if it
+      # lives somewhere else. It is a variable rather than a secret: it is
+      # a public URL, and it ends up in public JavaScript either way.
       - run: npm run build
+        env:
+          VITE_PRESENCE_ENDPOINT: ${{ vars.VITE_PRESENCE_ENDPOINT }}
 
       - uses: actions/configure-pages@v5
 
