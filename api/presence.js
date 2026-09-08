@@ -59,16 +59,105 @@ const ACTIVE = 'presence:active';
 const TOTAL = 'presence:total';
 const seen = (id) => `presence:seen:${id}`;
 
-/* Upstash's own names first; the pair Vercel's marketplace integration
-   writes for a Redis store second. Either is enough, and neither ever
-   reaches the browser — this file runs on the server, and nothing it
-   returns carries them. */
-function credentials() {
-    const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-    const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-    if (!url || !token) return null;
-    return { url: url.replace(/\/+$/, ''), token };
+/* Which two variables hold the credentials is not a thing this file
+   is allowed to be certain about. Upstash writes one pair, the Vercel
+   integration that provisions the same database has written another,
+   and a marketplace connection can be given a prefix of its own at the
+   moment it is made. Hard-coding a guess is how this ends up
+   configured correctly and switched off anyway.
+
+   So it is found rather than named: any variable whose name ends in
+   REST_URL or REST_API_URL, holding an https:// value, whose matching
+   ...TOKEN exists beside it. That covers UPSTASH_REDIS_REST_URL, it
+   covers KV_REST_API_URL, and it covers whatever prefix the next
+   integration decides on. The derivation is TOKEN in place of URL,
+   which is also why the read-only token is never picked up by
+   accident: nothing is named ..._READ_ONLY_URL.
+
+   Ranking, when more than one is present: a genuine Upstash host wins,
+   then Upstash's own naming, then Vercel's. A database this feature
+   was pointed at deliberately beats one that happens to be attached.
+
+   Values never leave the server. Nothing below returns one, logs one,
+   or puts one in a response — the names are all that is ever said out
+   loud, and a name is not a secret. */
+const REST_URL = /REST(?:_API)?_URL$/;
+/* What to name back when none of them worked out. Deliberately wider
+   than the pattern above: an integration free to choose its own prefix
+   is free to choose one with no "redis" in it, and the failure path is
+   the one place where listing too much is better than listing too
+   little. */
+const REDIS_ISH = /(?:UPSTASH|REDIS|^KV_)|REST(?:_API)?_(?:URL|TOKEN)$/;
+
+const host = (url) => {
+    try {
+        return new URL(url).host;
+    } catch {
+        return '';
+    }
+};
+
+function candidates() {
+    const env = process.env;
+
+    return Object.keys(env)
+        .filter((key) => REST_URL.test(key))
+        .map((urlKey) => ({
+            urlKey,
+            tokenKey: urlKey.replace(/URL$/, 'TOKEN'),
+            url: (env[urlKey] || '').trim(),
+        }))
+        .filter((c) => /^https?:\/\//i.test(c.url) && (env[c.tokenKey] || '').trim())
+        .map((c) => ({
+            ...c,
+            token: env[c.tokenKey].trim(),
+            rank: (/\.upstash\.io$/i.test(host(c.url)) ? 4 : 0)
+                + (c.urlKey.startsWith('UPSTASH_') ? 2 : 0)
+                + (c.urlKey.startsWith('KV_') ? 1 : 0),
+        }))
+        .sort((a, b) => b.rank - a.rank);
 }
+
+function credentials() {
+    const [best] = candidates();
+    if (!best) return null;
+    return { url: best.url.replace(/\/+$/, ''), token: best.token, from: best.urlKey };
+}
+
+/* What to say when there are none, and the only reason this function
+   exists: an endpoint that answers "not configured" and stops has told
+   whoever is setting it up nothing they did not already know. This
+   lists the names it looked for and the names it can actually see, so
+   the gap between them is the answer.
+
+   Names only. Never a value, never a fragment of one, not even a
+   length. */
+function diagnosis() {
+    const present = Object.keys(process.env).filter((key) => REDIS_ISH.test(key)).sort();
+
+    return {
+        error: 'presence store not configured',
+        detail: present.length
+            ? 'Redis variables are set, but no REST url/token pair was found among them. '
+                + 'The REST API needs a pair named <PREFIX>_REST_URL and <PREFIX>_REST_TOKEN '
+                + '(or _REST_API_URL / _REST_API_TOKEN). A redis:// or rediss:// url alone is '
+                + 'the TCP endpoint, which this function does not speak.'
+            : 'No Redis environment variables are visible to this function at all. If the '
+                + 'database was connected after the current deployment was built, redeploy — '
+                + 'Vercel does not hand new variables to an existing build.',
+        looked_for: ['<PREFIX>_REST_URL + <PREFIX>_REST_TOKEN', '<PREFIX>_REST_API_URL + <PREFIX>_REST_API_TOKEN'],
+        found: present,
+    };
+}
+
+/* Sweep and read, without claiming anything. The health check below is
+   the whole of its use: a url someone can open in a browser and be
+   told what is wrong, which is a great deal easier than composing a
+   POST by hand. */
+const READ = `
+redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', ARGV[1])
+return { redis.call('ZCARD', KEYS[1]), tonumber(redis.call('GET', KEYS[2])) or 0 }
+`;
 
 /* One HTTP round trip, one billed command, one atomic step.
 
@@ -126,6 +215,15 @@ async function command(creds, argv) {
     if (!body || body.error) throw new Error(`upstash: ${(body && body.error) || 'unexpected reply'}`);
 
     return body.result;
+}
+
+export async function counts(creds, now) {
+    const reply = await command(creds, [
+        'EVAL', READ, 2, ACTIVE, TOTAL, `(${now - WINDOW_MS}`,
+    ]);
+
+    const [active, total] = Array.isArray(reply) ? reply : [];
+    return { active: Number(active) || 0, total: Number(total) || 0 };
 }
 
 export async function tick(creds, id, now) {
@@ -191,17 +289,49 @@ export default async function handler(req, res) {
         return;
     }
 
-    if (req.method !== 'POST') {
-        res.setHeader('Allow', 'POST, OPTIONS');
+    if (req.method !== 'POST' && req.method !== 'GET') {
+        res.setHeader('Allow', 'GET, POST, OPTIONS');
         res.status(405).json({ error: 'method not allowed' });
         return;
     }
 
     const creds = credentials();
+
     if (!creds) {
         /* Unconfigured is not broken: the footer asks once, is told
-           there is nothing to show, and stays as it was. */
-        res.status(503).json({ error: 'presence store not configured' });
+           there is nothing to show, and stays as it was. What is new
+           is that it is told WHY, and so is anyone who opens this url
+           — see diagnosis(). */
+        res.status(503).json(diagnosis());
+        return;
+    }
+
+    /* GET is the health check. It registers nobody and claims nothing;
+       it sweeps, reads the two numbers the footer would have shown,
+       and names the variable it took its credentials from — the name,
+       not the value. Open it in a browser and it says either that the
+       store is answering, or exactly what is missing. */
+    if (req.method === 'GET') {
+        try {
+            res.status(200).json({
+                ok: true,
+                store: `reachable via ${creds.from}`,
+                ...(await counts(creds, Date.now())),
+            });
+        } catch (error) {
+            const detail = error && error.message ? error.message : String(error);
+            console.error('presence:', detail);
+            res.status(502).json({
+                ok: false,
+                error: 'presence store unavailable',
+                /* The credentials are named and the failure is quoted,
+                   because "unavailable" on its own cannot tell a wrong
+                   token from a deleted database. Upstash's own replies
+                   carry no secret — they are status lines. */
+                store: `configured from ${creds.from}`,
+                detail,
+            });
+        }
         return;
     }
 
@@ -220,7 +350,8 @@ export default async function handler(req, res) {
         const now = Date.now();
         res.status(200).json(await tick(creds, id, now));
     } catch (error) {
-        console.error('presence:', error && error.message ? error.message : error);
-        res.status(502).json({ error: 'presence store unavailable' });
+        const detail = error && error.message ? error.message : String(error);
+        console.error('presence:', detail);
+        res.status(502).json({ error: 'presence store unavailable', detail });
     }
 }

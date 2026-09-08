@@ -95,6 +95,41 @@ export default function usePresence() {
         let timer = 0;
         let inFlight = false;
         let stopped = false;
+        let explained = false;
+
+        /* The line is meant to be silent when it has nothing true to
+           say, and that is right for a reader — but it is wrong for
+           whoever is setting it up, to whom an unconfigured store and
+           a footer that never had the line look identical. Said once,
+           and only for the two answers that mean nobody has finished
+           wiring this up. A dropped request says nothing: that is the
+           reader's network, not the author's mistake. */
+        const explain = async (res) => {
+            if (explained) return;
+            explained = true;
+
+            if (res.status === 404) {
+                console.info(
+                    `presence: nothing is serving ${ENDPOINT}. This build is hosted somewhere `
+                    + 'that cannot run a function; see the Deployment section of the README.',
+                );
+                return;
+            }
+
+            /* The endpoint knows what is wrong with it — which
+               variables it looked for, which it can see — and there is
+               no reason to make anyone read the function's logs to
+               find that out. Passed through whole rather than
+               summarised here, so this half never has to be kept in
+               step with the other. */
+            const said = await res.json().catch(() => null);
+            if (said && said.error) {
+                console.info(`presence: ${said.error}. Open ${ENDPOINT} in a browser for the rest.`, said);
+                return;
+            }
+
+            console.info(`presence: ${ENDPOINT} answered ${res.status}.`);
+        };
 
         async function beat() {
             if (stopped || inFlight) return;
@@ -108,7 +143,10 @@ export default function usePresence() {
                     body: JSON.stringify({ id }),
                     signal: controller.signal,
                 });
-                if (!res.ok) throw new Error(`presence ${res.status}`);
+                if (!res.ok) {
+                    await explain(res);
+                    throw new Error(`presence ${res.status}`);
+                }
 
                 const data = await res.json();
                 if (stopped) return;
