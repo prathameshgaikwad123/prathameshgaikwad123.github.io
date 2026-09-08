@@ -104,20 +104,31 @@ export default function usePresence() {
            and only for the two answers that mean nobody has finished
            wiring this up. A dropped request says nothing: that is the
            reader's network, not the author's mistake. */
-        const explain = (status) => {
+        const explain = async (res) => {
             if (explained) return;
             explained = true;
-            if (status === 503) {
-                console.info(
-                    'presence: the store is not configured. Set UPSTASH_REDIS_REST_URL and '
-                    + 'UPSTASH_REDIS_REST_TOKEN in the hosting project and redeploy — see .env.example.',
-                );
-            } else if (status === 404) {
+
+            if (res.status === 404) {
                 console.info(
                     `presence: nothing is serving ${ENDPOINT}. This build is hosted somewhere `
                     + 'that cannot run a function; see the Deployment section of the README.',
                 );
+                return;
             }
+
+            /* The endpoint knows what is wrong with it — which
+               variables it looked for, which it can see — and there is
+               no reason to make anyone read the function's logs to
+               find that out. Passed through whole rather than
+               summarised here, so this half never has to be kept in
+               step with the other. */
+            const said = await res.json().catch(() => null);
+            if (said && said.error) {
+                console.info(`presence: ${said.error}. Open ${ENDPOINT} in a browser for the rest.`, said);
+                return;
+            }
+
+            console.info(`presence: ${ENDPOINT} answered ${res.status}.`);
         };
 
         async function beat() {
@@ -133,7 +144,7 @@ export default function usePresence() {
                     signal: controller.signal,
                 });
                 if (!res.ok) {
-                    explain(res.status);
+                    await explain(res);
                     throw new Error(`presence ${res.status}`);
                 }
 

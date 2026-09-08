@@ -127,11 +127,26 @@ a gesture.
 | `src/components/Presence.jsx` | Two lines of the footer's own micro type, rendered only once there is a real answer. |
 | stylesheet §13 | `.presence`, and the one repeating animation on the site. |
 
-**It is off until it is configured, and off is not broken.** Without the
-two Upstash variables the endpoint answers 503, the hook's first request
-fails, and the footer renders exactly as it always has — no placeholder,
-no zero, no gap. The same is true of a build served from somewhere with
-no `/api` at all, which is what GitHub Pages is.
+**It is off until it is configured, and off is not broken.** Without a
+usable store the endpoint answers 503, the hook's first request fails,
+and the footer renders exactly as it always has — no placeholder, no
+zero, no gap. The same is true of a build served from somewhere with no
+`/api` at all, which is what GitHub Pages is.
+
+**Off is not silent, though.** `GET /api/presence` is a health check
+meant to be opened in a browser: it either names the variable it took
+its credentials from and returns the two current numbers, or it says
+which variables it looked for and which it can actually see. The same
+answer reaches the browser console on any page where the line does not
+appear. Variable *names* are named; a value never is.
+
+**The credential names are discovered, not assumed.** Upstash writes one
+pair, Vercel's integration has written another, and a marketplace
+connection can be given a prefix of its own. `api/presence.js` takes any
+`<PREFIX>_REST_URL` with a matching `<PREFIX>_REST_TOKEN` beside it (or
+the `_REST_API_` form), preferring a real `.upstash.io` host, then
+Upstash's naming, then Vercel's. A `redis://` url is the TCP endpoint
+and is not one of these — the REST pair is what this needs.
 
 **No personal data is involved.** The id is sixteen random bytes the
 browser makes up for itself and forgets when the tab closes. No address,
