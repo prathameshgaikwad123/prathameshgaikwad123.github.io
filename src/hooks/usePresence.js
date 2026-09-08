@@ -95,6 +95,30 @@ export default function usePresence() {
         let timer = 0;
         let inFlight = false;
         let stopped = false;
+        let explained = false;
+
+        /* The line is meant to be silent when it has nothing true to
+           say, and that is right for a reader — but it is wrong for
+           whoever is setting it up, to whom an unconfigured store and
+           a footer that never had the line look identical. Said once,
+           and only for the two answers that mean nobody has finished
+           wiring this up. A dropped request says nothing: that is the
+           reader's network, not the author's mistake. */
+        const explain = (status) => {
+            if (explained) return;
+            explained = true;
+            if (status === 503) {
+                console.info(
+                    'presence: the store is not configured. Set UPSTASH_REDIS_REST_URL and '
+                    + 'UPSTASH_REDIS_REST_TOKEN in the hosting project and redeploy — see .env.example.',
+                );
+            } else if (status === 404) {
+                console.info(
+                    `presence: nothing is serving ${ENDPOINT}. This build is hosted somewhere `
+                    + 'that cannot run a function; see the Deployment section of the README.',
+                );
+            }
+        };
 
         async function beat() {
             if (stopped || inFlight) return;
@@ -108,7 +132,10 @@ export default function usePresence() {
                     body: JSON.stringify({ id }),
                     signal: controller.signal,
                 });
-                if (!res.ok) throw new Error(`presence ${res.status}`);
+                if (!res.ok) {
+                    explain(res.status);
+                    throw new Error(`presence ${res.status}`);
+                }
 
                 const data = await res.json();
                 if (stopped) return;
