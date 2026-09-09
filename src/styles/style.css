@@ -206,7 +206,7 @@
     /* The portrait's treatment, and the only thing about it that is per
        theme. It carries its own neutral ground, so it is not inverted
        on the dark one, only kept from glaring off it. */
-    --nav-face-tone: grayscale(1) contrast(1.06);
+    --nav-face-tone: none;
     --nav-mark: 0.9375rem;                        /* the monogram in its chip */
     --nav-icon: 1.0625rem;                        /* the theme mark in its chip */
     --nav-name: 0.9375rem;                        /* the name, at one size */
@@ -387,7 +387,7 @@
         --nav-edge:    rgba(255, 255, 255, 0.10);
         --nav-chip:    rgba(255, 255, 255, 0.09);
         --nav-chip-2:  rgba(255, 255, 255, 0.155);
-        --nav-face-tone: grayscale(1) contrast(1.02) brightness(0.86);
+        --nav-face-tone: none;
         --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                        0 8px 22px -12px rgba(0, 0, 0, 0.6);
         --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -437,7 +437,7 @@
     --nav-edge:    rgba(255, 255, 255, 0.10);
     --nav-chip:    rgba(255, 255, 255, 0.09);
     --nav-chip-2:  rgba(255, 255, 255, 0.155);
-    --nav-face-tone: grayscale(1) contrast(1.02) brightness(0.86);
+    --nav-face-tone: none;
     --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                    0 8px 22px -12px rgba(0, 0, 0, 0.6);
     --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
