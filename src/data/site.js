@@ -25,12 +25,13 @@ export const SITE = {
    between About and Side Quests, rather than one they are sent to.
    Experience is not here because it is not anywhere any more.
 
-   Two names per row. `said` is the reader being told, in their own
-   words, what is down there, and it is the one the panel sets at full
-   size; `label` is the destination, named small beside it. The panel is
-   the one place on the site where the sections get to introduce
-   themselves rather than be listed, so what they say leads and what
-   they are called follows.
+   Two names per row, and only one of them is painted. `said` is the
+   reader being told, in their own words, what is down there, and it is
+   the whole of the row. `label` is the section's own name, kept because
+   the code and the writing both need it — the panel is the one place on
+   the site where the sections get to introduce themselves rather than
+   be listed, and a row that named itself as well would be saying the
+   quiet half out loud.
 
    `id` is the section the row scrolls to and is not the label: Play is
    Side Quests, which is what the band, its heading and every anchor

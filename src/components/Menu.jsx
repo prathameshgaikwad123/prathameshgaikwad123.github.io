@@ -18,13 +18,12 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    page links to its own anchors and a case study links back up to the
    index.
 
-   What the row says comes first and at full size — Me, the work, just
-   because — with the section it goes to named after it, small. The
-   reader is being told what is down there rather than shown a table of
-   contents, and the destination is still on the row so the row can be
-   followed on purpose. The word is the panel's and the section is the
-   page's: Play scrolls to Side Quests, which is what that band and
-   every anchor into it still are.
+   A row says one thing and it is not the section's name — Me, the work,
+   just because. The reader is being told what is down there rather than
+   shown a table of contents, and a row that named itself twice was
+   saying the quiet half out loud. `label` is still the section behind
+   it and still what the code navigates by: Play scrolls to Side Quests,
+   which is what that band and every anchor into it still are.
 
    There is no row for the top of the page. The portrait at the left of
    the masthead is that link, on every page and without opening
@@ -84,7 +83,6 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                     {section.no}
                                 </span>
                                 {section.said}
-                                <span className="menu__said">{`— ${section.label}`}</span>
                             </a>
                         </li>
                     ))}
@@ -101,7 +99,6 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                             {MENU_END.no}
                         </span>
                         {MENU_END.said}
-                        <span className="menu__said">{`— ${MENU_END.label}`}</span>
                     </li>
                 </ul>
 
