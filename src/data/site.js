@@ -12,9 +12,6 @@ export const SITE = {
     githubHandle: '@prathameshgaikwad123',
     where: 'Based in India · Available Worldwide',
     disciplines: 'UI/UX · Web · Brand · Digital Experiences',
-    /* Replaced with the real year on the client, exactly as the previous
-       build did — this is only what a reader without JavaScript sees. */
-    year: 2026,
 };
 
 /* What the navigation offers, which is deliberately less than what the
