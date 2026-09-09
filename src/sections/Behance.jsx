@@ -6,15 +6,15 @@ import { behance, BEHANCE_PROFILE } from '../data/behance.js';
    behind it and a row that names, describes and links it. This is the
    other half of the same practice and it is not an index — there is
    nothing to read at the end of these, only more of them to look at.
-   So it is set as a spread rather than a list: six plates laid across
-   the twelve columns at four different widths and five different
-   heights, each one a link out.
+   So it is set as a grid rather than a list: six plates at one width
+   and one shape, on shared column and row lines, each one a link out.
 
-   The composition is in the data, in `span` and `drop`, for the reason
-   the scatter in Selected Work is: a spread is authored or it is
-   noise. Below the tablet step both are ignored and the plates stack
-   in one column at one width, which is the only thing a phone has room
-   for and is also the honest reading order.
+   The plates used to carry their own width and their own starting
+   height, which made a spread of them and made the section hard to
+   read as a set. Nothing on the row says anything about the layout
+   now — the stylesheet counts the columns, one across a phone, two
+   across a tablet, three across a desktop, and six divides by all
+   three so no row is ever short.
 
    Every plate leaves the site, so every plate says so — the arrow in
    the caption is the same mark the elsewhere links in the panel carry,
@@ -37,12 +37,7 @@ export default function Behance() {
 
                     <ul className="beh">
                         {behance.map((item) => (
-                            <li
-                                className="beh__item"
-                                key={item.id}
-                                data-reveal=""
-                                style={{ '--span': item.span, '--drop': item.drop }}
-                            >
+                            <li className="beh__item" key={item.id} data-reveal="">
                                 <a
                                     className="beh__link"
                                     href={item.href}

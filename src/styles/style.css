@@ -88,9 +88,8 @@
     --on-signal:   var(--paper);
     /* The other half of what the accent used to do. Every tabular
        index numeral on the site — the section eyebrows, the figure
-       numbers, the experience and capability counters, the case-study
-       block numbers — was orange in order to be *subordinate but
-       distinct*: a numeral you can find without reading. Pointed at
+       numbers, the plate counters, the case-study block numbers — was
+       orange in order to be *subordinate but distinct*: a numeral you can find without reading. Pointed at
        the ink it would simply be the type beside it. So it is pointed
        one step down the ramp instead, which is the monochrome way of
        saying the same thing. The decorative stops and the short
@@ -2531,18 +2530,21 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
    the half above it. Selected Work is an index — six rows, each with a
    case study behind it and a plate that answers to the row. Nothing
    here has anything to read at the end of it, so a list would be six
-   links pretending to be an argument. It is a spread instead.
+   links pretending to be an argument. It is a grid instead.
 
-   What makes it a spread rather than six cards is that no two plates
-   agree: four widths across the twelve columns and five starting
-   heights, carried on the row as --span and --drop and authored in
-   src/data/behance.js, because a composition is authored or it is
-   noise. --drop is spent in vw so the stagger holds its proportion as
-   the window changes rather than collapsing at one end of the range.
+   It used to be a spread: four widths and five starting heights,
+   carried on the row as --span and --drop. Six plates that never
+   agreed on a width or a baseline read as six plates that came loose,
+   and a gallery whose subject is other people's work is the last place
+   to spend the reader's attention on the layout. So the plates are all
+   one width now and all one shape — 4:3, the ratio every export is
+   already made at — and they sit on shared column and row lines: one
+   plate across a phone, two across a tablet, three across a desktop.
+   Six divides by all three, so the last row is never a short row.
 
-   Below the tablet step neither is read. One column, one width, no
-   stagger: a phone has room for one plate at a time, and the order
-   they are written in is the order they should arrive in.
+   The measure is the twelve-column grid the rest of the page is set
+   on, so the first plate starts on the same line as the tag above it
+   and the last ends on the same line as the count.
 
    Every plate leaves the site, and every plate says so — the same
    arrow the elsewhere links in the panel carry, with the accent
@@ -2563,19 +2565,25 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     margin-top: var(--head-gap);
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2.5rem, 6vw, 4.5rem) var(--gap);
+    gap: clamp(2.25rem, 4.5vw, 3.5rem) var(--gap);
 }
 
 @media (min-width: 48rem) {
-    .beh { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-
-    .beh__item {
-        grid-column: span var(--span, 6);
-        margin-top: calc(var(--drop, 0) * 1vw);
-    }
+    .beh { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.beh__item { min-width: 0; }
+@media (min-width: 75rem) {
+    .beh { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* The columns are equal and every plate is cropped to the same 4:3,
+   so every image in a row is the same height and every caption under
+   them starts on the same line — no rule is needed to hold the
+   baselines together, and a title that wraps to two lines lengthens
+   its own cell without moving the plate beside it. `start` keeps the
+   caption under its own image rather than stretched down to whatever
+   the tallest cell in the row turned out to be. */
+.beh__item { min-width: 0; align-self: start; }
 
 /* The link is the whole plate, and takes no colour of its own: what
    answers the cursor is the caption under it and the ticks around it. */
@@ -2827,193 +2835,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 11. CAPABILITIES ============================================ */
-
-/* --- The cut panel ---------------------------------------------------
-   The section's own header, standing on a tinted panel whose top and
-   bottom edges are cut on a slant. Nothing is added and nothing is
-   repeated: the tag, the statement and the note are the ones that were
-   already here.
-
-   The ground is a layer taller than the panel that clips it. That
-   overflow is the room the two slanted edges are given to travel in
-   (src/animations/panelCut.js moves the ground and the type at
-   different rates, which is the whole effect) and it is also what
-   stops the band behind ever showing through when they do. The slant
-   is measured against the viewport rather than the panel's height, so
-   a tall narrow panel on a phone gets a shallow cut rather than a
-   dramatic one.
-
-   At rest — a phone, reduced motion, no script — the slant is still
-   there. It is the slant that composes the section; the movement only
-   keeps it from being a sticker. */
-/* The band the section header stands on used to be a tinted, slant-cut
-   ground travelling at its own rate behind the type. It is gone: on a
-   two-tone ramp the tint was the one surface on the page that was a
-   shade rather than a statement, and a slab of --paper-2 behind a
-   heading reads as a panel the heading did not ask for. What is left
-   is the header on the page, like every other section's. */
-.cut {
-    position: relative;
-    padding-block: clamp(2.75rem, 6vw, 5rem);
-}
-
-.cut__type { position: relative; }
-
-/* Shifted baselines, set in the markup so the offsets are content
-   rather than script. `top` on a relative box moves the word without
-   moving the line it sits in, so the statement still wraps and
-   balances exactly as it did. */
-.set__word { position: relative; top: var(--o, 0); }
-
-.caps__tag { grid-column: 1 / -1; }
-.caps__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
-.caps__note { grid-column: 1 / -1; margin-top: 1.25rem; }
-
-@media (min-width: 48rem) {
-    .caps__tag       { grid-column: 1 / span 4; }
-    .caps__statement { grid-column: 1 / span 7; }
-    .caps__note      { grid-column: 9 / -1; align-self: start; justify-content: flex-end; margin-top: 0.5rem; }
-}
-
-.caps {
-    grid-column: 1 / -1;
-    margin-top: var(--head-gap);
-    border-top: 1px solid var(--rule-2);
-}
-
-.cap-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
-    padding-block: clamp(1.125rem, 2.6vw, 1.75rem);
-    border-bottom: 1px solid var(--rule);
-}
-
-.cap-row__title {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    font-size: var(--t-sub);
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.014em;
-    color: var(--ink);
-}
-
-.cap-row__title::before {
-    content: attr(data-index);
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    color: var(--mark);
-    font-variant-numeric: tabular-nums;
-    flex: none;
-}
-
-.cap-row__desc {
-    font-size: var(--t-small);
-    line-height: 1.65;
-    color: var(--ink-2);
-    max-width: 46ch;
-}
-
-@media (min-width: 48rem) {
-    .cap-row {
-        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-        column-gap: clamp(2rem, 5vw, 4.5rem);
-        align-items: baseline;
-    }
-}
-
-/* --- Approach: five steps on one rail -------------------------------- */
-
-.approach {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    border-top: 1px solid var(--rule);
-}
-
-.step { padding: 1.125rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
-
-.step__no {
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--mark);
-    font-variant-numeric: tabular-nums;
-}
-
-.step__title {
-    font-size: var(--t-body);
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--ink);
-    margin-top: 0.5rem;
-}
-
-.step__desc {
-    font-size: var(--t-meta);
-    line-height: 1.6;
-    color: var(--ink-2);
-    max-width: 32ch;
-    margin-top: 0.5rem;
-}
-
-@media (min-width: 45rem) {
-    .approach { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 3vw, 3rem); }
-}
-
-@media (min-width: 75rem) {
-    .approach { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 0; }
-    .step {
-        border-bottom: 0;
-        padding: 1.25rem clamp(1rem, 1.6vw, 1.5rem) 0 0;
-        min-height: 11rem;
-    }
-}
-
-/* --- Tools ----------------------------------------------------------- */
-
-.tools {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    border-top: 1px solid var(--rule);
-}
-
-.tools__group { padding: 1.125rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
-
-.tools__label {
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    margin-bottom: 0.875rem;
-}
-
-.tools__items li {
-    font-size: var(--t-small);
-    line-height: 1.9;
-    color: var(--ink);
-}
-
-@media (min-width: 40rem) {
-    .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.5rem, 4vw, 3rem); }
-}
-
-@media (min-width: 62rem) {
-    .tools { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
-    .tools__group {
-        border-bottom: 0;
-        padding: 1.25rem clamp(1rem, 1.6vw, 1.5rem) 0 0;
-    }
-}
-
-
-/* ====== 12. SIDE QUESTS ============================================= */
+/* ====== 11. SIDE QUESTS ============================================= */
 /* A rail, and a grid that answers it.
 
    The section used to be a wall of plates pinned a degree or two off
@@ -3294,7 +3116,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 13. CONTACT & FOOTER ======================================== */
+/* ====== 12. CONTACT & FOOTER ======================================== */
 
 /* --- The close -------------------------------------------------------
    The last band's ground is lifted into a layer of its own so that it
@@ -3588,7 +3410,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 14. CASE STUDY PAGES ======================================== */
+/* ====== 13. CASE STUDY PAGES ======================================== */
 
 .page { padding-top: var(--bar); }
 
@@ -3970,7 +3792,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .case-next a:hover .case-next__go svg { transform: translateX(0.3rem); }
 
 
-/* ====== 15. 404 ===================================================== */
+/* ====== 14. 404 ===================================================== */
 
 .notfound {
     padding-block: clamp(4rem, 14vh, 9rem) clamp(3rem, 8vh, 6rem);
@@ -4009,7 +3831,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 16. VIEW TRANSITIONS ======================================= */
+/* ====== 15. VIEW TRANSITIONS ======================================= */
 /* Cross-document only: the cover of the project being opened settles
    into the case study. Progressive — browsers without the API navigate
    normally.                                                            */
@@ -4036,7 +3858,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 17. PREFERENCE OVERRIDES =================================== */
+/* ====== 16. PREFERENCE OVERRIDES =================================== */
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -4291,10 +4113,9 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
         color: var(--ink) !important;
     }
 
-    /* The grounds are only grounds. Printed, they would be a sheet of
+    /* The ground is only a ground. Printed, it would be a sheet of
        ink around the last page. */
     .close__ground { display: none !important; }
-    .cut { padding-block: 0 !important; }
 
     /* The ramp is reset once, at every site that declares it, rather
        than each ground being overridden where it is painted: a sheet

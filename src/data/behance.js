@@ -17,12 +17,13 @@ export const BEHANCE_PROFILE = 'https://www.behance.net/prathamgaikwad1';
 
 const plate = (file) => `/assets/images/behance/${file}`;
 
-/* `span` and `drop` are the composition, not data about the project:
-   how many of the twelve columns a plate takes on a wide screen, and
-   how far down the spread it starts. Authored in pairs so no two
-   neighbours are the same width and no row sits level — which is what
-   makes six plates read as a spread rather than as six cards. Both are
-   ignored below the tablet step, where the spread is one column. */
+/* Nothing here says anything about the layout. The plates used to
+   carry a `span` and a `drop` — their own width across the twelve
+   columns and their own starting height — and the section is a plain
+   grid now, so the stylesheet counts the columns and a record is only
+   the project: the plate, what to call it, what it is, and where it
+   goes. Order is the one thing the list still decides, and it is the
+   reading order on every screen. */
 export const behance = [
     {
         id: 'brand-campaign',
@@ -32,8 +33,6 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('01-brand-campaign.svg'),
         alt: 'Placeholder for a Behance project of brand and campaign visuals.',
-        span: 7,
-        drop: 0,
     },
     {
         id: 'web-ui',
@@ -43,8 +42,6 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('02-web-ui.svg'),
         alt: 'Placeholder for a Behance project of web and interface explorations.',
-        span: 5,
-        drop: 5,
     },
     {
         id: 'social-systems',
@@ -54,8 +51,6 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('03-social-systems.svg'),
         alt: 'Placeholder for a Behance project of social media design systems.',
-        span: 5,
-        drop: 4,
     },
     {
         id: 'print-collateral',
@@ -65,8 +60,6 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
         alt: 'Placeholder for a Behance project of print and corporate collateral.',
-        span: 7,
-        drop: 0,
     },
     {
         id: 'visual-studies',
@@ -76,8 +69,6 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('05-visual-studies.svg'),
         alt: 'Placeholder for a Behance project of visual and typographic studies.',
-        span: 6,
-        drop: 0,
     },
     {
         id: 'motion-concepts',
@@ -87,7 +78,5 @@ export const behance = [
         href: BEHANCE_PROFILE,
         cover: plate('06-motion-concepts.svg'),
         alt: 'Placeholder for a Behance project of motion and concept work.',
-        span: 6,
-        drop: 3,
     },
 ];

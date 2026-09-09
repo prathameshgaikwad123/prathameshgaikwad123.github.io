@@ -20,10 +20,11 @@ export const SITE = {
 /* What the navigation offers, which is deliberately less than what the
    page contains. Home is not here — the mark at the left of the
    masthead is the way back to the top, and a panel that opens over the
-   page does not need a row for the page it opened over. Capabilities is
-   not here either: it is a section a reader arrives at by reading,
-   between About and Side Quests, rather than one they are sent to.
-   Experience is not here because it is not anywhere any more.
+   page does not need a row for the page it opened over. Selected
+   Behance Work is not here either: it is a section a reader arrives at
+   by reading, between Work and About, rather than one they are sent
+   to. Experience and Capabilities are not here because they are not
+   anywhere any more.
 
    Two names per row, and only one of them is painted. `said` is the
    reader being told, in their own words, what is down there, and it is
@@ -38,9 +39,9 @@ export const SITE = {
    pointing at it still are. Only the row's name changed.
 
    The numerals are the panel's own count, not the page's. A section
-   numbers itself in its own header — Capabilities is 04 on the page and
-   absent from this list, and neither is wrong, because they are
-   counting different things: the page counts its bands, the panel
+   numbers itself in its own header — Selected Behance Work is 02 on the
+   page and absent from this list, and neither is wrong, because they
+   are counting different things: the page counts its bands, the panel
    counts its destinations. */
 export const SECTIONS = [
     { id: 'about',       no: '01', label: 'About',   said: 'Me.' },
