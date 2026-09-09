@@ -189,11 +189,12 @@
        drawn as a fraction of the chip, so a chip that changes without
        them leaves a letterform adrift in the middle of it.
 
-       The name is not one of the three, deliberately. It is not chrome
-       sized to a pointer, it is the identity — set on one measure and
-       the same on every screen that shows it, so the lockup's
-       proportion follows the chip rather than the name shrinking to
-       chase it.                                                      */
+       What the chip says is not one of the three, deliberately. It is
+       a voice rather than chrome sized to a pointer: one measure on
+       every screen that shows it, so the lockup's proportion follows
+       the chip. Where a long phrase runs out of room it wraps rather
+       than shrinks — a line that changed size with the window would be
+       a different line, said differently.                            */
     --nav-item: 2.5rem;
     /* The portrait's chip, and the one thing in either plate that is
        not a full --nav-item square: a face at the size of a control is
@@ -209,7 +210,7 @@
     --nav-face-tone: none;
     --nav-mark: 0.9375rem;                        /* the monogram in its chip */
     --nav-icon: 1.0625rem;                        /* the theme mark in its chip */
-    --nav-name: 0.9375rem;                        /* the name, at one size */
+    --nav-say:  var(--t-meta);                    /* what the chip says */
     --nav-pad:  0.375rem;
     --nav-h:    calc(var(--nav-item) + var(--nav-pad) * 2 + 2px);
     --nav-top:  clamp(0.75rem, 1.8vh, 1.25rem);   /* resting offset */
@@ -1107,20 +1108,31 @@ em { font-style: italic; }
                 transform var(--t-mid) var(--ease);
 }
 
-/* The brand plate holds the portrait, and the name only while it is
-   being pointed at; the controls plate holds two chips and sets them
-   tighter than a lockup wants. The brand plate spends no gap of its
-   own: a gap is paid whether the name is out or not, and a chip with
-   nine pixels of nothing beside it is a plate that looks like it has
-   lost something. The name carries its own approach instead, and gives
-   it back as it goes. `margin-left: auto` is belt and braces for the
+/* The brand plate holds the portrait and the line beside it; the
+   controls plate holds two chips and sets them tighter than a lockup
+   wants. The brand plate spends no gap of its own — the line carries
+   its own approach as padding, which is the only way the two can be
+   set optically rather than to the same number as the chips at the
+   other end. `margin-left: auto` is belt and braces for the
    space-between above: it pins the controls plate to the right edge
-   even if it is ever the only plate rendered. */
+   even if it is ever the only plate rendered.
+
+   The two plates answer width pressure differently, and have to. What
+   the chip says is a line of running text whose length is not known
+   here — "oh, hi." at rest, and up to thirty-four characters of aside
+   under a cursor — so on a narrow phone the two plates can want more
+   room between them than the screen has. All of that shortfall is
+   given to the brand plate, which has something it can do with it: the
+   line wraps. Left to the default both plates would shrink by their
+   share, and the controls plate has nothing to shrink — its chips are
+   `flex: none` — so it would spill them out through its own rounded
+   edge. */
 .masthead__inner--brand { gap: 0; }
 
 .masthead__inner--actions {
     gap: 0.25rem;
     margin-left: auto;
+    flex: none;
 }
 
 /* Scrolled: both plates gather a little more ground and tuck up by a
@@ -1179,20 +1191,34 @@ em { font-style: italic; }
    glare out of a black plate. Declared per theme with the rest of the
    ramp in section 1, so there is nothing here to keep in step.
 
-   The name is beside it at every width and painted only on the
-   gesture. At rest the mark is the identity; hovered or focused, it
-   says who it is — one line, no card, no menu. Below the tablet step it
-   is not painted at all: the plate is a hand's width from the panel's
-   edge there and a name unfolding into that gap is a name unfolding
-   into the seam. What the reader is told does not depend on any of it,
-   because the link's accessible name is written on the anchor
+   What the mark says is beside it at every width, and it is not the
+   name. "oh, hi." at rest, and under a cursor, a finger or the
+   keyboard one of the asides in src/data/site.js — one line, no card,
+   no menu, and the only thing on the site that answers a gesture with
+   words. It is painted at every width, unlike the name it replaces:
+   the greeting is the resting state now rather than the reward for a
+   hover, and a chip that said nothing until it was pointed at would be
+   a chip that says nothing at all on a phone.
+
+   Which is also why the phrase is set small and quiet, in the display
+   face and the site's own lower case. It is somebody speaking, not a
+   label: uppercase and letter-spaced, the way the name was set, would
+   make an aside read as a second wordmark.
+
+   What the reader is told does not depend on any of it, because the
+   link's accessible name is written on the anchor
    (src/components/Navigation.jsx) rather than read off whatever is
    currently visible.                                                 */
 
 .wordmark {
     display: inline-flex;
     align-items: center;
-    flex: none;
+    /* Shrinkable, where it used to be rigid: what it now holds is a
+       line of unknown length, and on a narrow phone the plate hands it
+       less room than it wants (see .masthead__inner--actions). Taking
+       that shortfall here is what lets the line wrap inside the plate
+       rather than the anchor overrun it. */
+    flex: 0 1 auto;
     min-width: 0;
     color: var(--ink);
 }
@@ -1233,60 +1259,66 @@ em { font-style: italic; }
     box-shadow: inset 0 0 0 1px var(--flow);
 }
 
-.wordmark__full {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
+/* The line the mark says. The approach is the span's own padding
+   rather than the plate's gap, for the reason given at
+   .masthead__inner--brand: the chip and a line of type want to be set
+   optically, and a gap is one number for both sides. */
+.wordmark__say {
+    padding: 0 0.375rem 0 0.5rem;
+    /* Not a target — the anchor is. Which is not decoration: each
+       phrase is a NEW element (Navigation.jsx keys the span on the
+       text, so the fade below has something to play on), and an element
+       that can be pointed at going out from under the cursor is a
+       pointerout, followed by a pointerover on whatever is behind it.
+       React reads that pair as the cursor having left the link and come
+       back, which called for a second phrase inside one hover and made
+       the chip cycle where the brief says it holds. A line the pointer
+       passes straight through is never the target it leaves, so the
+       swap raises no boundary events at all. The click still lands: it
+       falls through to the link the same way. */
+    pointer-events: none;
+    font-family: var(--font-display);
+    font-size: var(--nav-say);
+    /* A little leading, so centring the box centres the type rather
+       than hanging it off its own cap height — and so a phrase that
+       wraps on a small phone reads as two lines of one thing. */
+    line-height: 1.25;
+    /* Quieter than the mark it belongs to. An aside said at full
+       strength is not an aside. */
+    color: var(--ink-2);
+    /* One line wherever a line fits, which is every screen from about
+       the tablet step up. Below that the longest of the asides is
+       longer than the room between the two plates, so it wraps: the
+       plate grows downwards for as long as the phrase is up and the
+       controls stay level with the top of it (.masthead is
+       align-items: flex-start). Wrapping is the concession the
+       narrowest phones get, and it is the right one — the alternative
+       is a phrase with its end cut off, which is a phrase not worth
+       putting up.
+
+       break-word is the floor under that: on a 320px screen the
+       shortfall can be deep enough that even one word is wider than
+       what is left, and a word is the one thing wrapping cannot
+       divide. It does not change how wide the line ASKS to be, so it
+       never makes the plate narrower than it had to be — it only
+       catches the case that would otherwise overrun the plate's
+       rounded edge. */
+    overflow-wrap: break-word;
+    /* Each phrase is a new element (Navigation.jsx keys the span on
+       the text), so it arrives on its own fade rather than being
+       swapped under the reader's eye mid-gesture. Shortened to nothing
+       for a reader who has asked for less motion, by the blanket rule
+       in section 17. */
+    animation: say-in var(--t-fast) var(--ease-io) both;
 }
 
-/* Painted from the tablet step, and only on the gesture. Every hidden
-   property is handed back — or the span stays a clipped pixel and reads
-   as a layout fault — and then the measure is taken away again: closed
-   it is a box of no width with its overflow hidden, which is a thing
-   that can be opened on a transition where a clip is not. It is a flex
-   item of an inline-flex link, so it is already a block and the measure
-   applies to it.
-
-   The approach is the span's own padding rather than the plate's gap,
-   for the reason given at .masthead__inner--brand: a gap would be paid
-   at rest, and at rest there is nothing to pay it for. */
-@media (min-width: 48rem) {
-    .wordmark__full {
-        position: static;
-        width: auto;
-        height: auto;
-        margin: 0;
-        max-width: 0;
-        padding: 0;
+@keyframes say-in {
+    from {
         opacity: 0;
-        overflow: hidden;
-        clip-path: none;
-        font-family: var(--font-display);
-        font-size: var(--nav-name);
-        /* A little leading, so centring the box centres the type
-           rather than hanging it off its own cap height. */
-        line-height: 1.2;
-        /* Small, spaced and upper case: the register the site's other
-           small names are set in, which is what keeps a serif at this
-           size from reading as a second headline in the corner. */
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        transition: max-width var(--t-mid) var(--ease),
-                    padding var(--t-mid) var(--ease),
-                    opacity var(--t-fast) var(--ease-io);
-    }
-
-    .wordmark:hover .wordmark__full,
-    .wordmark:focus-visible .wordmark__full {
-        max-width: 14rem;
-        padding: 0 0.375rem 0 0.5rem;
-        opacity: 1;
+        /* Half a line's rise, downwards — the phrase comes up out of
+           the plate rather than sliding in from the side, which would
+           read as the plate having something to reveal. */
+        transform: translateY(0.2em);
     }
 }
 

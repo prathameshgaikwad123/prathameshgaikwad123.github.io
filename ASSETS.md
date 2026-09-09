@@ -92,8 +92,11 @@ and three sit side by side. Put your strongest overview first.
 
 | Path | Size | Status |
 |---|---|---|
-| `public/assets/favicon.svg` | 64 × 64 | **Done** — "PG" monogram, adapts to light/dark |
-| `public/assets/apple-touch-icon.png` | 180 × 180 | **Done** — placeholder, replace if you want |
+| `public/favicon.ico` | 16 / 32 / 48 | **Done** — the portrait, for a browser tab |
+| `public/assets/icon-192.png` | 192 × 192 | **Done** — the portrait, for anything that wants a PNG |
+| `public/assets/icon-512.png` | 512 × 512 | **Done** — the portrait, for an Android home screen |
+| `public/assets/apple-touch-icon.png` | 180 × 180 | **Done** — the portrait, for an iOS home screen |
+| `public/site.webmanifest` | — | **Done** — name, colours and the two icons above |
 | `public/assets/og-image.png` | 1200 × 630 | **Done** — typographic placeholder, replace if you want |
 | `public/assets/images/avatar.png` | 128 × 128 (1:1) | **Done** — the mark at the left of the header |
 | `public/assets/images/portrait.*` | 1000 × 1250 (4:5) | **Optional** — About section |
@@ -106,9 +109,25 @@ will not render an SVG.
 `avatar.png` is the identity at the left of the header: the portrait, cropped
 square around the head and sized down to 128 × 128 — four times the chip it is
 drawn in, so it stays sharp on any display, at 23 KB. The chip crops and sizes
-whatever it is given, and the grayscale and per-theme contrast are handled in
-CSS by `--nav-face-tone`, so the file itself carries no treatment of its own
-and can be swapped for another square crop without touching anything.
+whatever it is given, so the file can be swapped for another square crop
+without touching anything.
+
+### The icons are the same portrait
+
+There is no separate mark. The four icon files are the *same* square as
+`avatar.png` — the head crop of `public/pNG.png` at `(205, 14)`, 873 × 873 —
+reduced to each size with Lanczos and reduced to a 256-colour palette, which
+is indistinguishable on this artwork and roughly halves each file. The "PG"
+monogram that used to be the favicon is gone: one site, one face.
+
+To replace them, crop your new portrait square, then export it at 180, 192 and
+512 and as a 16/32/48 `.ico`. Keep the paths — every page's `<head>` and the
+manifest name them, and Android reads the two larger sizes from the manifest
+rather than from the markup.
+
+`site.webmanifest` also declares `"display": "standalone"`, which is what makes
+a saved copy open without browser chrome. Change it to `"browser"` if you would
+rather a home-screen shortcut opened in the browser as an ordinary tab.
 
 The portrait is optional. To drop it, delete the `<figure className="about__portrait">`
 block in `src/sections/About.jsx`.

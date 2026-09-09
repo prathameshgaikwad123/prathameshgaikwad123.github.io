@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { SITE } from '../data/site.js';
 import { IconMoon, IconSun } from './Icons.jsx';
 import useTheme from '../hooks/useTheme.js';
+import useSaying from '../hooks/useSaying.js';
 
 /* The masthead: two plates, one at each end of the screen, and nothing
    between them.
@@ -38,6 +39,8 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
     const toggleRef = useRef(null);
     useTheme(toggleRef);
 
+    const say = useSaying();
+
     return (
         <header className="masthead" id="masthead">
             {/* The identity, and it is a face rather than two letters: a
@@ -45,22 +48,36 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
                 one mark on a site with no logo that could only belong
                 to this person.
 
-                The name is beside it in the document at every width and
-                painted on the gesture — the mark is the identity at
-                rest, and the name is what the mark says when it is
-                pointed at. It is not the link's accessible name either:
-                that is written on the anchor outright, so what the link
-                is called does not depend on whether anything is being
-                hovered, and the portrait is `alt=""` because it is the
-                same identity said a second way rather than a second
-                thing to read. */}
+                Beside it is what the mark says, not who it is. At rest
+                that is "oh, hi." on every page and at every width;
+                pointed at, focused or tapped it is one of the
+                twenty-five asides in src/data/site.js, a different one
+                each time. The name that used to sit here is gone from
+                the plate entirely — including the tooltip, which was
+                the same name said a third way and would have argued
+                with the line under the cursor.
+
+                What the LINK is called is a separate matter and is
+                still written on the anchor outright: a link's name has
+                to hold still, and this one's text is a thing that
+                moves. Which is also why the line is `aria-hidden` — it
+                is the chip's tone of voice, not a second label — and
+                why the portrait is `alt=""`: the identity said one way
+                is enough. The reader is told whose site this is by the
+                document's title, the hero and the panel.
+
+                Nothing here intercepts the click. The chip is the way
+                back to the top of the page, or up to the index from a
+                case study, exactly as it was. */}
             <div className="masthead__inner masthead__inner--brand">
-                <a className="wordmark" href={home} aria-label={SITE.name} title={SITE.name}>
+                <a className="wordmark" href={home} aria-label={SITE.name} {...say.handlers}>
                     <span className="wordmark__face">
                         {/* The portrait itself is
                             public/assets/images/avatar.png — a square
-                            crop of the photograph. The chip crops and
-                            sizes whatever it is given and the
+                            crop of the portrait illustration, and the
+                            same crop the favicon and the two
+                            home-screen icons are cut from. The chip
+                            crops and sizes whatever it is given and the
                             treatment is --nav-face-tone in section 1
                             of the stylesheet, so the file is the only
                             thing this depends on. See ASSETS.md. */}
@@ -72,7 +89,13 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
                             decoding="async"
                         />
                     </span>
-                    <span className="wordmark__full" aria-hidden="true">{SITE.name}</span>
+                    {/* Keyed on the phrase, so a new one is a new
+                        element and arrives on its own small fade
+                        (@keyframes say-in) rather than being swapped
+                        under the reader's eye. */}
+                    <span className="wordmark__say" key={say.saying} aria-hidden="true">
+                        {say.saying}
+                    </span>
                 </a>
             </div>
 

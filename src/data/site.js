@@ -56,3 +56,47 @@ export const SECTIONS = [
 export const MENU_END = { no: '05', label: 'End', said: "That's it." };
 
 export const INTRO_PHRASE = 'Hold that thought';
+
+/* What the identity in the masthead says. At rest it is this, on every
+   page and at every width — the portrait is the mark, and this is the
+   mark greeting whoever it is drawn for. The name used to be here and
+   is not any more: a name in the corner of a portfolio is a label on
+   something that is already the person's, and the reader is one line
+   further down the page from being told it anyway. */
+export const GREETING = 'oh, hi.';
+
+/* And what it says when it is pointed at, focused or tapped: one of
+   these, a different one each time, and never two in a row.
+
+   Twenty-five asides, all in the site's own lower case, each of them
+   something a person making things would actually mutter. They are the
+   whole of the chip's second state — no card, no tooltip, no menu — so
+   the register matters more than the count: nothing here sells
+   anything, and nothing here is a caption for the work. */
+export const SAYINGS = [
+    'made this at 2am.',
+    'yes, i use figma.',
+    'probably overthinking it.',
+    'this looked better yesterday.',
+    "i'll fix it later.",
+    'one more tweak.',
+    'currently making something.',
+    'this was supposed to be simple.',
+    'i have a tab for that.',
+    "there's probably a prototype.",
+    'it started as an idea.',
+    'somewhere between pixels & pixels.',
+    'designing things, breaking things.',
+    'i collect unfinished ideas.',
+    'another side quest.',
+    'not another case study.',
+    "yes, that's my face.",
+    'the pixels are mine.',
+    'built, not found.',
+    'made from curiosity.',
+    'too many ideas.',
+    'still experimenting.',
+    'currently somewhere in Figma.',
+    'i make weird little things.',
+    "there's more than this.",
+];
