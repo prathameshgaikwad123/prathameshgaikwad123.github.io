@@ -103,11 +103,19 @@
     /* The one hue left on the site, and the only token that is never
        painted at rest. --signal gave up being a colour when the ramp
        went to two tones, because an accent that is only ever decoration
-       has nowhere to sit on a monochrome page. This is the same orange
-       it used to be — the burnt value on paper, the brighter one on the
-       dark ground, each already sized to its own ramp — kept for the one
+       has nowhere to sit on a monochrome page. This is kept for the one
        thing a two-tone system genuinely cannot say: that a phrase is
        being touched right now.
+
+       It is the portrait's own red, and not an orange approximating it.
+       #CC021F is sampled from the ground of
+       public/assets/images/avatar.png — the same red the mark in the
+       masthead is cut out of and the same red the icon puts on a home
+       screen — so the one hue on the page and the one hue on the icon
+       are one hue, rather than two that nearly agree. On the dark ramp
+       it is lifted to hsl of the same hue: the sampled value is 2.7:1
+       on black, which is a colour you can see is there rather than one
+       you can read.
 
        It is never at rest anywhere. The statement takes it under the
        cursor (section 8); a Behance plate and a side quest take it the
@@ -116,7 +124,7 @@
        ever appears while something is being touched is not a third
        tone, which is what lets the register stay two-tone with this
        in it.                                                         */
-    --flow:        #C0431E;
+    --flow:        #CC021F;
     --scrim:       rgba(0, 0, 0, 0.6);
 
     /* --- The header's plates -------------------------------------------
@@ -371,8 +379,10 @@
         /* The one token that does restate here, because it is the one
            that is a colour rather than a reference into the ramp: the
            value that reads on paper is mud on a black ground, and the
-           value that reads on black is neon on paper. */
-        --flow:        #FF6A3D;
+           value that reads on black is neon on paper. Same hue as the
+           portrait's red, carried up the ramp until it reads on black
+           — 5.5:1, where the sampled value is 2.7:1. */
+        --flow:        #FF1A3C;
         --scrim:       rgba(0, 0, 0, 0.72);
         /* The one token whose polarity has to turn over. The scrim
            says the page behind the panel is not the one being read,
@@ -422,7 +432,7 @@
        is a colour rather than a reference into the ramp: the value that
        reads on paper is mud on a black ground, and the value that reads
        on black is neon on paper. */
-    --flow:        #FF6A3D;
+    --flow:        #FF1A3C;
     --scrim:       rgba(0, 0, 0, 0.72);
     /* The one token whose polarity has to turn over. The scrim
        says the page behind the panel is not the one being read,
@@ -1305,11 +1315,14 @@ em { font-style: italic; }
        rounded edge. */
     overflow-wrap: break-word;
     /* Each phrase is a new element (Navigation.jsx keys the span on
-       the text), so it arrives on its own fade rather than being
-       swapped under the reader's eye mid-gesture. Shortened to nothing
-       for a reader who has asked for less motion, by the blanket rule
-       in section 17. */
-    animation: say-in var(--t-fast) var(--ease-io) both;
+       the text), so it arrives on its own — every hover, not only the
+       first. Shortened to nothing for a reader who has asked for less
+       motion, by the blanket rule in section 17.
+
+       Here the measure is left alone and only the ink moves: below the
+       tablet step a long phrase wraps, and a measure opening from zero
+       would re-wrap it on every frame. */
+    animation: say-in var(--t-mid) var(--ease-io) both;
 }
 
 @keyframes say-in {
@@ -1319,6 +1332,43 @@ em { font-style: italic; }
            the plate rather than sliding in from the side, which would
            read as the plate having something to reveal. */
         transform: translateY(0.2em);
+    }
+}
+
+/* From the tablet step the line always fits on one, so the plate can
+   open to it rather than jump to it. That jump was the whole of what
+   read as abrupt: the ink arrived gently onto a plate that had already
+   snapped to its full width in a single frame, so the gentleness was
+   spent on a shape that had finished moving. Opening the measure with
+   the ink is the gesture the name it replaced was given, and it is
+   back here for the same reason — the plate is the thing that is
+   speaking, so the plate should be seen to speak.
+
+   The clip is what makes an opening measure legible: the line is at
+   its full length from the first frame and uncovered left to right,
+   rather than being set narrow and squeezed. Once open nothing
+   overflows it — the cap clears the longest phrase in the pool by a
+   wide margin, and it has to be a cap rather than `none` because a
+   keyframe cannot animate to an intrinsic width. */
+@media (min-width: 48rem) {
+    .wordmark__say {
+        white-space: nowrap;
+        overflow: hidden;
+        animation-name: say-open;
+        animation-timing-function: var(--ease);
+    }
+
+    @keyframes say-open {
+        from {
+            max-width: 0;
+            padding-inline: 0;
+            opacity: 0;
+        }
+        to {
+            max-width: 22rem;
+            padding-inline: 0.5rem 0.375rem;
+            opacity: 1;
+        }
     }
 }
 
