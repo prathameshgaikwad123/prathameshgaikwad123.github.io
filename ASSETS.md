@@ -95,7 +95,7 @@ and three sit side by side. Put your strongest overview first.
 | `public/assets/favicon.svg` | 64 × 64 | **Done** — "PG" monogram, adapts to light/dark |
 | `public/assets/apple-touch-icon.png` | 180 × 180 | **Done** — placeholder, replace if you want |
 | `public/assets/og-image.png` | 1200 × 630 | **Done** — typographic placeholder, replace if you want |
-| `public/assets/images/avatar.svg` | 64 × 64 (1:1) | **Done** — the mark at the left of the header |
+| `public/assets/images/avatar.png` | 256 × 256 (1:1) | **Required** — the mark at the left of the header |
 | `public/assets/images/portrait.*` | 1000 × 1250 (4:5) | **Optional** — About section |
 
 `og-image.png` is what appears when the site is shared on LinkedIn, Slack or
@@ -103,14 +103,12 @@ WhatsApp. The generated one is typographic and works; a version with your own
 design would be better. It must stay a **PNG or JPEG** — most link previewers
 will not render an SVG.
 
-`avatar.svg` is the identity at the left of the header — a tightly cropped
-monochrome portrait, drawn as vectors so it carries no weight and needs no
-second file per theme. To use a photograph instead, save a **square** crop of
-your own — face filling most of the frame, 128 × 128 or larger — as
-`public/assets/images/avatar.jpg` (or `.webp`) and point the one `src` at it in
-`src/components/Navigation.jsx`. Nothing else changes: the chip crops and sizes
-whatever it is given, and the grayscale and per-theme contrast are handled in
-CSS by `--nav-face-tone`.
+`avatar.png` is the identity at the left of the header: a **square** crop of the
+portrait, face filling most of the frame, 256 × 256 or larger. It is the one
+asset the header depends on — save it at exactly that path and nothing else
+needs changing. The chip crops and sizes whatever it is given, and the
+grayscale and per-theme contrast are handled in CSS by `--nav-face-tone`, so
+the file itself wants no treatment of its own.
 
 The portrait is optional. To drop it, delete the `<figure className="about__portrait">`
 block in `src/sections/About.jsx`.

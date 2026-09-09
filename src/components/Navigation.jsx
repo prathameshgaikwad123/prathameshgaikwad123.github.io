@@ -57,16 +57,15 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
             <div className="masthead__inner masthead__inner--brand">
                 <a className="wordmark" href={home} aria-label={SITE.name} title={SITE.name}>
                     <span className="wordmark__face">
-                        {/* REPLACE, optionally: a square photographic
-                            crop saved as
-                            public/assets/images/avatar.jpg (or .webp)
-                            can be pointed at from here instead. The
-                            chip crops and sizes whatever it is given,
-                            and the treatment is --nav-face-tone in
-                            section 1 of the stylesheet — see
-                            ASSETS.md. */}
+                        {/* The portrait itself is
+                            public/assets/images/avatar.png — a square
+                            crop of the photograph. The chip crops and
+                            sizes whatever it is given and the
+                            treatment is --nav-face-tone in section 1
+                            of the stylesheet, so the file is the only
+                            thing this depends on. See ASSETS.md. */}
                         <img
-                            src="/assets/images/avatar.svg"
+                            src="/assets/images/avatar.png"
                             alt=""
                             width="64"
                             height="64"

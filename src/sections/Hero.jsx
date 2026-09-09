@@ -44,6 +44,11 @@ const LINE = STATEMENT.map((word) => word.text).join('');
    nearer the centre of the screen rather than on a gap where a strip
    used to be.
 
+   The statement is the only thing on the stage now — the line of
+   supporting copy under it went with the strip, for the same reason:
+   it named the same four disciplines the strip listed, and a sentence
+   that lists them is not what "Just a designer." is for.
+
    One register remains under it, on the floor of the screen: the scroll
    cue. */
 export default function Hero({ ready = false }) {
@@ -117,10 +122,6 @@ export default function Hero({ ready = false }) {
                                 );
                             })}
                         </h1>
-
-                        <p className="hero__said" data-reveal="">
-                            I design interfaces, websites, brands and&nbsp;digital&nbsp;experiences.
-                        </p>
                     </div>
 
                     <div className="hero__foot">
