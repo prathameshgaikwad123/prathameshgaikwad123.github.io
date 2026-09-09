@@ -1569,33 +1569,6 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
-/* Two registers in one row. The phrase is display type and the
-   destination beside it is not, so if the pair ever runs past the
-   panel's measure the small half drops under it rather than being
-   clipped by .menu__inner — which clips across, and would take the end
-   of it off. */
-.menu__link { flex-wrap: wrap; }
-
-/* Where the row goes, set in the interface face one step down the ramp:
-   the same register the numeral at the head of the row is in, and for
-   the same reason — something you can read without being made to read
-   it. What the row says leads at full size and this follows it, so the
-   panel reads as the sections talking rather than as a list of
-   destinations. It answers the row's two states with the numeral, so
-   the pair moves together. */
-.menu__said {
-    font-family: var(--font-text);
-    font-size: var(--t-meta);
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: var(--mark);
-    transition: color var(--t-fast) var(--ease-io);
-}
-
-.menu__link:hover:not([aria-current]) .menu__said,
-.menu__link:focus-visible:not([aria-current]) .menu__said { color: var(--ink-2); }
-.menu__link[aria-current] .menu__said { color: var(--on-signal); opacity: 0.6; }
-
 /* The last row, which is the end of the list rather than a way out of
    it. It takes the list's own measure and metrics so it reads as one
    of the rows, and one step down the ramp with no hovered state at
@@ -1605,7 +1578,6 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 .menu__end {
     display: flex;
     align-items: baseline;
-    flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0.4375rem 0.625rem;
     font-family: var(--font-display);
