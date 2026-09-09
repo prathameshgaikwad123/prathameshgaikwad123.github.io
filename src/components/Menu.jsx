@@ -1,4 +1,4 @@
-import { SECTIONS, SITE } from '../data/site.js';
+import { MENU_END, SECTIONS, SITE } from '../data/site.js';
 import { projects } from '../data/projects.js';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
@@ -12,12 +12,18 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    src/hooks/useUnderlayNav.js; this file is only the document.
 
    Everything the site is navigated by is in here, which is what earns
-   it the width: four sections, then the six case studies and the
-   elsewhere links below. `base` and `work` differ per page because the
-   site is a set of documents, so the home page links to its own anchors
-   and a case study links back up to the index.
+   it the width: four sections and the line that closes them, then the
+   six case studies and the elsewhere links below. `base` and `work`
+   differ per page because the site is a set of documents, so the home
+   page links to its own anchors and a case study links back up to the
+   index.
 
-   There is no row for the top of the page. The wordmark at the left of
+   Each row says its own name and then what is down there — Play, and
+   then just because. The word is the panel's, the section is the
+   page's: Play scrolls to Side Quests, which is what that band and
+   every anchor into it still are.
+
+   There is no row for the top of the page. The portrait at the left of
    the masthead is that link, on every page and without opening
    anything, and a panel the reader has just opened over the page does
    not need to offer them the page back.
@@ -75,9 +81,25 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                     {section.no}
                                 </span>
                                 {section.label}
+                                <span className="menu__said">{`— ${section.said}`}</span>
                             </a>
                         </li>
                     ))}
+
+                    {/* The end of the list, said out loud. It is not an
+                        anchor and has no href, because there is no
+                        section under it and a row that cannot be
+                        followed should not look like one — so it takes
+                        the list's own measure and one step down the
+                        ramp, and the reveal draws it in with the four
+                        rows above it. */}
+                    <li className="menu__end" data-menu-reveal="l">
+                        <span className="nav__num" aria-hidden="true">
+                            {MENU_END.no}
+                        </span>
+                        {MENU_END.label}
+                        <span className="menu__said">{`— ${MENU_END.said}`}</span>
+                    </li>
                 </ul>
 
                 <div className="menu__bottom">

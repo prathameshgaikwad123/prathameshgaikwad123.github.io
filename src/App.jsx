@@ -62,7 +62,7 @@ export default function App() {
 
             <div data-main="" inert={menu.open || undefined}>
                 <main id="main">
-                    <Hero />
+                    <Hero ready={intro.done} />
                     <Work />
                     <Behance />
                     <About />
