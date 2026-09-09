@@ -1569,19 +1569,20 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
-/* Two rows in one, at the narrow end. The label is a display word and
-   the phrase beside it is not, so if the pair ever runs past the
-   panel's measure the phrase drops under it rather than being clipped
-   by .menu__inner — which clips across, and would take the end of the
-   sentence off. At every width the site actually has, nothing
-   wraps. */
+/* Two registers in one row. The phrase is display type and the
+   destination beside it is not, so if the pair ever runs past the
+   panel's measure the small half drops under it rather than being
+   clipped by .menu__inner — which clips across, and would take the end
+   of it off. */
 .menu__link { flex-wrap: wrap; }
 
-/* What the section says for itself, set in the interface face one step
-   down the ramp: the same register the numeral at the head of the row
-   is in, and for the same reason — something you can read without
-   being made to read it. It answers the row's two states with the
-   numeral, so the pair moves together. */
+/* Where the row goes, set in the interface face one step down the ramp:
+   the same register the numeral at the head of the row is in, and for
+   the same reason — something you can read without being made to read
+   it. What the row says leads at full size and this follows it, so the
+   panel reads as the sections talking rather than as a list of
+   destinations. It answers the row's two states with the numeral, so
+   the pair moves together. */
 .menu__said {
     font-family: var(--font-text);
     font-size: var(--t-meta);
