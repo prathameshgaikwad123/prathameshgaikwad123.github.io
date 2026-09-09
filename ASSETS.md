@@ -129,6 +129,16 @@ rather than from the markup.
 a saved copy open without browser chrome. Change it to `"browser"` if you would
 rather a home-screen shortcut opened in the browser as an ordinary tab.
 
+Its `name` and `short_name` are both **PG**, and that is deliberate. Android
+prints `name` under the icon on the launch screen every time a saved copy is
+opened — there is no way to ask it not to — and a full name plus a job title
+set under a portrait reads as a caption on a face. Initials leave the icon to
+carry itself. `apple-mobile-web-app-title` in every page's `<head>` is the same
+two letters, for the label under the icon on an iOS home screen. None of this
+touches how the site names itself to a reader or a crawler: that is the
+document's `<title>`, its Open Graph tags and its structured data, all of which
+still say Prathamesh Gaikwad in full.
+
 The portrait is optional. To drop it, delete the `<figure className="about__portrait">`
 block in `src/sections/About.jsx`.
 
