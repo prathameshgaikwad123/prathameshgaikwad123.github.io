@@ -191,7 +191,7 @@ export default function SideQuests() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag quests__tag" data-reveal="">
-                        <span className="tag__no num">05</span>Side Quests
+                        <span className="tag__no num">04</span>Side Quests
                     </p>
                     <h2 className="statement quests__statement" id="side-quests-title" data-reveal="">
                         Things I made because I&nbsp;wanted&nbsp;to.

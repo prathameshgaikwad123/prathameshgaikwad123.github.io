@@ -44,7 +44,7 @@ is written down at the point it matters — the top of stylesheet section 9.
 | Path | What it is |
 |---|---|
 | `index.html`, `work/*.html`, `404.html` | One HTML entry per published page. Each carries its own `<head>` — title, description, canonical, Open Graph, structured data — and the small script that settles the theme and the intro before the first paint. The body is a mount point. |
-| `src/App.jsx` | The home page: hero, then six bands — Selected Work, Selected Behance Work, About, Capabilities, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the six are in the navigation panel; Behance and Capabilities are arrived at by reading. |
+| `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The six bands of the home page. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
@@ -86,8 +86,7 @@ block in the stylesheet, and one section of the page.
 | 2 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
 | 3 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
 | 4 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
-| 5 | Capabilities | The section header on a panel cut on a slant, panel and type at different rates | `panelCut.js` |
-| 6 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
+| 5 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
 
 Three rules hold the whole thing together, and they are worth knowing before
 changing any of it:
