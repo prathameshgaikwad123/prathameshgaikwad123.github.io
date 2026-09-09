@@ -57,22 +57,32 @@ export const MENU_END = { no: '05', label: 'End', said: "That's it." };
 
 export const INTRO_PHRASE = 'Hold that thought';
 
-/* What the identity in the masthead says. At rest it is this, on every
-   page and at every width — the portrait is the mark, and this is the
-   mark greeting whoever it is drawn for. The name used to be here and
-   is not any more: a name in the corner of a portfolio is a label on
-   something that is already the person's, and the reader is one line
-   further down the page from being told it anyway. */
+/* The first thing the identity in the masthead says, and it says it
+   once a visit: the first hover, focus or tap spends this and nothing
+   spends it again. At rest the chip says nothing at all — the portrait
+   is the mark — which is what leaves this line something to do. It is
+   an answer to being noticed, and a greeting already sitting on screen
+   when the cursor arrives is not answering anything.
+
+   The name used to be here and is not any more: a name in the corner
+   of a portfolio is a label on something that is already the person's,
+   and the reader is one line further down the page from being told it
+   anyway. */
 export const GREETING = 'oh, hi.';
 
-/* And what it says when it is pointed at, focused or tapped: one of
-   these, a different one each time, and never two in a row.
+/* And what it says from the second gesture on: these, in this order,
+   one per gesture. Written in the order they are meant to be read —
+   the first few are the ones a stranger meets, so they are the ones
+   that have to earn the second hover — and dealt from the top rather
+   than picked at random, so a visit hears an opening rather than a
+   sample. Once all twenty-five are spent they are shuffled and dealt
+   again, and never so that the same one lands twice in a row.
 
-   Twenty-five asides, all in the site's own lower case, each of them
-   something a person making things would actually mutter. They are the
-   whole of the chip's second state — no card, no tooltip, no menu — so
-   the register matters more than the count: nothing here sells
-   anything, and nothing here is a caption for the work. */
+   All in the site's own lower case, each of them something a person
+   making things would actually mutter. They are the whole of the
+   chip's second state — no card, no tooltip, no menu — so the register
+   matters more than the count: nothing here sells anything, and
+   nothing here is a caption for the work. */
 export const SAYINGS = [
     'made this at 2am.',
     'yes, i use figma.',

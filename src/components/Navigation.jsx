@@ -48,14 +48,15 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
                 one mark on a site with no logo that could only belong
                 to this person.
 
-                Beside it is what the mark says, not who it is. At rest
-                that is "oh, hi." on every page and at every width;
-                pointed at, focused or tapped it is one of the
-                twenty-five asides in src/data/site.js, a different one
-                each time. The name that used to sit here is gone from
-                the plate entirely — including the tooltip, which was
-                the same name said a third way and would have argued
-                with the line under the cursor.
+                At rest that is the whole of it. Nothing is beside the
+                portrait until the chip is pointed at, focused or
+                tapped, and then it says one thing: "oh, hi." the first
+                time, and after that the asides in src/data/site.js in
+                the order they are written, one spent per gesture. The
+                name that used to sit here is gone from the plate
+                entirely — including the tooltip, which was the same
+                name said a third way and would have argued with the
+                line under the cursor.
 
                 What the LINK is called is a separate matter and is
                 still written on the anchor outright: a link's name has
@@ -89,13 +90,25 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
                             decoding="async"
                         />
                     </span>
-                    {/* Keyed on the phrase, so a new one is a new
+                    {/* Absent at rest rather than empty: the line
+                        carries its own approach as padding, and a span
+                        with no words in it would still hold that
+                        padding open beside the portrait. So the plate
+                        is one chip wide until there is something to
+                        say, which is the resting geometry it has
+                        always had.
+
+                        Keyed on the phrase, so a new one is a new
                         element and arrives on its own small fade
                         (@keyframes say-in) rather than being swapped
-                        under the reader's eye. */}
-                    <span className="wordmark__say" key={say.saying} aria-hidden="true">
-                        {say.saying}
-                    </span>
+                        under the reader's eye — which is what a tap
+                        does, since a phrase a finger put up stays up
+                        until the next one. */}
+                    {say.saying && (
+                        <span className="wordmark__say" key={say.saying} aria-hidden="true">
+                            {say.saying}
+                        </span>
+                    )}
                 </a>
             </div>
 
