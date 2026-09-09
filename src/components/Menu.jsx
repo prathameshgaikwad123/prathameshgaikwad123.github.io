@@ -18,8 +18,11 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    page links to its own anchors and a case study links back up to the
    index.
 
-   Each row says its own name and then what is down there — Play, and
-   then just because. The word is the panel's, the section is the
+   What the row says comes first and at full size — Me, the work, just
+   because — with the section it goes to named after it, small. The
+   reader is being told what is down there rather than shown a table of
+   contents, and the destination is still on the row so the row can be
+   followed on purpose. The word is the panel's and the section is the
    page's: Play scrolls to Side Quests, which is what that band and
    every anchor into it still are.
 
@@ -80,8 +83,8 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                 <span className="nav__num" aria-hidden="true">
                                     {section.no}
                                 </span>
-                                {section.label}
-                                <span className="menu__said">{`— ${section.said}`}</span>
+                                {section.said}
+                                <span className="menu__said">{`— ${section.label}`}</span>
                             </a>
                         </li>
                     ))}
@@ -97,8 +100,8 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                         <span className="nav__num" aria-hidden="true">
                             {MENU_END.no}
                         </span>
-                        {MENU_END.label}
-                        <span className="menu__said">{`— ${MENU_END.said}`}</span>
+                        {MENU_END.said}
+                        <span className="menu__said">{`— ${MENU_END.label}`}</span>
                     </li>
                 </ul>
 
