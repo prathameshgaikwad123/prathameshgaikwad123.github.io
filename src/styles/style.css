@@ -1191,19 +1191,19 @@ em { font-style: italic; }
    glare out of a black plate. Declared per theme with the rest of the
    ramp in section 1, so there is nothing here to keep in step.
 
-   What the mark says is beside it at every width, and it is not the
-   name. "oh, hi." at rest, and under a cursor, a finger or the
-   keyboard one of the asides in src/data/site.js — one line, no card,
-   no menu, and the only thing on the site that answers a gesture with
-   words. It is painted at every width, unlike the name it replaces:
-   the greeting is the resting state now rather than the reward for a
-   hover, and a chip that said nothing until it was pointed at would be
-   a chip that says nothing at all on a phone.
+   At rest the mark says nothing, and the plate is one chip wide. What
+   it says under a cursor, a finger or the keyboard is beside it at
+   every width and is not the name: "oh, hi." the first time and then
+   the asides in src/data/site.js, one line, no card, no menu, and the
+   only thing on the site that answers a gesture with words. Painted at
+   every width, unlike the name it replaces — on a phone the gesture is
+   a tap, and a chip that only spoke to a cursor would say nothing at
+   all there.
 
-   Which is also why the phrase is set small and quiet, in the display
-   face and the site's own lower case. It is somebody speaking, not a
-   label: uppercase and letter-spaced, the way the name was set, would
-   make an aside read as a second wordmark.
+   The phrase is set small and quiet, in the display face and the
+   site's own lower case. It is somebody speaking, not a label:
+   uppercase and letter-spaced, the way the name was set, would make an
+   aside read as a second wordmark.
 
    What the reader is told does not depend on any of it, because the
    link's accessible name is written on the anchor

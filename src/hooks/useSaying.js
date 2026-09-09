@@ -1,21 +1,37 @@
 import { useCallback, useRef, useState } from 'react';
 import { GREETING, SAYINGS } from '../data/site.js';
 
-/* What the identity chip is saying, and the gesture that changes it.
+/* What the identity chip is saying, and the gesture that makes it say
+   anything at all.
+
+   At rest it says nothing. The mark is the portrait and only the
+   portrait — the plate is one chip wide, exactly as it was before any
+   of this — and every word beside it is something the reader asked
+   for. Which is what makes the first one land: "oh, hi." is an answer
+   to being noticed, and a greeting that was already on screen before
+   the cursor arrived is not answering anything.
+
+   So the order is a queue rather than a mood. The first hover of a
+   visit spends the greeting; the next twenty-five spend the pool in
+   the order it is written in src/data/site.js, which is the order it
+   was written to be read in. Only once all twenty-six are spent does
+   chance come into it: the twenty-five are shuffled and dealt again,
+   and the greeting is not among them — it belongs to the first hello
+   of a visit and there is only one of those.
 
    One line of state and no DOM: the hook holds the phrase and the
    component renders it, which is the same bargain useTypewriter makes
-   and for the same reason — the greeting is in the prerendered
-   document, the first client render matches it, and nothing has to be
+   and for the same reason — the prerendered document has the chip at
+   rest, the first client render agrees with it, and nothing has to be
    undone afterwards.
 
    A pointer and a finger are answered differently, deliberately.
 
      A cursor      is a thing that hovers, and a hover is a state with
-                   an end: entering puts a phrase up, leaving takes it
-                   away, and the chip is back to saying hello before
-                   the next one. Nothing cycles while the cursor is
-                   inside — the phrase was picked on the way in.
+                   an end: entering spends one phrase, leaving takes it
+                   away, and the chip is silent again before the next
+                   one. Nothing cycles while the cursor is inside — the
+                   phrase was drawn on the way in.
 
      A finger      has no such state. There is nothing to leave, so a
                    tap puts a phrase up and it stays up; the next tap
@@ -24,21 +40,23 @@ import { GREETING, SAYINGS } from '../data/site.js';
                    the reader touching something else.
 
      A keyboard    is the cursor's case, because it has the same shape:
-                   focus puts a phrase up and blur takes it away.
+                   focus spends a phrase and blur takes it away.
 
    The link is still a link through all of it. Nothing is prevented,
    nothing is swallowed, and the chip goes where it has always gone —
    the interaction is painted on top of the navigation rather than in
    place of it. */
 
-/* A bag, not a die. Twenty-five phrases shuffled and then spent one at
-   a time, so every one of them is seen before any of them is seen
-   twice, and a reader who keeps hovering is being read to rather than
-   played dice with. The bag is drawn from the end; a reshuffle that
-   would hand back the phrase still on screen swaps it to the front
-   first, which is the whole of "a DIFFERENT phrase" across the seam
-   between one bag and the next. */
-function refill(last) {
+/* The opening hand, in writing order: the greeting, then the pool. */
+const opening = () => [GREETING, ...SAYINGS];
+
+/* And every hand after it, shuffled — so a long visit is not the same
+   recital twice, while still spending all twenty-five before repeating
+   any of them. The queue is drawn from the front, so a shuffle that
+   would deal back the phrase still on screen swaps it out of the front
+   first: that is the whole of "never the same phrase twice in a row"
+   across the seam between one hand and the next. */
+function shuffled(last) {
     const bag = SAYINGS.slice();
 
     for (let i = bag.length - 1; i > 0; i--) {
@@ -46,8 +64,8 @@ function refill(last) {
         [bag[i], bag[j]] = [bag[j], bag[i]];
     }
 
-    if (bag.length > 1 && bag[bag.length - 1] === last) {
-        [bag[bag.length - 1], bag[0]] = [bag[0], bag[bag.length - 1]];
+    if (bag.length > 1 && bag[0] === last) {
+        [bag[0], bag[bag.length - 1]] = [bag[bag.length - 1], bag[0]];
     }
 
     return bag;
@@ -55,10 +73,10 @@ function refill(last) {
 
 /* Was this focus asked for, or is it the focus a click and a tap hand
    out on the way past? Both of those have already been answered — by
-   the hover and by the tap itself — and answering them twice is the
-   one thing the brief rules out: a second phrase inside a single
-   gesture. `:focus-visible` is the browser's own answer to that
-   question, so it is read rather than guessed at from event order. */
+   the hover and by the tap itself — and answering them twice would
+   spend a phrase nobody asked for. `:focus-visible` is the browser's
+   own answer to that question, so it is read rather than guessed at
+   from event order. */
 function askedFor(el) {
     try {
         return el.matches(':focus-visible');
@@ -69,25 +87,27 @@ function askedFor(el) {
 }
 
 export default function useSaying() {
-    const [saying, setSaying] = useState(GREETING);
-    const bag = useRef([]);
+    /* null is the resting state, and it is the state the document is
+       served in: nothing beside the portrait until a gesture asks. */
+    const [saying, setSaying] = useState(null);
+    const queue = useRef(null);
     const last = useRef(null);
     const held = useRef(false);
     const hovering = useRef(false);
 
     const next = useCallback(() => {
-        if (!bag.current.length) bag.current = refill(last.current);
-        const phrase = bag.current.pop();
+        if (!queue.current) queue.current = opening();
+        if (!queue.current.length) queue.current = shuffled(last.current);
+        const phrase = queue.current.shift();
         last.current = phrase;
         setSaying(phrase);
     }, []);
 
-    const rest = useCallback(() => setSaying(GREETING), []);
+    const rest = useCallback(() => setSaying(null), []);
 
     /* Enter and leave are the cursor's, and only the cursor's. A touch
        fires both of them around its own tap, and a chip that answered
-       those would put a phrase up, take it away and put another one up
-       for one press of a finger. */
+       those would spend three phrases on one press of a finger. */
     const onPointerEnter = useCallback(
         (e) => {
             if (e.pointerType !== 'mouse') return;
