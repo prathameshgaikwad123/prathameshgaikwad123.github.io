@@ -31,8 +31,21 @@
 <meta name="twitter:image" content="https://prathameshgaikwad123.github.io/assets/og-image.png">
 <meta name="twitter:image:alt" content="Prathamesh Gaikwad — Multidisciplinary Digital Designer">
 
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<!-- The icon is the portrait, at the crop the header's chip draws: the same
+     face in a tab, on a phone's bookmark and on a home screen, rather than a
+     monogram in one place and a photograph in the other. /favicon.ico holds
+     16, 32 and 48 for a tab and is at the root where a browser looks for it
+     unprompted; the 192 is for everything that would rather have a PNG; the
+     180 is what iOS puts on a home screen; the manifest is what Android
+     reads for the same thing. All four are cut from one square — see
+     ASSETS.md. -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<!-- The label under the icon on an iOS home screen. The full name does not
+     fit there and is truncated mid-word if it is given. -->
+<meta name="apple-mobile-web-app-title" content="Prathamesh">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

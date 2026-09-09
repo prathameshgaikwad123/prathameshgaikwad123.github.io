@@ -51,11 +51,11 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, entrance reveals, the carousel's frame loop and input. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
-| `public/` | Assets served as-is: images, fonts, `robots.txt`, `sitemap.xml`. |
+| `public/` | Assets served as-is: images, the icon set cut from the portrait, `site.webmanifest`, `robots.txt`, `sitemap.xml`. |
 | `scripts/prerender.js` | Writes each page's markup into its built HTML file. |
 | `api/presence.js` | The only server-side code the site has: the live-presence counter behind the footer. See below. |
 
