@@ -40,17 +40,40 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
 
     return (
         <header className="masthead" id="masthead">
-            {/* The identity. The monogram is the mark at every width;
-                the name is set beside it from the tablet step up, where
-                there is room for the lockup and a lone square would
-                otherwise sit adrift in a header with nothing else in
-                it. Below that step the name is still in the document,
-                only unpainted — which is what keeps the link called the
-                same thing on both sides of the breakpoint. */}
+            {/* The identity, and it is a face rather than two letters: a
+                tightly cropped portrait in one small chip, which is the
+                one mark on a site with no logo that could only belong
+                to this person.
+
+                The name is beside it in the document at every width and
+                painted on the gesture — the mark is the identity at
+                rest, and the name is what the mark says when it is
+                pointed at. It is not the link's accessible name either:
+                that is written on the anchor outright, so what the link
+                is called does not depend on whether anything is being
+                hovered, and the portrait is `alt=""` because it is the
+                same identity said a second way rather than a second
+                thing to read. */}
             <div className="masthead__inner masthead__inner--brand">
-                <a className="wordmark" href={home}>
-                    <span className="wordmark__initials">{SITE.initials}</span>
-                    <span className="wordmark__full">{SITE.name}</span>
+                <a className="wordmark" href={home} aria-label={SITE.name} title={SITE.name}>
+                    <span className="wordmark__face">
+                        {/* REPLACE, optionally: a square photographic
+                            crop saved as
+                            public/assets/images/avatar.jpg (or .webp)
+                            can be pointed at from here instead. The
+                            chip crops and sizes whatever it is given,
+                            and the treatment is --nav-face-tone in
+                            section 1 of the stylesheet — see
+                            ASSETS.md. */}
+                        <img
+                            src="/assets/images/avatar.svg"
+                            alt=""
+                            width="64"
+                            height="64"
+                            decoding="async"
+                        />
+                    </span>
+                    <span className="wordmark__full" aria-hidden="true">{SITE.name}</span>
                 </a>
             </div>
 

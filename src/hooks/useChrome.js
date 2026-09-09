@@ -24,7 +24,11 @@ function offsetTop(el) {
    used to carry a copy of the section list with a travelling ground under
    the current link, and this hook used to place it; both are gone, and
    what is left is the panel's own links, found by the .menu__link class
-   they have always carried. */
+   they have always carried.
+
+   Which sections those are is the panel's business and the order they
+   are searched in is not: the list is sorted into document order below
+   before anything is decided from it. */
 export default function useChrome() {
     useEffect(() => {
         const masthead = document.getElementById('masthead');
@@ -40,6 +44,17 @@ export default function useChrome() {
             if (!section || section === document.body) return;
             if (spy.indexOf(section) === -1) spy.push(section);
         });
+
+        /* Down the page, whatever order the panel lists them in. The
+           search below walks this array and keeps the last section it
+           has passed, which is only the section the reader is in if the
+           array is in document order — and the panel's order is now the
+           panel's own: it opens on About, which is the third band on the
+           page. Read off the document rather than assumed of the list,
+           so the two are free to disagree and this stays right. */
+        spy.sort((a, b) =>
+            a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+        );
 
         if (!masthead && !progress && !spy.length) return undefined;
 

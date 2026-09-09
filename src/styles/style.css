@@ -195,6 +195,18 @@
        proportion follows the chip rather than the name shrinking to
        chase it.                                                      */
     --nav-item: 2.5rem;
+    /* The portrait's chip, and the one thing in either plate that is
+       not a full --nav-item square: a face at the size of a control is
+       a profile photograph, and this is a signature. Read off the
+       square rather than set beside it, so it steps down with the
+       plates and can never outgrow the padding it sits in — the plate
+       keeps its own height from --nav-h whatever is in it, so the two
+       ends of the header stay level. */
+    --nav-face: min(2rem, var(--nav-item));
+    /* The portrait's treatment, and the only thing about it that is per
+       theme. It carries its own neutral ground, so it is not inverted
+       on the dark one, only kept from glaring off it. */
+    --nav-face-tone: grayscale(1) contrast(1.06);
     --nav-mark: 0.9375rem;                        /* the monogram in its chip */
     --nav-icon: 1.0625rem;                        /* the theme mark in its chip */
     --nav-name: 0.9375rem;                        /* the name, at one size */
@@ -375,6 +387,7 @@
         --nav-edge:    rgba(255, 255, 255, 0.10);
         --nav-chip:    rgba(255, 255, 255, 0.09);
         --nav-chip-2:  rgba(255, 255, 255, 0.155);
+        --nav-face-tone: grayscale(1) contrast(1.02) brightness(0.86);
         --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                        0 8px 22px -12px rgba(0, 0, 0, 0.6);
         --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -424,6 +437,7 @@
     --nav-edge:    rgba(255, 255, 255, 0.10);
     --nav-chip:    rgba(255, 255, 255, 0.09);
     --nav-chip-2:  rgba(255, 255, 255, 0.155);
+    --nav-face-tone: grayscale(1) contrast(1.02) brightness(0.86);
     --nav-cast:    0 1px 1px rgba(0, 0, 0, 0.28),
                    0 8px 22px -12px rgba(0, 0, 0, 0.6);
     --nav-cast-2:  0 1px 1px rgba(0, 0, 0, 0.34),
@@ -1070,6 +1084,13 @@ em { font-style: italic; }
     pointer-events: auto;
     display: flex;
     align-items: center;
+    /* Stated rather than left to the content, because the two ends no
+       longer hold the same thing: the controls are --nav-item chips and
+       the identity is a smaller portrait, and two plates of different
+       heights at opposite ends of the same strip read as one of them
+       having gone wrong. --nav-h is that height with the padding and
+       the hairline already in it, and the box is a border box. */
+    min-height: var(--nav-h);
     gap: clamp(0.25rem, 0.9vw, 0.625rem);
     min-width: 0;
     max-width: 100%;
@@ -1086,12 +1107,16 @@ em { font-style: italic; }
                 transform var(--t-mid) var(--ease);
 }
 
-/* The brand plate holds one thing at the narrow end and a lockup at the
-   wide one; the controls plate holds two chips and sets them tighter
-   than the lockup wants. `margin-left: auto` is belt and braces for the
+/* The brand plate holds the portrait, and the name only while it is
+   being pointed at; the controls plate holds two chips and sets them
+   tighter than a lockup wants. The brand plate spends no gap of its
+   own: a gap is paid whether the name is out or not, and a chip with
+   nine pixels of nothing beside it is a plate that looks like it has
+   lost something. The name carries its own approach instead, and gives
+   it back as it goes. `margin-left: auto` is belt and braces for the
    space-between above: it pins the controls plate to the right edge
    even if it is ever the only plate rendered. */
-.masthead__inner--brand { gap: 0.5625rem; }
+.masthead__inner--brand { gap: 0; }
 
 .masthead__inner--actions {
     gap: 0.25rem;
@@ -1135,46 +1160,77 @@ em { font-style: italic; }
 }
 
 /* --- The identity ----------------------------------------------------
-   The initials already in the identity, set in the display face and
-   given one square of ground, with the name beside them from the tablet
-   step up. The header has nothing else in it now, and a single small
-   square at the end of an empty strip reads as a fragment rather than a
-   signature; the name is what makes the left end of the header a
-   deliberate thing.
+   A face, cropped tight and held in one small chip: the site has no
+   logo, and two letters in a box are a placeholder for one. The
+   portrait is the mark that could only be this person's, which is what
+   an identity in the corner of a page is for.
 
-   Below that step the name is still in the document, only unpainted, by
-   the same clip it has always been hidden with. Which is the point: the
-   span is in the accessibility tree on both sides of the breakpoint, so
-   the link is called the same thing at every width and needs no label
-   of its own to say so.                                              */
+   It is deliberately smaller than the chips at the other end. A
+   portrait at the size of a control reads as a profile photograph
+   wired into the interface; at two thirds of the plate's height it
+   reads as a signature the plate happens to be carrying. The plate
+   keeps the height either way — .masthead__inner states it — so the
+   two ends of the strip stay level.
+
+   Monochrome, because the page is. The asset carries its own neutral
+   ground rather than the source's red, and --nav-face-tone is the last
+   of the treatment: grey held to grey on the light ground, and the same
+   grey brought down a little on the dark one so a lit face does not
+   glare out of a black plate. Declared per theme with the rest of the
+   ramp in section 1, so there is nothing here to keep in step.
+
+   The name is beside it at every width and painted only on the
+   gesture. At rest the mark is the identity; hovered or focused, it
+   says who it is — one line, no card, no menu. Below the tablet step it
+   is not painted at all: the plate is a hand's width from the panel's
+   edge there and a name unfolding into that gap is a name unfolding
+   into the seam. What the reader is told does not depend on any of it,
+   because the link's accessible name is written on the anchor
+   (src/components/Navigation.jsx) rather than read off whatever is
+   currently visible.                                                 */
 
 .wordmark {
     display: inline-flex;
     align-items: center;
     flex: none;
+    min-width: 0;
     color: var(--ink);
 }
 
-.wordmark__initials {
-    display: grid;
-    place-items: center;
+.wordmark__face {
+    display: block;
     flex: none;
-    width: var(--nav-item);
-    height: var(--nav-item);
-    border-radius: var(--nav-r-in);
+    width: var(--nav-face);
+    height: var(--nav-face);
+    /* One step tighter than the chips beside it, because it is one step
+       smaller than they are: the same corner, not the same radius. */
+    border-radius: calc(var(--nav-r-in) - 0.125rem);
+    overflow: hidden;
     background: var(--nav-chip);
-    font-family: var(--font-display);
-    font-size: var(--nav-mark);
-    line-height: 1;
-    letter-spacing: 0.015em;
-    transition: background-color var(--t-fast) var(--ease-io),
-                color var(--t-fast) var(--ease-io);
+    /* Inset, so the edge is drawn inside the crop rather than around
+       the box: a border would grow the mark and a shadow outside it
+       would be a ring hanging in the plate's padding. */
+    box-shadow: inset 0 0 0 1px var(--nav-edge);
+    transition: box-shadow var(--t-fast) var(--ease-io),
+                transform var(--t-mid) var(--ease);
 }
 
-.wordmark:hover .wordmark__initials,
-.wordmark:focus-visible .wordmark__initials {
-    background: var(--signal);
-    color: var(--on-signal);
+.wordmark__face img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: var(--nav-face-tone);
+}
+
+/* Touched, the mark takes the accent as an edge and lifts by a
+   twentieth. The site's one hue is never painted at rest and is not
+   here either — it is the same sentence the statement and the covers
+   answer a cursor with, said on the smallest thing on the page. */
+.wordmark:hover .wordmark__face,
+.wordmark:focus-visible .wordmark__face {
+    transform: scale(1.05);
+    box-shadow: inset 0 0 0 1px var(--flow);
 }
 
 .wordmark__full {
@@ -1189,28 +1245,48 @@ em { font-style: italic; }
     border: 0;
 }
 
-/* Painted from the tablet step: every hidden property handed back, or
-   the span stays a clipped pixel and reads as a layout fault. It is
-   absolutely positioned while hidden, so it is out of flow and the
-   plate's gap does not pay for it below this width. */
+/* Painted from the tablet step, and only on the gesture. Every hidden
+   property is handed back — or the span stays a clipped pixel and reads
+   as a layout fault — and then the measure is taken away again: closed
+   it is a box of no width with its overflow hidden, which is a thing
+   that can be opened on a transition where a clip is not. It is a flex
+   item of an inline-flex link, so it is already a block and the measure
+   applies to it.
+
+   The approach is the span's own padding rather than the plate's gap,
+   for the reason given at .masthead__inner--brand: a gap would be paid
+   at rest, and at rest there is nothing to pay it for. */
 @media (min-width: 48rem) {
     .wordmark__full {
         position: static;
         width: auto;
         height: auto;
         margin: 0;
-        /* The chip is a filled box and sits flush in the plate's own
-           padding; the name is type and wants more air at the closed
-           end than a box does. */
-        padding-right: 0.3125rem;
-        overflow: visible;
+        max-width: 0;
+        padding: 0;
+        opacity: 0;
+        overflow: hidden;
         clip-path: none;
         font-family: var(--font-display);
         font-size: var(--nav-name);
         /* A little leading, so centring the box centres the type
            rather than hanging it off its own cap height. */
         line-height: 1.2;
-        letter-spacing: 0.005em;
+        /* Small, spaced and upper case: the register the site's other
+           small names are set in, which is what keeps a serif at this
+           size from reading as a second headline in the corner. */
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: max-width var(--t-mid) var(--ease),
+                    padding var(--t-mid) var(--ease),
+                    opacity var(--t-fast) var(--ease-io);
+    }
+
+    .wordmark:hover .wordmark__full,
+    .wordmark:focus-visible .wordmark__full {
+        max-width: 14rem;
+        padding: 0 0.375rem 0 0.5rem;
+        opacity: 1;
     }
 }
 
@@ -1493,13 +1569,60 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
+/* Two rows in one, at the narrow end. The label is a display word and
+   the phrase beside it is not, so if the pair ever runs past the
+   panel's measure the phrase drops under it rather than being clipped
+   by .menu__inner — which clips across, and would take the end of the
+   sentence off. At every width the site actually has, nothing
+   wraps. */
+.menu__link { flex-wrap: wrap; }
+
+/* What the section says for itself, set in the interface face one step
+   down the ramp: the same register the numeral at the head of the row
+   is in, and for the same reason — something you can read without
+   being made to read it. It answers the row's two states with the
+   numeral, so the pair moves together. */
+.menu__said {
+    font-family: var(--font-text);
+    font-size: var(--t-meta);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--mark);
+    transition: color var(--t-fast) var(--ease-io);
+}
+
+.menu__link:hover:not([aria-current]) .menu__said,
+.menu__link:focus-visible:not([aria-current]) .menu__said { color: var(--ink-2); }
+.menu__link[aria-current] .menu__said { color: var(--on-signal); opacity: 0.6; }
+
+/* The last row, which is the end of the list rather than a way out of
+   it. It takes the list's own measure and metrics so it reads as one
+   of the rows, and one step down the ramp with no hovered state at
+   all, because there is nothing under it to be offered: a row that
+   answered the cursor would be promising a section that does not
+   exist. Not an anchor either — see src/components/Menu.jsx. */
+.menu__end {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.4375rem 0.625rem;
+    font-family: var(--font-display);
+    font-size: var(--menu-type);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink-3);
+}
+
 /* The index numerals belong to the editorial registers — the section
    tags, the carousel's counter, and this panel. The name is the last thing left
    of the plate's copy of the section list, and it is kept rather than
    renamed because every row of the only navigation the site has is
    marked with it: .nav__num has no rule of its own anywhere, only the
-   two descendant blocks here and under .menu__small. */
-.menu__link .nav__num {
+   descendant blocks here — the rows and the line that closes them —
+   and the one under .menu__small. */
+.menu__link .nav__num,
+.menu__end .nav__num {
     flex: none;
     font-family: var(--font-text);
     font-size: var(--t-micro);
@@ -1760,7 +1883,8 @@ html:not(.js) .menu__list {
    one of these rows is filled with the signal to say where the reader
    is, and a ground that stops at the letterforms is not a row. What
    comes off here goes back into the list's column gap above. */
-html:not(.js) .menu__link {
+html:not(.js) .menu__link,
+html:not(.js) .menu__end {
     font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
     padding-inline: 0.25rem;
     gap: 0.4375rem;
@@ -1784,8 +1908,8 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
    space is left open: that space is the composition now, not a gap
    waiting to be filled.
 
-   Two quiet registers stay on the floor — the discipline strip and the
-   scroll cue — and both keep their own height whatever the stage does. */
+   One quiet register stays on the floor — the scroll cue — and it keeps
+   its own height whatever the stage does. */
 .hero {
     position: relative;
     display: flex;
@@ -1804,12 +1928,16 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     flex: 1;
 }
 
-/* Three rows: the stage takes the slack, the strip and the foot keep
-   their content height. Below 48rem `.grid` is a single column, which
-   changes nothing here — all three children still span it in order. */
+/* Two rows: the stage takes the slack and the foot keeps its content
+   height. It was three — the strip of disciplines had the middle one —
+   and what that row was holding is not replaced, it is given to the
+   stage, so the statement sits nearer the centre of the first screen
+   than it did rather than standing above a space where a strip used to
+   be. Below 48rem `.grid` is a single column, which changes nothing
+   here: both children still span it in order. */
 .hero__grid {
     flex: 1;
-    grid-template-rows: 1fr auto auto;
+    grid-template-rows: 1fr auto;
 }
 
 .hero__stage {
@@ -1842,12 +1970,24 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
    two-tone ramp leaves open. */
 .hero__title:hover .hero__stop { color: var(--ink); }
 
-/* Two lines, broken where the sense breaks rather than where the box
-   runs out — which is why each is its own block and nothing here
-   balances or re-wraps them. */
-.hero__title span { display: block; }
+/* One line, and the pieces it is typed in (src/sections/Hero.jsx): a
+   run per word, a box per character, and nothing declared here that
+   would take any of them out of the line. The two blocks the heading
+   used to be are gone with the statement that needed them.
+
+   The word is what a break is allowed to fall between. Every character
+   has a box of its own, and a box is a break opportunity — run
+   together, the statement would come apart mid-word at the narrow end,
+   so each word is one unbreakable run and the spaces between them keep
+   theirs. */
+.hero__word { white-space: nowrap; }
+/* The space between two runs, which is the one place the line is
+   allowed to break. Its box holds nothing else, so the space is
+   preserved explicitly rather than left to survive collapsing — and
+   preserved in the one way that still lets the break happen. */
+.hero__space { white-space: pre-wrap; }
 .hero__title em { font-style: italic; letter-spacing: -0.03em; }
-.hero__stop { color: var(--mark); display: inline !important; }
+.hero__stop { color: var(--mark); }
 
 /* --- The statement under the cursor ----------------------------------
    The colour is not switched, it is poured. One gradient — the site's
@@ -1898,12 +2038,10 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .hero__title {
         /* The image is sized to the box, and the box is not the ink. The
            line box is 0.94 of the em and Castoro's is a full one, so the
-           ascenders stand about 0.03em above the first line and the
-           italic g hangs about 0.04em below the second, and the final y
-           of the first line carries a negative right sidebearing past
-           the fitted width. Painted through the glyphs, anything the
-           image does not reach is not drawn at all — the descenders
-           come off the statement.
+           J stands about 0.03em above the line and the italic g hangs
+           about 0.04em below it. Painted through the glyphs, anything
+           the image does not reach is not drawn at all — the ascender
+           and the descender come off the statement.
 
            So the painting area is grown to hold the ink and the growth
            is handed straight back: background-origin is the padding
@@ -1972,6 +2110,70 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     }
 }
 
+/* --- The statement, typed --------------------------------------------
+   The line writes itself out once, character by character, on the first
+   screen (src/hooks/useTypewriter.js). Everything below is the hiding —
+   the cadence, the caret's position and when the whole thing stops are
+   the hook's, and the reader who has asked for less motion never gets
+   here at all: the hook reads the preference itself and returns without
+   typing, the same way the carousel and the scroll system do, so there
+   is nothing in section 17 to undo.
+
+   The image stands down for the length of it. The sweep above is a
+   background painted through the glyphs, and a background cannot be
+   held back a character at a time — an untyped character would still be
+   drawn by the image its parent is painting. So the ink is handed back
+   instead, which is what the resting state of that sweep looks like
+   anyway, and the sweep is given the finished line the moment the
+   attribute comes off. It is an attribute rather than a class because
+   the entrance marks this same element with one from outside React —
+   see the note in src/sections/Hero.jsx.                              */
+.hero__title[data-typing] {
+    background-image: none;
+    color: var(--ink);
+}
+
+/* Hidden rather than transparent, and hidden rather than unrendered:
+   visibility keeps every character's box, so the line is laid out at
+   its full measure from the first frame and nothing on the screen
+   reflows as it fills. It is also the one way of hiding a character
+   that the character's own caret can opt back out of. */
+.hero__title[data-typing] .hero__char { visibility: hidden; }
+.hero__title[data-typing] .hero__char.is-on { visibility: visible; }
+
+/* Positioned only while the class is on, and that is not a detail. A
+   relatively positioned inline is a positioned descendant, and a
+   positioned descendant's glyphs are painted after the box's own
+   background rather than into it — so they are not in the mask the
+   sweep above is clipped to, and a statement whose characters were
+   permanently positioned would be painted through nothing at all the
+   moment the typing handed it back. It only needs a containing block
+   for as long as there is a caret to hang off it, which is exactly as
+   long as this attribute is on the heading. */
+.hero__title[data-typing] .hero__char { position: relative; }
+
+/* The caret stands at the head of the next character to arrive, so it
+   advances with the line and is gone the moment there is no next
+   character — which is the same moment the attribute comes off. One step
+   down the ramp, the register every subordinate mark on the site is
+   set in, so it reads on either ground without a second declaration.
+   Its measure is in em: the statement is a clamp, and a caret set in
+   pixels would be a hairline at one end of it and a slab at the
+   other. */
+.hero__title[data-typing] .hero__char.is-caret::before {
+    content: '';
+    visibility: visible;
+    position: absolute;
+    left: -0.055em;
+    /* Cap height to baseline, measured off the face rather than the
+       line box: the box is 0.94 of the em and Castoro's cap sits about
+       0.07 below the top of its content area. */
+    top: 0.07em;
+    width: 0.05em;
+    height: 0.8em;
+    background: var(--mark);
+}
+
 .hero__said {
     margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
     font-family: var(--font-display);
@@ -1981,55 +2183,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     color: var(--ink);
     max-width: 34ch;
     text-wrap: balance;
-}
-
-/* --- Discipline strip: the floor of the first screen ----------------- */
-
-.hero__strip {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-top: clamp(2rem, 5vh, 3.5rem);
-    border-top: 1px solid var(--ink);
-}
-
-.hero__cell {
-    display: flex;
-    align-items: baseline;
-    gap: 0.625rem;
-    padding: 0.875rem 0.75rem 1rem 0;
-    border-bottom: 1px solid var(--rule-2);
-}
-
-.hero__cell:nth-child(odd) { padding-right: 1rem; }
-
-.hero__cell-no {
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    color: var(--mark);
-    font-variant-numeric: tabular-nums;
-    flex: none;
-}
-
-.hero__cell-name {
-    font-size: var(--t-meta);
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink);
-    line-height: 1.3;
-}
-
-@media (min-width: 48rem) {
-    .hero__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .hero__cell {
-        border-bottom: 0;
-        padding: 1rem 1rem 1.25rem 0;
-        min-height: 5.5rem;
-        align-items: flex-start;
-    }
-    .hero__cell:nth-child(odd) { padding-right: 1rem; }
 }
 
 .hero__foot {
@@ -3968,7 +4121,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
        panel becomes Canvas, so its edges say nothing and its clip would
        only risk cropping what is in front of it. */
     .close__ground { clip-path: none !important; }
-    .masthead__inner, .menu-btn, .wordmark__initials { border: 1px solid CanvasText; }
+    .masthead__inner, .menu-btn, .wordmark__face { border: 1px solid CanvasText; }
     /* Backgrounds are flattened here, so the filled row that says "you
        are here" in the panel becomes every other row. The underline
        carries the state instead — and it has to, because the panel is
@@ -3984,7 +4137,8 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
        in the system's ink so the idiom survives. */
     .case-figure figcaption::before,
     .case-list li::before,
-    .case-next__label::before { background: CanvasText; }
+    .case-next__label::before,
+    .hero__title[data-typing] .hero__char.is-caret::before { background: CanvasText; }
 
     /* And so is the live dot, for the same reason. Its two states were
        two steps of a ramp that no longer exists here, and its breath
