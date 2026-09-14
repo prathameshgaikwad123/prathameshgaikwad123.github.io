@@ -20,11 +20,21 @@
    external URL, or a Behance project.
    =================================================================== */
 
-/* REPLACE: every path below points at a labelled SVG placeholder in
+/* REPLACE: the gallery plates below point at labelled SVG placeholders in
    public/assets/images/projects/. Swap the extension here when you drop in
-   a real 1600×1000 cover or 1400×1050 gallery plate, and rewrite the alt
-   text next to it. */
+   a real 1400×1050 gallery plate, and rewrite the alt text next to it. */
 const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
+
+/* The covers are the real thing, and they are not in the repository:
+   they are delivered from Cloudinary. Nothing about the carousel had to
+   change to take them — a cover is a URL, and the strip's `img` and the
+   WebGL pass that rasterises it both take a remote one as readily as a
+   local one. The second of those asks for it cross-origin, so the
+   delivery host has to answer with `Access-Control-Allow-Origin`; a
+   card whose texture cannot be read draws as ground and the strip
+   below still shows and links it. One entry per card, in carousel
+   order. */
+const cdn = (file) => `https://res.cloudinary.com/duhuxaukd/image/upload/${file}`;
 
 /* `short` is the index label — the name this project answers to in a
    list rather than on a page. The navigation panel's work list is set
@@ -46,8 +56,8 @@ export const projects = [
             'communication and ongoing optimisation.',
         meta: ['Web Design', 'UX', 'Information Architecture', 'Odoo', 'SEO'],
         go: 'Read the case study',
-        cover: img('voepl-website', 'cover.svg'),
-        coverAlt: 'Placeholder for the VOEPL corporate website case study cover image.',
+        cover: cdn('v1789371081/1_ivtwne.png'),
+        coverAlt: 'Cover image for the VOEPL corporate website case study.',
         /* The one project with a case study, so the one card that is a
            link. The URL is the one the carousel used to build from the
            slug, written out rather than derived now that not every card
@@ -94,8 +104,8 @@ export const projects = [
         summary:
             'Created the logo and overall brand identity, establishing a cohesive ' +
             'visual presence for the brand.',
-        cover: img('gem-opalus-identity', 'cover.svg'),
-        coverAlt: 'Placeholder for the Gem Opalus logo and brand identity project.',
+        cover: cdn('v1789371081/2_cxup32.png'),
+        coverAlt: 'Cover image for the Gem Opalus logo and brand identity project.',
         href: null,
     },
 
@@ -108,8 +118,8 @@ export const projects = [
         summary:
             'Designed and developed a mascot concept, contributing to the brand\u2019s ' +
             'visual identity and character development.',
-        cover: img('amanoya-mascot', 'cover.svg'),
-        coverAlt: 'Placeholder for the Amanoya mascot creation project.',
+        cover: cdn('v1789371082/4_dtll6y.png'),
+        coverAlt: 'Cover image for the Amanoya mascot creation project.',
         href: null,
     },
 
@@ -122,8 +132,8 @@ export const projects = [
         summary:
             'Created brochures and banners aligned with the company\u2019s branding and ' +
             'communication requirements.',
-        cover: img('flowid-collateral', 'cover.svg'),
-        coverAlt: 'Placeholder for the FlowID brochure and banner design project.',
+        cover: cdn('v1789371082/3_mgl8ld.png'),
+        coverAlt: 'Cover image for the FlowID brochure and banner design project.',
         href: null,
     },
 
@@ -136,8 +146,8 @@ export const projects = [
         summary:
             'Developed WordPress websites from provided Figma designs, translating UI ' +
             'designs into functional and responsive websites.',
-        cover: img('wordpress-japan', 'cover.svg'),
-        coverAlt: 'Placeholder for the WordPress website development project.',
+        cover: cdn('v1789371081/5_sfpk7n.png'),
+        coverAlt: 'Cover image for the WordPress website development project.',
         href: null,
     },
 
@@ -150,8 +160,8 @@ export const projects = [
         summary:
             'Contributed to concept development, creative direction, project setup, ' +
             'execution, management, and coordination of NFT projects.',
-        cover: img('nft-projects', 'cover.svg'),
-        coverAlt: 'Placeholder for the NFT projects creation and management work.',
+        cover: cdn('v1789371082/6_unamem.png'),
+        coverAlt: 'Cover image for the NFT projects creation and management work.',
         href: null,
     },
 
@@ -164,8 +174,8 @@ export const projects = [
         summary:
             'Created videos using AI-powered tools for concept development, visual ' +
             'creation, and video production.',
-        cover: img('ai-video', 'cover.svg'),
-        coverAlt: 'Placeholder for the AI-assisted video creation work.',
+        cover: cdn('v1789371083/7_kwczeb.png'),
+        coverAlt: 'Cover image for the AI-assisted video creation work.',
         href: null,
     },
 ];
