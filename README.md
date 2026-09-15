@@ -44,14 +44,14 @@ is written down at the point it matters — the top of stylesheet section 9.
 | Path | What it is |
 |---|---|
 | `index.html`, `work/*.html`, `404.html` | One HTML entry per published page. Each carries its own `<head>` — title, description, canonical, Open Graph, structured data — and the small script that settles the theme and the intro before the first paint. The body is a mount point. |
-| `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. |
+| `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. Under the footer, and in the navigation nowhere, there is one more thing — see below. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
-| `src/sections/` | The six bands of the home page. |
+| `src/sections/` | The six bands of the home page, and the panel hidden under its footer. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the rise of the hidden panel, the carousel's frame loop and input. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
@@ -110,6 +110,41 @@ To tune, change `end`, `scrub` and `ease` in one file at a time, and the
 distances in the tokens at the top of the stylesheet. To add an effect: a new
 file in `src/animations/`, a `useScrollEffect(...)` call in its section, and a
 resting state in the stylesheet first.
+
+## Under the fold
+
+The page ends at the footer. Carry on scrolling and a thin curved edge comes
+up from underneath it with a little of the site's one hue on it, and brings a
+panel into the screen — a small game, set in the page's own parts, that never
+starts itself.
+
+| Piece | What it does |
+|---|---|
+| `src/hooks/useLift.js` | Writes `--lift`, 0 to 1, on every scroll frame: 0 when the panel's top edge is at the bottom of the screen, 1 six tenths of a screen later. It is the whole interface to the stylesheet. |
+| `src/sections/Under.jsx` | The panel, and the curved edge — one path, drawn outside the panel's box and sitting on its top edge, so the panel's own ground runs up into the bump. |
+| `src/components/Aim.jsx` | The game: a hairline runs the measure, a mark sits on it, five passes to stop one on the other. One button carries every state. |
+| stylesheet §12.1 | `.under` and `.aim`. Every rule in the reveal is a function of `--lift` and nothing else. |
+
+It keeps the same three rules the scroll system keeps, and one more. The
+resting state — the stylesheet's — is the panel **up**, so a document whose
+script never arrives, the prerendered pass, and a reader who has asked for
+less motion all get the end of the reveal rather than the start of an
+animation that is never going to play. The rise itself is two compositor
+properties inside a `(prefers-reduced-motion: no-preference)` query, and the
+hook binds nothing outside it.
+
+The one more: **nothing is held.** The reveal plays across scrolling the
+reader was going to do anyway — no pin, no lock, no hijacked wheel, no added
+scroll. Because every frame is a function of scroll position, reading it
+backwards is free: scroll up and the panel goes back under the footer along
+exactly the path it came out on.
+
+Two prices are worth knowing. The reading-progress line no longer fills at the
+footer — it reaches about seven eighths there, which is the page telling the
+truth about how much of it is left. And the panel carries a `min-height` in
+`lvh`, because the rise is measured against the screen and has to have that
+much document under it to finish; on a laptop the game is already deeper than
+that and it costs nothing.
 
 ## The presence line
 
