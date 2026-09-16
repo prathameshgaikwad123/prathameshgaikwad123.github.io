@@ -10,6 +10,7 @@ import Behance from './sections/Behance.jsx';
 import About from './sections/About.jsx';
 import SideQuests from './sections/SideQuests.jsx';
 import Contact from './sections/Contact.jsx';
+import Explorations from './sections/Explorations.jsx';
 
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
@@ -22,6 +23,12 @@ import useReveal from './hooks/useReveal.js';
    Four of the five are in the navigation panel; the other one, the
    Behance spread, is arrived at by reading, which is the difference
    between a destination and a section.
+
+   Under the footer, and in the navigation nowhere, there is one more
+   thing. It is not a sixth band: it is a coda the reader only meets by
+   carrying on past the end of the page, and the edge that brings it
+   over the footer is the whole of how they find out it is there — see
+   src/sections/Explorations.jsx.
 
    Two layers. The navigation is fixed under everything; the page is the
    one layer above it, and opening the menu slides that layer off the
@@ -67,6 +74,7 @@ export default function App() {
                     <About />
                     <SideQuests />
                     <Contact />
+                    <Explorations />
                 </main>
             </div>
         </>
