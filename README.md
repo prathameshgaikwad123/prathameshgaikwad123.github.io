@@ -44,14 +44,14 @@ is written down at the point it matters — the top of stylesheet section 9.
 | Path | What it is |
 |---|---|
 | `index.html`, `work/*.html`, `404.html` | One HTML entry per published page. Each carries its own `<head>` — title, description, canonical, Open Graph, structured data — and the small script that settles the theme and the intro before the first paint. The body is a mount point. |
-| `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. |
+| `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. Under the footer, and in the navigation nowhere, there is a coda — see below. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
-| `src/sections/` | The six bands of the home page. |
+| `src/sections/` | The six bands of the home page, and the coda under its footer. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the pull under the footer, the carousel's frame loop and input. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
@@ -110,6 +110,56 @@ To tune, change `end`, `scrub` and `ease` in one file at a time, and the
 distances in the tokens at the top of the stylesheet. To add an effect: a new
 file in `src/animations/`, a `useScrollEffect(...)` call in its section, and a
 resting state in the stylesheet first.
+
+## The pull, under the footer
+
+One thing on the page is not in that system, and could not be: the reveal at
+the very bottom. `src/hooks/usePull.js`, stylesheet §12.1, and
+`src/sections/Explorations.jsx`.
+
+The page reads as if it ends at the contact band. Carry on scrolling and a lit
+edge comes up from under it, stretches like something elastic being pulled, and
+brings a small coda over the footer — four places the work carries on into, and
+nothing else.
+
+Two numbers drive all of it, written on every scroll frame. `--pull` is nought
+when the coda's top edge is level with the bottom of the screen and one when it
+is level with the top; `--pull-light` is how lit the edge is, up fast and back
+to nothing by the far end. Everything in §12.1 is a function of those two, so
+reading the gesture backwards is free and a flick lands on the same frame a
+crawl would.
+
+It is not in the scroll system for three reasons, all of them the same reason.
+The system does not run below 62rem and this is a phone-first effect; the
+system's effects move an element and this one deforms a path, which is not
+something a stylesheet or a tween of CSS properties can do; and the whole thing
+costs no library at all — one scroll listener, one rAF, two attribute writes and
+two custom properties a frame.
+
+Three things are worth knowing before changing it:
+
+1. **The resting state is nought**, which is an ordinary section at the bottom
+   of an ordinary page. That is what a document whose script never arrives, the
+   prerendered pass and a reader who has asked for less motion all get — and
+   they get the page's own band rule as the seam, since the curve that normally
+   is the seam is not drawn for them.
+2. **Write `--pull` on the smallest elements that read it, never on `<main>`.**
+   Custom properties inherit, so writing one is a style invalidation of
+   everything underneath. On a phone-class processor, `<main>` costs about a
+   hundred milliseconds a frame and the section costs nothing measurable; the
+   curve, the light and the grounds together are free next to that difference.
+   The footer's composition carries `[data-pull-hold]` so it can be written to
+   directly rather than through a shared ancestor.
+3. **The curve's shape is JavaScript and its measures are CSS.** `--pull-lift`,
+   `--pull-hold` and `--pull-lag` in stylesheet §1 decide how deep the gesture
+   is at each width; `membrane()` in the hook decides what the edge does with
+   that room. Tune the first three before touching the second.
+
+Two prices, both deliberate. The reading-progress line no longer fills at the
+footer — it stops short there, which is the page telling the truth about how
+much of it is left. And the coda carries a `min-height` in `lvh`, because the
+run is measured against the screen and has to have that much document under it
+to finish.
 
 ## The presence line
 

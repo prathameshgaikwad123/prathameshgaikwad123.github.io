@@ -25,7 +25,11 @@ export default function Contact() {
             <div className="close__ground" aria-hidden="true" />
 
             <div className="shell close__type">
-                <div className="grid">
+                {/* The one thing the band carries for the section under
+                    it: the composition left behind while that section's
+                    edge comes over it. Nothing here moves without it —
+                    see src/sections/Explorations.jsx. */}
+                <div className="grid" data-pull-hold="">
                     <p className="tag contact__tag" data-reveal="">
                         <span className="tag__no num">05</span>Contact
                     </p>
