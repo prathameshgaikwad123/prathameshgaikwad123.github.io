@@ -171,16 +171,29 @@ export default function useTheme(buttonRef) {
         const onClick = () => {
             const next = activeTheme() === 'dark' ? 'light' : 'dark';
 
-            wipe(toggle, () => root.setAttribute('data-theme', next));
-
             /* Storage is written only here — on a deliberate choice — so an
-               untouched visit keeps following the system preference. */
+               untouched visit keeps following the system preference. It is
+               written before the change rather than after it because
+               describe() reads it back to paint the browser's own chrome,
+               and describe() now travels with the change. */
             try {
                 localStorage.setItem(THEME_KEY, next);
             } catch {
                 /* storage blocked — the choice simply does not outlive the page */
             }
-            describe();
+
+            /* Both inside the change, and that is the whole of the fix
+               this needed. describe() works out what the button should
+               say by reading the theme that is actually on the document,
+               which was safe for as long as the swap was synchronous. A
+               view transition does not run its callback until the
+               browser has taken its snapshot, so called out here it read
+               the theme the reader had just left and named the button
+               after the one they were already in. */
+            wipe(toggle, () => {
+                root.setAttribute('data-theme', next);
+                describe();
+            });
         };
 
         describe();

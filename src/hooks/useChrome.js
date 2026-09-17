@@ -241,6 +241,23 @@ export default function useChrome() {
             window.removeEventListener('scroll', onScroll);
             window.removeEventListener('resize', onScroll);
             window.removeEventListener('load', onScroll);
+
+            /* The ticks are the one thing in this file that is created
+               rather than written to, so they are the one thing that
+               would survive a teardown and be built again beside
+               themselves — twice over in development, where React runs
+               every effect through once to check that it can be undone.
+               The attributes go back with them, for the same reason. */
+            nodes.forEach((node) => {
+                if (node.tick && node.tick.parentNode) node.tick.parentNode.removeChild(node.tick);
+                node.tick = null;
+            });
+
+            if (folio) {
+                folio.removeAttribute('data-on');
+                folio.removeAttribute('data-empty');
+                folio.classList.remove('is-turn');
+            }
         };
     }, []);
 }

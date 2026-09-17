@@ -3541,17 +3541,36 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .contact__mail > * { grid-area: 1 / 1; }
 
+/* Both halves carry their visibility as well as their opacity, and not
+   only because it fades better. Text at zero opacity is still text: it
+   is selected by a cursor dragged across the address, copied with it,
+   found by a browser's own search and handed to a screen reader. The
+   line that is not currently being said should be none of those things,
+   and `visibility` is the one property that says so while keeping the
+   box — which is what holds the width and stops the composition moving.
+
+   The delay is on the way out only. Going hidden, the switch waits for
+   the fade to finish; arriving, it happens at once, or the thing would
+   fade in from nothing to nothing. */
 .contact__mail-text,
-.contact__mail-said { transition: opacity var(--t-fast) var(--ease-io); }
+.contact__mail-said {
+    transition: opacity var(--t-fast) var(--ease-io),
+                visibility 0s linear var(--t-fast);
+}
 
 /* The one hue, on the one rule it is kept for: something that is being
    touched, for as long as it is being touched and no longer. A word
    that appears on a press and is gone a second and a half later is the
    most literal reading of that rule on the site. */
-.contact__mail-said { color: var(--flow); opacity: 0; }
+.contact__mail-said { color: var(--flow); opacity: 0; visibility: hidden; }
 
-.contact__mail[data-said] .contact__mail-text { opacity: 0; }
-.contact__mail[data-said] .contact__mail-said { opacity: 1; }
+.contact__mail[data-said] .contact__mail-text { opacity: 0; visibility: hidden; }
+
+.contact__mail[data-said] .contact__mail-said {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s, 0s;
+}
 
 .contact__cols {
     grid-column: 1 / -1;

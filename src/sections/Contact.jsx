@@ -43,9 +43,24 @@ const SAID_FOR = 1600;
    address. */
 function MailAddress() {
     const [said, setSaid] = useState(false);
+    /* What the status line is currently saying, kept apart from what the
+       address is showing. A live region only announces a change, so a
+       second copy inside the window — the reader who did not see the
+       first one and pressed again — would set the same sentence on a
+       region already holding it and be answered with silence. Clearing
+       it and writing it again on the next frame is a change; the visible
+       line never learns about any of it and does not flicker. */
+    const [note, setNote] = useState('');
     const timer = useRef(0);
+    const frame = useRef(0);
 
-    useEffect(() => () => window.clearTimeout(timer.current), []);
+    useEffect(
+        () => () => {
+            window.clearTimeout(timer.current);
+            window.cancelAnimationFrame(frame.current);
+        },
+        [],
+    );
 
     const onClick = (event) => {
         if (
@@ -66,8 +81,17 @@ function MailAddress() {
         clip.writeText(SITE.email).then(
             () => {
                 setSaid(true);
+                setNote('');
+                window.cancelAnimationFrame(frame.current);
+                frame.current = window.requestAnimationFrame(() =>
+                    setNote('Email address copied to the clipboard.'),
+                );
+
                 window.clearTimeout(timer.current);
-                timer.current = window.setTimeout(() => setSaid(false), SAID_FOR);
+                timer.current = window.setTimeout(() => {
+                    setSaid(false);
+                    setNote('');
+                }, SAID_FOR);
             },
             () => {
                 /* Asked for and refused, and by now the navigation this
@@ -96,7 +120,7 @@ function MailAddress() {
                 again afterwards, so the region announces the event
                 rather than describing a state. */}
             <p className="visually-hidden" role="status">
-                {said ? 'Email address copied to the clipboard.' : ''}
+                {note}
             </p>
         </div>
     );
