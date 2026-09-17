@@ -31,10 +31,31 @@ export default function closePanel({ gsap, mm, root, CONDITIONS, SCRUB }) {
         const composition = root.querySelector('.close__type');
         if (!ground) return;
 
+        /* Where the panel has finished opening.
+
+           On the home page it is a third of the way up the screen,
+           which is the whole point of the effect: the last band is a
+           screen and a half of composition, and the ground has to have
+           reached the edges before any of it is readable.
+
+           A case study ends on a single plate with a footer under it,
+           and there is simply not that much page left — the block's top
+           never gets within a third of the screen, so a window measured
+           that way would leave the panel a few per cent short of the
+           edges for good, which is worse than not animating it. That
+           page asks for `max` instead: the panel is open exactly when
+           the document is over, whatever the block's height and
+           whatever the window's.
+
+           Read off the section rather than passed in, because
+           useScrollEffect hands every effect the same four things and
+           this is the only tuning on the site that is genuinely per
+           section rather than per effect. The default is the home
+           page's, so the band that has always had this is untouched. */
         const trigger = {
             trigger: root,
             start: 'top bottom',
-            end: 'top 30%',
+            end: root.getAttribute('data-close-end') || 'top 30%',
             scrub: SCRUB,
         };
 

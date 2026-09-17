@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useGlassCarousel from '../hooks/useGlassCarousel.js';
 
 /* ===================================================================
@@ -32,6 +32,107 @@ import useGlassCarousel from '../hooks/useGlassCarousel.js';
    =================================================================== */
 
 const pad = (n) => String(n + 1).padStart(2, '0');
+
+/* Spent once per session, in the shape the intro's own flag already
+   uses — see the inline script in index.html. Blocked storage counts as
+   spent, for the same reason it does there: a session that cannot be
+   marked would otherwise be told the same thing on every page of it. */
+const DRAG_KEY = 'pg-drag';
+
+/* Not shown · showing · spent. Three states rather than two, because a
+   hint that is taken away the instant the reader touches the strip
+   disappears at exactly the moment their eye is on it. Spent, it is
+   still in the document long enough to fade. */
+const OFF = 0;
+const ON = 1;
+const SPENT = 2;
+
+/* The one thing the carousel does not say about itself.
+
+   Everything else here is either in the document or drawn in the glass:
+   the covers, the counter, the name of what is in the middle and where
+   it goes. That it can be thrown sideways is the one fact with nothing
+   to carry it — a canvas has no affordance, and the cursor only says so
+   once the pointer is already over it, which is after the moment this
+   is for.
+
+   So it is said once, quietly, when the strip is first actually in
+   front of the reader rather than when the page loads, and it is spent
+   by any gesture at all: a drag, a wheel, a key, a finger. A reader who
+   already knew is told nothing, because they will have moved the strip
+   before the sentence was worth reading.
+
+   Nothing here is offered to anybody who cannot act on it. The whole
+   line is hidden from assistive technology, because a carousel that can
+   be dragged is not news to a reader who cannot drag it — what they are
+   given instead is the widget the live strip already declares itself
+   to be, with its arrow keys and its polite counter, both of which are
+   announced without any help from here. */
+function useDragHint(stageRef, live, reduced) {
+    const [state, setState] = useState(OFF);
+
+    useEffect(() => {
+        if (!live || reduced) return undefined;
+
+        let seen = true;
+        try {
+            seen = sessionStorage.getItem(DRAG_KEY) === 'seen';
+        } catch (e) {
+            /* storage blocked — see DRAG_KEY */
+        }
+        if (seen) return undefined;
+
+        const stage = stageRef.current;
+        if (!stage) return undefined;
+
+        let io = null;
+        const events = ['pointerdown', 'wheel', 'keydown', 'touchstart'];
+
+        const off = () => {
+            events.forEach((type) => stage.removeEventListener(type, spend));
+            if (io) io.disconnect();
+            io = null;
+        };
+
+        function spend() {
+            setState(SPENT);
+            try {
+                sessionStorage.setItem(DRAG_KEY, 'seen');
+            } catch (e) {
+                /* see above */
+            }
+            off();
+        }
+
+        /* Every one of these is a gesture the strip answers, and every
+           one of them is therefore a reader who has worked it out.
+           Passive, because not one of them is being cancelled here —
+           the hook next door is what decides whether a wheel belongs to
+           the strip or to the page. */
+        events.forEach((type) => stage.addEventListener(type, spend, { passive: true }));
+
+        if (typeof IntersectionObserver === 'function') {
+            io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        setState((was) => (was === OFF ? ON : was));
+                        if (io) io.disconnect();
+                        io = null;
+                    });
+                },
+                { threshold: 0.35 },
+            );
+            io.observe(stage);
+        } else {
+            setState(ON);
+        }
+
+        return off;
+    }, [live, reduced, stageRef]);
+
+    return state;
+}
 
 /* The destination a card carries, or nothing. Relative, like every
    other link on this page: the site is a multi-page build served from
@@ -68,6 +169,8 @@ export default function WorkCarousel({ items, reduced }) {
         reduced,
         onOpen: open,
     });
+
+    const hint = useDragHint(stageRef, live, reduced);
 
     const on = items[shown] || items[0];
 
@@ -121,6 +224,17 @@ export default function WorkCarousel({ items, reduced }) {
                 <span className="glass__sub">{on.category}</span>
                 {live && on.go ? <span className="glass__hint">{on.go}</span> : null}
             </Label>
+
+            {hint ? (
+                <p
+                    className="glass__drag"
+                    data-spent={hint === SPENT ? '' : undefined}
+                    aria-hidden="true"
+                >
+                    Drag
+                    <span className="glass__drag-mark">&#8596;</span>
+                </p>
+            ) : null}
 
             <p className="glass__count num" aria-hidden="true">
                 {`${pad(shown)}/${pad(items.length - 1)}`}

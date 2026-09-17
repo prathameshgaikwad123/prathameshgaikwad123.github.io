@@ -3,6 +3,12 @@ import { SITE } from '../data/site.js';
 import Words from '../components/Words.jsx';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import wordReveal from '../animations/wordReveal.js';
+import lineReveal from '../animations/lineReveal.js';
+
+/* Two effects, one section. Declared here rather than inline for the
+   reason useScrollEffect gives: a new array on every render would take
+   both timelines down and build them again. */
+const EFFECTS = [wordReveal, lineReveal];
 
 /* The statement this section turns on. Split into words here rather
    than in script so the sentence is complete, selectable and correct
@@ -53,17 +59,43 @@ function GitHubChart() {
 }
 
 export default function About() {
-    const ref = useScrollEffect(wordReveal);
+    const ref = useScrollEffect(EFFECTS);
 
     return (
-        <section className="band" id="about" aria-labelledby="about-title" ref={ref}>
+        <section data-reveal-rule="" className="band" id="about" aria-labelledby="about-title" ref={ref}>
             <div className="shell">
                 <div className="grid">
                     <p className="tag about__tag" data-reveal="">
                         <span className="tag__no num">03</span>About
                     </p>
                     <h2 className="statement about__statement" id="about-title" data-reveal="">
-                        A designer who works across{' '}
+                        {/* Split by hand rather than by the splitter,
+                            because this statement is not only text: the
+                            last word of it is an annotated phrase with a
+                            drawing under it, and the full stop belongs
+                            to that word rather than to a line of its
+                            own. */}
+                        <span className="sw">
+                            <span>A</span>
+                        </span>{' '}
+                        <span className="sw">
+                            <span>designer</span>
+                        </span>{' '}
+                        <span className="sw">
+                            <span>who</span>
+                        </span>{' '}
+                        <span className="sw">
+                            <span>works</span>
+                        </span>{' '}
+                        <span className="sw">
+                            <span>across</span>
+                        </span>{' '}
+                        {/* Not masked — see .sw--free in stylesheet
+                            section 4. The stroke under this phrase hangs
+                            below the baseline, and a box that clipped
+                            the word would clip the drawing off it. */}
+                        <span className="sw sw--free">
+                        <span>
                         <span className="mark" data-reveal-draw="">
                             <em>disciplines</em>
                             {/* The one annotated phrase on the site. Two
@@ -97,6 +129,8 @@ export default function About() {
                             </svg>
                         </span>
                         .
+                        </span>
+                        </span>
                     </h2>
 
                     <div className="about__body">

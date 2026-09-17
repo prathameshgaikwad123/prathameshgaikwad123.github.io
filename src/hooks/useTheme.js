@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { onMedia, activeTheme } from './dom.js';
+import { onMedia, activeTheme, motionOK } from './dom.js';
 
 const THEME_KEY = 'pg-theme';
 
@@ -75,6 +75,8 @@ export default function useTheme(buttonRef) {
            inline in the first of those only, so a theme that arrived from
            the operating system cross-faded and the one that arrived from
            the button did not. */
+        let wiping = false;
+
         const swap = (change) => {
             root.classList.add('theme-switch');
             change();
@@ -83,10 +85,93 @@ export default function useTheme(buttonRef) {
             });
         };
 
+        /* The same swap, opened by a circle from the control that asked
+           for it.
+
+           All of it is a courtesy and none of it is a condition. Where
+           the API is missing, where the reader has asked for less
+           motion, and where a transition is already running, the change
+           is made the way it has always been made — instantly, with the
+           transitions suppressed for the frame — and nothing is
+           reported. Which is why swap() is still the thing that does the
+           work and this only stands in front of it.
+
+           The origin is the button's own centre and the radius is the
+           distance from there to the furthest corner of the window, so
+           the circle ends on the last pixel it has to cover rather than
+           on a multiple of the screen somebody guessed at. Both are
+           written to the root as custom properties, because what spends
+           them is a rule rather than a tween: a ::view-transition
+           pseudo-element is not in the document and cannot be reached
+           from script at all. */
+        const wipe = (origin, change) => {
+            if (
+                !origin
+                || wiping
+                || !motionOK()
+                || typeof document.startViewTransition !== 'function'
+            ) {
+                swap(change);
+                return;
+            }
+
+            const box = origin.getBoundingClientRect();
+            const x = box.left + box.width / 2;
+            const y = box.top + box.height / 2;
+
+            root.style.setProperty('--wipe-x', `${x}px`);
+            root.style.setProperty('--wipe-y', `${y}px`);
+            root.style.setProperty(
+                '--wipe-r',
+                `${Math.hypot(
+                    Math.max(x, window.innerWidth - x),
+                    Math.max(y, window.innerHeight - y),
+                )}px`,
+            );
+
+            /* Set before the snapshot is taken, which is the whole of
+               why it is an attribute and not a class added afterwards:
+               it stands down the two view-transition names the site
+               carries for its cross-document navigations (stylesheet
+               section 15). A named element is lifted out of the root
+               snapshot and animated on its own terms, which across a
+               wipe would be the masthead — and, on a case study, the
+               cover — changing theme on a different curve from the page
+               underneath them. */
+            root.setAttribute('data-wipe', '');
+            wiping = true;
+
+            const settle = () => {
+                wiping = false;
+                root.removeAttribute('data-wipe');
+                root.style.removeProperty('--wipe-x');
+                root.style.removeProperty('--wipe-y');
+                root.style.removeProperty('--wipe-r');
+            };
+
+            let run;
+            try {
+                run = document.startViewTransition(() => swap(change));
+            } catch (e) {
+                /* The API is there and refused. The theme still changes;
+                   that is the part that was never optional. */
+                swap(change);
+                settle();
+                return;
+            }
+
+            /* `finished` rejects when a transition is skipped or
+               interrupted — a second one starting, the tab going away
+               mid-flight — and an unhandled rejection is a console error
+               raised by something working exactly as intended. Both ends
+               settle, because both ends are over. */
+            run.finished.then(settle, settle);
+        };
+
         const onClick = () => {
             const next = activeTheme() === 'dark' ? 'light' : 'dark';
 
-            swap(() => root.setAttribute('data-theme', next));
+            wipe(toggle, () => root.setAttribute('data-theme', next));
 
             /* Storage is written only here — on a deliberate choice — so an
                untouched visit keeps following the system preference. */
@@ -101,6 +186,12 @@ export default function useTheme(buttonRef) {
         describe();
         if (toggle) toggle.addEventListener('click', onClick);
 
+        /* The system route is deliberately not wiped. A circle opening
+           from a point is an answer to a press at that point, and this
+           change did not come from anywhere on the page — it came from
+           the operating system, possibly while the reader was looking at
+           something else entirely. There is no origin to open from, so
+           it keeps the instant swap it has always had. */
         const offMedia = onMedia(darkQuery, () => {
             if (!readStored()) {
                 swap(() => root.removeAttribute('data-theme'));

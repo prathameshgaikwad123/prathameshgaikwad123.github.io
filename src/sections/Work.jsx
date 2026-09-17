@@ -1,5 +1,8 @@
 import WorkCarousel from '../components/WorkCarousel.jsx';
+import Words from '../components/Words.jsx';
 import { useReducedMotion } from '../hooks/dom.js';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import lineReveal from '../animations/lineReveal.js';
 import { projects } from '../data/projects.js';
 
 /* The centre of the site, and now one thing rather than two: the
@@ -21,16 +24,26 @@ import { projects } from '../data/projects.js';
    strip does. */
 export default function Work() {
     const reduced = useReducedMotion();
+    const ref = useScrollEffect(lineReveal);
 
     return (
-        <section className="band zone-warm" id="work" aria-labelledby="work-title">
+        <section className="band zone-warm" id="work" aria-labelledby="work-title" ref={ref}>
             <div className="shell">
                 <div className="grid">
                     <p className="tag work__tag" data-reveal="">
                         <span className="tag__no num">01</span>Selected Work
                     </p>
                     <h2 className="statement work__statement" id="work-title" data-reveal="">
-                        Work across interfaces, websites, brand systems and digital&nbsp;communication.
+                        {/* The non-breaking space is inside a word rather
+                            than between two, so the pair it holds
+                            together stays one span and stays on one
+                            line — which is what it was put there to
+                            do. */}
+                        <Words
+                            text={'Work across interfaces, websites, brand systems and digital\u00A0communication.'}
+                            className="sw"
+                            inner
+                        />
                     </h2>
                     <p className="tag tag--end work__count" data-reveal="">
                         <span className="tag__no num">Index</span>

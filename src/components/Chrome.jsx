@@ -9,7 +9,55 @@ export const SkipLink = () => (
     </a>
 );
 
-export const Progress = () => <div className="progress progress--bar" id="progress" aria-hidden="true" />;
+/* The reading line, and the folio that reads it.
+
+   The line is what it has always been: two pixels across the top of the
+   window, filling with the reader's progress down the document. What is
+   new is that it is a ruler rather than a gauge — one tick per band, at
+   the scroll position where that band becomes the one being read — and
+   that something beside it says which band that is.
+
+   The running head is set in the left margin, vertically, which is
+   where a folio goes and also the one part of the screen the site has
+   left empty on purpose: the masthead is two plates pinned to the
+   gutters with the whole span between them open, and a running head
+   laid across that span would close the gap the header was split to
+   make.
+
+   Both are chrome and both are hidden from assistive technology. The
+   sections they name are headings in the document and the reader who
+   cannot see this has a better instrument for the same question; what
+   is here is a picture of where you are, and a picture is the one thing
+   it would be dishonest to read out.
+
+   Everything inside is empty in the markup. It is written by
+   src/hooks/useChrome.js from the bands' own tags, so the names cannot
+   drift out of step with the page, and so the prerendered document does
+   not ship a running head naming a section nobody is reading yet. */
+export const Progress = () => (
+    <>
+        <div className="progress" id="progress" aria-hidden="true">
+            {/* The ruler first, the fill over it: what is behind the
+                reader is a solid line and what is ahead of them is the
+                measure still to come. The other order leaves a grey
+                notch in the fill at every band passed, which reads as a
+                break in the line rather than as a mark under it. */}
+            <span className="progress__ticks" />
+            <span className="progress__fill" />
+        </div>
+
+        <div className="folio" id="folio" aria-hidden="true">
+            <p className="folio__line">
+                <span className="folio__slot">
+                    <span className="folio__no num" />
+                </span>
+                <span className="folio__slot">
+                    <span className="folio__name" />
+                </span>
+            </p>
+        </div>
+    </>
+);
 
 export const BackToTop = () => (
     <a href="#top">

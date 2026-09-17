@@ -125,6 +125,21 @@
        in it.                                                         */
     --flow:        #CC021F;
     --scrim:       rgba(0, 0, 0, 0.6);
+    /* The reticle, and the one declaration in this file that is not
+       reading the ramp — because it is not a colour. The mark that
+       follows the pointer over a picture has to be legible over a
+       picture, and a picture is the one surface on the site whose
+       tones nothing here controls: a grey off the ramp is invisible
+       over half the covers in the carousel and the other half of the
+       plates on the Behance grid.
+
+       So it is not painted, it is differenced. White against the
+       difference blend is the operand that returns the exact opposite
+       of whatever is underneath it, at every pixel, in both themes and
+       over every image the site will ever carry — which is a rule about
+       contrast rather than a third tone, and is why it can be one value
+       declared once instead of a pair declared per theme. */
+    --invert:      #FFFFFF;
 
     /* --- The header's plates -------------------------------------------
        Two translucent plates that ride over the page, sharing one set of
@@ -664,9 +679,32 @@ em { font-style: italic; }
    hairline is the only thing left to say it, and the two seams that
    suppression used to remove — Work into About, Experience into
    Contact — are back to being the same rule as every other. */
-.band { padding-block: var(--band-y); }
+.band { position: relative; padding-block: var(--band-y); }
 
-.band + .band { border-top: 1px solid var(--rule); }
+/* The divider is drawn by the band rather than bordered onto it, for
+   one reason: a border cannot be scaled and a pseudo-element can.
+   Section 6 has carried an entrance for a rule that draws itself from
+   its left edge since the site was written, and there was never an
+   element to give it to — the divider was a border, and a border is not
+   a box. Same place, same weight, same token; what changes is that the
+   line is now something the entrance can reach.
+
+   The layer is named because the last band paints a ground of its own
+   over its whole padding box (.close__ground, section 12), and a
+   hairline underneath that is a hairline nobody sees. Two is above both
+   the ground and the composition, which for a line one pixel tall at
+   the very top edge of a section costs nothing and settles the one case
+   where the order would otherwise be decided by tree order. */
+.band + .band::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--rule);
+}
 
 /* A sub-block inside a band: same rules, smaller step. */
 .sub {
@@ -747,6 +785,39 @@ em { font-style: italic; }
 }
 
 .statement em { color: var(--ink); }
+
+/* The statement, split for the line reveal (src/animations/lineReveal.js).
+
+   At rest these are inline spans with nothing said about them, and the
+   sentence is exactly the sentence: one line of prose, selectable,
+   searchable, read whole. Everything that turns a word into a box is
+   held behind the attribute the effect writes and is taken off again
+   when it reverts — so a phone, a reader who has asked for less motion
+   and a document with no script in it are given the composition that
+   was always here, down to the pixel. */
+.statement[data-lines] .sw {
+    display: inline-block;
+    overflow: hidden;
+    /* An inline-block that hides its overflow takes its baseline from
+       the bottom of its own box rather than from the type inside it,
+       which would drop every word on the line by the depth of a
+       descender. Aligned to the bottom of the line box instead, so all
+       of them are answered the same way and the line stays straight. */
+    vertical-align: bottom;
+    /* The box is opened below the type so the mask does not cut the
+       descenders off, and pulled back by the same amount so that
+       nothing in the composition moves to make room for it. */
+    padding-bottom: 0.22em;
+    margin-bottom: -0.22em;
+}
+
+.statement[data-lines] .sw > span { display: block; }
+
+/* The annotated phrase in About is not masked. Its stroke is an
+   absolutely positioned SVG hanging a third of an em below the baseline
+   (section 10), and a box that clipped the word to the word would take
+   the drawing off it. */
+.statement[data-lines] .sw--free { overflow: visible; }
 
 .lead {
     font-size: var(--t-lead);
@@ -849,6 +920,77 @@ em { font-style: italic; }
     object-fit: cover;
     background: var(--paper-2);
 }
+
+/* --- The reticle -------------------------------------------------------
+   The same register mark as above, carried by the pointer, and drawn
+   only where there is a picture under it — the gate and the hit-test
+   are in src/components/Reticle.jsx and ReticleMark.jsx. Four corners
+   here rather than two: the pair above is a crop mark on a plate that
+   is not going anywhere, and this one is a frame being held over
+   something, which needs all four of its corners to read as a frame.
+
+   Differenced rather than painted. Everything else on the site sits on
+   a ground the stylesheet chose; this sits on whatever the photograph
+   underneath it happens to be, and there is no value on the ramp that
+   is legible over both a white studio shot and a black one. The blend
+   returns the opposite of the backdrop at every pixel instead, which is
+   the only answer that is right over an image nobody has seen yet. See
+   --invert in section 1.
+
+   It never takes a pointer event and it never hides the cursor. The
+   cursor is carrying real information here — the carousel writes grab,
+   grabbing and pointer onto itself depending on whether there is a card
+   under the pointer or only the ground between two — and a decoration
+   that erased that would be taking something away to add something.  */
+.reticle {
+    --reticle: 2.75rem;
+    --reticle-tick: 0.5rem;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 105;
+    width: var(--reticle);
+    height: var(--reticle);
+    margin: calc(var(--reticle) / -2) 0 0 calc(var(--reticle) / -2);
+    pointer-events: none;
+    mix-blend-mode: difference;
+    /* The resting state, for the frames before the library has written
+       anything to the element. */
+    opacity: 0;
+}
+
+.reticle__tick {
+    position: absolute;
+    width: var(--reticle-tick);
+    height: var(--reticle-tick);
+    border: 0 solid var(--invert);
+}
+
+.reticle__tick:nth-child(1) { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.reticle__tick:nth-child(2) { top: 0; right: 0; border-width: 1px 1px 0 0; }
+.reticle__tick:nth-child(3) { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+.reticle__tick:nth-child(4) { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+
+/* Said under the mark, and only where the picture leads somewhere. */
+.reticle__say {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    translate: -50% 0;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--invert);
+    opacity: 0;
+    transition: opacity var(--t-fast) var(--ease-io);
+}
+
+.reticle[data-open] .reticle__say { opacity: 1; }
+
 
 /* Figure caption — numbered, quiet, always the same shape. */
 .cap {
@@ -959,9 +1101,15 @@ em { font-style: italic; }
                 transform var(--t-slow) var(--ease) var(--d, 0s);
 }
 
-.js [data-reveal-rule] { transform: scaleX(0); transform-origin: left; }
+/* A rule drawing itself from its left edge: the hairline at the top of
+   every band but the first (section 3). The attribute goes on the band
+   and the transform goes on the line the band draws, for the same
+   reason the annotation below marks a <span> and animates the <path>
+   inside it — what is observed has to be an element, and what moves is
+   a pseudo-element it owns. */
+.js [data-reveal-rule]::before { transform: scaleX(0); transform-origin: left; }
 
-.js [data-reveal-rule].is-in {
+.js [data-reveal-rule].is-in::before {
     transform: none;
     transition: transform 0.9s var(--ease) var(--d, 0s);
 }
@@ -1162,6 +1310,21 @@ em { font-style: italic; }
 
 /* Scroll position, on the top edge of the viewport — the navigation no
    longer spans it to carry the line itself. */
+/* --- The reading line, and the folio ----------------------------------
+   The line across the top of the window is what it has always been, but
+   it is a ruler now rather than a gauge: the fill is a layer of its own
+   so that the ticks beside it can hold still while it passes over them.
+   That is the whole reason for the extra element — a bar that is itself
+   scaled cannot carry anything that is not scaled with it.
+
+   --p is still written to the container, and the fill reads it from
+   there, because a custom property set on a parent is inherited and a
+   transform is not. One write per frame, as before.
+
+   .progress--bar went with the restructuring. It restated the three
+   declarations the class beside it already made, which was harmless
+   while there was one element and misleading the moment there were
+   three.                                                             */
 .progress {
     position: fixed;
     top: 0;
@@ -1169,15 +1332,103 @@ em { font-style: italic; }
     z-index: 101;
     height: 2px;
     width: 100%;
+    pointer-events: none;
+}
+
+.progress__fill {
+    position: absolute;
+    inset: 0;
     background: var(--signal);
     transform: scaleX(var(--p, 0));
     transform-origin: left;
 }
 
-.progress--bar {
+.progress__ticks { position: absolute; inset: 0; }
+
+/* One mark per band, at the point in the scroll where that band becomes
+   the one being read — src/hooks/useChrome.js writes --t. They hang
+   below the line rather than sitting in it, so the fill passes over
+   their heads and what is left showing is the part of the ruler still
+   to come: a measure the reader can see the shape of before they have
+   read it, which is the one thing a percentage cannot say. */
+.progress__tick {
+    position: absolute;
     top: 0;
-    height: 2px;
-    transform: scaleX(var(--p, 0));
+    left: calc(var(--t, 0) * 100%);
+    width: 1px;
+    height: 6px;
+    background: var(--rule-2);
+}
+
+/* The running head, in the left margin, set the way a folio is set.
+
+   It is shown from 75rem because that is the first step at which the
+   margin is genuinely a margin — wide enough to hold eleven-pixel type
+   with air either side of it, rather than a strip the type is wedged
+   into. Below that the line at the top of the screen goes on doing the
+   whole job on its own, which is what it did before any of this.
+
+   Never visible while the navigation is open. The page slides off the
+   panel and this does not travel with it, so a running head left
+   showing would be a caption from one layer lying over another.      */
+.folio {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    display: none;
+    width: var(--gutter);
+    place-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--t-mid) var(--ease-io);
+}
+
+@media (min-width: 75rem) {
+    .js .folio[data-on] { display: grid; opacity: 1; }
+}
+
+/* Above the first band there is no band to name. */
+.js .folio[data-empty],
+body[data-menu-status='open'] .folio { opacity: 0; }
+
+.folio__line {
+    writing-mode: vertical-rl;
+    /* Read from the foot of the page upwards, which is the direction a
+       folio in a left margin is set in and the only one that does not
+       ask the reader to tilt their head the wrong way. */
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-3);
+}
+
+/* The window each half of the head turns inside. Without it the two
+   would cross-fade, and a running head that dissolves is a caption; one
+   that turns is a page being turned, which is the thing this is a
+   picture of. */
+.folio__slot { display: block; overflow: hidden; }
+
+.folio__no { color: var(--mark); font-variant-numeric: tabular-nums; }
+
+.folio.is-turn .folio__no,
+.folio.is-turn .folio__name { animation: folio-turn var(--t-mid) var(--ease) both; }
+
+/* The name follows the numeral rather than arriving with it, for the
+   same reason the two strokes of the annotation in About are drawn in
+   sequence: together they are one block changing, one after the other
+   they are somebody turning a page. */
+.folio.is-turn .folio__name { animation-delay: 60ms; }
+
+@keyframes folio-turn {
+    from { opacity: 0; transform: translateY(0.8em); }
 }
 
 /* --- The identity ----------------------------------------------------
@@ -2417,6 +2668,58 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 /* 80 × 39 at the reference's scale, radius 7, on a fill nine per cent
    darker than the ground. The padding is in em so it holds at any
    size. */
+/* Said once a session, under the counter, where there is ground rather
+   than a cover: the strip's own cards stop a little above it and
+   nothing else is down here. It is drawn in the same chip the counter
+   sits in so the two read as one instrument rather than as a notice
+   stuck to the glass, and it never takes a pointer — a hint you can
+   click is a control, and this is a sentence. */
+.glass__drag {
+    position: absolute;
+    left: 50%;
+    bottom: 3.5%;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.7em 1.1em;
+    border-radius: 0.5em;
+    background: var(--glass-pill, var(--nav-chip));
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--ink-2);
+    pointer-events: none;
+    animation: drag-say var(--t-slow) var(--ease-io) both;
+}
+
+/* Spent. It goes on the reader's own gesture, so it goes at the speed
+   of an answer rather than of an arrival — and it is the gesture, not
+   this, that they are looking at by then. */
+.glass__drag[data-spent] {
+    opacity: 0;
+    transition: opacity var(--t-mid) var(--ease-io);
+    animation: none;
+}
+
+/* The one part of the line that is not a word, and it is the part that
+   is actually the instruction. It travels the distance a strip would,
+   which is small and sideways and not a loop — a mark that animates
+   forever is a thing on the page rather than a thing being said. */
+.glass__drag-mark { animation: drag-swing 2.4s var(--ease-io) 3; }
+
+@keyframes drag-say {
+    from { opacity: 0; transform: translateY(0.5rem); }
+}
+
+@keyframes drag-swing {
+    0%, 62%, 100% { transform: none; }
+    76%           { transform: translateX(-0.2em); }
+    90%           { transform: translateX(0.2em); }
+}
+
 .glass__count {
     position: absolute;
     left: 50%;
@@ -2615,11 +2918,44 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
    name it is the same gap on all six, and the caption ends where the
    words do. */
 .beh__cap {
+    position: relative;
     display: grid;
     grid-template-columns: auto minmax(0, auto) minmax(0, 1fr);
     align-items: baseline;
     column-gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
 }
+
+/* The last thing the two galleries did not have in common. A side quest
+   answers a gesture four ways — the plate lifts, the picture eases in
+   behind its crop, the ticks and the title take the accent, and a rule
+   draws itself across the foot of the card (section 11). A plate here
+   answered it three ways: the rule was the one part of that sentence
+   the grid never had, because it had no rule to draw.
+
+   So the caption gets one, and it gets it the way the quests do: two
+   layers on one edge, the hairline as the border and the accent as a
+   pseudo-element scaled over the top of it, so that nothing moves,
+   nothing reflows and the line is the same weight drawn or not. The
+   rule also earns itself at rest — it is what sets the caption off from
+   the picture above it, which in a grid of six plates is the difference
+   between a caption and a line of type that happens to be underneath.  */
+.beh__cap::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--flow);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--t-slow) var(--ease);
+}
+
+.beh__link:hover .beh__cap::after,
+.beh__link:focus-visible .beh__cap::after { transform: scaleX(1); }
 
 .beh__names { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
 
@@ -3165,8 +3501,15 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     border-top: 1px solid var(--ink);
 }
 
+/* Two lines in one cell: the address, and what the address says when it
+   has just been copied. Both are always in the box, so the box is
+   always the width of the address and nothing in the composition can be
+   moved by a word arriving. Grid rather than absolute positioning
+   because the wrap above still has to be sized by something, and the
+   address is the only one of the two that should ever be doing the
+   sizing. */
 .contact__mail {
-    display: inline-block;
+    display: inline-grid;
     font-family: var(--font-display);
     font-size: clamp(1.375rem, 4.6vw, 3.5rem);
     line-height: 1.05;
@@ -3186,6 +3529,20 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
    that is the ink to the ink, so it is gone and its transition segment
    with it. */
 .contact__mail:hover { background-size: 100% 1px; }
+
+.contact__mail > * { grid-area: 1 / 1; }
+
+.contact__mail-text,
+.contact__mail-said { transition: opacity var(--t-fast) var(--ease-io); }
+
+/* The one hue, on the one rule it is kept for: something that is being
+   touched, for as long as it is being touched and no longer. A word
+   that appears on a press and is gone a second and a half later is the
+   most literal reading of that rule on the site. */
+.contact__mail-said { color: var(--flow); opacity: 0; }
+
+.contact__mail[data-said] .contact__mail-text { opacity: 0; }
+.contact__mail[data-said] .contact__mail-said { opacity: 1; }
 
 .contact__cols {
     grid-column: 1 / -1;
@@ -3740,6 +4097,14 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 /* --- Next project --------------------------------------------------- */
 
+/* The document's ending, and the same one the home page has: the ground
+   arrives as a contained panel and opens out to the edges of the screen
+   (src/animations/closePanel.js, and the .close rules in section 12,
+   which this shares outright rather than restating). Everything the
+   band needs is already in those two places; what is left here is the
+   plate that sits on it. */
+.case-close { padding-block: clamp(1rem, 3vw, 2rem); }
+
 .case-next { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
 
 .case-next__label {
@@ -3791,6 +4156,50 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .case-next__go svg { width: 1rem; height: 0.75rem; color: currentColor; transition: transform var(--t-mid) var(--ease); }
 .case-next a:hover .case-next__go svg { transform: translateX(0.3rem); }
 
+/* The next project's cover, where the record carries one. The plate is
+   still one link and still reads top to bottom on a narrow window; the
+   two columns are what a wide one is for, and they are asked for by the
+   attribute rather than by the class, so a `next` with nothing to show
+   is not given a second column to leave empty. */
+.case-next__cover {
+    display: block;
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.case-next__cover .frame__media img {
+    display: block;
+    aspect-ratio: 16 / 10;
+    transition: transform var(--t-slow) var(--ease);
+}
+
+.case-next a:hover .case-next__cover .frame__media img,
+.case-next a:focus-visible .case-next__cover .frame__media img { transform: scale(1.03); }
+
+.case-next a:hover .case-next__cover.frame::before,
+.case-next a:hover .case-next__cover.frame::after,
+.case-next a:focus-visible .case-next__cover.frame::before,
+.case-next a:focus-visible .case-next__cover.frame::after { border-color: var(--flow); }
+
+@media (min-width: 62rem) {
+    .case-next a[data-cover] {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+        align-items: start;
+        column-gap: clamp(2rem, 5vw, 4rem);
+    }
+
+    .case-next a[data-cover] .case-next__label,
+    .case-next a[data-cover] .case-next__title,
+    .case-next a[data-cover] .case-next__go { grid-column: 1; }
+
+    .case-next a[data-cover] .case-next__cover {
+        grid-column: 2;
+        grid-row: 1 / 4;
+        align-self: center;
+        margin-top: 0;
+    }
+}
+
 
 /* ====== 14. 404 ===================================================== */
 
@@ -3831,6 +4240,74 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
+/* ====== 14.1 THE GRID, SHOWN ======================================= */
+/* Drawn with the layout's own .shell and .grid rather than with a
+   picture of them — see src/components/Grid.jsx for why that is the
+   whole point. Nothing here restates a measurement; the only things
+   this section declares are how the marks are painted and how tall they
+   have to be for the grid to reach the foot of the screen.
+
+   Under the two floating instruments and over everything else: the
+   reading line and the folio are chrome, and chrome is not what the
+   grid is being checked against.                                     */
+
+.rule-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+}
+
+.rule-grid .shell,
+.rule-grid .grid { height: 100%; }
+
+/* Where the shell stops and the margin begins. Dashed, because it is
+   the one line in the drawing that is not a thing on the page — the
+   columns are real and this is where they end. */
+.rule-grid .shell { border-inline: 1px dashed var(--rule-2); }
+
+.rule-grid__col {
+    grid-row: 1;
+    background: var(--signal-soft);
+    border-inline: 1px solid var(--rule);
+}
+
+/* The grid really is one column below this step, so one column is what
+   is drawn. The others are removed rather than hidden, so that nothing
+   is left to be placed into columns the layout does not have. */
+@media (max-width: 47.999rem) {
+    .rule-grid__col + .rule-grid__col { display: none; }
+}
+
+/* What is on screen says how to put it away, which is the only thing
+   somebody who found the key by accident needs to be told. */
+.rule-grid__say {
+    position: absolute;
+    left: var(--gutter);
+    bottom: clamp(1rem, 2.5vh, 1.75rem);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.rule-grid__say b {
+    display: grid;
+    place-content: center;
+    min-width: 1.5em;
+    padding: 0.35em 0.4em;
+    border: 1px solid var(--rule-2);
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ink-2);
+}
+
+
 /* ====== 15. VIEW TRANSITIONS ======================================= */
 /* Cross-document only: the cover of the project being opened settles
    into the case study. Progressive — browsers without the API navigate
@@ -3855,6 +4332,67 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
     @keyframes vt-out { to { opacity: 0; } }
     @keyframes vt-in  { from { opacity: 0; } }
+}
+
+/* The cover the transition is carrying, while the reader is on their way
+   to it. At rest the name belongs to this page's own cover, which is
+   what a project arriving from the index settles into; from the press on
+   the plate at the foot of the page until the document is replaced, it
+   belongs to the plate instead, so what settles into the next project's
+   cover is the picture of the next project. Never both — see the note in
+   src/CaseStudy.jsx for what a browser does with a name it is handed
+   twice.                                                              */
+@media (prefers-reduced-motion: no-preference) {
+    html[data-going] .case-figure--cover img { view-transition-name: none; }
+    html[data-going] .case-next__cover img { view-transition-name: project-cover; }
+}
+
+
+/* --- The theme, turning over -----------------------------------------
+   The one same-document transition on the site, and the only thing in
+   this section that is not a navigation: the incoming theme is revealed
+   by a circle opening from the middle of the control that was pressed,
+   over an outgoing theme that does not move at all.
+   src/hooks/useTheme.js writes the origin and the radius and takes the
+   attribute off again when the transition is over; this is where they
+   are spent, because a ::view-transition pseudo-element is not in the
+   document and script cannot reach it.
+
+   Everything is held behind [data-wipe] so that the cross-document
+   rules above keep the cross-fade they were written with. Reduced
+   motion never arrives here — the hook checks before it starts, and
+   section 16 would stop the animation even if it did — which leaves the
+   attribute on the root for one frame and the theme simply changed,
+   which is the correct answer to the preference rather than a shortened
+   version of the wrong one.                                          */
+html[data-wipe]::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+html[data-wipe]::view-transition-new(root) {
+    /* Over the old snapshot rather than blended with it. Blended, the
+       two themes average into a grey halfway house wherever the circle
+       has reached, which is a third ground the system does not have. */
+    z-index: 1;
+    animation: theme-wipe 0.56s var(--ease-io) both;
+    mix-blend-mode: normal;
+}
+
+/* The two names the site carries for its cross-document navigations are
+   stood down for the length of the wipe — see the note in useTheme.js.
+   They are written here rather than removed in script because a name is
+   a style, and a style the stylesheet owns is one the transition cannot
+   leave behind if it is interrupted. */
+html[data-wipe] .masthead,
+html[data-wipe] .case-figure--cover img { view-transition-name: none; }
+
+/* The fallbacks are the centre of the screen and a radius large enough
+   to leave it, so a wipe that somehow starts without its numbers is
+   still a wipe rather than a page that never arrives. */
+@keyframes theme-wipe {
+    from { clip-path: circle(0 at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
+    to   { clip-path: circle(var(--wipe-r, 150vmax) at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
 }
 
 
@@ -3885,7 +4423,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal] { opacity: 1; transform: none; }
-    .js [data-reveal-rule] { transform: none; }
+    .js [data-reveal-rule]::before { transform: none; }
     /* The statement's sweep (section 8) is shortened to nothing by the
        rule above, which leaves its stop waiting most of a second in
        front of a change that no longer takes any time. A delay is the
@@ -3984,6 +4522,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
     .glass__cell img { border: 1px solid CanvasText; }
 
+    /* A blend has nothing to blend with once the palette is flattened,
+       so the mark is drawn in the system's own ink instead. */
+    .reticle { mix-blend-mode: normal; }
+    .reticle__tick { border-color: CanvasText; }
+    .reticle__say { color: CanvasText; }
+
     /* Grounds carry no information once colour is flattened: the closing
        panel becomes Canvas, so its edges say nothing and its clip would
        only risk cropping what is in front of it. */
@@ -4027,7 +4571,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 @media print {
     .masthead, .menu, .theme-toggle, .skip-link,
-    .case-next, .progress, .hero__scroll, .intro { display: none !important; }
+    .case-next, .progress, .folio, .rule-grid, .reticle, .hero__scroll, .intro { display: none !important; }
 
     /* The carousel survives the loss of the scroll that drives it: it is
        the whole of the work now, so on paper it becomes what it already

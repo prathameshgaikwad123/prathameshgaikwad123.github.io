@@ -1,4 +1,7 @@
 import { behance, BEHANCE_PROFILE } from '../data/behance.js';
+import Words from '../components/Words.jsx';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import lineReveal from '../animations/lineReveal.js';
 
 /* The gallery, standing between the index and the writing.
 
@@ -20,15 +23,27 @@ import { behance, BEHANCE_PROFILE } from '../data/behance.js';
    the caption is the same mark the elsewhere links in the panel carry,
    and the new tab is given the two attributes it needs to be safe.  */
 export default function Behance() {
+    const ref = useScrollEffect(lineReveal);
+
     return (
-        <section className="band" id="behance" aria-labelledby="behance-title">
+        <section
+            data-reveal-rule=""
+            className="band"
+            id="behance"
+            aria-labelledby="behance-title"
+            ref={ref}
+        >
             <div className="shell">
                 <div className="grid">
                     <p className="tag beh__tag" data-reveal="">
                         <span className="tag__no num">02</span>Selected Behance Work
                     </p>
                     <h2 className="statement beh__statement" id="behance-title" data-reveal="">
-                        Selected creative work and visual&nbsp;explorations.
+                        <Words
+                            text={'Selected creative work and visual\u00A0explorations.'}
+                            className="sw"
+                            inner
+                        />
                     </h2>
                     <p className="tag tag--end beh__count" data-reveal="">
                         <span className="tag__no num">Plates</span>
