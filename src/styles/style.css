@@ -1389,9 +1389,18 @@ em { font-style: italic; }
     .js .folio[data-on] { display: grid; opacity: 1; }
 }
 
-/* Above the first band there is no band to name. */
-.js .folio[data-empty],
-body[data-menu-status='open'] .folio { opacity: 0; }
+/* Above the first band there is no band to name; and while the
+   navigation is open the page has slid off the panel and this does not
+   travel with it, so a running head left showing would be a caption from
+   one layer lying over another.
+
+   Both are written at the weight the rule above them carries — two
+   classes and an attribute — rather than at the weight that reads most
+   easily. A state that loses on specificity to the state it exists to
+   override is not a state at all, and the media query the rule above
+   sits in does nothing to change that. */
+.js .folio[data-on][data-empty],
+.js body[data-menu-status='open'] .folio[data-on] { opacity: 0; }
 
 .folio__line {
     writing-mode: vertical-rl;
@@ -4430,6 +4439,14 @@ html[data-wipe] .case-figure--cover img { view-transition-name: none; }
        only part of that gesture the rule above does not reach, so it is
        taken here. */
     .hero__title:hover .hero__stop { transition-delay: 0s; }
+    /* The folio's two halves turn one after the other, which the rule
+       above shortens to nothing while leaving the wait in front of it:
+       the name would sit at the start of its own animation — which is
+       out of sight — for sixty milliseconds, on every band, every time.
+       The same correction the side quests' grid and the hero's stop
+       already carry, for the same reason. */
+    .folio.is-turn .folio__name { animation-delay: 0s; }
+
     /* The navigation's travel is positional too, and this is the one place
        where shortening is not enough: a hundredth of a millisecond is
        still a transition, with a frame to start it and a frame to finish
@@ -4521,6 +4538,17 @@ html[data-wipe] .case-figure--cover img { view-transition-name: none; }
     .zone-invert, .zone-warm { background: Canvas; color: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
     .glass__cell img { border: 1px solid CanvasText; }
+
+    /* Three lines that used to be borders, or are new, and a flattened
+       palette forces an author's background to the system's ground: a
+       hairline painted rather than bordered is a hairline that is not
+       there. Named in the system's own ink, which is honoured, they are
+       drawn again — the band dividers as they always were, and the
+       reading line and its ruler for the first time, since the bar was
+       painted this way before any of this and had the same problem. */
+    .band + .band::before,
+    .progress__fill,
+    .progress__tick { background: CanvasText; }
 
     /* A blend has nothing to blend with once the palette is flattened,
        so the mark is drawn in the system's own ink instead. */
@@ -4691,6 +4719,13 @@ html[data-wipe] .case-figure--cover img { view-transition-name: none; }
     .band { padding-block: 1.25rem; break-inside: avoid; }
 
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+    /* The band dividers, which are an entrance now rather than a border
+       and would otherwise print only for the bands the reader happened
+       to have scrolled past before pressing print. */
+    .js [data-reveal-rule]::before { transform: none !important; }
+    /* One more part of the carousel that needed a screen: a strip that
+       cannot be dragged does not need telling that it can. */
+    .glass__drag { display: none !important; }
 
     a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: var(--ink-3); }
 }
