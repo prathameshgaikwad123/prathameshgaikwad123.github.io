@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Loader from './components/Loader.jsx';
 import Navigation from './components/Navigation.jsx';
 import Menu from './components/Menu.jsx';
 import Underlay from './components/Underlay.jsx';
+import Grid from './components/Grid.jsx';
+import Reticle from './components/Reticle.jsx';
 import Lightbox, { Zoomable } from './components/Lightbox.jsx';
 import { PageFoot, Progress, SkipLink } from './components/Chrome.jsx';
 import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
@@ -15,8 +17,62 @@ import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
 import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
+import useScrollEffect from './hooks/useScrollEffect.js';
+import closePanel from './animations/closePanel.js';
 
 const HOME = '../index.html';
+
+/* Two elements on one page cannot carry the same view-transition name —
+   a browser handed a duplicate abandons the transition altogether — and
+   a case study has two covers on it the moment the plate at the foot of
+   the page carries one: its own, at the top, and the next project's.
+
+   So the name is moved rather than shared, and it is moved in the
+   stylesheet (section 15) off an attribute written here, for the same
+   reason the theme wipe does it that way: a name is a style, and a style
+   the stylesheet owns cannot be left behind by a navigation that never
+   happened. From the press until the document goes away, the cover that
+   is named is the one the reader is travelling to.
+
+   Only a plain press. A modified click opens a tab, which is not a
+   navigation this document is taking part in, and naming anything for
+   it would leave the mark on a page the reader is still reading. */
+function useHandover() {
+    useEffect(() => {
+        const root = document.documentElement;
+        const link = document.querySelector('.case-next a[data-cover]');
+        if (!link) return undefined;
+
+        const go = (event) => {
+            if (
+                event.defaultPrevented
+                || event.button !== 0
+                || event.metaKey
+                || event.ctrlKey
+                || event.shiftKey
+                || event.altKey
+            ) {
+                return;
+            }
+            root.setAttribute('data-going', '');
+        };
+
+        /* A page restored from the back-forward cache comes back exactly
+           as it left, attribute and all — which on this page would be a
+           document whose own cover has given its name away to a plate at
+           the bottom of it. */
+        const back = () => root.removeAttribute('data-going');
+
+        link.addEventListener('click', go);
+        window.addEventListener('pageshow', back);
+
+        return () => {
+            link.removeEventListener('click', go);
+            window.removeEventListener('pageshow', back);
+            root.removeAttribute('data-going');
+        };
+    }, []);
+}
 
 /* One fact row. Most values are a plain string; the one that is still to be
    confirmed carries its marker through rather than being filled in. */
@@ -50,6 +106,13 @@ export default function CaseStudy({ slug }) {
 
     useChrome();
     useUnderlayNav(menu.open);
+    useHandover();
+
+    /* The same ending the home page has, for the same reason: the last
+       thing in a document is a ground closing over rather than another
+       block of it passing. One effect, one set of tokens — see
+       src/animations/closePanel.js. */
+    const closeRef = useScrollEffect(closePanel);
 
     const blocks = caseBlocks[slug](project, setZoomed);
 
@@ -73,6 +136,8 @@ export default function CaseStudy({ slug }) {
                 onClick={menu.onPanelClick}
             />
             <Underlay onClick={menu.onOverlayClick} />
+            <Grid />
+            <Reticle />
             <Progress />
 
             <div data-main="" inert={menu.open || undefined}>
@@ -147,12 +212,44 @@ export default function CaseStudy({ slug }) {
                         </div>
 
                         {/* ---------- NEXT ---------- */}
-                        <div className="zone-invert">
-                            <div className="shell">
+                        <div className="case-close zone-invert close" data-close-end="max" ref={closeRef}>
+                            {/* The band's ground, as its own layer, so it can
+                                arrive as a contained panel and open out to
+                                the edges without the plate inside it ever
+                                moving. Full bleed is the resting state. */}
+                            <div className="close__ground" aria-hidden="true" />
+
+                            <div className="shell close__type">
                                 <nav className="case-next" aria-label={project.next.aria || 'Next project'}>
-                                    <a href={project.next.href}>
+                                    {/* The cover is optional on the record and
+                                        the plate is a complete link without it:
+                                        a `next` can point at a project, and
+                                        then it has one, or at somewhere on the
+                                        home page, and then there is no cover to
+                                        show and nothing is invented. See the
+                                        note on `next` in src/data/projects.js. */}
+                                    <a
+                                        href={project.next.href}
+                                        data-cover={project.next.cover ? '' : undefined}
+                                    >
                                         <p className="case-next__label">{project.next.label}</p>
                                         <p className="case-next__title">{project.next.title}</p>
+
+                                        {project.next.cover ? (
+                                            <span className="case-next__cover frame">
+                                                <span className="frame__media">
+                                                    <img
+                                                        src={project.next.cover}
+                                                        alt={project.next.coverAlt || ''}
+                                                        width="1600"
+                                                        height="1000"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                </span>
+                                            </span>
+                                        ) : null}
+
                                         <span className="case-next__go" aria-hidden="true">
                                             <ArrowRight />
                                         </span>

@@ -2,6 +2,8 @@ import Loader from './components/Loader.jsx';
 import Navigation from './components/Navigation.jsx';
 import Menu from './components/Menu.jsx';
 import Underlay from './components/Underlay.jsx';
+import Grid from './components/Grid.jsx';
+import Reticle from './components/Reticle.jsx';
 import { Progress, SkipLink } from './components/Chrome.jsx';
 
 import Hero from './sections/Hero.jsx';
@@ -58,6 +60,8 @@ export default function App() {
                 onClick={menu.onPanelClick}
             />
             <Underlay onClick={menu.onOverlayClick} />
+            <Grid />
+            <Reticle />
 
             <div data-main="" inert={menu.open || undefined}>
                 <main id="main">

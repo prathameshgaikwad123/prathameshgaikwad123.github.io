@@ -87,6 +87,15 @@ export const projects = [
            at the second case study, and there is no second case study
            any more — so it points where the last project's pointer
            always pointed, which is the way out of the work. */
+        /* Where the case study goes at the end of itself. `href`, `label`,
+           `title` and `aria` are the plate; `cover` and `coverAlt` are
+           optional and are what make it carry a picture. A `next` that
+           points at another project should have them — the cover is also
+           what the cross-document view transition settles into on the
+           page it opens (stylesheet section 15). This one points back at
+           the home page's last band rather than at a project, because
+           there is only one case study so far, and a plate for a section
+           has no cover to show. */
         next: {
             href: '../index.html#contact',
             label: 'Next',

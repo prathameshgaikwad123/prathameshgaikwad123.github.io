@@ -31,6 +31,14 @@ export default function useReveal(ready) {
         const counts = [];
 
         revealed.forEach((el) => {
+            /* A rule is not a list item. It is one line at the top of one
+               band, arriving on its own as that band is reached, and a
+               band that waited its turn behind the three above it would
+               be waiting on sections the reader passed minutes ago. So
+               it neither takes a number nor spends one — the tally below
+               is for things that arrive together. */
+            if (el.hasAttribute('data-reveal-rule')) return;
+
             const parent = el.parentNode;
             let i = seen.indexOf(parent);
             if (i === -1) {

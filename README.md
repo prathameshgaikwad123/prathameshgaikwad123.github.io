@@ -19,9 +19,13 @@ npm run preview  # serve the production build
 React with Vite, and two animation systems that never overlap.
 
 **Framer Motion** handles component motion — anything that answers a pointer,
-a focus ring or a press. Its shared patterns live in `src/motion/`. No section
-is built on them at the moment; they are there so the next one that needs them
-does not have to invent its own timing.
+a focus ring or a press. Its shared patterns live in `src/motion/`. One thing is
+built on it: the reticle, the register mark that follows the pointer over the
+site's pictures (`src/components/Reticle.jsx`). It is the only spring on the
+site, and the library is fetched rather than imported — `lazy()` behind a gate
+that asks for a fine pointer and a reader who has not asked for less motion, so
+a phone never downloads it. `vite.config.js` already gave it a chunk of its
+own.
 
 **GSAP with ScrollTrigger** handles scroll choreography — anything whose
 progress is the reader's own progress down the page. Every effect is one file
@@ -47,7 +51,7 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The six bands of the home page. |
-| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the shared page furniture. |
+| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the reticle, the grid overlay, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
@@ -87,6 +91,8 @@ block in the stylesheet, and one section of the page.
 | 3 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
 | 4 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
 | 5 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
+| 6 | Work · Behance · About · Contact | Each band's opening statement arriving a line at a time out of a mask | `lineReveal.js` |
+| 7 | Case study | The same ending as the home page: the plate at the foot of the page arriving as a panel and opening out | `closePanel.js` *(reused)* |
 
 Three rules hold the whole thing together, and they are worth knowing before
 changing any of it:
@@ -110,6 +116,41 @@ To tune, change `end`, `scrub` and `ease` in one file at a time, and the
 distances in the tokens at the top of the stylesheet. To add an effect: a new
 file in `src/animations/`, a `useScrollEffect(...)` call in its section, and a
 resting state in the stylesheet first.
+
+## The small instruments
+
+Four things that are chrome rather than content, and are worth knowing about
+because none of them is discoverable by reading the markup.
+
+**The folio.** The line across the top of the window still fills with the
+reader's progress, but it carries one tick per band now — placed at the scroll
+position where that band becomes the one being read — and a running head in the
+left margin names it: `03 — About`. Both are written straight to the DOM by
+`src/hooks/useChrome.js`, from the bands' own tags, so the names cannot drift
+out of step with the page. The running head is shown from 75rem, where the
+margin is wide enough to hold it, and hidden while the navigation is open. A
+case study has no bands, so it has no folio.
+
+**The reticle.** Over a picture — the carousel, a Behance plate, a side quest, a
+portrait, a case study's figures — the pointer carries the same crop mark the
+stylesheet draws on every frame, and it says `Open` where the picture leads
+somewhere. Over everything else there is no reticle at all. It is differenced
+rather than painted (`--invert`, section 1), because it has to be legible over
+photographs nobody has chosen yet.
+
+**Press `G`.** The grid the page is set on, drawn over it: twelve columns, the
+gaps, and the two edges where the shell stops. It is built from the layout's own
+`.shell` and `.grid` rather than from a picture of them, so it cannot disagree
+with the real thing. Nothing on the page advertises it. The state is kept for
+the session, because the reason to have it open is to walk the site with it.
+
+**The theme wipe.** The toggle swaps the theme inside a view transition, with
+the new theme revealed by a circle opening from the button itself. It stands
+down where the API is missing, where a transition is already running, and for a
+reader who has asked for less motion — all three fall back to the instant swap
+the site has always had. A theme that changes because the operating system
+changed is not wiped: there is no point on the page for the circle to open from.
+
 
 ## The presence line
 

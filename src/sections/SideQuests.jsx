@@ -1,6 +1,9 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { sideQuests } from '../data/sideQuests.js';
+import Words from '../components/Words.jsx';
 import { useEnhanced } from '../hooks/dom.js';
+import useScrollEffect from '../hooks/useScrollEffect.js';
+import lineReveal from '../animations/lineReveal.js';
 
 /* ===================================================================
    SIDE QUESTS
@@ -99,6 +102,7 @@ function Quest({ item }) {
 
 export default function SideQuests() {
     const enhanced = useEnhanced();
+    const sectionRef = useScrollEffect(lineReveal);
     const railRef = useRef(null);
     const btnRefs = useRef({});
 
@@ -187,14 +191,24 @@ export default function SideQuests() {
     };
 
     return (
-        <section className="band" id="side-quests" aria-labelledby="side-quests-title">
+        <section
+            data-reveal-rule=""
+            className="band"
+            id="side-quests"
+            aria-labelledby="side-quests-title"
+            ref={sectionRef}
+        >
             <div className="shell">
                 <div className="grid">
                     <p className="tag quests__tag" data-reveal="">
                         <span className="tag__no num">04</span>Side Quests
                     </p>
                     <h2 className="statement quests__statement" id="side-quests-title" data-reveal="">
-                        Things I made because I&nbsp;wanted&nbsp;to.
+                        <Words
+                            text={'Things I made because I\u00A0wanted\u00A0to.'}
+                            className="sw"
+                            inner
+                        />
                     </h2>
                     <p className="lead quests__lead" data-reveal="">
                         No brief, no client, no deadline. Experiments, small builds and
