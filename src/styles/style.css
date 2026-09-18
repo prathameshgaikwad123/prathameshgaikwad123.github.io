@@ -4309,74 +4309,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 
-/* ====== 14.1 THE GRID, SHOWN ======================================= */
-/* Drawn with the layout's own .shell and .grid rather than with a
-   picture of them — see src/components/Grid.jsx for why that is the
-   whole point. Nothing here restates a measurement; the only things
-   this section declares are how the marks are painted and how tall they
-   have to be for the grid to reach the foot of the screen.
-
-   Under the two floating instruments and over everything else: the
-   reading line and the folio are chrome, and chrome is not what the
-   grid is being checked against.                                     */
-
-.rule-grid {
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-    pointer-events: none;
-}
-
-.rule-grid .shell,
-.rule-grid .grid { height: 100%; }
-
-/* Where the shell stops and the margin begins. Dashed, because it is
-   the one line in the drawing that is not a thing on the page — the
-   columns are real and this is where they end. */
-.rule-grid .shell { border-inline: 1px dashed var(--rule-2); }
-
-.rule-grid__col {
-    grid-row: 1;
-    background: var(--signal-soft);
-    border-inline: 1px solid var(--rule);
-}
-
-/* The grid really is one column below this step, so one column is what
-   is drawn. The others are removed rather than hidden, so that nothing
-   is left to be placed into columns the layout does not have. */
-@media (max-width: 47.999rem) {
-    .rule-grid__col + .rule-grid__col { display: none; }
-}
-
-/* What is on screen says how to put it away, which is the only thing
-   somebody who found the key by accident needs to be told. */
-.rule-grid__say {
-    position: absolute;
-    left: var(--gutter);
-    bottom: clamp(1rem, 2.5vh, 1.75rem);
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-}
-
-.rule-grid__say b {
-    display: grid;
-    place-content: center;
-    min-width: 1.5em;
-    padding: 0.35em 0.4em;
-    border: 1px solid var(--rule-2);
-    border-radius: 3px;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: var(--ink-2);
-}
-
-
 /* ====== 15. VIEW TRANSITIONS ======================================= */
 /* Cross-document only: the cover of the project being opened settles
    into the case study. Progressive — browsers without the API navigate
@@ -4414,71 +4346,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 @media (prefers-reduced-motion: no-preference) {
     html[data-going] .case-figure--cover img { view-transition-name: none; }
     html[data-going] .case-next__cover img { view-transition-name: project-cover; }
-}
-
-
-/* --- The theme, turning over -----------------------------------------
-   The one same-document transition on the site, and the only thing in
-   this section that is not a navigation: the incoming theme is revealed
-   by a circle opening from the middle of the control that was pressed,
-   over an outgoing theme that does not move at all.
-   src/hooks/useTheme.js writes the origin and the radius and takes the
-   attribute off again when the transition is over; this is where they
-   are spent, because a ::view-transition pseudo-element is not in the
-   document and script cannot reach it.
-
-   Everything is held behind [data-wipe] so that the cross-document
-   rules above keep the cross-fade they were written with. Reduced
-   motion never arrives here — the hook checks before it starts, and
-   section 16 would stop the animation even if it did — which leaves the
-   attribute on the root for one frame and the theme simply changed,
-   which is the correct answer to the preference rather than a shortened
-   version of the wrong one.                                          */
-html[data-wipe]::view-transition-old(root) {
-    animation: none;
-    mix-blend-mode: normal;
-}
-
-html[data-wipe]::view-transition-new(root) {
-    /* Over the old snapshot rather than blended with it. Blended, the
-       two themes average into a grey halfway house wherever the circle
-       has reached, which is a third ground the system does not have. */
-    z-index: 1;
-    mix-blend-mode: normal;
-
-    /* Was 0.56s on --ease-io, and both halves of that were wrong for a
-       control.
-
-       --ease-io is ease-in-OUT: it spends its opening frames barely
-       moving. A circle on that curve creeps away from the finger before
-       it opens, and at 0.56s there is a great deal of creeping to do —
-       and the whole of that window is time in which a second press has
-       nothing to do but queue. --ease is the ramp the rest of the site
-       leaves on. It is at its fastest in the frames just after the
-       press and settles at the end, which is the shape of a thing that
-       answered at once and then took its time arriving.
-
-       0.42s is also what the press is measured against in
-       src/hooks/useTheme.js (WIPE_MS), which is the boundary between a
-       press this wipe should honour and one it should get out of the
-       way of. The two numbers have to agree. */
-    animation: theme-wipe 0.42s var(--ease) both;
-}
-
-/* The two names the site carries for its cross-document navigations are
-   stood down for the length of the wipe — see the note in useTheme.js.
-   They are written here rather than removed in script because a name is
-   a style, and a style the stylesheet owns is one the transition cannot
-   leave behind if it is interrupted. */
-html[data-wipe] .masthead,
-html[data-wipe] .case-figure--cover img { view-transition-name: none; }
-
-/* The fallbacks are the centre of the screen and a radius large enough
-   to leave it, so a wipe that somehow starts without its numbers is
-   still a wipe rather than a page that never arrives. */
-@keyframes theme-wipe {
-    from { clip-path: circle(0 at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
-    to   { clip-path: circle(var(--wipe-r, 150vmax) at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
 }
 
 
@@ -4676,7 +4543,7 @@ html[data-wipe] .case-figure--cover img { view-transition-name: none; }
 
 @media print {
     .masthead, .menu, .theme-toggle, .skip-link,
-    .case-next, .progress, .folio, .rule-grid, .reticle, .hero__scroll, .intro { display: none !important; }
+    .case-next, .progress, .folio, .reticle, .hero__scroll, .intro { display: none !important; }
 
     /* The carousel survives the loss of the scroll that drives it: it is
        the whole of the work now, so on paper it becomes what it already
