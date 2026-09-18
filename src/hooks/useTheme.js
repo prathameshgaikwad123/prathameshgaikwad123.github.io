@@ -3,6 +3,13 @@ import { onMedia, activeTheme, motionOK } from './dom.js';
 
 const THEME_KEY = 'pg-theme';
 
+/* The length of the wipe in the stylesheet (section 15,
+   html[data-wipe]::view-transition-new(root)). The one thing script has
+   to know about that animation is when it is over, so that a press
+   arriving inside it can be told apart from a press arriving after it.
+   If the animation's duration changes, this changes with it. */
+const WIPE_MS = 420;
+
 function readStored() {
     try {
         const v = localStorage.getItem(THEME_KEY);
@@ -67,6 +74,22 @@ export default function useTheme(buttonRef) {
             toggle.setAttribute('title', `Switch to ${next} theme`);
         };
 
+        /* The transition in flight, if there is one, and when the last
+           change was made. Between them they are the whole of how this
+           behaves under a finger that is not waiting — see wipe(). The
+           first used to be a bare `wiping` boolean, which could say that
+           a wipe was running but not which one, and the rapid-press path
+           below has to be able to reach it.
+
+           -Infinity rather than 0 so that the first press of the visit
+           is never mistaken for a second one. `changedAt` is compared
+           against performance.now(), which is milliseconds since the
+           document began, so from 0 a press inside the first 420ms of
+           the page would have measured as arriving on top of a wipe that
+           never happened. */
+        let active = null;
+        let changedAt = -Infinity;
+
         /* Backgrounds flip instantly while colour would animate, which
            puts some text briefly at low contrast against the new ground.
            Both routes into a change suppress the transitions for the swap
@@ -75,8 +98,6 @@ export default function useTheme(buttonRef) {
            inline in the first of those only, so a theme that arrived from
            the operating system cross-faded and the one that arrived from
            the button did not. */
-        let wiping = false;
-
         const swap = (change) => {
             root.classList.add('theme-switch');
             change();
@@ -85,16 +106,58 @@ export default function useTheme(buttonRef) {
             });
         };
 
+        const clear = () => {
+            root.removeAttribute('data-wipe');
+            root.style.removeProperty('--wipe-x');
+            root.style.removeProperty('--wipe-y');
+            root.style.removeProperty('--wipe-r');
+        };
+
+        /* `finished` can arrive for a transition this no longer owns:
+           press, press again quickly, and the first settles while the
+           second is running. Clearing the root on the strength of the
+           older promise would take the newer wipe's origin and radius
+           out from under it mid-animation, so both ends check who is
+           current before tidying anything away. */
+        const settle = (run) => {
+            if (active !== run) return;
+            active = null;
+            clear();
+        };
+
         /* The same swap, opened by a circle from the control that asked
            for it.
 
            All of it is a courtesy and none of it is a condition. Where
            the API is missing, where the reader has asked for less
-           motion, and where a transition is already running, the change
-           is made the way it has always been made — instantly, with the
-           transitions suppressed for the frame — and nothing is
-           reported. Which is why swap() is still the thing that does the
-           work and this only stands in front of it.
+           motion, and where the press came in on top of the last one,
+           the change is made the way it has always been made —
+           instantly, with the transitions suppressed for the frame — and
+           nothing is reported. Which is why swap() is still the thing
+           that does the work and this only stands in front of it.
+
+           The last of those was the one that was wrong, and wrong in a
+           way that read as lag rather than as haste. A second press
+           inside the first wipe was refused a transition and then
+           swap()ped the theme underneath one: the outgoing snapshot is
+           a still frame held over the document, so everywhere the first
+           circle had not yet reached went on showing the theme the
+           reader had just pressed twice to leave, for whatever was left
+           of half a second. The change had happened and the screen was
+           not allowed to say so. Pressing the button faster made it
+           worse, which is exactly how it was found.
+
+           It is answered in two parts. The wipe still in flight is
+           SKIPPED, which tears down the snapshot and hands the screen
+           back to the live document, so an instant swap is instant on
+           screen and not merely in the DOM. And a press that lands
+           within one wipe of the last one takes that instant path
+           deliberately rather than opening a transition of its own: a
+           press costs two frames of setup and a snapshot of the whole
+           viewport before its circle can move at all, which is a price
+           worth paying once and not worth paying nine times while
+           somebody leans on the button. Press once and wait, and the
+           wipe is there.
 
            The origin is the button's own centre and the radius is the
            distance from there to the furthest corner of the window, so
@@ -105,9 +168,21 @@ export default function useTheme(buttonRef) {
            pseudo-element is not in the document and cannot be reached
            from script at all. */
         const wipe = (origin, change) => {
+            const now = performance.now();
+            const rapid = now - changedAt < WIPE_MS;
+            changedAt = now;
+
+            if (active) {
+                try {
+                    active.skipTransition();
+                } catch {
+                    /* already over — settle() tidies up either way */
+                }
+            }
+
             if (
-                !origin
-                || wiping
+                rapid
+                || !origin
                 || !motionOK()
                 || typeof document.startViewTransition !== 'function'
             ) {
@@ -119,14 +194,24 @@ export default function useTheme(buttonRef) {
             const x = box.left + box.width / 2;
             const y = box.top + box.height / 2;
 
+            /* Measured against the larger of the two viewports the
+               browser will report. On a phone they disagree while the
+               address bar is collapsing, and a radius taken from the
+               smaller one finishes a few pixels short of the screen it
+               has to cover — which the eye catches as the last strip of
+               the old theme snapping out rather than arriving. Rounded
+               up for the same reason. */
+            const vw = Math.max(window.innerWidth, root.clientWidth);
+            const vh = Math.max(window.innerHeight, root.clientHeight);
+
             root.style.setProperty('--wipe-x', `${x}px`);
             root.style.setProperty('--wipe-y', `${y}px`);
             root.style.setProperty(
                 '--wipe-r',
-                `${Math.hypot(
-                    Math.max(x, window.innerWidth - x),
-                    Math.max(y, window.innerHeight - y),
-                )}px`,
+                `${Math.ceil(Math.hypot(
+                    Math.max(x, vw - x),
+                    Math.max(y, vh - y),
+                ))}px`,
             );
 
             /* Set before the snapshot is taken, which is the whole of
@@ -139,15 +224,6 @@ export default function useTheme(buttonRef) {
                cover — changing theme on a different curve from the page
                underneath them. */
             root.setAttribute('data-wipe', '');
-            wiping = true;
-
-            const settle = () => {
-                wiping = false;
-                root.removeAttribute('data-wipe');
-                root.style.removeProperty('--wipe-x');
-                root.style.removeProperty('--wipe-y');
-                root.style.removeProperty('--wipe-r');
-            };
 
             let run;
             try {
@@ -156,16 +232,18 @@ export default function useTheme(buttonRef) {
                 /* The API is there and refused. The theme still changes;
                    that is the part that was never optional. */
                 swap(change);
-                settle();
+                clear();
                 return;
             }
+
+            active = run;
 
             /* `finished` rejects when a transition is skipped or
                interrupted — a second one starting, the tab going away
                mid-flight — and an unhandled rejection is a console error
                raised by something working exactly as intended. Both ends
                settle, because both ends are over. */
-            run.finished.then(settle, settle);
+            run.finished.then(() => settle(run), () => settle(run));
         };
 
         const onClick = () => {

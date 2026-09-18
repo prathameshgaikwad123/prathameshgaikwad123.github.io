@@ -1084,6 +1084,26 @@ em { font-style: italic; }
 .theme-switch *::before,
 .theme-switch *::after { transition: none !important; }
 
+/* With one exemption, and it is the control that asked for the swap. The
+   rule above exists because a ground that flips while its text
+   cross-fades leaves some of that text briefly unreadable — a colour
+   problem, and the two marks in the chip are not a colour problem. They
+   are the site's only stateful control, and the state they are in is the
+   answer to the press. Suppressed along with everything else the answer
+   would land in the same frame as the question, which is the one thing a
+   toggle must not do.
+
+   Held inside no-preference because the durations it restates would
+   otherwise outrank section 16: `*` carries no specificity and this
+   selector carries plenty, so an unconditional !important here would
+   reinstate the crossing for a reader who has asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+    .theme-switch .theme-toggle svg {
+        transition: opacity var(--t-fast) var(--ease-io),
+                    transform var(--t-mid) var(--ease) !important;
+    }
+}
+
 
 /* ====== 6. ENTRANCE MOTION ========================================== */
 /* One rule for the whole site: a small rise and a fade, staggered by
@@ -1647,26 +1667,66 @@ em { font-style: italic; }
     border-radius: var(--nav-r-in);
     color: var(--ink-3);
     background: transparent;
+    /* The press is answered before the wipe is: a chip that gives under
+       the finger is the only part of this the reader can feel inside one
+       frame, and everything after it — the snapshot, the circle — is
+       then something that happened to a control that had already
+       replied. `manipulation` is the other half of the same sentence.
+       Without it a browser may hold the click back to see whether a
+       second tap is coming and a double-tap zoom is meant, which on a
+       phone is up to 300ms of nothing at all. The site is laid out to
+       the device width and has no zoom to offer here, so there is
+       nothing to wait for. */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transition: color var(--t-fast) var(--ease-io),
-                background-color var(--t-fast) var(--ease-io);
+                background-color var(--t-fast) var(--ease-io),
+                transform 0.1s var(--ease-io);
 }
 
 .theme-toggle:hover { color: var(--ink); background: var(--nav-chip); }
 
+.theme-toggle:active { transform: scale(0.9); }
+
 /* Both marks are drawn as a fraction of the chip, so they hold the same
    proportion whichever size the chip is, rather than sitting adrift in
-   the middle of the larger square. One token, set with --nav-item. */
-.theme-toggle svg { width: var(--nav-icon); height: var(--nav-icon); }
+   the middle of the larger square. One token, set with --nav-item.
 
-.theme-toggle .icon-moon { display: none; }
-:root[data-theme="dark"] .theme-toggle .icon-sun  { display: none; }
-:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+   They are stacked in one cell rather than swapped in and out of the
+   layout, because `display` cannot be animated and the chip was the one
+   place on the site where a state change simply appeared. Both are in
+   the document at all times; --mark-in says which of them is the one on
+   duty, and it is the only thing any of the rules below set. Opacity
+   and transform are the pair that can be interpolated without touching
+   layout, which is what lets the crossing run over the top of the one
+   thing here that is expensive: the whole palette re-resolving under
+   it. */
+.theme-toggle svg {
+    grid-area: 1 / 1;
+    width: var(--nav-icon);
+    height: var(--nav-icon);
+    opacity: var(--mark-in, 0);
+    transform: rotate(calc((1 - var(--mark-in, 0)) * var(--mark-dir, 1) * 65deg))
+               scale(calc(0.6 + var(--mark-in, 0) * 0.4));
+    transition: opacity var(--t-fast) var(--ease-io),
+                transform var(--t-mid) var(--ease);
+}
+
+/* The two marks turn opposite ways, so one is always arriving from where
+   the other left. Which of them is lit is the same set of selectors the
+   `display` pair used to be written as — the logic is unchanged, only
+   what it sets. */
+.theme-toggle .icon-sun  { --mark-dir: -1; --mark-in: 1; }
+.theme-toggle .icon-moon { --mark-dir:  1; --mark-in: 0; }
+
+:root[data-theme="dark"] .theme-toggle .icon-sun  { --mark-in: 0; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { --mark-in: 1; }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .theme-toggle .icon-sun  { display: none; }
-    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: block; }
-    :root[data-theme="light"] .theme-toggle .icon-sun  { display: block; }
-    :root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun  { --mark-in: 0; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { --mark-in: 1; }
+    :root[data-theme="light"] .theme-toggle .icon-sun  { --mark-in: 1; }
+    :root[data-theme="light"] .theme-toggle .icon-moon { --mark-in: 0; }
 }
 
 /* --- The two layers --------------------------------------------------
@@ -4384,8 +4444,25 @@ html[data-wipe]::view-transition-new(root) {
        two themes average into a grey halfway house wherever the circle
        has reached, which is a third ground the system does not have. */
     z-index: 1;
-    animation: theme-wipe 0.56s var(--ease-io) both;
     mix-blend-mode: normal;
+
+    /* Was 0.56s on --ease-io, and both halves of that were wrong for a
+       control.
+
+       --ease-io is ease-in-OUT: it spends its opening frames barely
+       moving. A circle on that curve creeps away from the finger before
+       it opens, and at 0.56s there is a great deal of creeping to do —
+       and the whole of that window is time in which a second press has
+       nothing to do but queue. --ease is the ramp the rest of the site
+       leaves on. It is at its fastest in the frames just after the
+       press and settles at the end, which is the shape of a thing that
+       answered at once and then took its time arriving.
+
+       0.42s is also what the press is measured against in
+       src/hooks/useTheme.js (WIPE_MS), which is the boundary between a
+       press this wipe should honour and one it should get out of the
+       way of. The two numbers have to agree. */
+    animation: theme-wipe 0.42s var(--ease) both;
 }
 
 /* The two names the site carries for its cross-document navigations are
