@@ -1363,23 +1363,6 @@ em { font-style: italic; }
     transform-origin: left;
 }
 
-.progress__ticks { position: absolute; inset: 0; }
-
-/* One mark per band, at the point in the scroll where that band becomes
-   the one being read — src/hooks/useChrome.js writes --t. They hang
-   below the line rather than sitting in it, so the fill passes over
-   their heads and what is left showing is the part of the ruler still
-   to come: a measure the reader can see the shape of before they have
-   read it, which is the one thing a percentage cannot say. */
-.progress__tick {
-    position: absolute;
-    top: 0;
-    left: calc(var(--t, 0) * 100%);
-    width: 1px;
-    height: 6px;
-    background: var(--rule-2);
-}
-
 /* The running head, in the left margin, set the way a folio is set.
 
    It is shown from 75rem because that is the first step at which the
@@ -4491,8 +4474,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
        reading line and its ruler for the first time, since the bar was
        painted this way before any of this and had the same problem. */
     .band + .band::before,
-    .progress__fill,
-    .progress__tick { background: CanvasText; }
+    .progress__fill { background: CanvasText; }
 
     /* A blend has nothing to blend with once the palette is flattened,
        so the mark is drawn in the system's own ink instead. */

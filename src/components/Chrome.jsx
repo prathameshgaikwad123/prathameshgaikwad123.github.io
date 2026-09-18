@@ -12,10 +12,12 @@ export const SkipLink = () => (
 /* The reading line, and the folio that reads it.
 
    The line is what it has always been: two pixels across the top of the
-   window, filling with the reader's progress down the document. What is
-   new is that it is a ruler rather than a gauge — one tick per band, at
-   the scroll position where that band becomes the one being read — and
-   that something beside it says which band that is.
+   window, filling with the reader's progress down the document. It
+   carried a tick per band for a while, hung under the line so the fill
+   passed over their heads; at the top of a page, where the fill has
+   covered none of them, they read as specks on the screen rather than
+   as a measure, and they are gone. What is beside it says which band is
+   being read, which was the half of that idea that worked.
 
    The running head is set in the left margin, vertically, which is
    where a folio goes and also the one part of the screen the site has
@@ -37,12 +39,6 @@ export const SkipLink = () => (
 export const Progress = () => (
     <>
         <div className="progress" id="progress" aria-hidden="true">
-            {/* The ruler first, the fill over it: what is behind the
-                reader is a solid line and what is ahead of them is the
-                measure still to come. The other order leaves a grey
-                notch in the fill at every band passed, which reads as a
-                break in the line rather than as a mark under it. */}
-            <span className="progress__ticks" />
             <span className="progress__fill" />
         </div>
 
