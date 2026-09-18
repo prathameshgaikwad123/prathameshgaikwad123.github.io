@@ -11,7 +11,7 @@ function offsetTop(el) {
     return y;
 }
 
-/* The floating plates gather ground, the reading line fills and ticks
+/* The floating plates gather ground, the reading line fills
    itself, the folio in the left margin names the band being read, and
    that same band marks itself in the navigation panel. All of it gets
    decided once per frame, from a single line three tenths of the way
@@ -34,7 +34,6 @@ export default function useChrome() {
     useEffect(() => {
         const masthead = document.getElementById('masthead');
         const progress = document.getElementById('progress');
-        const ticks = progress ? progress.querySelector('.progress__ticks') : null;
         const folio = document.getElementById('folio');
         const folioNo = folio ? folio.querySelector('.folio__no') : null;
         const folioName = folio ? folio.querySelector('.folio__name') : null;
@@ -65,7 +64,7 @@ export default function useChrome() {
                 if (nodes[i].el === section) node = nodes[i];
             }
             if (!node) {
-                node = { el: section, spy: false, band: false, no: '', name: '', tick: null, at: -1 };
+                node = { el: section, spy: false, band: false, no: '', name: '' };
                 nodes.push(node);
             }
             node[role] = true;
@@ -106,18 +105,6 @@ export default function useChrome() {
             node.name = tag.textContent.replace(node.no, '').trim();
         });
 
-        /* One tick per band, built here rather than rendered, because
-           which bands there are is a question about the document and the
-           component that draws the line has no way to ask it. */
-        if (ticks) {
-            nodes.forEach((node) => {
-                if (!node.band) return;
-                node.tick = document.createElement('span');
-                node.tick.className = 'progress__tick';
-                ticks.appendChild(node.tick);
-            });
-        }
-
         /* A case study has no bands, so it gets no folio — and not an
            empty one. There is one thing to be in on that page and the
            reader is in it. */
@@ -133,7 +120,7 @@ export default function useChrome() {
            be able to tell the two apart. */
         let said = null;
 
-        const paintSpy = (span) => {
+        const paintSpy = () => {
             if (!nodes.length) return;
 
             const view = window.innerHeight;
@@ -149,21 +136,6 @@ export default function useChrome() {
                 if (bottom || y <= line) {
                     if (node.spy) spied = node;
                     if (node.band) band = node;
-                }
-
-                /* The tick is set at the scroll position where this band
-                   becomes the one being read — the same line the folio
-                   changes on — rather than at the band's own top edge.
-                   Two marks for one event, a third of a screen apart,
-                   would read as a fault in the instrument. Written only
-                   when it moves, which is a resize or a font landing and
-                   not a scroll. */
-                if (node.tick && span > 0) {
-                    const at = Math.max(0, Math.min(1, (y - view * 0.3) / span));
-                    if (at !== node.at) {
-                        node.at = at;
-                        node.tick.style.setProperty('--t', at);
-                    }
                 }
             }
 
@@ -219,7 +191,7 @@ export default function useChrome() {
                 progress.style.setProperty('--p', span > 0 ? Math.min(1, window.scrollY / span) : 0);
             }
 
-            paintSpy(span);
+            paintSpy();
         };
 
         const onScroll = () => schedule(paintChrome);
