@@ -4,7 +4,6 @@ import Loader from './components/Loader.jsx';
 import Navigation from './components/Navigation.jsx';
 import Menu from './components/Menu.jsx';
 import Underlay from './components/Underlay.jsx';
-import Grid from './components/Grid.jsx';
 import Reticle from './components/Reticle.jsx';
 import Lightbox, { Zoomable } from './components/Lightbox.jsx';
 import { PageFoot, Progress, SkipLink } from './components/Chrome.jsx';
@@ -136,7 +135,6 @@ export default function CaseStudy({ slug }) {
                 onClick={menu.onPanelClick}
             />
             <Underlay onClick={menu.onOverlayClick} />
-            <Grid />
             <Reticle />
             <Progress />
 
