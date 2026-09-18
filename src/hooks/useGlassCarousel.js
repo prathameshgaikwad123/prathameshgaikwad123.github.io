@@ -303,29 +303,71 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         );
         seen.observe(stage);
 
-        const theme = new MutationObserver(() => {
-            glass.setGround(readGround(stage));
-            wake();
-        });
-        /* `style` is in the list because the theme can also arrive as
-           an inline custom property on <html> — a devtools edit, or a
-           future toggle that writes the ramp rather than an attribute
-           — and a ground the canvas did not hear about is a seam at
-           the rim. The three together are every route there is. */
+        /* The ground last handed to the renderer, so a change that is not
+           one costs nothing. */
+        let ground = null;
+        let groundFrame = 0;
+
+        /* Deferred to a frame rather than run on the spot, and coalesced
+           to one read however many mutations arrive. readGround() calls
+           getComputedStyle, which inside a MutationObserver's microtask
+           forces a synchronous full-document style recalc — ahead of the
+           one the browser was already going to do for the theme itself.
+           Waiting a frame gets the same answer out of the recalc that was
+           happening anyway. */
+        const followGround = () => {
+            if (groundFrame) return;
+            groundFrame = requestAnimationFrame(() => {
+                groundFrame = 0;
+                const next = readGround(stage);
+                if (
+                    ground
+                    && next[0] === ground[0]
+                    && next[1] === ground[1]
+                    && next[2] === ground[2]
+                ) return;
+                ground = next;
+                glass.setGround(next);
+
+                /* One frame, not the loop. wake() starts the scroller
+                   ticking — coasting, snapping, the label fading — and a
+                   theme change moves nothing on the strip; it only
+                   changes what the lens magnifies. Waking it here cost a
+                   measured 79ms of main-thread time per press at 4x CPU
+                   throttle, for physics nobody asked for. Off screen it
+                   is not drawn at all: the ground is recorded, and the
+                   IntersectionObserver above wakes the loop on the way
+                   back in, which draws it. */
+                if (engine.onscreen && !engine.running) draw();
+            });
+        };
+
+        const theme = new MutationObserver(followGround);
+        /* Only the attribute the toggle actually sets.
+
+           `class` and `style` used to be in this list, on the reasoning
+           that a theme might arrive as an inline custom property — a
+           devtools edit, or a future toggle that wrote the ramp rather
+           than an attribute. No such toggle was ever written, and the
+           real one mutates both of those on every press for reasons that
+           have nothing to do with the ground: a .theme-switch class on
+           and off again, and (until it was moved into a stylesheet) the
+           wipe's geometry. The result was four callbacks per press where
+           one was warranted, at a measured 138ms of main-thread time at
+           4x CPU throttle. The system preference, the other real route,
+           has its own listener below. */
         theme.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ['data-theme', 'class', 'style'],
+            attributeFilter: ['data-theme'],
         });
 
         const scheme = window.matchMedia('(prefers-color-scheme: dark)');
-        const onScheme = () => {
-            glass.setGround(readGround(stage));
-            wake();
-        };
+        const onScheme = followGround;
         scheme.addEventListener('change', onScheme);
 
         return () => {
             cancelAnimationFrame(engine.frame);
+            if (groundFrame) cancelAnimationFrame(groundFrame);
             engine.running = false;
             observer.disconnect();
             seen.disconnect();

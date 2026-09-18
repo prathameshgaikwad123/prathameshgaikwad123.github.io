@@ -10,6 +10,52 @@ const THEME_KEY = 'pg-theme';
    If the animation's duration changes, this changes with it. */
 const WIPE_MS = 420;
 
+/* The wipe's geometry used to be written to <html> as three custom
+   properties and taken off again afterwards. That is the single most
+   expensive thing the press did, and it had nothing to do with the theme.
+
+   A custom property on the document element is INHERITED BY EVERY
+   ELEMENT, so each of those writes invalidated the whole tree: measured
+   on a 390x844 mobile viewport at 4x CPU throttle, writing the three
+   properties alone — no theme change, no transition — cost one
+   full-document style recalc of 35-42ms and about 130ms of main-thread
+   time. It happened twice per press, once to set and once to clear, and
+   it also woke the carousel's MutationObserver (which watches <html> for
+   `style`) two more times on top.
+
+   Nothing in the document ever read them. The only thing that did is a
+   keyframe on a pseudo-element, so that is where they are written now: a
+   constructed stylesheet holding one rule, replaced wholesale per press.
+   Replacing a rule that can only match ::view-transition-new(root)
+   invalidates nothing in the tree, because nothing in the tree matches
+   it.
+
+   Built lazily rather than at module scope: this module is imported by
+   the prerender pass, where there is no document to adopt anything into. */
+let geometrySheet = null;
+let geometryTried = false;
+
+function wipeGeometry() {
+    if (geometryTried) return geometrySheet;
+    geometryTried = true;
+    try {
+        if (
+            typeof CSSStyleSheet === 'function'
+            && typeof CSSStyleSheet.prototype.replaceSync === 'function'
+            && 'adoptedStyleSheets' in document
+        ) {
+            const sheet = new CSSStyleSheet();
+            document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+            geometrySheet = sheet;
+        }
+    } catch {
+        /* Constructed stylesheets refused. The fallback below writes the
+           properties the old way — slower, and correct. */
+        geometrySheet = null;
+    }
+    return geometrySheet;
+}
+
 function readStored() {
     try {
         const v = localStorage.getItem(THEME_KEY);
@@ -108,6 +154,13 @@ export default function useTheme(buttonRef) {
 
         const clear = () => {
             root.removeAttribute('data-wipe');
+
+            /* The rule in the sheet is inert the moment the attribute is
+               gone — it cannot match anything without it — so it is left
+               where it is rather than cleared, which would be a second
+               stylesheet mutation for no effect. Only the fallback path
+               ever wrote to the tree, and only it has anything to undo. */
+            if (wipeGeometry()) return;
             root.style.removeProperty('--wipe-x');
             root.style.removeProperty('--wipe-y');
             root.style.removeProperty('--wipe-r');
@@ -162,11 +215,12 @@ export default function useTheme(buttonRef) {
            The origin is the button's own centre and the radius is the
            distance from there to the furthest corner of the window, so
            the circle ends on the last pixel it has to cover rather than
-           on a multiple of the screen somebody guessed at. Both are
-           written to the root as custom properties, because what spends
+           on a multiple of the screen somebody guessed at. Both go into
+           a stylesheet rather than onto an element, because what spends
            them is a rule rather than a tween: a ::view-transition
            pseudo-element is not in the document and cannot be reached
-           from script at all. */
+           from script at all. See wipeGeometry() above for why the rule
+           and not the root. */
         const wipe = (origin, change) => {
             const now = performance.now();
             const rapid = now - changedAt < WIPE_MS;
@@ -204,15 +258,19 @@ export default function useTheme(buttonRef) {
             const vw = Math.max(window.innerWidth, root.clientWidth);
             const vh = Math.max(window.innerHeight, root.clientHeight);
 
-            root.style.setProperty('--wipe-x', `${x}px`);
-            root.style.setProperty('--wipe-y', `${y}px`);
-            root.style.setProperty(
-                '--wipe-r',
-                `${Math.ceil(Math.hypot(
-                    Math.max(x, vw - x),
-                    Math.max(y, vh - y),
-                ))}px`,
-            );
+            const r = Math.ceil(Math.hypot(Math.max(x, vw - x), Math.max(y, vh - y)));
+
+            const sheet = wipeGeometry();
+            if (sheet) {
+                sheet.replaceSync(
+                    'html[data-wipe]::view-transition-new(root){'
+                    + `--wipe-x:${x}px;--wipe-y:${y}px;--wipe-r:${r}px}`,
+                );
+            } else {
+                root.style.setProperty('--wipe-x', `${x}px`);
+                root.style.setProperty('--wipe-y', `${y}px`);
+                root.style.setProperty('--wipe-r', `${r}px`);
+            }
 
             /* Set before the snapshot is taken, which is the whole of
                why it is an attribute and not a class added afterwards:
