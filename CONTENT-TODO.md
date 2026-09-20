@@ -14,7 +14,7 @@ Nothing on this list has been guessed or filled in on your behalf.
 
 ## 1. Behance projects — blocking
 
-The Behance spread ships with six labelled placeholders and no real project
+The Behance rail ships with six labelled placeholders and no real project
 URLs, because a project URL cannot be guessed. Both halves of each record are
 replaced together in `src/data/behance.js`:
 
@@ -24,9 +24,15 @@ replaced together in `src/data/behance.js`:
 | `cover` | A 1600×1200 export saved beside the placeholder in `public/assets/images/behance/`, with the extension changed here. |
 | `title`, `type`, `alt` | The project's real name, its disciplines, and a real description of the image. |
 
-`span` and `drop` are the composition rather than content — how wide the plate
-is and how far down the spread it starts. Leave them alone unless the spread
-needs rebalancing after the real covers go in.
+Nothing in the record says anything about the layout. The rail counts the
+plates and the stylesheet sets their width, so a record is only the project.
+Order is the one thing the list still decides, and it is the reading order on
+every screen — and, because the rail wraps, the order the plates come back
+round in.
+
+One thing the export has to know about: the plate is a crop that moves. See
+"A Behance plate is a crop that moves" in ASSETS.md before choosing what to
+export.
 
 ---
 

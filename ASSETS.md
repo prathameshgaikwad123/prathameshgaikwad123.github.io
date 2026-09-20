@@ -29,10 +29,19 @@ gallery plates are described in one place: `src/data/projects.js`, where the
 grep -rn "REPLACE:" src/
 ```
 
-The Behance spread and the Side Quests wall name their images the same way,
+The Behance rail and the Side Quests wall name their images the same way,
 from their own records: `src/data/behance.js` and `src/data/sideQuests.js`.
 Their plates live in `public/assets/images/behance/` (1600×1200, 4:3) and
 `public/assets/images/side-quests/` (1600×1200, 4:3).
+
+**A Behance plate is a crop that moves.** The rail sits the picture behind its
+own frame and pans it as the plate crosses the stage, so at any moment about
+three quarters of the export is showing and the window travels roughly a
+twelfth of the width either side of centre. The shape and the size do not
+change — still 1600×1200 — but the composition should: keep the subject, and
+anything that has to be read, clear of the outer eighth of the frame. A logo
+tight into a corner will leave the plate at one end of the rail and come back
+at the other.
 
 **Formats.** Prefer WebP for photography and screenshots (smaller than JPEG at
 the same quality); JPEG is a fine fallback. Use PNG only for images that need

@@ -2882,28 +2882,35 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 /* ====== 9.1 SELECTED BEHANCE WORK =================================== */
 /* The other half of the same practice, and deliberately not set like
-   the half above it. Selected Work is an index — six rows, each with a
-   case study behind it and a plate that answers to the row. Nothing
-   here has anything to read at the end of it, so a list would be six
-   links pretending to be an argument. It is a grid instead.
+   the half above it.
 
-   It used to be a spread: four widths and five starting heights,
-   carried on the row as --span and --drop. Six plates that never
-   agreed on a width or a baseline read as six plates that came loose,
-   and a gallery whose subject is other people's work is the last place
-   to spend the reader's attention on the layout. So the plates are all
-   one width now and all one shape — 4:3, the ratio every export is
-   already made at — and they sit on shared column and row lines: one
-   plate across a phone, two across a tablet, three across a desktop.
-   Six divides by all three, so the last row is never a short row.
+   It was a grid — six plates at one width and one shape on shared
+   column and row lines — and a grid was the right answer to "these are
+   a set" and the wrong one to what a set of pictures is for. A grid is
+   read the way a table is, all at once and by comparison, and six
+   covers laid out to be compared are six covers nobody looks at.
 
-   The measure is the twelve-column grid the rest of the page is set
-   on, so the first plate starts on the same line as the tag above it
-   and the last ends on the same line as the count.
+   So it is a rail: one endless row, thrown by hand, with the picture
+   inside each plate sitting a little behind its own crop so that it
+   lags the frame it is in. A set you move through rather than scan.
 
-   Every plate leaves the site, and every plate says so — the same
-   arrow the elsewhere links in the panel carry, with the accent
-   arriving on the same gesture it arrives on everywhere else.      */
+   It is the second moving strip on the page and it is not the first
+   one again. Selected Work is a rigid row passing behind a pane of
+   glass: the row is flat, the field is the whole of the effect, and it
+   snaps so the reader is always looking at one project. Here the field
+   is flat, the depth is in the plates, and nothing snaps — a gallery
+   has no one thing to be looking at, so it is never brought to a stop
+   on one.
+
+   WHAT THIS FILE OWNS, AND WHAT IT DOES NOT. Everything below is the
+   resting state: the plate's width, the gap, the crop, the caption,
+   the gutter the row starts at, and the horizontal scroller the row
+   *is* before any script has run. The loop in
+   src/hooks/usePlateRail.js reads that layout back off the browser and
+   writes one transform per plate on top of it — so a breakpoint added
+   here changes the rhythm of the rail without a line of JavaScript
+   changing, and taking the script away leaves a gallery rather than a
+   ruin.                                                              */
 
 .beh__tag { grid-column: 1 / -1; }
 .beh__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -2915,60 +2922,183 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .beh__count     { grid-column: 11 / span 2; margin-top: 0; }
 }
 
-.beh {
-    grid-column: 1 / -1;
+/* --- The stage --------------------------------------------------------
+   Full bleed. The element is a child of the band rather than of the
+   shell, so this is already the page's content box — no viewport unit,
+   and therefore no scrollbar counted into the width and no few pixels
+   of drift between the gate and the middle of the reader's screen.
+
+   The padding is the gate's: the two register ticks sit in it, above
+   the row and below it, and the row keeps clear of them.              */
+.beh__stage {
+    position: relative;
+    width: 100%;
     margin-top: var(--head-gap);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2.25rem, 4.5vw, 3.5rem) var(--gap);
+    padding-block: 1.125rem;
 }
 
-@media (min-width: 48rem) {
-    .beh { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* --- The rail ---------------------------------------------------------
+   The plate's width is a fraction of the row rather than a measure,
+   because how many plates reach across the stage is what the rhythm is
+   made of — the same reasoning the carousel's card width is set from
+   the stage's width and not its height. One and a third across a
+   phone, two and a bit across a tablet, three and a half across a
+   desktop, with a plate cut by each edge at every width: a row that
+   ended cleanly at both edges would be a row with two ends, which is
+   the one thing an endless rail must not look like.
+
+   Before the script runs — and for a reader who has asked for less
+   motion — it is a horizontal scroller with snap points, which is a
+   perfectly good gallery and is what the prerendered document ships.
+   The scrollbar is hidden because the state lasts one frame for almost
+   everybody and a bar that appears and then vanishes is a layout shift;
+   what says there is more of it is the plate cut by the right edge,
+   which says so at every width and in every state.                    */
+.beh__rail {
+    --beh-plate: 74%;
+    --beh-gap: clamp(0.875rem, 1.6vw, 1.75rem);
+
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline-start: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
 }
 
-@media (min-width: 75rem) {
-    .beh { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.beh__rail::-webkit-scrollbar { display: none; }
+
+@media (min-width: 48rem) { .beh__rail { --beh-plate: 44%; } }
+@media (min-width: 62rem) { .beh__rail { --beh-plate: 33%; } }
+@media (min-width: 75rem) { .beh__rail { --beh-plate: 27%; } }
+
+/* Live, the scroller stops being one: the row is wrapped and placed by
+   the loop, and a box that could also be scrolled natively would be
+   two instruments disagreeing about where the row is. Vertical panning
+   still belongs to the page — a gallery that swallowed it would be a
+   trap three quarters of the way down a document. */
+.beh__rail[data-live] {
+    overflow: hidden;
+    scroll-snap-type: none;
+    cursor: grab;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-/* The columns are equal and every plate is cropped to the same 4:3,
-   so every image in a row is the same height and every caption under
-   them starts on the same line — no rule is needed to hold the
-   baselines together, and a title that wraps to two lines lengthens
-   its own cell without moving the plate beside it. `start` keeps the
-   caption under its own image rather than stretched down to whatever
-   the tallest cell in the row turned out to be. */
-.beh__item { min-width: 0; align-self: start; }
+/* Grab, and grab only — where the carousel next door writes `pointer`
+   over a card and `grab` over the ground between two. The difference is
+   what is under the pointer: there, most of the stage is ground, so the
+   cursor can afford to change over a card and still have somewhere to
+   say `grab`. Here almost the whole row is plates, and a cursor that
+   read `pointer` everywhere would have nowhere left to say the row can
+   be thrown at all. What says a plate opens is the reticle, which is
+   already over it and already says `Open`. */
+.beh__rail[data-live].is-held { cursor: grabbing; }
 
-/* The link is the whole plate, and takes no colour of its own: what
+.beh__rail:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+/* One flex row in ordinary flow, which is the whole trick: the browser
+   decides every plate's width and position from the rules above, the
+   loop reads that back and moves each plate away from it, and the
+   revert is to stop writing. The block padding is the crop ticks' —
+   they sit a little outside the picture, and the rail clips. */
+.beh__track {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--beh-gap);
+    padding-inline: var(--gutter);
+    padding-block: 0.5rem;
+}
+
+.beh__cell {
+    position: relative;
+    flex: 0 0 var(--beh-plate);
+    min-width: 0;
+    scroll-snap-align: start;
+}
+
+/* The link is the whole plate and takes no colour of its own: what
    answers the cursor is the caption under it and the ticks around it. */
 .beh__link { display: block; color: inherit; }
 
-.beh__figure .frame__media img {
-    aspect-ratio: 4 / 3;
+.beh__figure .frame__media { aspect-ratio: 4 / 3; }
+
+/* The picture, and the one element on the page that is genuinely
+   behind something. At rest it is exactly its own crop — no scale, no
+   offset — because that is the state the fallback needs and the state
+   a revert has to be able to get back to. Live, the loop writes the
+   lag, the smear and the scale that pays for them, all three in one
+   transform.
+
+   The transition is the fallback's. It is what lets a hovered plate
+   ease in behind its crop where there is no loop to do anything more
+   interesting, and it is taken off the moment there is one: a property
+   being written sixty times a second must not also be being eased
+   toward its last value. */
+.beh__shot {
     display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: 50% 50%;
     transition: transform var(--t-slow) var(--ease);
 }
 
-.beh__link:hover .frame__media img,
-.beh__link:focus-visible .frame__media img { transform: scale(1.03); }
+.beh__rail[data-live] .beh__shot { transition: none; }
+
+.beh__link:hover .beh__shot,
+.beh__link:focus-visible .beh__shot { transform: scale(1.03); }
 
 .beh__link:hover .frame::before,
 .beh__link:hover .frame::after,
 .beh__link:focus-visible .frame::before,
 .beh__link:focus-visible .frame::after { border-color: var(--flow); }
 
-/* The caption is the site's, with one column added: the numeral it has
-   always had, the name and the discipline, and the mark that says this
-   one leaves the site.
+/* --- The gate ---------------------------------------------------------
+   Two register ticks on the stage's centre line, one above the row and
+   one below it. It is the axis the parallax is measured from and the
+   point the focus falls away from, and it is the site's own mark
+   rather than a new device: the same hairline tick that sits on the
+   corner of every framed picture on the page, turned to mark a middle
+   instead of a corner.
+
+   Written only while the rail is live — see PlateRail.jsx. A mark
+   across a gallery that is not moving would be pointing at nothing. */
+.beh__gate {
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: 1px;
+    margin-left: -0.5px;
+    pointer-events: none;
+}
+
+.beh__gate::before,
+.beh__gate::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: 0.5rem;
+    background: var(--rule-2);
+}
+
+.beh__gate::before { top: 0; }
+.beh__gate::after { bottom: 0; }
+
+/* --- The caption ------------------------------------------------------
+   The site's, with one column added: the numeral it has always had,
+   the name and the discipline, and the mark that says this one leaves
+   the site.
 
    The mark sits with the name rather than at the plate's right edge.
    Pinned to the edge it was a different distance from the words on
-   every plate — half a column on the widest, a fifth on the narrowest
-   — and a gap that changes size with no rule behind it reads as
-   something that came loose rather than as alignment. Next to the
-   name it is the same gap on all six, and the caption ends where the
-   words do. */
+   every plate, and a gap that changes size with no rule behind it
+   reads as something that came loose rather than as alignment. */
 .beh__cap {
     position: relative;
     display: grid;
@@ -2979,20 +3109,11 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     border-top: 1px solid var(--rule);
 }
 
-/* The last thing the two galleries did not have in common. A side quest
-   answers a gesture four ways — the plate lifts, the picture eases in
-   behind its crop, the ticks and the title take the accent, and a rule
-   draws itself across the foot of the card (section 11). A plate here
-   answered it three ways: the rule was the one part of that sentence
-   the grid never had, because it had no rule to draw.
-
-   So the caption gets one, and it gets it the way the quests do: two
-   layers on one edge, the hairline as the border and the accent as a
-   pseudo-element scaled over the top of it, so that nothing moves,
-   nothing reflows and the line is the same weight drawn or not. The
-   rule also earns itself at rest — it is what sets the caption off from
-   the picture above it, which in a grid of six plates is the difference
-   between a caption and a line of type that happens to be underneath.  */
+/* Two layers on one edge — the hairline as the border and the accent as
+   a pseudo-element scaled over the top of it — so that nothing moves,
+   nothing reflows, and the line is the same weight drawn or not. The
+   rule earns itself at rest as well: in a row of plates it is what
+   sets a caption off from the picture above it. */
 .beh__cap::after {
     content: '';
     position: absolute;
@@ -3039,14 +3160,73 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .beh__link:hover .beh__go,
 .beh__link:focus-visible .beh__go { transform: translate(0.2rem, -0.2rem); color: var(--flow); }
 
-/* The way out of the section, and the only thing in it that is not a
-   plate: the profile itself, set as a rule the whole measure wide so
-   it closes the spread rather than sitting under one corner of it. */
-.beh__all {
+/* --- The instrument line ----------------------------------------------
+   Back on the twelve columns, under a full-bleed row: where in the lap
+   the reader is, the lap itself drawn as a hairline, and the way out of
+   the section. One line, so the rail is closed the way every other band
+   on the site is closed — by a rule the whole measure wide with
+   something set on it.                                                */
+.beh__foot {
     grid-column: 1 / -1;
-    margin-top: clamp(2.5rem, 5vw, 4rem);
-    padding-top: clamp(1.25rem, 2.5vw, 2rem);
+    margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+    padding-top: clamp(1rem, 2vw, 1.5rem);
     border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (min-width: 48rem) {
+    .beh__foot {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: clamp(1.5rem, 3vw, 3rem);
+    }
+}
+
+.beh__lap { flex: none; }
+.beh__lap b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* The lap, drawn. A hairline the width of the column with one plate's
+   worth of it inked, travelling — which is the one readout an endless
+   row can honestly give: not how far through it the reader is, because
+   there is no through, but where in the set they are standing.
+
+   Two runs, a lap apart, so the meter is endless in the same way the
+   rail is: as the first leaves the right edge the second is already
+   entering from the left, and there is no frame where the mark is
+   nowhere. The travel is written as a multiple of the run's own width
+   because that is the one unit both of them share — at --beh-lap of 1
+   the first has moved exactly the width of the meter and the second is
+   standing where the first began. */
+.beh__meter {
+    --beh-lap: 0;
+    --beh-n: 6;
+
+    position: relative;
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    background: var(--rule);
+}
+
+.beh__run {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: calc(100% / var(--beh-n));
+    background: var(--ink);
+    transform: translateX(calc(var(--beh-lap) * var(--beh-n) * 100%));
+}
+
+.beh__run--next {
+    transform: translateX(calc((var(--beh-lap) - 1) * var(--beh-n) * 100%));
+}
+
+.beh__all { margin: 0; justify-self: start; }
+
+@media (min-width: 48rem) {
+    .beh__all { justify-self: end; }
 }
 
 .beh__cta {
@@ -3055,8 +3235,14 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     gap: 0.5rem;
     font-size: var(--t-micro);
     font-weight: 500;
+    /* The tag's own line box, so that the counter at one end of the
+       foot and this at the other sit on one baseline: both boxes are
+       centred in the same row, and two boxes of different heights
+       centred together have their type at two different levels. */
+    line-height: 1.35;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    white-space: nowrap;
     color: var(--ink);
     transition: color var(--t-mid) var(--ease);
 }
