@@ -47,7 +47,7 @@ export default function useChrome() {
            What the panel marks is the panel's business — the sections it
            lists, found through its own links, exactly as before. What
            the folio names is the document's: every band with an id,
-           including the Behance spread, which is a band a reader arrives
+           including the Behance rail, which is a band a reader arrives
            at by reading rather than a destination in the index. A
            running head that went quiet for the length of a whole section
            would be telling them they were still in the one above it.

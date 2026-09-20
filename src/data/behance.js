@@ -1,8 +1,8 @@
 /* ===================================================================
    SELECTED BEHANCE WORK
-   One record per plate in the Behance spread on the home page. The
+   One record per plate in the Behance rail on the home page. The
    section is a gallery rather than an index — nothing here has a case
-   study behind it — so a record is only what the spread needs: the
+   study behind it — so a record is only what the rail needs: the
    plate, what to call it, what it is, and where it goes.
 
    REPLACE: every `cover` below points at a labelled SVG placeholder in
@@ -10,7 +10,10 @@
    rather than at a project, because a project URL cannot be invented.
    Replace both together — the cover with a real 1600×1200 export (swap
    the extension here) and the href with that project's own Behance URL
-   — and rewrite the `alt` beside it. See ASSETS.md and CONTENT-TODO.md.
+   — and rewrite the `alt` beside it. See ASSETS.md and CONTENT-TODO.md,
+   and note what ASSETS.md says about the crop: the rail pans the
+   picture behind its frame, so the outer eighth of an export is not
+   always on screen.
    =================================================================== */
 
 export const BEHANCE_PROFILE = 'https://www.behance.net/prathamgaikwad1';
@@ -19,11 +22,12 @@ const plate = (file) => `/assets/images/behance/${file}`;
 
 /* Nothing here says anything about the layout. The plates used to
    carry a `span` and a `drop` — their own width across the twelve
-   columns and their own starting height — and the section is a plain
-   grid now, so the stylesheet counts the columns and a record is only
-   the project: the plate, what to call it, what it is, and where it
-   goes. Order is the one thing the list still decides, and it is the
-   reading order on every screen. */
+   columns and their own starting height — and the section is a rail
+   now, so the stylesheet sets one width for all of them and a record is
+   only the project: the plate, what to call it, what it is, and where
+   it goes. Order is the one thing the list still decides, and it is the
+   reading order on every screen — and, because the rail wraps, the
+   order they come back round in. */
 export const behance = [
     {
         id: 'brand-campaign',

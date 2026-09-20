@@ -21,7 +21,7 @@ import useReveal from './hooks/useReveal.js';
 /* The home page: one scrolling document, five bands under the hero —
    Selected Work, Selected Behance Work, About, Side Quests and Contact.
    Four of the five are in the navigation panel; the other one, the
-   Behance spread, is arrived at by reading, which is the difference
+   Behance rail, is arrived at by reading, which is the difference
    between a destination and a section.
 
    Two layers. The navigation is fixed under everything; the page is the

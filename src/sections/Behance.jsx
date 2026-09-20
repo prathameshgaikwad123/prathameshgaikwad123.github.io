@@ -1,5 +1,7 @@
 import { behance, BEHANCE_PROFILE } from '../data/behance.js';
+import PlateRail from '../components/PlateRail.jsx';
 import Words from '../components/Words.jsx';
+import { useReducedMotion } from '../hooks/dom.js';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import lineReveal from '../animations/lineReveal.js';
 
@@ -9,20 +11,29 @@ import lineReveal from '../animations/lineReveal.js';
    behind it and a row that names, describes and links it. This is the
    other half of the same practice and it is not an index — there is
    nothing to read at the end of these, only more of them to look at.
-   So it is set as a grid rather than a list: six plates at one width
-   and one shape, on shared column and row lines, each one a link out.
 
-   The plates used to carry their own width and their own starting
-   height, which made a spread of them and made the section hard to
-   read as a set. Nothing on the row says anything about the layout
-   now — the stylesheet counts the columns, one across a phone, two
-   across a tablet, three across a desktop, and six divides by all
-   three so no row is ever short.
+   It was a grid: six plates at one width and one shape on shared
+   column and row lines, which was the right answer to "these are a
+   set" and the wrong one to what a set of pictures is for. A grid is
+   read the way a table is — all at once, by comparison — and six
+   covers laid out to be compared are six covers nobody looks at.
 
-   Every plate leaves the site, so every plate says so — the arrow in
-   the caption is the same mark the elsewhere links in the panel carry,
-   and the new tab is given the two attributes it needs to be safe.  */
+   So it is a rail now. One endless row, thrown by hand, with the
+   picture inside each plate sitting a little behind its own crop so
+   that it lags the frame it is in. That is the whole of it: a set you
+   move through rather than scan, with a depth to look into. The plates
+   themselves did not change — same 4:3 crop, same caption, same crop
+   ticks, same link out — and neither did the section's shape on the
+   page: tag, statement and count on the twelve columns, the gallery
+   full bleed underneath them, the way out at the foot.
+
+   Everything about the movement is in src/hooks/usePlateRail.js;
+   everything about the plates is in src/components/PlateRail.jsx. The
+   reduced-motion answer is the stylesheet's, and it is a real one: a
+   horizontal gallery with snap points, which is what the prerendered
+   document ships and what a reader without a script keeps.  */
 export default function Behance() {
+    const reduced = useReducedMotion();
     const ref = useScrollEffect(lineReveal);
 
     return (
@@ -49,58 +60,16 @@ export default function Behance() {
                         <span className="tag__no num">Plates</span>
                         <b className="num">01 — 0{behance.length}</b>
                     </p>
-
-                    <ul className="beh">
-                        {behance.map((item) => (
-                            <li className="beh__item" key={item.id} data-reveal="">
-                                <a
-                                    className="beh__link"
-                                    href={item.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <figure className="beh__figure frame">
-                                        <span className="frame__media">
-                                            {/* REPLACE: labelled placeholder —
-                                                see src/data/behance.js. */}
-                                            <img
-                                                src={item.cover}
-                                                alt={item.alt}
-                                                width="1600"
-                                                height="1200"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        </span>
-                                        <figcaption className="cap beh__cap">
-                                            <span className="cap__no num">{item.no}</span>
-                                            <span className="beh__names">
-                                                <span className="beh__title">{item.title}</span>
-                                                <span className="beh__type">{item.type}</span>
-                                            </span>
-                                            <span className="beh__go" aria-hidden="true">
-                                                ↗
-                                            </span>
-                                        </figcaption>
-                                    </figure>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-
-                    <p className="beh__all" data-reveal="">
-                        <a
-                            className="beh__cta"
-                            href={BEHANCE_PROFILE}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            View all work on Behance
-                            <span aria-hidden="true"> ↗</span>
-                        </a>
-                    </p>
                 </div>
             </div>
+
+            {/* Outside the shell, and deliberately: the rail is endless
+                and an endless row that stopped at the measure would be
+                a row with two ends. A section is exactly the width of
+                the page's content box, so full bleed here is the
+                element's own `width: 100%` and never the viewport unit
+                that would also count the scrollbar. */}
+            <PlateRail items={behance} profile={BEHANCE_PROFILE} reduced={reduced} />
         </section>
     );
 }

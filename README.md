@@ -16,7 +16,7 @@ npm run build    # production build into dist/
 npm run preview  # serve the production build
 ```
 
-React with Vite, and two animation systems that never overlap.
+React with Vite, and four kinds of motion that never overlap.
 
 **Framer Motion** handles component motion — anything that answers a pointer,
 a focus ring or a press. Its shared patterns live in `src/motion/`. One thing is
@@ -40,8 +40,17 @@ it was measured off a recording rather than chosen — `src/carousel/config.js`
 says what each number was fitted against, and `src/carousel/warp.js` explains
 the one piece of the maths that is not obvious.
 
-No two of the three ever touch the same element. Where the boundary matters it
-is written down at the point it matters — the top of stylesheet section 9.
+**Plain DOM transforms** drive the second moving strip: the plate rail in
+Selected Behance Work (`src/hooks/usePlateRail.js`). It has no library at all —
+one transform per plate per frame, written straight to the element — and it
+borrows the carousel's scroll model (`src/carousel/scroll.js`) rather than
+copying it, so the two strips coast with the same weight. The plates stay real
+links in the document the whole time, which is what the wrap is arranged
+around; see the head of the hook.
+
+No two of the four ever touch the same element. Where the boundary matters it
+is written down at the point it matters — the top of stylesheet sections 9 and
+9.1.
 
 ## Structure
 
@@ -51,11 +60,11 @@ is written down at the point it matters — the top of stylesheet section 9.
 | `src/App.jsx` | The home page: hero, then five bands — Selected Work, Selected Behance Work, About, Side Quests, Contact. One scrolling document; each band is an anchor (`/#work`, `/#behance`, …). Four of the five are in the navigation panel; Behance is arrived at by reading. |
 | `src/CaseStudy.jsx` | The shell every case study shares. |
 | `src/sections/` | The six bands of the home page. |
-| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the image lightbox, the reticle, the grid overlay, the shared page furniture. |
+| `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the plate rail's, the image lightbox, the reticle, the grid overlay, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
-| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input. |
+| `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input, and the plate rail's. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |
 | `src/animations/` | The scroll system. `core.js` is the loader, the one media condition and the shared helpers; every other file is a single effect. See below. |
 | `src/styles/style.css` | The single stylesheet, and the design system: tokens, twelve-column grid, UI language, motion. Castoro for display, Inter for interface and text. |
@@ -90,9 +99,10 @@ block in the stylesheet, and one section of the page.
 | 2 | About | The one hand-drawn annotation — an entrance, not choreography, so it lives in `useReveal` and costs no library | *(stylesheet §6)* |
 | 3 | Work | Six covers as one rigid strip behind a pane of glass: neutral across the middle, refracting hard at the rims | `src/carousel/` *(WebGL2)* |
 | 4 | Work | Every cover a link: the card under the pointer is found by taking the click back through the lens | `src/carousel/layout.js` |
-| 5 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
-| 6 | Work · Behance · About · Contact | Each band's opening statement arriving a line at a time out of a mask | `lineReveal.js` |
-| 7 | Case study | The same ending as the home page: the plate at the foot of the page arriving as a panel and opening out | `closePanel.js` *(reused)* |
+| 5 | Behance | Six plates as one endless rail, thrown by hand, each picture lagging its own crop — and drifting with the page's own scrolling while the section is on screen | `src/hooks/usePlateRail.js` |
+| 6 | Contact | The last band arriving as a contained panel and opening to the edges | `closePanel.js` |
+| 7 | Work · Behance · About · Contact | Each band's opening statement arriving a line at a time out of a mask | `lineReveal.js` |
+| 8 | Case study | The same ending as the home page: the plate at the foot of the page arriving as a panel and opening out | `closePanel.js` *(reused)* |
 
 Three rules hold the whole thing together, and they are worth knowing before
 changing any of it:
