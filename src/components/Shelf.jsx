@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BOOKS } from '../data/books.js';
-import { onMedia, rafOnce } from '../hooks/dom.js';
+import Lightbox from './Lightbox.jsx';
+import { onMedia, rafOnce, useEnhanced } from '../hooks/dom.js';
 import { armShelf, topple } from '../hooks/shelfsound.js';
 
 /* ===================================================================
@@ -10,27 +11,29 @@ import { armShelf, topple } from '../hooks/shelfsound.js';
    one thing on the site that answers a cursor before it has arrived
    anywhere.
 
-   THE GESTURE. A book leans toward the pointer, and the further the
-   pointer is from its spine the less it leans, until at a little over
-   one book's width away it does not lean at all. Which side it goes is
-   not a decision the code makes — it is the sign of the same number
-   that decides how far, so a cursor to the left of a spine tips it left
-   and a cursor to the right tips it right, and a cursor sitting exactly
-   on the spine tips it nowhere. That last case is why the curve is the
-   shape it is rather than a simple falloff: a book being pushed dead
-   centre is a book being pushed, not one being toppled, and a falloff
-   that peaked there would have to pick a side at the moment the reader
-   crossed the middle and would snap between the two every time they
-   did.
+   THE GESTURE. The row leans toward the pointer, all of it at once and
+   all of it by the same angle — a stack of books going over together
+   rather than four objects each answering for itself. Which way it
+   goes is not a decision the code makes: it is the sign of the same
+   number that decides how far, so a cursor to the left of the row
+   tips it left, a cursor to the right tips it right, and a cursor
+   sitting exactly at the middle of it tips it nowhere.
 
-   What is left is a row that collapses toward the gap the pointer is
-   making in it — which is what a shelf does when a book is taken out of
-   it, and is the whole of the reference. The neighbours come with it,
-   an order of magnitude less, because the reach is a little wider than
-   one book and the tail of the curve is all they are standing in.
+   That last case is why the curve is the shape it is rather than a
+   simple falloff. A stack pushed dead centre is a stack being pushed,
+   not one being toppled — and a falloff that peaked in the middle
+   would have to pick a side at the moment the reader crossed it, and
+   would snap between the two every time they did. Zero at the middle,
+   zero at the rim, and a peak a third of the way out: the peak lands
+   about where the outer books are, so the row is fully over while the
+   pointer is still on it.
 
-   HOW IT MOVES. A spring per book rather than an eased transition,
-   under-damped by about a sixth. A book that arrived at its angle and
+   Because every cover takes the same angle they stay parallel, and a
+   parallel row keeps the gaps the shelf set. Nothing overlaps, nothing
+   collides, and what leans is the stack.
+
+   HOW IT MOVES. One spring rather than an eased transition,
+   under-damped by about a sixth. A row that arrived at its angle and
    stopped dead reads as a value being set; one that goes a shade past
    and comes back reads as a thing with a mass. The overshoot is small
    enough to be felt rather than seen, which is the only size it is
@@ -39,48 +42,49 @@ import { armShelf, topple } from '../hooks/shelfsound.js';
    Everything per-frame is written straight to the elements, as two
    custom properties and a transform origin — the arrangement the plate
    rail uses (src/hooks/usePlateRail.js). React renders four list items
-   once and is not told about any of this.
+   once and is told nothing about any of this; the only state it keeps
+   is which cover is open.
 
-   WHAT IS NOT HERE. No focus ring, no count, no rating, no link out,
-   no cursor of its own. The books are a list of titles that happens to
-   be legible as a shelf; a reader who never moves a pointer over them
-   has lost nothing but a flourish, and a reader who cannot see them at
-   all is read the four titles as a list, which is what they are.
+   THE COVER. A press on a spine opens that book's cover over the page,
+   through the same dialog a case-study figure opens in
+   (src/components/Lightbox.jsx) — the site's own answer to showing a
+   picture larger without leaving the page for it. The spine is only a
+   button where a script ran and the browser has the dialog to open, so
+   a document with neither is four titles on a shelf, which is what it
+   was.
+
+   WHAT IS NOT HERE. No count, no rating, no star, no link out, no
+   cursor of its own. The books are a list of titles that happens to be
+   legible as a shelf; a reader who never moves a pointer over them has
+   lost nothing but a flourish, and a reader who cannot see them at all
+   is read the four titles as a list, which is what they are.
    =================================================================== */
 
-/* How far a book goes over at the peak of the curve, and how far it
+/* How far the row goes over at the peak of the curve, and how far it
    slides while it does. The slide is what separates toppling from
-   pivoting: a book that rotates about a fixed corner is hinged to the
+   pivoting: a stack that rotates about a fixed corner is hinged to the
    shelf, and three pixels of travel in the direction it is falling is
-   the difference between a hinge and a book. */
+   the difference between a hinge and a row of books. */
 const LEAN = 9;
 const SLIDE = 3;
 
-/* Nine rather than the twelve this started at, and the reason is the
-   gap. A pointer resting between two books is the same distance from
-   both, so under any symmetric curve both of them go over by the same
-   amount and they meet in the middle — which is the gesture, and is
-   also two solid covers occupying one piece of the screen. Nine is the
-   angle at which that reads as a pair of books leaning on each other
-   rather than as a shape. The hairline the stylesheet puts round each
-   cover is the other half of the same answer.
-
-   The reach, as a multiple of the distance between two spines, and the
+/* The reach, as a multiple of the width of the whole row, and the
    height of the curve that fills it.
 
-   t is the pointer's distance from a spine over the reach, so it runs
-   from -1 to 1 across the whole of a book's influence; the lean is
-   t·(1-|t|)², which is zero at the spine, zero at the rim and peaks a
-   third of the way out. PEAK is 27/4 — the reciprocal of that peak —
-   and its only job is to make the maximum of the curve exactly one, so
-   that LEAN above is in degrees and means what it says.
+   t is the pointer's distance from the middle of the row over the
+   reach, so it runs from -1 to 1 across the whole of the row's
+   influence; the lean is t·(1-|t|)², which is zero in the middle, zero
+   at the rim and peaks a third of the way out. PEAK is 27/4 — the
+   reciprocal of that peak — and its only job is to make the maximum of
+   the curve exactly one, so that LEAN above is in degrees and means
+   what it says.
 
-   1.15 is chosen against the row rather than the page: the peak then
-   falls just outside a book's own edge, and a neighbour one spine away
-   is standing in the last tenth of the curve. That is the difference
-   between a row that bends and a row where one book goes over and the
-   next one notices. */
-const REACH = 1.15;
+   1.25 puts that peak at about five-eighths of the way from the middle
+   of the row to its end, which is under the second and third covers.
+   The row is therefore all the way over while the pointer is still on
+   the books, and still answering for half a row's width beyond either
+   end of them. */
+const REACH = 1.25;
 const PEAK = 27 / 4;
 
 /* The spring. Critical damping for this stiffness is 2√170 ≈ 26.1, and
@@ -88,12 +92,12 @@ const PEAK = 27 / 4;
 const STIFF = 170;
 const DAMP = 22;
 
-/* When every book is within this of where it is being asked to stand,
-   and moving slower than this, the row has arrived and the loop stops —
-   whether that is upright or leaning. A cursor parked over the shelf
-   holds its angle without a frame being drawn for it; only the ones
-   where something actually changes are spent. The first figure is in
-   the units of the curve above and the second in those units a second.
+/* When the row is within this of where it is being asked to stand, and
+   moving slower than this, it has arrived and the loop stops — whether
+   that is upright or leaning. A cursor parked over the shelf holds its
+   angle without a frame being drawn for it; only the ones where
+   something actually changes are spent. The first figure is in the
+   units of the curve above and the second in those units a second.
 
    If what it arrived at was upright, the properties are taken off as
    well, so a shelf nobody is pointing at carries no inline style at
@@ -101,13 +105,17 @@ const DAMP = 22;
 const QUIET = 0.004;
 const STILL = 0.03;
 
-/* A book sounds on its way over, once, at this much of full lean, and
+/* The row sounds on its way over, once, at this much of full lean, and
    is not allowed to sound again until it has come back under the
-   second figure. Two thresholds rather than one because a pointer held
+   second figure. Two thresholds rather than one because a row held
    still at the top of the curve sits on a single one and rings against
    it on every frame. */
 const LOUD = 0.4;
 const HUSH = 0.15;
+
+/* Four covers going over together are heavier than one, so the thud
+   they make is pitched below a single book's. */
+const WEIGHT = 1.25;
 
 /* How far above and below the row a pointer still counts as being at
    the shelf. Generous vertically and mean horizontally — a reader
@@ -124,7 +132,7 @@ const NEAR = 110;
    a thumb is not leaving books over behind them. */
 const HELD_FOR = 1100;
 
-/* What an upright book reads as, written the way the loop writes it so
+/* What an upright row reads as, written the way the loop writes it so
    the two can be compared as strings rather than as numbers that have
    already been rounded once. */
 const ZERO_LEAN = '0.00deg';
@@ -138,25 +146,25 @@ function arm(root) {
     /* The list item is the box the entrance owns — it carries the
        site's own rise and fade (stylesheet section 6), which is a
        transform, and two transforms on one element is one of them
-       being thrown away. The volume inside it is what leans. */
+       being thrown away. The cover inside it is what leans. */
     const vols = books.map((book) => book.querySelector('.shelf__vol') || book);
-    const weight = books.map((book) => Number(book.dataset.tall) || 1);
 
-    const at = books.map(() => 0);
-    const vel = books.map(() => 0);
-    const side = books.map(() => 0);
-    const rung = books.map(() => false);
+    /* One angle for the row, so one spring for the row. */
+    let at = 0;
+    let vel = 0;
+    let side = 0;
+    let rung = false;
 
-    /* What is on each cover already. A property removed and a property
+    /* What is on the covers already. A property removed and a property
        set to zero render identically — the stylesheet declares the
-       fallback — so an upright book is recorded as the zero it would
+       fallback — so an upright row is recorded as the zero it would
        have been written, and a frame that computes the same value
        again touches nothing. Without it a pointer crossing the far side
        of the page rewrites four style attributes for every frame it is
        moving, all of them with the value they already had. */
-    const shown = books.map(() => ({ lean: ZERO_LEAN, slide: ZERO_SLIDE, on: false }));
+    const shown = { lean: ZERO_LEAN, slide: ZERO_SLIDE, on: false };
 
-    let centres = [];
+    let middle = 0;
     let reach = 1;
     /* Where the pointer was last seen, in the viewport's own
        coordinates, or null once it has gone. Whether that is anywhere
@@ -166,46 +174,59 @@ function arm(root) {
     let clock = 0;
     let held = 0;
 
-    /* offsetLeft rather than a client rect, and this is the whole
+    /* offset geometry rather than a client rect, and this is the whole
        reason the row is positioned: offset geometry is what the layout
        says and a client rect is what the screen shows. The second one
-       is measured through the rotation this file is writing, so a book
-       that leans reports a wider box and a moved centre, the next frame
-       reads that moved centre, and the row walks away from the pointer
+       is measured through the rotation this file is writing, so a row
+       that leans reports a wider box and a moved middle, the next frame
+       reads that moved middle, and the row walks away from the pointer
        under its own feedback. */
     const measure = () => {
-        centres = books.map((book) => book.offsetLeft + book.offsetWidth / 2);
-        const pitch = centres.length > 1
-            ? Math.abs(centres[1] - centres[0])
-            : books[0].offsetWidth * 1.4;
-        reach = (pitch || books[0].offsetWidth || 1) * REACH;
+        const first = books[0];
+        const last = books[books.length - 1];
+        const left = first.offsetLeft;
+        const right = last.offsetLeft + last.offsetWidth;
+        middle = (left + right) / 2;
+        reach = ((right - left) || first.offsetWidth || 1) * REACH;
     };
 
-    const write = (i) => {
-        const vol = vols[i];
-        const lean = `${(at[i] * LEAN).toFixed(2)}deg`;
-        const slide = `${(at[i] * SLIDE).toFixed(2)}px`;
+    const write = () => {
+        const lean = `${(at * LEAN).toFixed(2)}deg`;
+        const slide = `${(at * SLIDE).toFixed(2)}px`;
 
-        if (lean !== shown[i].lean) {
-            vol.style.setProperty('--lean', lean);
-            shown[i].lean = lean;
-            shown[i].on = true;
-        }
-        if (slide !== shown[i].slide) {
-            vol.style.setProperty('--slide', slide);
-            shown[i].slide = slide;
-            shown[i].on = true;
-        }
-
-        /* The pivot is the bottom corner on the side the book is going,
+        /* The pivot is the bottom corner on the side the row is going,
            which is the corner a book actually turns about. It can only
            change while the angle is passing through zero, so the swap
            is never on screen. */
-        const s = at[i] > QUIET ? 1 : at[i] < -QUIET ? -1 : side[i];
-        if (s !== side[i]) {
-            side[i] = s;
-            vol.style.setProperty('--pivot', s < 0 ? '0%' : '100%');
+        const s = at > QUIET ? 1 : at < -QUIET ? -1 : side;
+        const turned = s !== side;
+        if (turned) side = s;
+
+        if (lean === shown.lean && slide === shown.slide && !turned) return;
+
+        for (let i = 0; i < vols.length; i++) {
+            const vol = vols[i];
+            if (lean !== shown.lean) vol.style.setProperty('--lean', lean);
+            if (slide !== shown.slide) vol.style.setProperty('--slide', slide);
+            if (turned) vol.style.setProperty('--pivot', s < 0 ? '0%' : '100%');
         }
+
+        shown.lean = lean;
+        shown.slide = slide;
+        shown.on = true;
+    };
+
+    const clear = () => {
+        at = 0;
+        vel = 0;
+        if (!shown.on) return;
+        for (let i = 0; i < vols.length; i++) {
+            vols[i].style.removeProperty('--lean');
+            vols[i].style.removeProperty('--slide');
+        }
+        shown.lean = ZERO_LEAN;
+        shown.slide = ZERO_SLIDE;
+        shown.on = false;
     };
 
     const tick = (stamp) => {
@@ -213,7 +234,7 @@ function arm(root) {
 
         /* Clamped, for the reason the scroll model clamps a long frame:
            a tab that has been in the background for a second should
-           come back to a shelf, not to four books mid-flight. */
+           come back to a shelf, not to a row mid-flight. */
         const dt = clock ? Math.min((stamp - clock) / 1000, 1 / 30) : 1 / 60;
         clock = stamp;
 
@@ -227,61 +248,45 @@ function arm(root) {
            in a pointermove handler is a synchronous layout on every
            move of the mouse anywhere on the page — for a row of four
            books in the corner of the last section. */
-        let aim = null;
+        let to = 0;
         if (pointer
             && pointer.y > box.top - NEAR
-            && pointer.y < box.bottom + NEAR
-            && pointer.x > box.left - reach
-            && pointer.x < box.right + reach) {
-            aim = pointer.x;
+            && pointer.y < box.bottom + NEAR) {
+            const t = (pointer.x - (box.left + middle)) / reach;
+            if (t > -1 && t < 1) {
+                const a = t < 0 ? -t : t;
+                to = t * (1 - a) * (1 - a) * PEAK;
+            }
         }
 
-        let alive = false;
-        let upright = true;
+        vel += (-STIFF * (at - to) - DAMP * vel) * dt;
+        at += vel * dt;
 
-        for (let i = 0; i < books.length; i++) {
-            let to = 0;
-            if (aim !== null) {
-                const t = (aim - (box.left + centres[i])) / reach;
-                if (t > -1 && t < 1) {
-                    const a = t < 0 ? -t : t;
-                    to = t * (1 - a) * (1 - a) * PEAK;
-                }
-            }
+        const a = at < 0 ? -at : at;
+        const gap = at - to < 0 ? to - at : at - to;
+        const v = vel < 0 ? -vel : vel;
 
-            vel[i] += (-STIFF * (at[i] - to) - DAMP * vel[i]) * dt;
-            at[i] += vel[i] * dt;
+        /* A row sounds on the way over and not on the way back. The two
+           thresholds keep a row resting at the top of the curve from
+           ringing against a single one on every frame; the direction is
+           what keeps a row swinging — the page scrolling under a held
+           lean, a window being dragged — from ringing on the return leg
+           of every swing. Falling further is the sign of the velocity
+           agreeing with the sign of the angle. */
+        const falling = at > 0 ? vel > 0 : vel < 0;
 
-            const a = at[i] < 0 ? -at[i] : at[i];
-            const gap = at[i] - to < 0 ? to - at[i] : at[i] - to;
-            const v = vel[i] < 0 ? -vel[i] : vel[i];
-
-            /* Still moving, or not yet where it is being asked to
-               stand. Either way there is another frame to draw. */
-            if (gap > QUIET || v > STILL) alive = true;
-            if (a > QUIET) upright = false;
-
-            /* A book sounds on the way over and not on the way back.
-               The two thresholds keep a cover resting at the top of the
-               curve from ringing against a single one on every frame;
-               the direction is what keeps a row swinging — the page
-               scrolling under a held lean, a window being dragged —
-               from ringing on the return leg of every swing. Falling
-               further is the sign of the velocity agreeing with the
-               sign of the angle. */
-            const falling = at[i] > 0 ? vel[i] > 0 : vel[i] < 0;
-
-            if (!rung[i] && a > LOUD && falling) {
-                rung[i] = true;
-                topple(weight[i]);
-            } else if (rung[i] && a < HUSH) {
-                rung[i] = false;
-            }
-
-            write(i);
+        if (!rung && a > LOUD && falling) {
+            rung = true;
+            topple(WEIGHT);
+        } else if (rung && a < HUSH) {
+            rung = false;
         }
 
-        if (alive) {
+        write();
+
+        /* Still moving, or not yet where it is being asked to stand.
+           Either way there is another frame to draw. */
+        if (gap > QUIET || v > STILL) {
             frame = requestAnimationFrame(tick);
             return;
         }
@@ -291,23 +296,9 @@ function arm(root) {
         /* Arrived. If where it arrived is upright, the row is put back
            to the state the stylesheet left it in rather than held at a
            rounded-down version of it; if it arrived leaning — a cursor
-           resting on the shelf — the angles stand, and the next move of
-           the pointer picks them up from where they are. */
-        if (!upright) return;
-
-        for (let i = 0; i < books.length; i++) {
-            at[i] = 0;
-            vel[i] = 0;
-            /* `on` rather than the values, because a cover that came
-               back to zero has those values written on it and is not
-               the same thing as one that was never touched. */
-            if (!shown[i].on) continue;
-            vols[i].style.removeProperty('--lean');
-            vols[i].style.removeProperty('--slide');
-            shown[i].lean = ZERO_LEAN;
-            shown[i].slide = ZERO_SLIDE;
-            shown[i].on = false;
-        }
+           resting on the shelf — the angle stands, and the next move of
+           the pointer picks it up from where it is. */
+        if (a <= QUIET) clear();
     };
 
     const start = () => {
@@ -334,7 +325,7 @@ function arm(root) {
 
     /* A reader can move the shelf without moving the pointer. The loop
        stops once the row has arrived, so a cursor left resting on the
-       books while the page scrolls would otherwise take its angles with
+       books while the page scrolls would otherwise take its angle with
        it — the shelf sliding up the screen still leaning at a pointer
        that is no longer anywhere near it, until the mouse was next
        moved. One frame per scroll is enough to answer that, and it is
@@ -379,8 +370,8 @@ function arm(root) {
     };
 
     /* A drag of a window edge is a stream of these, and measuring is
-       two layout reads a book. Coalesced to one a frame, through the
-       same helper the chrome and the rail use. */
+       two layout reads. Coalesced to one a frame, through the same
+       helper the chrome and the rail use. */
     const remeasure = rafOnce();
     const onResize = () => remeasure(measure);
 
@@ -420,11 +411,11 @@ function arm(root) {
         window.removeEventListener('pointercancel', onUp);
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', onResize);
-        remeasure.cancel();
         window.removeEventListener('blur', gone);
         document.documentElement.removeEventListener('pointerleave', gone);
 
         window.clearTimeout(held);
+        remeasure.cancel();
         if (frame) cancelAnimationFrame(frame);
         offSound();
 
@@ -433,16 +424,28 @@ function arm(root) {
             vol.style.removeProperty('--slide');
             vol.style.removeProperty('--pivot');
         });
-        shown.forEach((cover) => {
-            cover.lean = ZERO_LEAN;
-            cover.slide = ZERO_SLIDE;
-            cover.on = false;
-        });
+        shown.lean = ZERO_LEAN;
+        shown.slide = ZERO_SLIDE;
+        shown.on = false;
     };
 }
 
+const dialogSupported = () =>
+    typeof HTMLDialogElement === 'function'
+    && typeof HTMLDialogElement.prototype.showModal === 'function';
+
 export default function Shelf() {
     const ref = useRef(null);
+    /* The one thing React is told about this section: which cover is
+       open. It changes on a press and at no other time. */
+    const [poster, setPoster] = useState(null);
+
+    /* False on the server and on the first client render, which is what
+       the prerendered document says too — so the spine is a plain box
+       in the markup and becomes a button afterwards, exactly as a
+       case-study figure becomes zoomable. */
+    const enhanced = useEnhanced();
+    const opens = enhanced && dialogSupported();
 
     useEffect(() => {
         const root = ref.current;
@@ -468,40 +471,80 @@ export default function Shelf() {
             offMedia();
             off();
         };
-    }, []);
+        /* `opens` is a dependency because it rewrites the markup this
+           effect is holding on to: the spine ships as a plain box and
+           becomes a button on the first client render after mount, and
+           React replaces the element rather than changing it. Armed
+           once and never again, the loop would spend the rest of the
+           visit writing angles to four spans that are no longer in the
+           document — the shelf answering a pointer that nothing on
+           screen is attached to. */
+    }, [opens]);
 
     return (
-        <div className="shelf" ref={ref}>
-            {/* The role is not redundant: a list whose markers the
-                stylesheet removes stops being announced as a list in
-                Safari, and four titles are worth being told there are
-                four of. */}
-            <ul className="shelf__row" role="list">
-                {BOOKS.map((book) => (
-                    <li
-                        className="shelf__book"
-                        key={book.title}
-                        data-reveal=""
-                        data-tall={book.tall || 1}
-                        style={{ '--tall': book.tall || 1 }}
-                    >
-                        <span className="shelf__vol">
+        <>
+            <div className="shelf" ref={ref}>
+                {/* The role is not redundant: a list whose markers the
+                    stylesheet removes stops being announced as a list in
+                    Safari, and four titles are worth being told there are
+                    four of. */}
+                <ul className="shelf__row" role="list">
+                    {BOOKS.map((book) => {
+                        const spine = (
                             <span className="shelf__spine" aria-hidden="true">
                                 {book.spine || book.title}
                             </span>
-                        </span>
-                        {/* The cover prints what fits down a spine; this
-                            is the book. */}
-                        <span className="visually-hidden">{book.title}</span>
-                    </li>
-                ))}
-            </ul>
+                        );
 
-            {/* The shelf itself is a rule, so it arrives the way every
-                other rule on the site does — drawn from its left edge,
-                by the entrance system, off the same attribute the band
-                dividers use (src/hooks/useReveal.js). */}
-            <div className="shelf__board" data-reveal-rule="" aria-hidden="true" />
-        </div>
+                        return (
+                            <li
+                                className="shelf__book"
+                                key={book.title}
+                                data-reveal=""
+                                style={{ '--tall': book.tall || 1 }}
+                            >
+                                {opens ? (
+                                    <button
+                                        type="button"
+                                        className="shelf__vol"
+                                        /* The cover prints what fits down a
+                                           spine; this is the book, and the
+                                           whole of what the press does. */
+                                        aria-label={`${book.title} — show cover`}
+                                        onClick={(event) =>
+                                            setPoster({
+                                                src: book.cover,
+                                                alt: book.alt || book.title,
+                                                opener: event.currentTarget,
+                                            })}
+                                    >
+                                        {spine}
+                                    </button>
+                                ) : (
+                                    <span className="shelf__vol">
+                                        {spine}
+                                        <span className="visually-hidden">{book.title}</span>
+                                    </span>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+
+                {/* The shelf itself is a rule, so it arrives the way every
+                    other rule on the site does — drawn from its left edge,
+                    by the entrance system, off the same attribute the band
+                    dividers use (src/hooks/useReveal.js). */}
+                <div className="shelf__board" data-reveal-rule="" aria-hidden="true" />
+            </div>
+
+            {/* Outside the shelf on purpose. A modal dialog is painted in
+                the top layer but it is still a descendant for the sake of
+                inheritance, and the shelf gives up its pointer events so
+                that its empty half stops catching presses meant for the
+                heading underneath — inherited onto the dialog, that would
+                be a cover nobody can close. */}
+            <Lightbox item={poster} onClose={() => setPoster(null)} />
+        </>
     );
 }

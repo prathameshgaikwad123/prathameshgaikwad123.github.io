@@ -3839,8 +3839,19 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 /* The cover, and the only thing in the row that moves. It is a layer of
    its own because the list item above it is already carrying the site's
    entrance — a rise and a fade, section 6 — and an element cannot hold
-   two transforms without one of them being the one that survives. */
+   two transforms without one of them being the one that survives.
+
+   It is a <button> wherever a script ran and the browser has a dialog
+   to open, and a <span> everywhere else, so the reset below is written
+   for both: a button brings a border, a background, a padding, a font
+   and a text alignment of its own, and every one of them is something
+   this rule is about to set for itself. */
 .shelf__vol {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    font: inherit;
+    text-align: inherit;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3864,6 +3875,13 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     transform: translateX(var(--slide, 0px)) rotate(var(--lean, 0deg));
     transform-origin: var(--pivot, 50%) 100%;
 }
+
+/* A spine that opens something says so the way every other target on
+   the site says it, and with nothing else: no hover fill, no lift, no
+   mark in the corner. The row already answers the pointer — a cover
+   that also changed colour under it would be the shelf explaining
+   itself twice. */
+button.shelf__vol { cursor: pointer; }
 
 /* Down the spine, head to the right, which is the way a book on a
    shelf is read. A title too long for the cover wraps to a second line
