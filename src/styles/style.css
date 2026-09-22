@@ -3815,16 +3815,18 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     padding-inline: var(--shelf-room);
     margin: 0;
     list-style: none;
-}
-
-/* Kept to the end of the line from the width the band gets a measure.
-   On a phone the shelf is the whole of it and the books start where
-   every other line on the page starts; from 48rem the rule under them
-   is the full width of the grid and the books stand at the far end of
-   it, which is the only place four small objects on a long line do not
-   read as the start of a list. */
-@media (min-width: 48rem) {
-    .shelf__row { justify-content: flex-end; }
+    /* At the far end of the line, at every width. The rule under the
+       books is the full width of the grid on a phone as much as on a
+       desk, and four small objects standing at the start of a long line
+       read as the start of a list — at the end of it they read as the
+       end of a shelf. They were left-aligned below 48rem on the grounds
+       that a phone's lines all start at the left; the shelf is not a
+       line of text, and the two layouts disagreeing about where the
+       books stand was the one thing on the band that changed character
+       between a phone and a laptop. The room at the end is the same
+       overhang allowance as ever, so the last cover leaning right still
+       stays inside the page. */
+    justify-content: flex-end;
 }
 
 .shelf__book {
