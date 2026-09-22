@@ -97,6 +97,38 @@ and three sit side by side. Put your strongest overview first.
 
 ---
 
+## Book covers
+
+Four books stand on the rule above the address in the closing band, and a
+press on a spine opens that book's cover over the page. Each one is a
+labelled placeholder today.
+
+| Path | Size | Ratio | Used on |
+|---|---|---|---|
+| `public/assets/images/books/01-immortals-of-meluha.*` | 1200 × 1800 | 2:3 | Contact |
+| `public/assets/images/books/02-metamorphosis.*` | 1200 × 1800 | 2:3 | Contact |
+| `public/assets/images/books/03-ghachar-ghochar.*` | 1200 × 1800 | 2:3 | Contact |
+| `public/assets/images/books/04-how-i-braved-anu-aunty.*` | 1200 × 1800 | 2:3 | Contact |
+
+A photograph of your own copy is the better answer here, and the honest
+one: it is a shelf of books somebody has read, and a picture of the book
+that was read says that where a publisher's press shot does not. Shoot
+the front cover square on, fill the frame, and let the paper look like
+paper — the cover opens at up to 80% of the window height, so it is seen
+closer than anything else on the page bar the carousel.
+
+The spine on the shelf is type, not a picture: it is set from `spine` in
+`src/data/books.js` and owes the cover nothing. Swap the extension in
+`cover` there when a real export goes in beside the placeholder, and
+rewrite `alt` — it currently describes the book, which is right, but
+check it still reads correctly against the picture you chose.
+
+To add a fifth book, append a record to `BOOKS` in `src/data/books.js`.
+The shelf measures its own row from the markup and the lean measures its
+reach from the width of the row, so nothing else needs touching.
+
+---
+
 ## Site-level assets
 
 | Path | Size | Status |
