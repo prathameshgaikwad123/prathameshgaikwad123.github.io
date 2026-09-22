@@ -1428,6 +1428,12 @@ em { font-style: italic; }
    picture of. */
 .folio__slot { display: block; overflow: hidden; }
 
+/* A band that does not number itself — the close, which spends its
+   opening line on the shelf rather than on its own name. The slot is
+   still there and still turns; what it holds is nothing, so the lead in
+   front of the name goes with it. */
+.folio[data-unnumbered] .folio__line { gap: 0; }
+
 .folio__no { color: var(--mark); font-variant-numeric: tabular-nums; }
 
 .folio.is-turn .folio__no,
@@ -3721,14 +3727,154 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .js:not(.motion-off) .close__ground { clip-path: inset(var(--close-inset)); }
 }
 
-.contact__tag { grid-column: 1 / -1; }
-.contact__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
-.contact__lead { grid-column: 1 / -1; margin-top: 1.5rem; max-width: 40ch; }
+.contact__statement { grid-column: 1 / -1; }
 
 @media (min-width: 48rem) {
-    .contact__tag       { grid-column: 1 / span 4; }
     .contact__statement { grid-column: 1 / span 7; }
-    .contact__lead      { grid-column: 9 / -1; margin-top: 1.75rem; }
+
+    /* Set against the shelf rather than against the top of the band.
+       The books are the tallest thing in this row by a factor of three,
+       and a heading sitting level with their top edge reads as a label
+       over a diagram; level with their middle it reads as the other
+       half of a pair, which is what it is. This is the one heading on
+       the site that is not top-aligned, and the only reason it is
+       allowed to be is that it has something beside it. */
+    .contact__statement { align-self: center; }
+}
+
+
+/* --- The shelf -------------------------------------------------------
+   Four books on a rule, in the cell the supporting line used to hold.
+   The geometry is declared here, once, and read by everything below it
+   and by src/components/Shelf.jsx — the lean measures its own reach
+   from the distance between two spines, so the numbers in this block
+   are the only place the row is sized.
+
+   --shelf-room is the one that is not a taste. A book turns about its
+   bottom corner, so a cover of height h leaning by θ reaches h·sinθ
+   past the edge it started at, and at twelve degrees that is a fifth of
+   its own height. The room either side of the row is that overhang,
+   which is what keeps a book at either end of the shelf inside the box
+   the grid gave it instead of out over the gutter — it is why this
+   section can be left to overflow visibly without ever widening the
+   page. Raise --shelf-h or the lean in the component and this has to
+   come up with them.
+
+   Nothing here is painted in anything but the ramp: a cover is --ink
+   and the type on it is --paper, so the shelf is black on white on the
+   light theme and white on black on the dark one without a second
+   declaration anywhere.                                              */
+.shelf {
+    /* The floor on the width is set by a wrapped title rather than by
+       taste: below 48rem a cover is at its narrowest and the two
+       longest titles here need two lines to fit down it, so the cover
+       has to be wide enough to stand them side by side — two lines of
+       --t-micro at this leading, and the padding either side. Take it
+       lower and a spine runs out over its own edge. */
+    --shelf-w:    clamp(2.5rem, 4.4vw, 2.625rem);
+    --shelf-h:    clamp(9.5rem, 13vw, 11rem);
+    --shelf-gap:  clamp(0.3125rem, 0.6vw, 0.5rem);
+    --shelf-room: clamp(1.75rem, 3.2vw, 2.75rem);
+
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: clamp(2.25rem, 7vw, 3rem);
+}
+
+@media (min-width: 48rem) {
+    /* Column 8 rather than 9 between the two breakpoints: the grid is
+       at its narrowest here and the row plus its overhang is very
+       nearly the width of four columns. One more column is the margin
+       that makes it a fit rather than a coincidence. */
+    .shelf { grid-column: 8 / -1; margin-top: 0; }
+}
+
+@media (min-width: 62rem) {
+    .shelf { grid-column: 9 / -1; }
+}
+
+.shelf__row {
+    /* Positioned so that a book's offsetLeft is measured against the
+       row. The component reads the spines that way rather than off a
+       client rect, because a client rect is measured through the
+       rotation the component is writing — see the note there. */
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: var(--shelf-gap);
+    padding-inline: var(--shelf-room);
+    margin: 0;
+    list-style: none;
+}
+
+.shelf__book {
+    flex: none;
+    width: var(--shelf-w);
+    /* Four identical rectangles read as a chart. The variance is in
+       the data (src/data/books.js) because it belongs to the book. */
+    height: calc(var(--shelf-h) * var(--tall, 1));
+}
+
+/* The cover, and the only thing in the row that moves. It is a layer of
+   its own because the list item above it is already carrying the site's
+   entrance — a rise and a fade, section 6 — and an element cannot hold
+   two transforms without one of them being the one that survives. */
+.shelf__vol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem 0.25rem;
+    background: var(--ink);
+    color: var(--paper);
+    /* Square against the spine, eased at the fore edge — the only thing
+       on the cover that says which way round the book is. */
+    border-radius: 1px 3px 3px 1px;
+    /* A hairline of the ground round every cover. Two books leaning
+       into the same gap end up over one another, and two --ink
+       rectangles overlapping are one --ink shape: the row stops being
+       books at exactly the moment it is doing the thing it is here to
+       do. This is the page showing through between them, which is the
+       only separator a two-tone system has — a ring rather than a
+       shadow, at the width of every other line on the site, and in the
+       gap at rest where nothing can see it. */
+    box-shadow: 0 0 0 1px var(--paper);
+    transform: translateX(var(--slide, 0px)) rotate(var(--lean, 0deg));
+    transform-origin: var(--pivot, 50%) 100%;
+}
+
+/* Down the spine, head to the right, which is the way a book on a
+   shelf is read. A title too long for the cover wraps to a second line
+   beside the first rather than being cut, for the same reason a real
+   one does. */
+.shelf__spine {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    max-height: 100%;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* The shelf is a rule, so it is drawn like every other rule on the
+   site: from its left edge, by the entrance system, off the attribute
+   the band dividers use. The line is the pseudo-element rather than
+   the box because that is what `[data-reveal-rule]` animates — section
+   6 — and because a border cannot be scaled. */
+.shelf__board {
+    position: relative;
+    height: 3px;
+    margin-inline: calc(var(--shelf-room) - 0.5rem);
+}
+
+.shelf__board::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
 }
 
 /* The address is the focal point of the last screen. */
