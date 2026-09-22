@@ -58,15 +58,29 @@ export function armShelf() {
 
     const events = ['pointerdown', 'keydown', 'touchstart'];
     let off = () => {};
+    let armed = true;
+
+    /* Given up only once there is a context that is actually running.
+       The listeners used to come off on the first gesture, whatever
+       came of it — and a context built where the browser was not yet
+       satisfied that a gesture had happened is created suspended and
+       stays that way. That was the second half of the silence: the one
+       gesture that could have opened the audio was spent finding out
+       that it could not, and nothing ever asked again. */
+    const settle = () => {
+        if (!armed || !ctx || ctx.state !== 'running') return;
+        armed = false;
+        off();
+    };
 
     const wake = () => {
-        off();
         try {
             if (!ctx) {
                 ctx = new Context();
                 noise = buffer(ctx);
             }
-            if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+            if (ctx.state === 'suspended') ctx.resume().then(settle, () => {});
+            else settle();
         } catch (e) {
             /* No audio on this device, or none allowed. Silence is the
                fallback and the reader is told nothing. */
@@ -91,7 +105,10 @@ export function armShelf() {
 
    Rate-limited off the audio clock rather than the wall clock, for the
    reason the typing sound is: a sweep along the row can ask for four of
-   these inside a frame, and four thuds inside a frame is a click. */
+   these inside a frame, and four thuds inside a frame is a click. The
+   window is short enough that four books going over one after another
+   are four books and not one — which is the whole sound — and long
+   enough that they cannot become a buzz. */
 export function topple(weight) {
     if (!ctx || !noise || ctx.state !== 'running') return;
 
@@ -107,13 +124,18 @@ export function topple(weight) {
            second sliding under the first. */
         source.playbackRate.value = 1 / weight;
 
-        /* The body of a board being struck and nothing above it: past
-           about half a kilohertz this stops being a book and starts
-           being a page being turned. */
+        /* The body of a board being struck. This sat at 340Hz and was
+           the whole reason the shelf was silent on a laptop: everything
+           a book actually sounds like was under the range a small
+           speaker can move, so the sound was being made correctly and
+           reproduced by nothing. A book landing is a knock, and a knock
+           lives where a phone and a laptop are loudest — so the corner
+           is up where the wood is rather than down where the rumble
+           is. */
         const low = ctx.createBiquadFilter();
         low.type = 'lowpass';
-        low.frequency.value = 340 / weight;
-        low.Q.value = 0.8;
+        low.frequency.value = 1150 / weight;
+        low.Q.value = 0.9;
 
         /* And nothing below it either. A thud with its bottom octave
            left in is a sound a laptop speaker renders as a rattle and a
@@ -121,13 +143,13 @@ export function topple(weight) {
            which is more than a shelf should ever be asking for. */
         const high = ctx.createBiquadFilter();
         high.type = 'highpass';
-        high.frequency.value = 90;
+        high.frequency.value = 120;
         high.Q.value = 0.7;
 
         const gain = ctx.createGain();
         gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.055, now + 0.006);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+        gain.gain.exponentialRampToValueAtTime(0.38, now + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
 
         source.connect(high);
         high.connect(low);

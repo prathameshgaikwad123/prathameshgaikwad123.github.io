@@ -261,7 +261,17 @@ function arm(root) {
             if (gap > QUIET || v > STILL) alive = true;
             if (a > QUIET) upright = false;
 
-            if (!rung[i] && a > LOUD) {
+            /* A book sounds on the way over and not on the way back.
+               The two thresholds keep a cover resting at the top of the
+               curve from ringing against a single one on every frame;
+               the direction is what keeps a row swinging — the page
+               scrolling under a held lean, a window being dragged —
+               from ringing on the return leg of every swing. Falling
+               further is the sign of the velocity agreeing with the
+               sign of the angle. */
+            const falling = at[i] > 0 ? vel[i] > 0 : vel[i] < 0;
+
+            if (!rung[i] && a > LOUD && falling) {
                 rung[i] = true;
                 topple(weight[i]);
             } else if (rung[i] && a < HUSH) {
@@ -376,25 +386,23 @@ function arm(root) {
 
     measure();
 
-    /* The sound is armed when the band has been on screen once rather
-       than when the page loads. Its listeners build an audio context on
-       the first gesture of any kind (src/hooks/shelfsound.js), and a
-       reader who never reaches the last section should not be handed
-       one for clicking something in the first. */
-    let offSound = () => {};
-    let io = null;
+    /* The sound is armed now rather than when the band comes into view.
 
-    if (typeof IntersectionObserver === 'function') {
-        io = new IntersectionObserver((entries) => {
-            if (!entries.some((entry) => entry.isIntersecting)) return;
-            io.disconnect();
-            io = null;
-            offSound = armShelf();
-        }, { threshold: 0.2 });
-        io.observe(root);
-    } else {
-        offSound = armShelf();
-    }
+       It was armed on the band, which was the wrong end of the visit:
+       the listeners build an audio context on the first gesture of any
+       kind, and a browser gives a page one of those only for a press or
+       a key — never for a scroll. So a reader who clicked something in
+       the masthead, read the whole page, and arrived here had already
+       spent the only gesture they were going to make before anything
+       was listening for it, and the shelf was silent for the rest of
+       the visit. Armed from the start, the press they have already made
+       is the one that opens the audio.
+
+       What that costs is an audio context for a reader who presses
+       something and never reaches the last section. It is built inside
+       their gesture handler either way, and the intro's typing sound
+       has asked for exactly this since the site was written. */
+    const offSound = armShelf();
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerdown', onDown, { passive: true });
@@ -418,7 +426,6 @@ function arm(root) {
 
         window.clearTimeout(held);
         if (frame) cancelAnimationFrame(frame);
-        if (io) io.disconnect();
         offSound();
 
         vols.forEach((vol) => {
@@ -465,7 +472,11 @@ export default function Shelf() {
 
     return (
         <div className="shelf" ref={ref}>
-            <ul className="shelf__row">
+            {/* The role is not redundant: a list whose markers the
+                stylesheet removes stops being announced as a list in
+                Safari, and four titles are worth being told there are
+                four of. */}
+            <ul className="shelf__row" role="list">
                 {BOOKS.map((book) => (
                     <li
                         className="shelf__book"
