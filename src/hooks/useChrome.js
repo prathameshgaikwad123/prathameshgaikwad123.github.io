@@ -99,10 +99,29 @@ export default function useChrome() {
         nodes.forEach((node) => {
             if (!node.band) return;
             const tag = node.el.querySelector('.tag');
-            if (!tag) return;
-            const numeral = tag.querySelector('.tag__no');
-            node.no = numeral ? numeral.textContent.trim() : '';
-            node.name = tag.textContent.replace(node.no, '').trim();
+
+            if (tag) {
+                const numeral = tag.querySelector('.tag__no');
+                node.no = numeral ? numeral.textContent.trim() : '';
+                node.name = tag.textContent.replace(node.no, '').trim();
+                return;
+            }
+
+            /* And a band that does not open on a tag is asked what it
+               calls itself instead. There is one — the close, which
+               gives its opening line to the shelf beside it rather than
+               to its own name — and without this it would be the one
+               band on the page a reader scrolls into and watches the
+               running head go blank for: `band` is still truthy there,
+               so the folio is shown, and what it is shown saying is two
+               empty strings.
+
+               The numeral goes with the tag rather than being found
+               somewhere else, which is the honest answer: a band the
+               page has stopped numbering is not a band the margin
+               should still be numbering. The line closes up around the
+               missing half — see `data-unnumbered` below. */
+            node.name = (node.el.getAttribute('aria-label') || '').trim();
         });
 
         /* A case study has no bands, so it gets no folio — and not an
@@ -163,6 +182,13 @@ export default function useChrome() {
             if (folioName) folioName.textContent = band ? band.name : '';
             if (band) folio.removeAttribute('data-empty');
             else folio.setAttribute('data-empty', '');
+
+            /* The gap between the two halves is set by the line and not
+               by either half, so a band with no numeral would otherwise
+               be a name with the lead of a numeral in front of it —
+               centred against a slot that is not there. */
+            if (band && !band.no) folio.setAttribute('data-unnumbered', '');
+            else folio.removeAttribute('data-unnumbered');
 
             /* Restarting the animation takes the class off, forces the
                style to be resolved, and puts it back. It is the one

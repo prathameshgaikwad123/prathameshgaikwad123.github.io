@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { SITE } from '../data/site.js';
 import { SiteFoot } from '../components/Chrome.jsx';
+import Shelf from '../components/Shelf.jsx';
 import { IconGitHub, IconLinkedIn, IconPhone, IconPin } from '../components/Icons.jsx';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import closePanel from '../animations/closePanel.js';
@@ -114,7 +115,7 @@ export default function Contact() {
     const ref = useScrollEffect(EFFECTS);
 
     return (
-        <section data-reveal-rule="" className="band zone-invert close" id="contact" aria-labelledby="contact-title" ref={ref}>
+        <section data-reveal-rule="" className="band zone-invert close" id="contact" aria-label="Contact" ref={ref}>
             {/* The band's ground, as its own layer, so the section can
                 arrive as a contained panel and open out to the edges
                 without the composition inside ever moving with it.
@@ -124,26 +125,30 @@ export default function Contact() {
 
             <div className="shell close__type">
                 <div className="grid">
-                    <p className="tag contact__tag" data-reveal="">
-                        <span className="tag__no num">05</span>Contact
-                    </p>
-                    <h2 className="statement contact__statement" id="contact-title" data-reveal="">
+                    {/* The words are spans because the line reveal reads
+                        them off the layout rather than splitting the
+                        heading itself — see src/animations/lineReveal.js.
+                        The band's numbered eyebrow is gone from here and
+                        from nowhere else: this is the one section that
+                        opens on its own subject. */}
+                    <h2 className="statement contact__statement" data-reveal="">
                         <span className="sw">
-                            <span>Open</span>
+                            <span>Books</span>
                         </span>{' '}
                         <span className="sw">
-                            <span>to</span>
+                            <span>I</span>
+                        </span>{' '}
+                        <span className="sw">
+                            <span>have</span>
                         </span>{' '}
                         <span className="sw">
                             <span>
-                                <em>Opportunities</em>.
+                                <em>read</em>.
                             </span>
                         </span>
                     </h2>
-                    <p className="lead contact__lead" data-reveal="">
-                        Currently based in India and open to remote roles, international
-                        opportunities and relocation.
-                    </p>
+
+                    <Shelf />
 
                     <MailAddress />
 
