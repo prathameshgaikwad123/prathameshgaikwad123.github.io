@@ -4401,6 +4401,11 @@ button.shelf__vol { cursor: pointer; }
        a #000000 ground --paper is the same black as what it covers. */
     background: var(--paper-2);
     color: var(--ink);
+    /* The reset at the top of this file takes every margin to zero,
+       and a modal <dialog> is centred by nothing but its UA margin of
+       auto — without this line it opens pinned to the top left of the
+       window. */
+    margin: auto;
 }
 
 .lightbox::backdrop { background: var(--scrim); }
@@ -4430,6 +4435,100 @@ button.shelf__vol { cursor: pointer; }
 .lightbox__close { color: var(--ink-2); }
 .lightbox__close:hover,
 .lightbox__close:focus-visible { color: var(--ink); }
+
+/* A book on the shelf opens as its cover and a note on it. The dialog
+   is sized by the cover rather than stretched to the window: a 2:3
+   poster in an 82rem box is a narrow picture in a wide grey field,
+   which is what this replaced. Stacked on a phone, where the dialog
+   scrolls as one thing; side by side from 48rem, where the cover sets
+   the height and the note scrolls inside it if it has to. */
+.lightbox--book {
+    width: min(94vw, 62rem);
+    overflow: auto;
+}
+
+.lightbox__book {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.25rem;
+}
+
+.lightbox--book .lightbox__cover {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 58dvh;
+    margin-inline: auto;
+    object-fit: contain;
+    box-shadow: 0 0 0 1px var(--rule);
+}
+
+.lightbox__review {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.lightbox__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2.2vw, 1.875rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.lightbox__author {
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.lightbox__note {
+    display: grid;
+    gap: 0.875rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--t-body);
+    line-height: 1.65;
+    color: var(--ink-2);
+}
+
+/* Held at the foot of the dialog while the stacked layout scrolls, so
+   Close is never a scroll away. */
+.lightbox--book .lightbox__bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--paper-2);
+}
+
+@media (min-width: 48rem) {
+    .lightbox--book { overflow: hidden; }
+
+    .lightbox__book {
+        grid-template-columns: auto minmax(16rem, 1fr);
+        align-items: start;
+        gap: clamp(1.75rem, 3vw, 2.75rem);
+        padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    }
+
+    .lightbox--book .lightbox__cover {
+        height: min(calc(94dvh - 3.5rem - 4.5rem), 40rem);
+        max-height: none;
+        margin-inline: 0;
+    }
+
+    .lightbox__review {
+        max-height: min(calc(94dvh - 3.5rem - 4.5rem), 40rem);
+        overflow-y: auto;
+        padding-right: 0.25rem;
+    }
+}
 
 /* --- Case body ------------------------------------------------------- */
 
