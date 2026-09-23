@@ -82,8 +82,12 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
                             treatment is --nav-face-tone in section 1
                             of the stylesheet, so the file is the only
                             thing this depends on. See ASSETS.md. */}
+                        {/* The same 128px square as a 3 KB WebP beside
+                            the 23 KB PNG, which stays as the fallback. */}
                         <img
                             src="/assets/images/avatar.png"
+                            srcSet="/assets/images/avatar.webp 128w"
+                            sizes="2rem"
                             alt=""
                             width="64"
                             height="64"

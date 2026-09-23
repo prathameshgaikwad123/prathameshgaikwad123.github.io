@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useGlassCarousel from '../hooks/useGlassCarousel.js';
+import { responsive } from '../data/cloudinary.js';
 
 /* ===================================================================
    THE WORK CAROUSEL
@@ -32,6 +33,15 @@ import useGlassCarousel from '../hooks/useGlassCarousel.js';
    =================================================================== */
 
 const pad = (n) => String(n + 1).padStart(2, '0');
+
+/* How many pixels of a cover the strip draws across, per breakpoint.
+   A cell is sized by its height — the card's share of the width, held
+   under the card's share of the stage's height — and crops a 16:10
+   cover to 4:3 or 4:5 inside it, so the picture it needs is 1.6 times
+   that height wide whichever crop it is. Worked from the three stage
+   shapes in the stylesheet (.glass and its two media queries) and
+   rounded up. */
+const STRIP_SIZES = '(max-width: 40rem) 92vw, (max-width: 62rem) 55vw, 36vw';
 
 /* Spent once per session, in the shape the intro's own flag already
    uses — see the inline script in index.html. Blocked storage counts as
@@ -164,7 +174,7 @@ export default function WorkCarousel({ items, reduced }) {
         [items],
     );
 
-    const { stageRef, canvasRef, labelRef, shown, live } = useGlassCarousel({
+    const { stageRef, canvasRef, labelRef, shown, live, fallback } = useGlassCarousel({
         items,
         reduced,
         onOpen: open,
@@ -212,7 +222,13 @@ export default function WorkCarousel({ items, reduced }) {
         live && onHref ? { href: onHref, draggable: 'false' } : { 'aria-hidden': !live || undefined };
 
     return (
-        <div className="glass" ref={stageRef} data-live={live ? '' : undefined} {...shell}>
+        <div
+            className="glass"
+            ref={stageRef}
+            data-live={live ? '' : undefined}
+            data-strip={fallback ? '' : undefined}
+            {...shell}
+        >
             {/* The canvas is the picture, and the picture is described
                 by everything around it, so it carries nothing itself. */}
             <canvas className="glass__canvas" ref={canvasRef} aria-hidden="true" />
@@ -263,7 +279,7 @@ export default function WorkCarousel({ items, reduced }) {
                         <li className="glass__cell" key={item.slug}>
                             <Cell className="glass__cell-link" {...cellProps}>
                                 <img
-                                    src={item.cover}
+                                    {...responsive(item.cover, STRIP_SIZES)}
                                     alt=""
                                     width="1600"
                                     height="1000"

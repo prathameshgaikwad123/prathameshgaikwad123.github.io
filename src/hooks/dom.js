@@ -40,6 +40,33 @@ export function rafOnce() {
     return schedule;
 }
 
+/* Once the document has finished loading and the main thread has a
+   moment, and not before. For work that belongs to the page but not to
+   its first screen — the carousel's covers — so that none of it is on
+   the line while the first screen is still arriving. The idle wait has
+   a ceiling so a page that is never idle still gets there, and Safari,
+   which has no requestIdleCallback, waits a beat instead. Returns a
+   cancel. */
+export function afterLoad(fn) {
+    if (typeof window === 'undefined') return () => {};
+    let idle = 0;
+    let beat = 0;
+    const settle = () => {
+        if (typeof window.requestIdleCallback === 'function') {
+            idle = window.requestIdleCallback(fn, { timeout: 1500 });
+        } else {
+            beat = window.setTimeout(fn, 200);
+        }
+    };
+    if (document.readyState === 'complete') settle();
+    else window.addEventListener('load', settle, { once: true });
+    return () => {
+        window.removeEventListener('load', settle);
+        if (idle && typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
+        if (beat) window.clearTimeout(beat);
+    };
+}
+
 export const motionOK = () =>
     !(typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 

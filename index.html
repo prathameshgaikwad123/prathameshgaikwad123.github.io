@@ -50,9 +50,12 @@
      the document — title, Open Graph, structured data — not to the icon. -->
 <meta name="apple-mobile-web-app-title" content="PG">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Inter:wght@400..600&amp;display=swap">
+<!-- The type is served from this site (src/fonts, declared at the top of
+     style.css), so the first paint waits on no other origin. The faces the
+     first screen is set in are asked for here, beside the stylesheet,
+     rather than after it has been parsed. -->
+<link rel="preload" href="/src/fonts/castoro-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/src/fonts/castoro-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/src/styles/style.css">
 
 <!-- Resolve the theme before first paint so there is no flash. Only an
