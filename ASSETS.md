@@ -100,28 +100,26 @@ and three sit side by side. Put your strongest overview first.
 ## Book covers
 
 Four books stand on the rule above the address in the closing band, and a
-press on a spine opens that book's cover over the page. Each one is a
-labelled placeholder today.
+press on a spine opens that book's cover over the page. The covers are
+delivered from Cloudinary and are set in `cover` in `src/data/books.js`.
 
-| Path | Size | Ratio | Used on |
-|---|---|---|---|
-| `public/assets/images/books/01-immortals-of-meluha.*` | 1200 × 1800 | 2:3 | Contact |
-| `public/assets/images/books/02-metamorphosis.*` | 1200 × 1800 | 2:3 | Contact |
-| `public/assets/images/books/03-ghachar-ghochar.*` | 1200 × 1800 | 2:3 | Contact |
-| `public/assets/images/books/04-how-i-braved-anu-aunty.*` | 1200 × 1800 | 2:3 | Contact |
+| Book | Cover | Used on |
+|---|---|---|
+| The Immortals of Meluha | `v1790162147/IM_icierl.png` | Contact |
+| Metamorphosis | `v1790162147/Kafka_fljx2q.png` | Contact |
+| Ghachar Ghochar | `v1790162147/Shanbhag_pfom66.png` | Contact |
+| How I Braved Anu Aunty | `v1790162147/HIBAACAMDC_adzo4d.png` | Contact |
 
-A photograph of your own copy is the better answer here, and the honest
-one: it is a shelf of books somebody has read, and a picture of the book
-that was read says that where a publisher's press shot does not. Shoot
-the front cover square on, fill the frame, and let the paper look like
-paper — the cover opens at up to 80% of the window height, so it is seen
-closer than anything else on the page bar the carousel.
+The URLs carry no Cloudinary transformation (nothing between `upload/`
+and the version), so each cover is served as the original upload, at
+its own resolution and without recompression. Keep it that way: the
+cover opens at up to 80% of the window height, so it is seen closer
+than anything else on the page bar the carousel. To replace one, upload
+the new file and change its path in `cover`.
 
 The spine on the shelf is type, not a picture: it is set from `spine` in
-`src/data/books.js` and owes the cover nothing. Swap the extension in
-`cover` there when a real export goes in beside the placeholder, and
-rewrite `alt` — it currently describes the book, which is right, but
-check it still reads correctly against the picture you chose.
+`src/data/books.js` and owes the cover nothing. Check `alt` still reads
+correctly against the picture whenever a cover changes.
 
 To add a fifth book, append a record to `BOOKS` in `src/data/books.js`.
 The shelf measures its own row from the markup and the lean measures its
