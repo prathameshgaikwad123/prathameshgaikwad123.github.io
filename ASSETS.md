@@ -138,6 +138,7 @@ reach from the width of the row, so nothing else needs touching.
 | `public/site.webmanifest` | — | **Done** — name, colours and the two icons above |
 | `public/assets/og-image.png` | 1200 × 630 | **Done** — typographic placeholder, replace if you want |
 | `public/assets/images/avatar.png` | 128 × 128 (1:1) | **Done** — the mark at the left of the header |
+| `public/assets/images/avatar.webp` | 128 × 128 (1:1) | **Done** — the same square as WebP (q85), which the header serves first; re-export it whenever `avatar.png` changes |
 | `public/assets/images/portrait.*` | 1000 × 1250 (4:5) | **Optional** — About section |
 
 `og-image.png` is what appears when the site is shared on LinkedIn, Slack or

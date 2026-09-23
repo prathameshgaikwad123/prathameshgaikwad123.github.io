@@ -8,7 +8,7 @@ const dialogSupported = () =>
    rather than shipped in the markup, so the pages stay plain HTML and keep
    working without JavaScript — the same reason the previous build created
    this button in script. */
-export function Zoomable({ src, alt, width, height, loading, fetchPriority, onZoom }) {
+export function Zoomable({ src, srcSet, sizes, zoom, alt, width, height, loading, fetchPriority, onZoom }) {
     const enhanced = useEnhanced();
     const ref = useRef(null);
 
@@ -16,6 +16,8 @@ export function Zoomable({ src, alt, width, height, loading, fetchPriority, onZo
         <img
             ref={ref}
             src={src}
+            srcSet={srcSet}
+            sizes={sizes}
             alt={alt}
             width={width}
             height={height}
@@ -34,8 +36,11 @@ export function Zoomable({ src, alt, width, height, loading, fetchPriority, onZo
             aria-label="Expand image"
             onClick={(e) => {
                 const img = ref.current;
+                /* `zoom` is the picture at the size the dialog shows it,
+                   which a responsive figure's own choice — made for the
+                   column it sits in — can be well short of. */
                 onZoom({
-                    src: img ? img.currentSrc || img.src : src,
+                    src: zoom || (img ? img.currentSrc || img.src : src),
                     alt: alt || '',
                     opener: e.currentTarget,
                 });

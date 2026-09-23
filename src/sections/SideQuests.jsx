@@ -4,6 +4,7 @@ import Words from '../components/Words.jsx';
 import { useEnhanced } from '../hooks/dom.js';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import lineReveal from '../animations/lineReveal.js';
+import { responsive } from '../data/cloudinary.js';
 
 /* ===================================================================
    SIDE QUESTS
@@ -43,6 +44,10 @@ import lineReveal from '../animations/lineReveal.js';
 
 const ALL = 'all';
 
+/* One column of the grid below at each of its three widths. A
+   placeholder ignores this; a Cloudinary upload is fetched to match. */
+const QUEST_SIZES = '(min-width: 92rem) 440px, (min-width: 62rem) 30vw, (min-width: 40rem) 45vw, 92vw';
+
 /* One card. An anchor when the quest has somewhere to go and a plain
    block when it does not, which is the only difference a link makes:
    nothing here is clickable that does not lead anywhere. */
@@ -54,7 +59,7 @@ function Quest({ item }) {
                     {/* REPLACE: labelled placeholder — see
                         src/data/sideQuests.js. */}
                     <img
-                        src={item.cover}
+                        {...responsive(item.cover, QUEST_SIZES)}
                         alt={item.alt}
                         width="1600"
                         height="1200"

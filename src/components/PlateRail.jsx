@@ -1,4 +1,10 @@
 import usePlateRail from '../hooks/usePlateRail.js';
+import { responsive } from '../data/cloudinary.js';
+
+/* A plate's share of the rail at each of its four widths (.beh__rail's
+   --beh-plate). A placeholder ignores this; a Cloudinary upload is
+   fetched to match. */
+const PLATE_SIZES = '(min-width: 75rem) 27vw, (min-width: 62rem) 33vw, (min-width: 48rem) 44vw, 74vw';
 
 /* ===================================================================
    THE PLATE RAIL
@@ -107,7 +113,7 @@ export default function PlateRail({ items, profile, reduced }) {
                                                     — see src/data/behance.js. */}
                                                 <img
                                                     className="beh__shot"
-                                                    src={item.cover}
+                                                    {...responsive(item.cover, PLATE_SIZES)}
                                                     alt={again ? '' : item.alt}
                                                     width="1600"
                                                     height="1200"

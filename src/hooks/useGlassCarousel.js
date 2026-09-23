@@ -3,7 +3,7 @@ import { createGlass } from '../carousel/glass.js';
 import Scroller from '../carousel/scroll.js';
 import { buildStrip, visible, activeIndex, cardAt, nearestSnap, snapTo, pitch } from '../carousel/layout.js';
 import { CARD_W, CARD_H, GAP, STRIP_Y, FADE_IN, FADE_OUT, SURGE_SPEED } from '../carousel/config.js';
-import { activeTheme } from './dom.js';
+import { activeTheme, afterLoad } from './dom.js';
 
 /* ===================================================================
    THE LOOP
@@ -30,6 +30,15 @@ const useLatest =
 /* How far a pointer may travel between press and release and still be
    read as a click on a card rather than as a drag of the strip. */
 const DRAG_SLOP = 6;
+
+/* Every card, nearest the one in the middle first and outwards round
+   the loop from there — the order the covers are fetched in. */
+const ring = (centre, count) =>
+    Array.from({ length: count }, (_, i) => i).sort((a, b) => {
+        const da = Math.min(Math.abs(a - centre), count - Math.abs(a - centre));
+        const db = Math.min(Math.abs(b - centre), count - Math.abs(b - centre));
+        return da - db || a - b;
+    });
 
 const num = (value, fallback) => {
     const parsed = Number.parseFloat(value);
@@ -78,6 +87,11 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
     const labelRef = useRef(null);
     const [shown, setShown] = useState(0);
     const [live, setLive] = useState(false);
+    /* The strip, shown instead of the glass: where there is no WebGL to
+       draw it, or while a lost context is on its way back. Until the
+       renderer has answered one way or the other a scripted page shows
+       neither — see .glass__strip in the stylesheet. */
+    const [fallback, setFallback] = useState(false);
     /* Bumped when a lost context comes back, which rebuilds everything
        the driver took with it. */
     const [generation, setGeneration] = useState(0);
@@ -95,6 +109,11 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         last: 0,
         running: false,
         onscreen: true,
+        /* Whether the covers may be fetched yet — the page has loaded
+           and the stage is within a screen of the reader — and the
+           height, in device pixels, they will be drawn at. */
+        fetching: false,
+        target: 0,
         pointer: null,
         fade: 1,
         phase: 'in',
@@ -139,7 +158,13 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         /* The tallest a card is ever drawn: its height at the rim, at
            whatever device ratio the renderer settled on after its own
            ceilings. Anything more is detail the mip chain throws away. */
-        engine.glass.textures.start(strip.height * 1.6 * engine.glass.size.dpr);
+        engine.target = strip.height * 1.6 * engine.glass.size.dpr;
+        if (engine.fetching) {
+            engine.glass.textures.start(
+                engine.target,
+                ring(activeIndex(strip, engine.scroller.current), items.length),
+            );
+        }
     }, [items]);
 
     const draw = useCallback(() => {
@@ -261,9 +286,13 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         if (!canvas || !stage) return undefined;
 
         const glass = createGlass(canvas, sources, () => wake());
-        if (!glass) return undefined;
+        if (!glass) {
+            setFallback(true);
+            return undefined;
+        }
         engine.glass = glass;
         setLive(true);
+        setFallback(false);
         measure();
         draw();
 
@@ -302,6 +331,53 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
             { rootMargin: '200px 0px', threshold: [0, 0.32] },
         );
         seen.observe(stage);
+
+        /* The covers are the heaviest thing on the page and none of them
+           is on its first screen, so they are not asked for until two
+           things are true: the document has loaded — the type, the
+           script and the hero have had the connection to themselves —
+           and the stage is within a screen of being read. From there
+           the card in the middle comes first and the rest follow it
+           outwards (src/carousel/textures.js). A card whose cover has
+           not arrived draws as ground and fades in, exactly as it
+           always has; a screen of warning is what keeps that from being
+           something anyone sees. */
+        let loaded = false;
+        let near = false;
+        const fetchCovers = (now) => {
+            if (engine.fetching || !engine.strip) return;
+            if (!now && !(loaded && near)) return;
+            engine.fetching = true;
+            glass.textures.start(
+                engine.target,
+                ring(activeIndex(engine.strip, engine.scroller.current), sources.length),
+                now,
+            );
+        };
+        const offLoad = afterLoad(() => {
+            loaded = true;
+            fetchCovers();
+        });
+        const ahead = new IntersectionObserver(
+            (entries) => {
+                if (!entries[entries.length - 1].isIntersecting) return;
+                near = true;
+                ahead.disconnect();
+                fetchCovers();
+            },
+            { rootMargin: '100% 0px' },
+        );
+        ahead.observe(stage);
+
+        /* A reader who reaches the stage before the page has finished
+           loading is not kept waiting for it: the covers are wanted now,
+           and the first of them at high priority. */
+        const arrived = new IntersectionObserver((entries) => {
+            if (!entries[entries.length - 1].isIntersecting) return;
+            arrived.disconnect();
+            fetchCovers(true);
+        });
+        arrived.observe(stage);
 
         /* The ground last handed to the renderer, so a change that is not
            one costs nothing. */
@@ -371,6 +447,10 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
             engine.running = false;
             observer.disconnect();
             seen.disconnect();
+            ahead.disconnect();
+            arrived.disconnect();
+            offLoad();
+            engine.fetching = false;
             theme.disconnect();
             scheme.removeEventListener('change', onScheme);
             glass.dispose();
@@ -392,6 +472,7 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         const onLost = (event) => {
             event.preventDefault();
             setLive(false);
+            setFallback(true);
         };
         const onRestored = () => setGeneration((n) => n + 1);
         canvas.addEventListener('webglcontextlost', onLost);
@@ -565,5 +646,5 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
         };
     }, [live, items.length, wake]);
 
-    return { stageRef, canvasRef, labelRef, shown, live };
+    return { stageRef, canvasRef, labelRef, shown, live, fallback };
 }

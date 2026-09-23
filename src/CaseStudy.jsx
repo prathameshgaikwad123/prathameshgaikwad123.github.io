@@ -10,6 +10,7 @@ import { PageFoot, Progress, SkipLink } from './components/Chrome.jsx';
 import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
 
 import { projectBySlug } from './data/projects.js';
+import { cld, responsive } from './data/cloudinary.js';
 import { caseBlocks } from './case-studies/index.js';
 
 import useIntro from './hooks/useIntro.js';
@@ -18,6 +19,11 @@ import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
 import useScrollEffect from './hooks/useScrollEffect.js';
 import closePanel from './animations/closePanel.js';
+
+/* How wide a figure in the page's column is drawn: the shell's content
+   box, which is the window less its gutters up to a 92rem shell less
+   its own. */
+const FIGURE_SIZES = '(min-width: 92rem) 1344px, 92vw';
 
 const HOME = '../index.html';
 
@@ -173,7 +179,8 @@ export default function CaseStudy({ slug }) {
                                     path and alt text are in src/data/projects.js. */}
                                 <span className="frame__media">
                                     <Zoomable
-                                        src={project.cover}
+                                        {...responsive(project.cover, FIGURE_SIZES)}
+                                        zoom={cld(project.cover, { w: 2560 })}
                                         alt={project.caseCoverAlt || project.coverAlt}
                                         width="1600"
                                         height="1000"
@@ -237,7 +244,7 @@ export default function CaseStudy({ slug }) {
                                             <span className="case-next__cover frame">
                                                 <span className="frame__media">
                                                     <img
-                                                        src={project.next.cover}
+                                                        {...responsive(project.next.cover, FIGURE_SIZES)}
                                                         alt={project.next.coverAlt || ''}
                                                         width="1600"
                                                         height="1000"
