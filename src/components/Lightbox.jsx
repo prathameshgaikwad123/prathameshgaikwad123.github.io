@@ -69,9 +69,11 @@ export default function Lightbox({ item, onClose }) {
 
     if (!ready) return null;
 
+    const review = item && item.review && item.review.length ? item.review : null;
+
     return (
         <dialog
-            className="lightbox"
+            className={review ? 'lightbox lightbox--book' : 'lightbox'}
             ref={ref}
             /* Clicking the backdrop — anywhere outside the image and its bar. */
             onClick={(e) => {
@@ -84,9 +86,28 @@ export default function Lightbox({ item, onClose }) {
                 if (back && document.contains(back)) back.focus();
             }}
         >
-            <img src={item ? item.src : undefined} alt={item ? item.alt : ''} />
+            {review ? (
+                /* A book: the cover and the note on it, side by side where
+                   there is room and stacked where there is not. The
+                   caption bar is the title here, so the note is not
+                   introduced twice. */
+                <div className="lightbox__book">
+                    <img className="lightbox__cover" src={item.src} alt={item.alt} />
+                    <article className="lightbox__review" aria-labelledby="lightbox-review-title">
+                        <h2 className="lightbox__title" id="lightbox-review-title">{item.title}</h2>
+                        {item.author ? <p className="lightbox__author">{item.author}</p> : null}
+                        <div className="lightbox__note">
+                            {review.map((para) => (
+                                <p key={para.slice(0, 32)}>{para}</p>
+                            ))}
+                        </div>
+                    </article>
+                </div>
+            ) : (
+                <img src={item ? item.src : undefined} alt={item ? item.alt : ''} />
+            )}
             <div className="lightbox__bar">
-                <span className="lightbox__caption">{item ? item.alt : ''}</span>
+                <span className="lightbox__caption">{review ? 'What I thought' : item ? item.alt : ''}</span>
                 <button
                     type="button"
                     className="lightbox__close"

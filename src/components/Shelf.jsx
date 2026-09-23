@@ -515,6 +515,9 @@ export default function Shelf() {
                                             setPoster({
                                                 src: book.cover,
                                                 alt: book.alt || book.title,
+                                                title: book.title,
+                                                author: book.author,
+                                                review: book.review,
                                                 opener: event.currentTarget,
                                             })}
                                     >
