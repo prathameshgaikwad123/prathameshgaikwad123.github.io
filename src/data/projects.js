@@ -154,26 +154,37 @@ export const projects = [
         coverAlt: 'The FLOWID exhibition banner artwork.',
         href: 'work/flowid-collateral.html',
 
-        /* The project page. Not a written case study: a name, what it
-           was and where, and then the work, in three plates — the
-           artwork, the artwork standing at the expo, and the brochure
-           handed out beside it. The page is src/case-studies/
+        /* The case study page, on the same shell and in the same places
+           as VOEPL's: the hero with its lead and facts, then one block per
+           part of the work — the banner, the banner at the expo, the
+           brochure — each with its label in the left column and its
+           pictures in the right. The blocks are src/case-studies/
            flowid-collateral.jsx; the pictures, and the order they are
            shown in, are here.
+
+           No 16:10 cover: it would cut the banner, which is 4:5, so the
+           banner opens the first block uncut instead.
 
            `w` and `h` are what the page reserves before a picture has
            arrived, so only their ratio matters. The banner's is its
            print size, 2 m by 2.5 m, and the brochure's pages are A4. The
            photographs are a mix of portrait and landscape and were not
-           measured, so they are reserved as portrait 3:4; enter a
-           photograph's real size here and the page stops moving when it
-           arrives. Nothing is cropped or stretched either way: every
-           plate takes the picture's own proportions the moment it has
-           loaded. */
-        name: 'FLOWID',
-        discipline: 'Brochure & Banner Design',
-        place: 'Netherlands',
-        size: '2 m × 2.5 m',
+           measured, so they are reserved as portrait 3:4; the block
+           measures each one when it arrives and lays the three out from
+           their real shapes. Entering a photograph's real size here stops
+           the page moving when it does. */
+        caseTitle: 'FLOWID',
+        caseCategory: 'Brochure & Banner Design',
+        caseCover: false,
+        lead:
+            'Created brochures and banners aligned with the company\u2019s branding and ' +
+            'communication requirements.',
+        facts: [
+            ['Client', 'FLOWID'],
+            ['Location', 'Netherlands'],
+            ['Deliverables', 'Exhibition banner \u00b7 Four-page brochure'],
+            ['Banner size', '2 m \u00d7 2.5 m'],
+        ],
         banner: {
             src: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
             w: 2000,

@@ -11,7 +11,7 @@ import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
 
 import { projectBySlug } from './data/projects.js';
 import { cld, responsive } from './data/cloudinary.js';
-import { caseBlocks, caseViews } from './case-studies/index.js';
+import { caseBlocks } from './case-studies/index.js';
 
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
@@ -119,10 +119,7 @@ export default function CaseStudy({ slug }) {
        src/animations/closePanel.js. */
     const closeRef = useScrollEffect(closePanel);
 
-    /* A project shown rather than written brings its own page, and the
-       hero, cover and blocks below are not drawn for it. */
-    const View = caseViews[slug];
-    const blocks = View ? null : caseBlocks[slug](project, setZoomed);
+    const blocks = caseBlocks[slug](project, setZoomed);
 
     return (
         <>
@@ -150,80 +147,82 @@ export default function CaseStudy({ slug }) {
             <div data-main="" inert={menu.open || undefined}>
                 <main id="main" className="page">
                     <article>
-                        {View ? (
-                            <View project={project} onZoom={setZoomed} />
-                        ) : (
-                            <>
-                                {/* ---------- HERO ---------- */}
-                                <section className="case-hero shell" id="top" aria-labelledby="case-title">
-                                    <a className="breadcrumb" href={`${HOME}#work`}>
-                                        <ArrowLeft />
-                                        Selected Work
-                                    </a>
+                        {/* ---------- HERO ---------- */}
+                        <section className="case-hero shell" id="top" aria-labelledby="case-title">
+                            <a className="breadcrumb" href={`${HOME}#work`}>
+                                <ArrowLeft />
+                                Selected Work
+                            </a>
 
-                                    <div className="case-hero__category">
-                                        <span className="case-hero__no num">{project.no}</span>
-                                        <span className="case-hero__cat">{project.category}</span>
-                                    </div>
+                            <div className="case-hero__category">
+                                <span className="case-hero__no num">{project.no}</span>
+                                <span className="case-hero__cat">{project.caseCategory || project.category}</span>
+                            </div>
 
-                                    <h1 className="case-hero__title" id="case-title">
-                                        {project.title}
-                                    </h1>
+                            {/* `caseTitle` and `caseCategory` are for a project
+                                whose carousel caption is not the name its
+                                page should be headed with. */}
+                            <h1 className="case-hero__title" id="case-title">
+                                {project.caseTitle || project.title}
+                            </h1>
 
-                                    <p className="lead case-hero__lead">{project.lead}</p>
+                            <p className="lead case-hero__lead">{project.lead}</p>
 
-                                    <dl className="case-facts">
-                                        {project.facts.map(([label, value]) => (
-                                            <Fact label={label} value={value} key={label} />
-                                        ))}
-                                    </dl>
-                                </section>
+                            <dl className="case-facts">
+                                {project.facts.map(([label, value]) => (
+                                    <Fact label={label} value={value} key={label} />
+                                ))}
+                            </dl>
+                        </section>
 
-                                {/* ---------- COVER ---------- */}
-                                <div className="shell">
-                                    <figure className="case-figure case-figure--cover frame">
-                                        {/* REPLACE: the cover is a 1600×1000 placeholder. Its
-                                            path and alt text are in src/data/projects.js. */}
-                                        <span className="frame__media">
-                                            <Zoomable
-                                                {...responsive(project.cover, FIGURE_SIZES)}
-                                                zoom={cld(project.cover, { w: 2560 })}
-                                                alt={project.caseCoverAlt || project.coverAlt}
-                                                width="1600"
-                                                height="1000"
-                                                loading="eager"
-                                                fetchPriority="high"
-                                                onZoom={setZoomed}
-                                            />
-                                        </span>
-                                        <figcaption>{project.coverCaption}</figcaption>
-                                    </figure>
-                                </div>
-
-                                {/* ---------- BODY ---------- */}
-                                <div className="shell case-body">
-                                    {blocks.map((block) => {
-                                        const id = `${block.key}-${project.no}`;
-                                        return (
-                                            <section className="case-block" aria-labelledby={id} key={block.key}>
-                                                <h2 className="case-block__label" id={id}>
-                                                    {block.label}
-                                                </h2>
-                                                <div
-                                                    className={
-                                                        block.wide
-                                                            ? 'case-block__body case-block__body--wide'
-                                                            : 'case-block__body'
-                                                    }
-                                                >
-                                                    {block.body}
-                                                </div>
-                                            </section>
-                                        );
-                                    })}
-                                </div>
-                            </>
+                        {/* ---------- COVER ---------- */}
+                        {/* The cover is cut to 16:10. A project whose first
+                            picture must not be cut sets `caseCover: false`
+                            and opens its first block with it instead. */}
+                        {project.caseCover === false ? null : (
+                            <div className="shell">
+                                <figure className="case-figure case-figure--cover frame">
+                                    {/* REPLACE: the cover is a 1600×1000 placeholder. Its
+                                        path and alt text are in src/data/projects.js. */}
+                                    <span className="frame__media">
+                                        <Zoomable
+                                            {...responsive(project.cover, FIGURE_SIZES)}
+                                            zoom={cld(project.cover, { w: 2560 })}
+                                            alt={project.caseCoverAlt || project.coverAlt}
+                                            width="1600"
+                                            height="1000"
+                                            loading="eager"
+                                            fetchPriority="high"
+                                            onZoom={setZoomed}
+                                        />
+                                    </span>
+                                    <figcaption>{project.coverCaption}</figcaption>
+                                </figure>
+                            </div>
                         )}
+
+                        {/* ---------- BODY ---------- */}
+                        <div className="shell case-body">
+                            {blocks.map((block) => {
+                                const id = `${block.key}-${project.no}`;
+                                return (
+                                    <section className="case-block" aria-labelledby={id} key={block.key}>
+                                        <h2 className="case-block__label" id={id}>
+                                            {block.label}
+                                        </h2>
+                                        <div
+                                            className={
+                                                block.wide
+                                                    ? 'case-block__body case-block__body--wide'
+                                                    : 'case-block__body'
+                                            }
+                                        >
+                                            {block.body}
+                                        </div>
+                                    </section>
+                                );
+                            })}
+                        </div>
 
                         {/* ---------- NEXT ---------- */}
                         <div className="case-close zone-invert close" data-close-end="max" ref={closeRef}>
@@ -244,7 +243,7 @@ export default function CaseStudy({ slug }) {
                                         note on `next` in src/data/projects.js. */}
                                     {/* `back` is a plate that returns rather
                                         than continues, and its arrow says
-                                        so. */}
+                                        so; its label is optional. */}
                                     <a
                                         href={project.next.href}
                                         data-cover={project.next.cover ? '' : undefined}
