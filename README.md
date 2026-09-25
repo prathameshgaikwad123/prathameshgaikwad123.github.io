@@ -62,7 +62,7 @@ is written down at the point it matters — the top of stylesheet sections 9 and
 | `src/sections/` | The six bands of the home page. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the plate rail's, the image lightbox, the reticle, the grid overlay, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
-| `src/case-studies/` | The written body of each case study. |
+| `src/case-studies/` | The written body of each case study — or, for a project shown rather than written, its whole page (FlowID). |
 | `src/data/` | Project records, site constants, the page list. |
 | `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input, and the plate rail's. |
 | `src/motion/` | The Framer Motion foundation: `fade`, `fadeUp`, `stagger`, `imageReveal`, and the `Reveal` wrapper. |

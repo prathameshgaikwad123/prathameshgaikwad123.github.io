@@ -49,7 +49,7 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Six of the seven projects in `src/data/projects.js` are covers and captions:
+Five of the seven projects in `src/data/projects.js` are covers and captions:
 they carry no `href`, so the carousel shows them without making them links,
 and nothing about them is published as a page.
 
@@ -60,6 +60,11 @@ Giving one a case study is three edits made together:
 | `src/data/projects.js` | the `href`, plus `lead`, `meta`, `go`, `facts`, `gallery`, `coverCaption`, `next` — copy the shape from `voepl-website` |
 | `src/case-studies/index.js` | the written body, keyed by slug |
 | `src/data/pages.js` | the slug, so the page is built and prerendered |
+
+A project that is shown rather than written — pictures in order, no
+prose — takes a view in `caseViews` in `src/case-studies/index.js`
+instead of a body in `caseBlocks`, and its pictures on the record. FlowID
+(`flowid-collateral`) is the example.
 
 A project can also be pointed at something that already exists instead —
 an external URL is a valid `href` — in which case only the first edit is
@@ -72,6 +77,16 @@ the projects before them did.
 ---
 
 ## Decisions I made that you should confirm
+
+**FlowID image proportions.** The page reserves room for each picture
+before it arrives, from `w` and `h` on the FlowID record in
+`src/data/projects.js`. The banner's is its print size (2 m × 2.5 m, 4:5);
+the three expo photographs are assumed portrait 3:4 and the brochure pages
+A4 — Cloudinary could not be reached when the page was built, so those were
+not measured off the files. Nothing is cropped or stretched if they are
+wrong: each picture takes its own proportions once loaded. But if one is a
+different shape, correct its `w` and `h` so the page does not shift as it
+loads and the plate is sized to fit the window.
 
 **Email.** The site uses `prathameshg83800@gmail.com`, taken from the old
 repository. Your work address was not used — a portfolio should outlive a job.

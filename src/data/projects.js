@@ -141,9 +141,77 @@ export const projects = [
         summary:
             'Created brochures and banners aligned with the company\u2019s branding and ' +
             'communication requirements.',
-        cover: cdn('v1789371082/3_mgl8ld.png'),
-        coverAlt: 'Cover image for the FlowID brochure and banner design project.',
-        href: null,
+        go: 'View the project',
+        /* The banner artwork itself rather than a photograph of it: the
+           card stands for the design. It is 4:5, which is the shape the
+           strip gives this slot (every even card is tall), so the glass
+           crops nothing off it. */
+        cover: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
+        coverAlt: 'The FlowID exhibition banner artwork.',
+        href: 'work/flowid-collateral.html',
+
+        /* The project page. Not a written case study: a name, what it
+           was and where, and then the work, in three plates \u2014 the
+           artwork, the artwork standing at the expo, and the brochure
+           handed out beside it. The page is src/case-studies/
+           flowid-collateral.jsx; the pictures, and the order they are
+           shown in, are here.
+
+           `w` and `h` are what the page reserves before a picture has
+           arrived, so only their ratio matters. The banner's is its
+           print size, 2 m by 2.5 m. The photographs are taken as
+           portrait 3:4 and the brochure's pages as A4 \u2014 neither was
+           measured off the file, so if one turns out a different shape,
+           correct it here. Nothing is cropped or stretched in the
+           meantime: every plate takes the picture's own proportions the
+           moment it has loaded, and the reservation is only what the
+           page holds open until then. */
+        name: 'FlowID',
+        discipline: 'Brochure & Banner Design',
+        place: 'Netherlands',
+        banner: {
+            src: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
+            w: 2000,
+            h: 2500,
+            size: '2 m \u00d7 2.5 m',
+            alt: 'The FlowID exhibition banner artwork, designed for a 2 m by 2.5 m print.',
+        },
+        /* In the order the page shows them. */
+        expo: [
+            {
+                src: cdn('v1790315145/Booth_3_icvngf.jpg'),
+                w: 3000,
+                h: 4000,
+                alt: 'The printed FlowID banner standing on the stand at the expo.',
+            },
+            {
+                src: cdn('v1790315145/Booth_1_y6hnrz.jpg'),
+                w: 3000,
+                h: 4000,
+                alt: 'The FlowID stand at the expo, with the banner in place.',
+            },
+            {
+                src: cdn('v1790315145/Booth_2_mapxic.jpg'),
+                w: 3000,
+                h: 4000,
+                alt: 'Another view of the FlowID banner on the expo floor.',
+            },
+        ],
+        /* Four pages of one brochure, first to last. */
+        brochure: [
+            { src: cdn('v1790315381/flowfn_conv_0_a5k3ew.png'), w: 2480, h: 3508 },
+            { src: cdn('v1790315382/flowfn_conv_1_pf1hzy.png'), w: 2480, h: 3508 },
+            { src: cdn('v1790315381/flowfn_conv_2_fo3f9a.png'), w: 2480, h: 3508 },
+            { src: cdn('v1790315398/flowfn_conv_3_rmqhko.png'), w: 2480, h: 3508 },
+        ],
+        /* The way out is the way in: back to the strip this came from. */
+        next: {
+            href: '../index.html#work',
+            label: 'Back',
+            title: 'Selected Work',
+            aria: 'Back to Selected Work',
+            back: true,
+        },
     },
 
     {
