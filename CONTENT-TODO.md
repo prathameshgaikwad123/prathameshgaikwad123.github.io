@@ -61,10 +61,9 @@ Giving one a case study is three edits made together:
 | `src/case-studies/index.js` | the written body, keyed by slug |
 | `src/data/pages.js` | the slug, so the page is built and prerendered |
 
-A project that is shown rather than written — pictures in order, no
-prose — takes a view in `caseViews` in `src/case-studies/index.js`
-instead of a body in `caseBlocks`, and its pictures on the record. FLOWID
-(`flowid-collateral`) is the example.
+A block's body can be pictures alone — FLOWID (`flowid-collateral`) is
+written that way — and a record with `caseCover: false` skips the 16:10
+cover, for a project whose first picture must not be cut.
 
 A project can also be pointed at something that already exists instead —
 an external URL is a valid `href` — in which case only the first edit is
@@ -83,9 +82,10 @@ before it arrives, from `w` and `h` on the FLOWID record in
 `src/data/projects.js`. The banner (2 m × 2.5 m, 4:5) and the brochure's A4
 pages are known; the three expo photographs are a mix of portrait and
 landscape and were not measured, so they are reserved as portrait 3:4.
-Nothing is cropped or stretched if that is wrong — each picture takes its
-own proportions once loaded, and the pair re-measures itself — but entering
-each photograph's real `w` and `h` stops the page moving as they arrive.
+Nothing is cropped or stretched if that is wrong — the block measures each
+photograph when it arrives and lays the three out from their real shapes —
+but entering each one's real `w` and `h` stops the page moving as they
+arrive.
 
 **Email.** The site uses `prathameshg83800@gmail.com`, taken from the old
 repository. Your work address was not used — a portfolio should outlive a job.
