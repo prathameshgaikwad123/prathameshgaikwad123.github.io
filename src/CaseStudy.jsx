@@ -250,7 +250,9 @@ export default function CaseStudy({ slug }) {
                                         data-cover={project.next.cover ? '' : undefined}
                                         data-back={project.next.back ? '' : undefined}
                                     >
-                                        <p className="case-next__label">{project.next.label}</p>
+                                        {project.next.label ? (
+                                            <p className="case-next__label">{project.next.label}</p>
+                                        ) : null}
                                         <p className="case-next__title">{project.next.title}</p>
 
                                         {project.next.cover ? (

@@ -1,40 +1,71 @@
+import { useEffect, useRef } from 'react';
 import { Zoomable } from '../components/Lightbox.jsx';
 import { ArrowLeft } from '../components/Icons.jsx';
 import { cld, responsive } from '../data/cloudinary.js';
 
-/* FlowID is shown rather than written: a name, what it was and where,
-   and then three plates in the order the work happened — the artwork,
-   the artwork standing at the expo, and the brochure handed out beside
-   it. Everything it shows is on the project record in
+/* FLOWID is shown rather than written: a name, what it was and where,
+   and then three numbered plates in the order the work happened — the
+   artwork, the artwork standing at the expo, and the brochure handed
+   out beside it. Everything it shows is on the project record in
    src/data/projects.js, in the order it is shown; this file is only the
    composition.
 
-   Every picture here keeps its own proportions. None is given a shape
-   to be cropped into: each is drawn at the width of its place and its
-   own height, and where a picture is taller than the window has room
-   for, the place is narrowed until it fits rather than the picture
-   being cut. `--ar` carries the ratio the record reserves, which is
-   what that narrowing is worked out from. */
+   One container and one grid from the top of the page to the bottom:
+   the shell, and its twelve columns. Every block starts on the first
+   column. A picture is given a number of columns and nothing else — it
+   is as wide as they are and as tall as its own proportions make it, so
+   none is cropped, none is stretched, and none is centred on its own. */
 
 const HOME = '../index.html';
 
 const pad = (n) => String(n).padStart(2, '0');
 
 /* How wide each plate is drawn, for the srcset. Worked from the
-   stylesheet (section 13, "Plates") at a typical window height and
-   rounded up — on a wide screen each of these is held by the window's
-   height, not its width. */
+   stylesheet (section 13, "Plates"): the shell's content box is 1344px
+   at most, a lead plate is seven of its twelve columns, a page is six,
+   and the pair shares the full width. */
 const SIZES = {
-    banner: '(min-width: 62rem) 50vw, 92vw',
-    lead: '(min-width: 62rem) 50vw, 92vw',
-    pair: '(min-width: 62rem) 30vw, (min-width: 48rem) 46vw, 92vw',
-    page: '(min-width: 62rem) 40vw, 92vw',
+    lead: '(min-width: 92rem) 790px, (min-width: 62rem) 56vw, 92vw',
+    pair: '(min-width: 92rem) 860px, (min-width: 48rem) 64vw, 92vw',
+    page: '(min-width: 92rem) 670px, (min-width: 48rem) 47vw, 92vw',
 };
 
 /* The picture the lightbox opens: the whole of it inside a 2560 square,
    so a tall page and a wide photograph are both asked for at their long
    edge. */
 const zoomOf = (src) => cld(src, { w: 2560, h: 2560 });
+
+const ratio = (plate) => (plate.w / plate.h).toFixed(4);
+
+/* The two photographs in the pair share their row in proportion to
+   their ratios, which is what keeps them the same height. The ratio the
+   record reserves is a guess for a photograph nobody measured, so once
+   the picture itself has arrived its own is written over it. Listening
+   on the container, in the capture phase, because `load` does not
+   bubble and the <img> is replaced once the zoom control is added. */
+function useMeasured(ref) {
+    useEffect(() => {
+        const root = ref.current;
+        if (!root) return undefined;
+
+        const measure = (img) => {
+            const plate = img.closest('[data-measure]');
+            if (plate && img.naturalWidth && img.naturalHeight) {
+                plate.style.setProperty('--ar', (img.naturalWidth / img.naturalHeight).toFixed(4));
+            }
+        };
+
+        root.querySelectorAll('[data-measure] img').forEach((img) => {
+            if (img.complete) measure(img);
+        });
+
+        const onLoad = (event) => {
+            if (event.target instanceof HTMLImageElement) measure(event.target);
+        };
+        root.addEventListener('load', onLoad, true);
+        return () => root.removeEventListener('load', onLoad, true);
+    }, [ref]);
+}
 
 function Plate({ plate, sizes, alt, eager, onZoom }) {
     return (
@@ -53,11 +84,26 @@ function Plate({ plate, sizes, alt, eager, onZoom }) {
     );
 }
 
-const ratio = (plate) => ({ '--ar': (plate.w / plate.h).toFixed(4) });
+/* A plate's heading: its number, then its name, and under them a line
+   of fact where there is one. */
+function Head({ id, no, title, meta }) {
+    return (
+        <header className="plates__head">
+            <h2 className="plates__heading" id={id}>
+                <span className="plates__no num">{no}</span>
+                <span className="plates__title">{title}</span>
+            </h2>
+            {meta ? <p className="plates__meta">{meta}</p> : null}
+        </header>
+    );
+}
 
-export default function FlowID({ project, onZoom }) {
+export default function Flowid({ project, onZoom }) {
     const { banner, expo, brochure } = project;
     const [lead, ...pair] = expo;
+    const pairRef = useRef(null);
+
+    useMeasured(pairRef);
 
     return (
         <>
@@ -68,9 +114,8 @@ export default function FlowID({ project, onZoom }) {
                     Selected Work
                 </a>
 
-                <p className="case-hero__category">
-                    <span className="case-hero__no num">Project</span>
-                    <span className="case-hero__cat num">{project.no}</span>
+                <p className="case-hero__category case-hero__project">
+                    Project <span className="num">{project.no}</span>
                 </p>
 
                 <h1 className="case-hero__title" id="case-title">
@@ -80,57 +125,43 @@ export default function FlowID({ project, onZoom }) {
                 <div className="case-hero__about">
                     <p className="case-hero__what">{project.discipline}</p>
                     <p className="case-hero__where">{project.place}</p>
+                    <p className="case-hero__where num">{project.size}</p>
                 </div>
             </section>
 
             <div className="shell plates">
-                {/* ---------- 01 · THE ARTWORK ---------- */}
+                {/* ---------- 01 · BANNER DESIGN ---------- */}
                 <section className="plates__sec" aria-labelledby="plates-banner">
-                    <header className="plates__head">
-                        <h2 className="tag" id="plates-banner">
-                            <span className="tag__no num">01</span>Banner Design
-                        </h2>
-                        <p className="plates__aside num">{banner.size}</p>
-                    </header>
+                    <Head id="plates-banner" no="01" title="Banner Design" />
 
-                    {/* The first picture on the page, so it is not lazy. */}
-                    <figure className="frame plates__banner" style={ratio(banner)}>
-                        <Plate plate={banner} sizes={SIZES.banner} alt={banner.alt} eager onZoom={onZoom} />
-                    </figure>
+                    <div className="plates__grid">
+                        {/* The first picture on the page, so it is not lazy. */}
+                        <figure className="frame plates__lead">
+                            <Plate plate={banner} sizes={SIZES.lead} alt={banner.alt} eager onZoom={onZoom} />
+                        </figure>
+                    </div>
                 </section>
 
                 {/* ---------- 02 · AT THE EXPO ---------- */}
                 <section className="plates__sec" aria-labelledby="plates-expo">
-                    <header className="plates__head">
-                        <h2 className="tag" id="plates-expo">
-                            <span className="tag__no num">02</span>At the Expo
-                        </h2>
-                        {/* The whole of what this section has to say, and
-                            said as a sequence rather than a paragraph. */}
-                        <ol className="plates__steps" aria-label="From artwork to expo">
-                            <li>Designed</li>
-                            <li>Produced</li>
-                            <li>Seen in the real world</li>
-                        </ol>
-                    </header>
+                    <Head id="plates-expo" no="02" title="At the Expo" />
 
-                    {/* One photograph large, then two beside each other and
-                        set over to the right — same height as each other
-                        whatever their shapes, because each takes a share
-                        of the row in proportion to its own ratio. */}
-                    <div className="plates__expo">
-                        <figure className="frame plates__lead" style={ratio(lead)}>
+                    {/* The first photograph on the same seven columns as the
+                        banner above it, then the other two across the whole
+                        width at one height. */}
+                    <div className="plates__grid">
+                        <figure className="frame plates__lead">
                             <Plate plate={lead} sizes={SIZES.lead} alt={lead.alt} onZoom={onZoom} />
                         </figure>
 
-                        {/* The pair's ratio is the two side by side, so the
-                            row can be held to the window's height as one. */}
-                        <div
-                            className="plates__pair"
-                            style={{ '--ar': pair.reduce((sum, p) => sum + p.w / p.h, 0).toFixed(4) }}
-                        >
+                        <div className="plates__pair" ref={pairRef}>
                             {pair.map((photo) => (
-                                <figure className="frame plates__photo" style={ratio(photo)} key={photo.src}>
+                                <figure
+                                    className="frame plates__photo"
+                                    style={{ '--ar': ratio(photo) }}
+                                    data-measure=""
+                                    key={photo.src}
+                                >
                                     <Plate plate={photo} sizes={SIZES.pair} alt={photo.alt} onZoom={onZoom} />
                                 </figure>
                             ))}
@@ -140,26 +171,23 @@ export default function FlowID({ project, onZoom }) {
 
                 {/* ---------- 03 · THE BROCHURE ---------- */}
                 <section className="plates__sec" aria-labelledby="plates-brochure">
-                    <header className="plates__head">
-                        <h2 className="tag" id="plates-brochure">
-                            <span className="tag__no num">03</span>The Brochure
-                        </h2>
-                        <p className="plates__aside num">{`${brochure.length} pages`}</p>
-                    </header>
+                    <Head
+                        id="plates-brochure"
+                        no="03"
+                        title="The Brochure"
+                        meta={`${brochure.length} pages`}
+                    />
 
-                    {/* One publication, laid out the way a folded one is
-                        read: the cover alone on the right, the inside as
-                        one spread, the back alone on the left. Each page
-                        keeps the side of the fold it is printed on at
-                        every width, and carries its folio under it. */}
-                    <ol className="plates__book" style={ratio(brochure[0])}>
+                    {/* One publication: its pages in order, the same size,
+                        each with its number in the same place under it. */}
+                    <ol className="plates__grid plates__book">
                         {brochure.map((page, i) => (
                             <li className="plates__page" key={page.src}>
-                                <figure>
+                                <figure className="frame">
                                     <Plate
                                         plate={page}
                                         sizes={SIZES.page}
-                                        alt={`FlowID brochure, page ${i + 1} of ${brochure.length}.`}
+                                        alt={`${project.name} brochure, page ${i + 1} of ${brochure.length}.`}
                                         onZoom={onZoom}
                                     />
                                     <figcaption className="plates__folio num" aria-hidden="true">

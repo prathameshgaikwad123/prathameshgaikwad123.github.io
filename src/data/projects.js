@@ -136,8 +136,12 @@ export const projects = [
         slug: 'flowid-collateral',
         no: '04',
         category: 'Graphic Design / Marketing Collateral',
-        short: 'FlowID Collateral',
-        title: 'Brochure & Banner Design — FlowID, Netherlands',
+        /* FLOWID is the client's own styling of its name, and it is
+           written that way here rather than set in capitals by the
+           stylesheet: the carousel, the navigation, the page, its title
+           and every description of a picture all read these strings. */
+        short: 'FLOWID Collateral',
+        title: 'Brochure & Banner Design — FLOWID, Netherlands',
         summary:
             'Created brochures and banners aligned with the company\u2019s branding and ' +
             'communication requirements.',
@@ -147,11 +151,11 @@ export const projects = [
            strip gives this slot (every even card is tall), so the glass
            crops nothing off it. */
         cover: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
-        coverAlt: 'The FlowID exhibition banner artwork.',
+        coverAlt: 'The FLOWID exhibition banner artwork.',
         href: 'work/flowid-collateral.html',
 
         /* The project page. Not a written case study: a name, what it
-           was and where, and then the work, in three plates \u2014 the
+           was and where, and then the work, in three plates — the
            artwork, the artwork standing at the expo, and the brochure
            handed out beside it. The page is src/case-studies/
            flowid-collateral.jsx; the pictures, and the order they are
@@ -159,22 +163,22 @@ export const projects = [
 
            `w` and `h` are what the page reserves before a picture has
            arrived, so only their ratio matters. The banner's is its
-           print size, 2 m by 2.5 m. The photographs are taken as
-           portrait 3:4 and the brochure's pages as A4 \u2014 neither was
-           measured off the file, so if one turns out a different shape,
-           correct it here. Nothing is cropped or stretched in the
-           meantime: every plate takes the picture's own proportions the
-           moment it has loaded, and the reservation is only what the
-           page holds open until then. */
-        name: 'FlowID',
+           print size, 2 m by 2.5 m, and the brochure's pages are A4. The
+           photographs are a mix of portrait and landscape and were not
+           measured, so they are reserved as portrait 3:4; enter a
+           photograph's real size here and the page stops moving when it
+           arrives. Nothing is cropped or stretched either way: every
+           plate takes the picture's own proportions the moment it has
+           loaded. */
+        name: 'FLOWID',
         discipline: 'Brochure & Banner Design',
         place: 'Netherlands',
+        size: '2 m × 2.5 m',
         banner: {
             src: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
             w: 2000,
             h: 2500,
-            size: '2 m \u00d7 2.5 m',
-            alt: 'The FlowID exhibition banner artwork, designed for a 2 m by 2.5 m print.',
+            alt: 'The FLOWID exhibition banner artwork, designed for a 2 m by 2.5 m print.',
         },
         /* In the order the page shows them. */
         expo: [
@@ -182,33 +186,33 @@ export const projects = [
                 src: cdn('v1790315145/Booth_3_icvngf.jpg'),
                 w: 3000,
                 h: 4000,
-                alt: 'The printed FlowID banner standing on the stand at the expo.',
+                alt: 'The printed FLOWID banner standing on the stand at the expo.',
             },
             {
                 src: cdn('v1790315145/Booth_1_y6hnrz.jpg'),
                 w: 3000,
                 h: 4000,
-                alt: 'The FlowID stand at the expo, with the banner in place.',
+                alt: 'The FLOWID stand at the expo, with the banner in place.',
             },
             {
                 src: cdn('v1790315145/Booth_2_mapxic.jpg'),
                 w: 3000,
                 h: 4000,
-                alt: 'Another view of the FlowID banner on the expo floor.',
+                alt: 'Another view of the FLOWID banner on the expo floor.',
             },
         ],
-        /* Four pages of one brochure, first to last. */
+        /* Four A4 pages of one brochure, first to last. */
         brochure: [
             { src: cdn('v1790315381/flowfn_conv_0_a5k3ew.png'), w: 2480, h: 3508 },
             { src: cdn('v1790315382/flowfn_conv_1_pf1hzy.png'), w: 2480, h: 3508 },
             { src: cdn('v1790315381/flowfn_conv_2_fo3f9a.png'), w: 2480, h: 3508 },
             { src: cdn('v1790315398/flowfn_conv_3_rmqhko.png'), w: 2480, h: 3508 },
         ],
-        /* The way out is the way in: back to the strip this came from. */
+        /* The way out is the way in: back to the strip this came from.
+           No label: the title already says what the plate does. */
         next: {
             href: '../index.html#work',
-            label: 'Back',
-            title: 'Selected Work',
+            title: 'Back to Selected Work',
             aria: 'Back to Selected Work',
             back: true,
         },
