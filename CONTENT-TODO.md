@@ -63,7 +63,7 @@ Giving one a case study is three edits made together:
 
 A project that is shown rather than written — pictures in order, no
 prose — takes a view in `caseViews` in `src/case-studies/index.js`
-instead of a body in `caseBlocks`, and its pictures on the record. FlowID
+instead of a body in `caseBlocks`, and its pictures on the record. FLOWID
 (`flowid-collateral`) is the example.
 
 A project can also be pointed at something that already exists instead —
@@ -78,15 +78,14 @@ the projects before them did.
 
 ## Decisions I made that you should confirm
 
-**FlowID image proportions.** The page reserves room for each picture
-before it arrives, from `w` and `h` on the FlowID record in
-`src/data/projects.js`. The banner's is its print size (2 m × 2.5 m, 4:5);
-the three expo photographs are assumed portrait 3:4 and the brochure pages
-A4 — Cloudinary could not be reached when the page was built, so those were
-not measured off the files. Nothing is cropped or stretched if they are
-wrong: each picture takes its own proportions once loaded. But if one is a
-different shape, correct its `w` and `h` so the page does not shift as it
-loads and the plate is sized to fit the window.
+**FLOWID photograph proportions.** The page reserves room for each picture
+before it arrives, from `w` and `h` on the FLOWID record in
+`src/data/projects.js`. The banner (2 m × 2.5 m, 4:5) and the brochure's A4
+pages are known; the three expo photographs are a mix of portrait and
+landscape and were not measured, so they are reserved as portrait 3:4.
+Nothing is cropped or stretched if that is wrong — each picture takes its
+own proportions once loaded, and the pair re-measures itself — but entering
+each photograph's real `w` and `h` stops the page moving as they arrive.
 
 **Email.** The site uses `prathameshg83800@gmail.com`, taken from the old
 repository. Your work address was not used — a portfolio should outlive a job.
