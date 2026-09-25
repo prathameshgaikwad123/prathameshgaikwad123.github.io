@@ -7,7 +7,7 @@
    is a card in the carousel and nothing else, and publishes no page.
    Adding one here means adding its written body to
    src/case-studies/index.js and its `href` to the project record. */
-const slugs = ['voepl-website'];
+const slugs = ['voepl-website', 'flowid-collateral'];
 
 export const PAGES = [
     { id: 'home', file: 'index.html', kind: 'home' },

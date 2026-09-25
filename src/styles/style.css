@@ -4767,6 +4767,210 @@ button.shelf__vol { cursor: pointer; }
 /* A single figure quoted inside a case study. */
 
 
+/* --- Plates ------------------------------------------------------------
+   A project that is shown rather than written (FlowID —
+   src/case-studies/flowid-collateral.jsx). The opening is the case
+   hero above with the lead and the facts taken out; what follows is a
+   column of numbered plates, each introduced by the same numeral, tick
+   and label every band on the site opens with.
+
+   No plate is given a shape. Every picture is drawn at the width of its
+   place and at its own height, so nothing is cropped and nothing is
+   stretched. Where a picture is taller than the window can show, its
+   place is narrowed until the whole of it fits under the masthead —
+   `--ar`, written on the element from the project record, is the ratio
+   that is worked out from — but never below 18rem, so a phone held
+   sideways is given a picture it can still read rather than a stamp.  */
+
+/* The numeral slot holds a word here — "Project", ahead of the number —
+   so it is set in the label's capitals rather than the numeral's. */
+.case-hero--plates .case-hero__no { text-transform: uppercase; letter-spacing: 0.17em; }
+.case-hero--plates .case-hero__cat { color: var(--ink); }
+
+.case-hero--plates .case-hero__title {
+    font-size: var(--t-hero);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+}
+
+.case-hero__about { margin-top: clamp(1.25rem, 3vw, 2rem); }
+
+.case-hero__what {
+    font-family: var(--font-display);
+    font-size: var(--t-title);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.case-hero__where {
+    margin-top: 0.75rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+@media (min-width: 62rem) {
+    .case-hero__about {
+        grid-column: 9 / -1;
+        align-self: end;
+        margin-top: 0;
+        padding-bottom: 0.5rem;
+    }
+}
+
+.plates {
+    --plate-room: calc(100vh - var(--bar) - 7rem);
+    padding-bottom: clamp(4rem, 10vw, 8rem);
+}
+
+@supports (height: 100svh) {
+    .plates { --plate-room: calc(100svh - var(--bar) - 7rem); }
+}
+
+.plates__sec { padding-top: clamp(3.5rem, 9vw, 8rem); }
+
+/* The artwork follows the opening closely: it is what the opening is
+   introducing. */
+.plates__sec:first-child { padding-top: clamp(1rem, 2.5vw, 2rem); }
+
+.plates__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+/* Measurements and counts are read, not labelled, so they keep their
+   own case: "2 m" set in capitals is a different unit. */
+.plates__aside {
+    font-size: var(--t-meta);
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+}
+
+.plates__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.625rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.plates__steps li + li::before {
+    content: '\2192';
+    margin-right: 0.625rem;
+    letter-spacing: 0;
+    color: var(--rule-2);
+}
+
+.plates .frame__media img { object-fit: contain; }
+
+/* 01 — the artwork, alone and centred, as large as the window allows. */
+.plates__banner {
+    width: min(100%, max(18rem, calc(var(--plate-room) * var(--ar))));
+    margin-inline: auto;
+}
+
+/* 02 — one photograph large, then the other two as a pair. The pair
+   shares its row in proportion to each photograph's own ratio, which
+   is what keeps the two the same height whatever their shapes. */
+.plates__expo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+.plates__lead,
+.plates__photo { width: min(100%, max(18rem, calc(var(--plate-room) * var(--ar)))); }
+
+.plates__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+@media (min-width: 48rem) {
+    .plates__pair {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--gap);
+        width: min(100%, max(36rem, calc(var(--plate-room) * var(--ar))));
+        justify-self: end;
+    }
+
+    .plates__pair > .plates__photo {
+        flex: var(--ar) 1 0;
+        width: auto;
+        min-width: 0;
+    }
+}
+
+@media (min-width: 62rem) {
+    .plates__expo {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--gap);
+    }
+
+    .plates__lead { grid-column: 1 / span 8; }
+    .plates__pair { grid-column: 5 / -1; }
+}
+
+/* 03 — one publication, read the way a folded one is: each page on the
+   side of the fold it is printed on. Stacked, that is a page that steps
+   from right to left and back; from 62rem it is the whole imposition —
+   the cover alone on the right, the inside as one spread, the back
+   alone on the left — which is still 01 to 04 in reading order. */
+.plates__book {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(2rem, 5vw, 3.5rem);
+}
+
+.plates__page figure { width: min(100%, max(18rem, calc(var(--plate-room) * var(--ar)))); }
+.plates__page:nth-child(odd) figure { margin-left: auto; }
+
+/* A page is not a .frame — the ticks would cross the fold — so nothing
+   has made its media a block, and an inline wrapper round a block would
+   hold a line of empty ground above and below the page. */
+.plates__page .frame__media { display: block; }
+
+.plates__folio {
+    margin-top: 0.75rem;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--mark);
+}
+
+.plates__page:nth-child(odd) .plates__folio { text-align: right; }
+
+@media (min-width: 62rem) {
+    .plates__book {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 0;
+        width: min(100%, max(36rem, calc(var(--plate-room) * var(--ar) * 2)));
+        margin-inline: auto;
+    }
+
+    .plates__page figure { width: auto; margin-left: 0; }
+    .plates__page:nth-child(odd) { grid-column: 2; }
+    .plates__page:nth-child(even) { grid-column: 1; }
+
+    /* The spread meets at one hairline, the fold, rather than two. */
+    .plates__page:nth-child(2) .frame__media { border-right-width: 0; }
+}
+
+
 /* --- Next project --------------------------------------------------- */
 
 /* The document's ending, and the same one the home page has: the ground
@@ -4827,6 +5031,10 @@ button.shelf__vol { cursor: pointer; }
 
 .case-next__go svg { width: 1rem; height: 0.75rem; color: currentColor; transition: transform var(--t-mid) var(--ease); }
 .case-next a:hover .case-next__go svg { transform: translateX(0.3rem); }
+
+/* A plate that goes back rather than on leans the way its arrow points. */
+.case-next a[data-back]:hover .case-next__title { transform: translateX(-0.5rem); }
+.case-next a[data-back]:hover .case-next__go svg { transform: translateX(-0.3rem); }
 
 /* The next project's cover, where the record carries one. The plate is
    still one link and still reads top to bottom on a narrow window; the
