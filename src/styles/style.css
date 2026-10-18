@@ -4454,8 +4454,11 @@ button.shelf__vol { cursor: pointer; }
 .case-facts__val { font-size: var(--t-small); line-height: 1.55; color: var(--ink); margin: 0; }
 
 /* A fact that is a link to somewhere else: underlined, because nothing
-   else in the strip is, and the underline is what says it can be pressed. */
+   else in the strip is, and the underline is what says it can be pressed.
+   One to a line when there are two. */
 .case-facts__link {
+    display: block;
+    width: fit-content;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.25em;

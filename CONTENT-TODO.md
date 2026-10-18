@@ -49,18 +49,23 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Eight projects are in `src/data/projects.js`. Three have a case study page
-(VOEPL, FLOWID, and Horita DM Clinic under `wordpress-japan`), and one,
-Kuwahara Lab, links straight to its live site. The other four are covers and
-captions: they carry no `href`, so the carousel shows them without making
-them links, and nothing about them is published as a page.
+Seven projects are in `src/data/projects.js`. Three have a case study page
+(VOEPL, FLOWID, and the Japan WordPress sites under `wordpress-japan`). The
+other four are covers and captions: they carry no `href`, so the carousel
+shows them without making them links, and nothing about them is published as
+a page.
 
-**Kuwahara Lab needs a cover.** It ships a labelled placeholder
-(`public/assets/images/projects/kuwahara-lab/cover.svg`) because there was no
-image to use. Upload a 1600×1000 cover to Cloudinary, point `cover` on its
-record at it, and write a real `coverAlt`. It also has no case study yet, and
-its summary says only what is known: that the site was worked on and where it
-lives. Say what the work was and it can be given a page like the others.
+**Kuwahara Lab needs a screen.** It shares the `wordpress-japan` card and page
+with Horita DM Clinic, and has no pictures of its own yet, so two things carry
+a labelled placeholder:
+
+| Where | What to replace it with |
+|---|---|
+| `public/assets/images/projects/wordpress-japan/kuwahara-placeholder.svg` | A 1440×900 screen of blog.kuwatechno.jp, then update `kuwahara` on the record (name, size, alt, and the `ext` on the block in `src/case-studies/wordpress-japan.jsx`) |
+| The right half of `public/assets/images/projects/wordpress-japan/cover.webp` | The same screen, in the card's collage. It was cut with a small script from the clinic's frames, so it is simplest to send the screen and have the cover re-cut |
+
+Its page text says only what is known: that the team created the site and
+where it lives. Say what the work was and it can be given a block of its own.
 
 Giving one a case study is three edits made together:
 
