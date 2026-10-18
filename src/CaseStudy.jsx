@@ -80,8 +80,9 @@ function useHandover() {
 }
 
 /* One fact row. Most values are a plain string; one that points somewhere
-   else — a live site — is `{ text, href }`; and the one that is still to be
-   confirmed carries its marker through rather than being filled in. */
+   else — the live sites — is `{ links: [{ text, href }, …] }`, one link to
+   a line; and the one that is still to be confirmed carries its marker
+   through rather than being filled in. */
 function Fact({ label, value }) {
     return (
         <div className="case-facts__item">
@@ -89,10 +90,18 @@ function Fact({ label, value }) {
             <dd className="case-facts__val">
                 {typeof value === 'string' ? (
                     value
-                ) : value.href ? (
-                    <a className="case-facts__link" href={value.href} target="_blank" rel="noopener noreferrer">
-                        {value.text}
-                    </a>
+                ) : value.links ? (
+                    value.links.map((link) => (
+                        <a
+                            className="case-facts__link"
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key={link.href}
+                        >
+                            {link.text}
+                        </a>
+                    ))
                 ) : (
                     <>
                         {value.text}

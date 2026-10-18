@@ -49,18 +49,23 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Eight projects are in `src/data/projects.js`. Three have a case study page
-(VOEPL, FLOWID, and Horita DM Clinic under `wordpress-japan`), and one,
-Kuwahara Lab, links straight to its live site. The other four are covers and
-captions: they carry no `href`, so the carousel shows them without making
-them links, and nothing about them is published as a page.
+Seven projects are in `src/data/projects.js`. Three have a case study page
+(VOEPL, FLOWID, and the three Japan WordPress sites under `wordpress-japan`). The
+other four are covers and captions: they carry no `href`, so the carousel
+shows them without making them links, and nothing about them is published as
+a page.
 
-**Kuwahara Lab needs a cover.** It ships a labelled placeholder
-(`public/assets/images/projects/kuwahara-lab/cover.svg`) because there was no
-image to use. Upload a 1600×1000 cover to Cloudinary, point `cover` on its
-record at it, and write a real `coverAlt`. It also has no case study yet, and
-its summary says only what is known: that the site was worked on and where it
-lives. Say what the work was and it can be given a page like the others.
+**FotoLib Kyoto's pictures are soft.** They are cut from a PNG export of its
+Figma design in which the whole page is squeezed into a strip about 260px
+wide, then enlarged 2×: `fotolib-hero`, `fotolib-pages` and `fotolib-plans`
+under `public/assets/images/projects/wordpress-japan/`, and the right half of
+`cover.webp`. They read as an impression of the page, not a sharp picture.
+Export the frame again at full size (Figma, Export, PNG at 2×, or share the
+file as "anyone with the link can view") and they can be re-cut properly.
+
+**Kuwahara Lab has a link and nothing else.** It is named in the page and
+linked from its facts, with no pictures, by choice. Send a screen and what the
+work was and it can be given a block of its own.
 
 Giving one a case study is three edits made together:
 

@@ -1,11 +1,13 @@
 import { Zoomable } from '../components/Lightbox.jsx';
 
-/* Horita DM Clinic, on the same shell as every case study: the brief in
-   words, then the screens it was built from in pictures — the home page
-   at desktop width, the same page on a phone, and the inner pages.
+/* WordPress websites for clients in Japan, on the same shell as every
+   case study: the brief in words, then Horita DM Clinic's screens in
+   pictures — the home page at desktop width, the same page on a phone, and
+   the inner pages — and then FotoLib Kyoto, from the export of its design.
+   Kuwahara Lab has no screens and appears by name and link only.
 
-   The pictures are the frames of the Figma file the site was built from,
-   cut at section edges and kept in the repository, so they are plain
+   The clinic's pictures are the frames of the Figma file its site was built
+   from, cut at section edges and kept in the repository, so they are plain
    local files rather than Cloudinary uploads. Each is given its width and
    never a shape, as FLOWID's are: the desktop plates run the width of the
    column and the phone frames stand three to a row at their own height, so
@@ -43,15 +45,21 @@ export default function blocks(project, onZoom) {
             body: (
                 <>
                     <p>
-                        Horita DM Clinic is a diabetes and metabolic-medicine clinic in
-                        Minokamo, Gifu. Its website is where a patient first finds out what
-                        the clinic treats, when it is open, and how to reach it — by phone,
-                        by booking online, or on LINE.
+                        Three websites for clients in Japan, built in WordPress to be
+                        responsive and to work as designed.
                     </p>
                     <p>
-                        The design arrived as a Figma file. My part was to build it as a
-                        WordPress website: the same pages, at desktop and phone width,
-                        working as the file drew them.
+                        <strong>Horita DM Clinic</strong> is a diabetes and
+                        metabolic-medicine clinic in Minokamo, Gifu. Its website is where a
+                        patient first finds out what the clinic treats, when it is open, and
+                        how to reach it — by phone, by booking online, or on LINE. The design
+                        arrived as a Figma file, and my part was to build it in WordPress.
+                    </p>
+                    <p>
+                        <strong>FotoLib Kyoto</strong> is a photo-album service for visitors
+                        to Kyoto, live at fotolib-kyoto.com; its page is shown below.{' '}
+                        <strong>Kuwahara Lab</strong>, the third, is a website the team
+                        created, live at blog.kuwatechno.jp.
                     </p>
                 </>
             ),
@@ -61,17 +69,17 @@ export default function blocks(project, onZoom) {
             label: 'Role',
             body: (
                 <ul className="case-list">
-                    <li>WordPress development from the supplied Figma designs</li>
-                    <li>Responsive layouts from the desktop and phone frames</li>
-                    <li>The header, the phone navigation panel and the footer</li>
-                    <li>The booking and LINE buttons that stay with the reader down the page</li>
-                    <li>The consultation-hours table, the news list and the diabetes pages</li>
+                    <li>WordPress development of all three websites</li>
+                    <li>Horita DM Clinic: building the supplied Figma designs, from the desktop and phone frames</li>
+                    <li>Horita DM Clinic: the header, the phone navigation panel and the footer</li>
+                    <li>Horita DM Clinic: the booking and LINE buttons that stay with the reader down the page</li>
+                    <li>Horita DM Clinic: the consultation-hours table, the news list and the diabetes pages</li>
                 </ul>
             ),
         },
         {
             key: 'file',
-            label: 'The design file',
+            label: 'Horita · The design file',
             body: (
                 <>
                     <p>
@@ -90,7 +98,7 @@ export default function blocks(project, onZoom) {
         },
         {
             key: 'pc',
-            label: 'Home page — desktop',
+            label: 'Horita · Home, desktop',
             wide: true,
             body: (
                 <div className="case-stack">
@@ -102,7 +110,7 @@ export default function blocks(project, onZoom) {
         },
         {
             key: 'sp',
-            label: 'Home page — phone',
+            label: 'Horita · Home, phone',
             wide: true,
             body: (
                 <div className="case-phones">
@@ -114,7 +122,7 @@ export default function blocks(project, onZoom) {
         },
         {
             key: 'inner',
-            label: 'Inner pages',
+            label: 'Horita · Inner pages',
             wide: true,
             body: (
                 <div className="case-stack">
@@ -122,6 +130,24 @@ export default function blocks(project, onZoom) {
                         <Shot shot={shot} onZoom={onZoom} key={shot[0]} />
                     ))}
                 </div>
+            ),
+        },
+        {
+            key: 'fotolib',
+            label: 'FotoLib Kyoto',
+            wide: true,
+            body: (
+                <>
+                    <p className="case-block__note">
+                        A page that explains a Kyoto photo-album service: two plans, what each
+                        page of the album includes, and a six-step order process.
+                    </p>
+                    <div className="case-phones">
+                        {project.fotolib.map((shot) => (
+                            <Shot shot={shot} onZoom={onZoom} key={shot[0]} />
+                        ))}
+                    </div>
+                </>
             ),
         },
     ];

@@ -236,41 +236,67 @@ export const projects = [
         short: 'WordPress Development',
         title: 'WordPress Website Development — Japan',
         summary:
-            'Developed WordPress websites from provided Figma designs, translating UI ' +
-            'designs into functional and responsive websites.',
+            'Developed WordPress websites for clients in Japan \u2014 Horita DM Clinic, ' +
+            'Kuwahara Lab and FotoLib Kyoto \u2014 including translating provided Figma ' +
+            'designs into functional and responsive sites.',
         go: 'View the project',
-        cover: cdn('v1789371081/5_sfpk7n.png'),
-        coverAlt: 'Cover image for the WordPress website development project.',
+        /* A collage made for the card: the clinic's home page at desktop
+           width and on a phone, beside the top of the FotoLib page. Kuwahara
+           Lab has no pictures and is in the card by name and link only. */
+        cover: img('wordpress-japan', 'cover.webp'),
+        coverAlt:
+            'Three websites for clients in Japan: the Horita DM Clinic home page at desktop ' +
+            'width and on a phone, beside the top of the FotoLib Kyoto page.',
         href: 'work/wordpress-japan.html',
 
         /* The case study page: the hero with its lead and facts, then one
-           block per part of the work — the brief, the file, and the screens
-           it was built from — each with its label in the left column.
-           The blocks are src/case-studies/wordpress-japan.jsx.
+           block per part of the work. The sites share it, because they are
+           the same kind of work for the same kind of client: the clinic's
+           and FotoLib's, which have screens, and Kuwahara Lab's, which has
+           only its link, in the facts and in the context. The blocks are
+           src/case-studies/wordpress-japan.jsx.
 
-           The pictures are the Figma file's own frames, exported and cut at
-           section edges (public/assets/images/projects/wordpress-japan/),
+           The clinic's pictures are the Figma file's own frames, exported and
+           cut at section edges (public/assets/images/projects/wordpress-japan/),
            so they are local WebP rather than Cloudinary uploads; the page
-           reads them as they are. `w` and `h` are the exported size, which
-           is what the page reserves before a picture has arrived.
+           reads them as they are. The numbers beside each are the exported
+           size, which is what the page reserves before a picture has arrived.
 
-           The client's name is the logo's, which is how it spells itself in
-           Latin letters; the Japanese is the name on the site.
+           The clinic's name is the logo's, which is how it spells itself in
+           Latin letters; the Japanese is the name on its site.
 
            No 16:10 cover, as with FLOWID: the first block opens with the
-           desktop top page uncut instead. */
-        caseTitle: 'Horita DM Clinic',
+           desktop home page uncut instead. */
+        caseTitle: 'WordPress Websites \u2014 Japan',
         caseCategory: 'WordPress Development',
         caseCover: false,
         lead:
-            'Built the website of a diabetes and metabolic-medicine clinic in Gifu, ' +
-            'turning the supplied Figma designs, for desktop and for phones, into a ' +
-            'responsive WordPress site.',
+            'Built WordPress websites for clients in Japan: a diabetes clinic in Gifu, ' +
+            'from supplied Figma designs for desktop and for phones, and the Kuwahara ' +
+            'Lab and FotoLib Kyoto websites.',
         facts: [
-            ['Client', 'Horita DM Clinic (堀田DMクリニック)'],
-            ['Location', 'Minokamo, Gifu, Japan'],
-            ['Role', 'WordPress development from supplied Figma designs'],
-            ['Live site', { text: 'h-cl.jp', href: 'https://h-cl.jp/' }],
+            ['Clients', 'Horita DM Clinic (\u5800\u7530DM\u30af\u30ea\u30cb\u30c3\u30af) \u00b7 Kuwahara Lab \u00b7 FotoLib Kyoto'],
+            ['Location', 'Japan'],
+            ['Role', 'WordPress development'],
+            [
+                'Live sites',
+                {
+                    links: [
+                        { text: 'h-cl.jp', href: 'https://h-cl.jp/' },
+                        { text: 'blog.kuwatechno.jp', href: 'https://blog.kuwatechno.jp/' },
+                        { text: 'fotolib-kyoto.com', href: 'https://fotolib-kyoto.com/' },
+                    ],
+                },
+            ],
+        ],
+        /* FotoLib Kyoto, from the PNG export of its design: the whole page
+           shrunk into a strip about 260px wide, so these are crops of it,
+           enlarged 2×, and soft. REPLACE with crops of a full-size export
+           (Figma, Export, PNG at 2×) and the three can be re-cut sharp. */
+        fotolib: [
+            ['fotolib-hero', 510, 610, 'The top of the FotoLib Kyoto page: an orange header, a photograph of a woman in a kimono on a Kyoto street, two album plans with their prices, and three photographs of Arashiyama.'],
+            ['fotolib-pages', 510, 510, 'The FotoLib Kyoto page\u2019s list of what each album page includes, set as speech bubbles beside small illustrations of people.'],
+            ['fotolib-plans', 510, 580, 'The FotoLib Kyoto page\u2019s two plans side by side, a \u201cCreate My Kyoto Album\u201d button, and the first of the six ordering steps.'],
         ],
         screens: {
             top: [
@@ -328,27 +354,6 @@ export const projects = [
         cover: cdn('v1789371083/7_kwczeb.png'),
         coverAlt: 'Cover image for the AI-assisted video creation work.',
         href: null,
-    },
-
-    {
-        slug: 'kuwahara-lab',
-        no: '08',
-        category: 'Web Development',
-        short: 'Kuwahara Lab',
-        title: 'Kuwahara Lab Website',
-        summary: 'Contributed to the creation of the Kuwahara Lab website.',
-        go: 'Visit the site',
-        /* REPLACE: a labelled placeholder until there is a real cover.
-           Upload a 1600\u00d71000 image to Cloudinary and swap this for
-           cdn('<version>/<file>'), like the covers above, and write a real
-           coverAlt. See ASSETS.md. */
-        cover: img('kuwahara-lab', 'cover.svg'),
-        coverAlt: 'Placeholder cover for the Kuwahara Lab website project.',
-        /* No case study yet, so the card goes straight to the live site: an
-           external URL is a valid `href`, and the carousel and the menu
-           both open one in a new tab. A page of its own is the three edits
-           in CONTENT-TODO.md §2, and replaces this line when it exists. */
-        href: 'https://blog.kuwatechno.jp/',
     },
 ];
 
