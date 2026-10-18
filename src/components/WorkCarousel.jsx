@@ -149,6 +149,11 @@ function useDragHint(stageRef, live, reduced) {
    the domain root, and the home page is its index. */
 const href = (item) => item?.href || null;
 
+/* A project whose destination is another site is followed in a new tab, so
+   the portfolio is still where the reader left it. */
+const isExternal = (url) => /^https?:\/\//.test(url);
+const blank = (url) => (isExternal(url) ? { target: '_blank', rel: 'noopener noreferrer' } : {});
+
 export default function WorkCarousel({ items, reduced }) {
     /* Opening a project from the canvas. Every card is a destination
        now — the strip is the only place the six projects are listed —
@@ -165,7 +170,7 @@ export default function WorkCarousel({ items, reduced }) {
                destination is not a broken one, and a click that does
                nothing is the honest answer to it. */
             if (!url) return;
-            if (event && (event.metaKey || event.ctrlKey || event.shiftKey)) {
+            if (isExternal(url) || (event && (event.metaKey || event.ctrlKey || event.shiftKey))) {
                 window.open(url, '_blank', 'noopener');
                 return;
             }
@@ -219,7 +224,7 @@ export default function WorkCarousel({ items, reduced }) {
     const onHref = href(on);
     const Label = live && onHref ? 'a' : 'p';
     const labelProps =
-        live && onHref ? { href: onHref, draggable: 'false' } : { 'aria-hidden': !live || undefined };
+        live && onHref ? { href: onHref, draggable: 'false', ...blank(onHref) } : { 'aria-hidden': !live || undefined };
 
     return (
         <div
@@ -273,7 +278,7 @@ export default function WorkCarousel({ items, reduced }) {
                        crops — is the same one. */
                     const to = href(item);
                     const Cell = to ? 'a' : 'span';
-                    const cellProps = to ? { href: to, draggable: 'false' } : {};
+                    const cellProps = to ? { href: to, draggable: 'false', ...blank(to) } : {};
 
                     return (
                         <li className="glass__cell" key={item.slug}>

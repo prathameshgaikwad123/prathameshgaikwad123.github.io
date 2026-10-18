@@ -79,7 +79,8 @@ function useHandover() {
     }, []);
 }
 
-/* One fact row. Most values are a plain string; the one that is still to be
+/* One fact row. Most values are a plain string; one that points somewhere
+   else — a live site — is `{ text, href }`; and the one that is still to be
    confirmed carries its marker through rather than being filled in. */
 function Fact({ label, value }) {
     return (
@@ -88,6 +89,10 @@ function Fact({ label, value }) {
             <dd className="case-facts__val">
                 {typeof value === 'string' ? (
                     value
+                ) : value.href ? (
+                    <a className="case-facts__link" href={value.href} target="_blank" rel="noopener noreferrer">
+                        {value.text}
+                    </a>
                 ) : (
                     <>
                         {value.text}

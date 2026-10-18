@@ -66,7 +66,9 @@ they gain a case study.
 | `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/amanoya-mascot/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/flowid-collateral/cover.*` | 1600 × 1000 | 16:10 | Home |
-| `public/assets/images/projects/wordpress-japan/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/wordpress-japan/cover.*` | 1600 × 1000 | 16:10 | Home (not used: the card's cover is on Cloudinary) |
+| `public/assets/images/projects/wordpress-japan/*.webp` | 1440 or 375 wide | — | Case study: frames of the client's Figma file, cut at section edges |
+| `public/assets/images/projects/kuwahara-lab/cover.*` | 1600 × 1000 | 16:10 | Home. **Placeholder** — replace with a real cover |
 | `public/assets/images/projects/nft-projects/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/ai-video/cover.*` | 1600 × 1000 | 16:10 | Home |
 
