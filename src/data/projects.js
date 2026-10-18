@@ -238,9 +238,68 @@ export const projects = [
         summary:
             'Developed WordPress websites from provided Figma designs, translating UI ' +
             'designs into functional and responsive websites.',
+        go: 'View the project',
         cover: cdn('v1789371081/5_sfpk7n.png'),
         coverAlt: 'Cover image for the WordPress website development project.',
-        href: null,
+        href: 'work/wordpress-japan.html',
+
+        /* The case study page: the hero with its lead and facts, then one
+           block per part of the work — the brief, the file, and the screens
+           it was built from — each with its label in the left column.
+           The blocks are src/case-studies/wordpress-japan.jsx.
+
+           The pictures are the Figma file's own frames, exported and cut at
+           section edges (public/assets/images/projects/wordpress-japan/),
+           so they are local WebP rather than Cloudinary uploads; the page
+           reads them as they are. `w` and `h` are the exported size, which
+           is what the page reserves before a picture has arrived.
+
+           The client's name is the logo's, which is how it spells itself in
+           Latin letters; the Japanese is the name on the site.
+
+           No 16:10 cover, as with FLOWID: the first block opens with the
+           desktop top page uncut instead. */
+        caseTitle: 'Horita DM Clinic',
+        caseCategory: 'WordPress Development',
+        caseCover: false,
+        lead:
+            'Built the website of a diabetes and metabolic-medicine clinic in Gifu, ' +
+            'turning the supplied Figma designs, for desktop and for phones, into a ' +
+            'responsive WordPress site.',
+        facts: [
+            ['Client', 'Horita DM Clinic (堀田DMクリニック)'],
+            ['Location', 'Minokamo, Gifu, Japan'],
+            ['Role', 'WordPress development from supplied Figma designs'],
+            ['Live site', { text: 'h-cl.jp', href: 'https://h-cl.jp/' }],
+        ],
+        screens: {
+            top: [
+                ['pc-top-hero', 1440, 950, 'The Horita DM Clinic home page at desktop width: the header with the clinic’s phone number, online booking and LINE buttons, the hero with its consultation-hours table, and a notice banner.'],
+                ['pc-top-features', 1440, 830, 'The home page’s “Features” section: three numbered reasons to choose the clinic, each with a photograph and a short paragraph.'],
+                ['pc-top-service', 1440, 1350, 'The home page’s “Service” section: the diabetes and metabolic medicine departments as offset cards beside photographs.'],
+                ['pc-top-diabetes', 1440, 1020, 'The home page’s “About diabetes” section: four headed columns — types, treatment, tests and medicines — each with an outline icon and a list of links.'],
+            ],
+            phone: [
+                ['sp-top-1', 375, 1540, 'The home page on a phone, top: the hero with booking and LINE buttons, the notice, and the news list.'],
+                ['sp-top-2', 375, 1577, 'The home page on a phone, middle: the clinic’s three features stacked, one under another, each with its photograph.'],
+                ['sp-top-3', 375, 1402, 'The home page on a phone: the service section, with the two departments set as photograph and card.'],
+                ['sp-top-4', 375, 1681, 'The home page on a phone: the diabetes section as four stacked, headed lists of links.'],
+                ['sp-top-5', 375, 2157, 'The home page on a phone, foot: the director’s message, a map, and the footer navigation.'],
+                ['sp-menu', 375, 645, 'The phone navigation panel: the page list, with a sub-list under “About the clinic”.'],
+            ],
+            inner: [
+                ['pc-diabetes-page', 1440, 1330, 'The diabetes medicine page at desktop width: a banner, anchor links to its three sections, and a list of symptoms to see a doctor about.'],
+                ['pc-diabetes-treatments', 1440, 1160, 'The diabetes page’s treatment section, with medication, exercise and diet each given a tile.'],
+                ['pc-news-list', 1440, 1620, 'The news archive page at desktop width: each notice a row with its date, its title and an arrow, under a photographic banner.'],
+            ],
+        },
+        /* The way out is the way in: back to the strip this came from. */
+        next: {
+            href: '../index.html#work',
+            title: 'Back to Selected Work',
+            aria: 'Back to Selected Work',
+            back: true,
+        },
     },
 
     {
@@ -269,6 +328,27 @@ export const projects = [
         cover: cdn('v1789371083/7_kwczeb.png'),
         coverAlt: 'Cover image for the AI-assisted video creation work.',
         href: null,
+    },
+
+    {
+        slug: 'kuwahara-lab',
+        no: '08',
+        category: 'Web Development',
+        short: 'Kuwahara Lab',
+        title: 'Kuwahara Lab Website',
+        summary: 'Contributed to the creation of the Kuwahara Lab website.',
+        go: 'Visit the site',
+        /* REPLACE: a labelled placeholder until there is a real cover.
+           Upload a 1600\u00d71000 image to Cloudinary and swap this for
+           cdn('<version>/<file>'), like the covers above, and write a real
+           coverAlt. See ASSETS.md. */
+        cover: img('kuwahara-lab', 'cover.svg'),
+        coverAlt: 'Placeholder cover for the Kuwahara Lab website project.',
+        /* No case study yet, so the card goes straight to the live site: an
+           external URL is a valid `href`, and the carousel and the menu
+           both open one in a new tab. A page of its own is the three edits
+           in CONTENT-TODO.md §2, and replaces this line when it exists. */
+        href: 'https://blog.kuwatechno.jp/',
     },
 ];
 

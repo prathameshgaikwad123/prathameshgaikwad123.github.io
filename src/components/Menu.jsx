@@ -128,13 +128,21 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                     ones, and it grows as they do. */}
                                 {projects
                                     .filter((project) => project.href)
-                                    .map((project) => (
+                                    .map((project) => {
+                                    /* A project whose `href` is another site
+                                       is linked there, in a new tab, rather
+                                       than to a case study page it has not
+                                       got. */
+                                    const external = /^https?:\/\//.test(project.href);
+                                    return (
                                     <li data-menu-reveal="s" key={project.slug}>
                                         <a
                                             className="menu__small"
-                                            href={`${work}${project.slug}.html`}
+                                            href={external ? project.href : `${work}${project.slug}.html`}
+                                            target={external ? '_blank' : undefined}
+                                            rel={external ? 'noopener noreferrer' : undefined}
                                             aria-current={
-                                                path.endsWith(`/work/${project.slug}.html`)
+                                                !external && path.endsWith(`/work/${project.slug}.html`)
                                                     ? 'page'
                                                     : undefined
                                             }
@@ -145,7 +153,8 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                             {project.short}
                                         </a>
                                     </li>
-                                    ))}
+                                    );
+                                    })}
                             </ul>
                         </div>
 

@@ -4453,6 +4453,14 @@ button.shelf__vol { cursor: pointer; }
 
 .case-facts__val { font-size: var(--t-small); line-height: 1.55; color: var(--ink); margin: 0; }
 
+/* A fact that is a link to somewhere else: underlined, because nothing
+   else in the strip is, and the underline is what says it can be pressed. */
+.case-facts__link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+}
+
 @media (min-width: 48rem) {
     .case-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
     .case-facts__item {
@@ -4775,7 +4783,9 @@ button.shelf__vol { cursor: pointer; }
 
 .case-plate .frame__media img,
 .case-expo .frame__media img,
-.case-pages .frame__media img { object-fit: contain; }
+.case-pages .frame__media img,
+.case-stack .frame__media img,
+.case-phones .frame__media img { object-fit: contain; }
 
 /* The expo: rows that fill the column, every photograph in a row the
    same height and as wide as its ratio (`--ar`) makes its share. Which
@@ -4807,6 +4817,28 @@ button.shelf__vol { cursor: pointer; }
         flex-basis: 100%;
         height: clamp(1.75rem, 3.5vw, 2.75rem);
     }
+}
+
+/* The screens of a site (src/case-studies/wordpress-japan.jsx). A stack
+   is desktop-width plates one under another, each the width of the
+   column; the phones are the same site at 375px, two to a row and three
+   from 48rem, each at its own height — they are frames of different
+   lengths, so the rows start at the top and are left to be ragged. */
+.case-stack,
+.case-phones {
+    display: grid;
+    gap: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.case-stack { grid-template-columns: minmax(0, 1fr); }
+
+.case-phones {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
+@media (min-width: 48rem) {
+    .case-phones { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* The brochure: its pages in order, two to a row from 48rem, with each

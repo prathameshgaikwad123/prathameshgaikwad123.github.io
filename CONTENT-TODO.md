@@ -49,9 +49,18 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Five of the seven projects in `src/data/projects.js` are covers and captions:
-they carry no `href`, so the carousel shows them without making them links,
-and nothing about them is published as a page.
+Eight projects are in `src/data/projects.js`. Three have a case study page
+(VOEPL, FLOWID, and Horita DM Clinic under `wordpress-japan`), and one,
+Kuwahara Lab, links straight to its live site. The other four are covers and
+captions: they carry no `href`, so the carousel shows them without making
+them links, and nothing about them is published as a page.
+
+**Kuwahara Lab needs a cover.** It ships a labelled placeholder
+(`public/assets/images/projects/kuwahara-lab/cover.svg`) because there was no
+image to use. Upload a 1600×1000 cover to Cloudinary, point `cover` on its
+record at it, and write a real `coverAlt`. It also has no case study yet, and
+its summary says only what is known: that the site was worked on and where it
+lives. Say what the work was and it can be given a page like the others.
 
 Giving one a case study is three edits made together:
 
