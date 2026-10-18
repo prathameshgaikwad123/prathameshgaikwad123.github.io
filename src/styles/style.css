@@ -4750,6 +4750,15 @@ button.shelf__vol { cursor: pointer; }
 
 .case-block__body strong { color: var(--ink); font-weight: 500; }
 
+/* A link in running text, underlined as the fact strip's are, because the
+   page sets nothing else apart that way. */
+.case-block__body a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+}
+
 .case-list { display: grid; grid-template-columns: minmax(0, 1fr); }
 
 .case-list li {
