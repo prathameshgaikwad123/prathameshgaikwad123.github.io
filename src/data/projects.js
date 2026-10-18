@@ -236,25 +236,25 @@ export const projects = [
         short: 'WordPress Development',
         title: 'WordPress Website Development — Japan',
         summary:
-            'Developed WordPress websites for clients in Japan \u2014 Horita DM Clinic and ' +
-            'Kuwahara Lab \u2014 including translating provided Figma designs into ' +
-            'functional and responsive sites.',
+            'Developed WordPress websites for clients in Japan \u2014 Horita DM Clinic, ' +
+            'Kuwahara Lab and FotoLib Kyoto \u2014 including translating provided Figma ' +
+            'designs into functional and responsive sites.',
         go: 'View the project',
-        /* A collage of the two sites, made for the card: the clinic's home
-           page at desktop width and on a phone beside a labelled placeholder
-           for Kuwahara Lab. REPLACE the placeholder half with a real screen
-           of that site — see CONTENT-TODO.md §2 — and re-cut the file. */
+        /* A collage of the sites, made for the card: the clinic's home page
+           at desktop width and on a phone beside a labelled placeholder for
+           each of the other two. REPLACE those with real screens — see
+           CONTENT-TODO.md §2 — and re-cut the file. */
         cover: img('wordpress-japan', 'cover.webp'),
         coverAlt:
-            'Two WordPress websites for clients in Japan: the Horita DM Clinic home page ' +
-            'at desktop width and on a phone, beside a placeholder for the Kuwahara Lab website.',
+            'Three websites for clients in Japan: the Horita DM Clinic home page at desktop ' +
+            'width and on a phone, beside placeholders for the Kuwahara Lab and FotoLib Kyoto websites.',
         href: 'work/wordpress-japan.html',
 
         /* The case study page: the hero with its lead and facts, then one
-           block per part of the work. Two sites share it, because they are
+           block per part of the work. The sites share it, because they are
            the same kind of work for the same kind of client: the clinic's,
-           which has its screens, and Kuwahara Lab's, which has a placeholder
-           until it does. The blocks are src/case-studies/wordpress-japan.jsx.
+           which has its screens, and the others, which have a placeholder
+           each until they do. The blocks are src/case-studies/wordpress-japan.jsx.
 
            The clinic's pictures are the Figma file's own frames, exported and
            cut at section edges (public/assets/images/projects/wordpress-japan/),
@@ -273,9 +273,9 @@ export const projects = [
         lead:
             'Built WordPress websites for clients in Japan: a diabetes clinic in Gifu, ' +
             'from supplied Figma designs for desktop and for phones, and the Kuwahara ' +
-            'Lab website.',
+            'Lab and FotoLib Kyoto websites.',
         facts: [
-            ['Clients', 'Horita DM Clinic (\u5800\u7530DM\u30af\u30ea\u30cb\u30c3\u30af) \u00b7 Kuwahara Lab'],
+            ['Clients', 'Horita DM Clinic (\u5800\u7530DM\u30af\u30ea\u30cb\u30c3\u30af) \u00b7 Kuwahara Lab \u00b7 FotoLib Kyoto'],
             ['Location', 'Japan'],
             ['Role', 'WordPress development'],
             [
@@ -284,15 +284,26 @@ export const projects = [
                     links: [
                         { text: 'h-cl.jp', href: 'https://h-cl.jp/' },
                         { text: 'blog.kuwatechno.jp', href: 'https://blog.kuwatechno.jp/' },
+                        { text: 'fotolib-kyoto.com', href: 'https://fotolib-kyoto.com/' },
                     ],
                 },
             ],
         ],
-        /* Placeholder for the Kuwahara Lab block: 1440×900, replace with a
-           real screen of the site and write a real alt. */
-        kuwahara: [
-            'kuwahara-placeholder', 1440, 900,
-            'Placeholder for a screen of the Kuwahara Lab website.',
+        /* The sites that have no screens yet, one block each, in page order:
+           the key and label of the block, and a 1440×900 placeholder. REPLACE
+           an entry's picture with a real screen of the site (a webp beside the
+           clinic's, in screens) and write a real alt. */
+        pending: [
+            {
+                key: 'kuwahara',
+                label: 'Kuwahara Lab',
+                shot: ['kuwahara-placeholder', 1440, 900, 'Placeholder for a screen of the Kuwahara Lab website.'],
+            },
+            {
+                key: 'fotolib',
+                label: 'FotoLib Kyoto',
+                shot: ['fotolib-placeholder', 1440, 900, 'Placeholder for a screen of the FotoLib Kyoto website.'],
+            },
         ],
         screens: {
             top: [

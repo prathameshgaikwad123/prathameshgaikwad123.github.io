@@ -50,22 +50,25 @@ rather than a dead one, so leaving that field null is a valid answer.
 ## 2. Case studies for the new carousel projects
 
 Seven projects are in `src/data/projects.js`. Three have a case study page
-(VOEPL, FLOWID, and the Japan WordPress sites under `wordpress-japan`). The
+(VOEPL, FLOWID, and the three Japan WordPress sites under `wordpress-japan`). The
 other four are covers and captions: they carry no `href`, so the carousel
 shows them without making them links, and nothing about them is published as
 a page.
 
-**Kuwahara Lab needs a screen.** It shares the `wordpress-japan` card and page
-with Horita DM Clinic, and has no pictures of its own yet, so two things carry
-a labelled placeholder:
+**Kuwahara Lab and FotoLib Kyoto need screens.** Both share the
+`wordpress-japan` card and page with Horita DM Clinic, and have no pictures
+of their own yet, so each carries a labelled placeholder in two places:
 
 | Where | What to replace it with |
 |---|---|
-| `public/assets/images/projects/wordpress-japan/kuwahara-placeholder.svg` | A 1440×900 screen of blog.kuwatechno.jp, then update `kuwahara` on the record (name, size, alt, and the `ext` on the block in `src/case-studies/wordpress-japan.jsx`) |
-| The right half of `public/assets/images/projects/wordpress-japan/cover.webp` | The same screen, in the card's collage. It was cut with a small script from the clinic's frames, so it is simplest to send the screen and have the cover re-cut |
+| `kuwahara-placeholder.svg` / `fotolib-placeholder.svg` in `public/assets/images/projects/wordpress-japan/` | A 1440×900 screen of the site, then update that entry in `pending` on the record in `src/data/projects.js` (name, size, alt) and the `ext` on its block in `src/case-studies/wordpress-japan.jsx` |
+| Its panel in `public/assets/images/projects/wordpress-japan/cover.webp` | The same screen, in the card's collage. It was cut with a small script from the clinic's frames, so it is simplest to send the screens and have the cover re-cut |
 
-Its page text says only what is known: that the team created the site and
-where it lives. Say what the work was and it can be given a block of its own.
+Their page text says only what is known: that the team created the sites and
+where they live. Say what the work was on each and it can be given a block of
+its own. FotoLib's Figma file could not be opened from the session that
+wrote this, so nothing from it is used; share it as "anyone with the link can
+view" and its frames can be cut the way the clinic's were.
 
 Giving one a case study is three edits made together:
 

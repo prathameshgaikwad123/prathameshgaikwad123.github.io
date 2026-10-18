@@ -1,10 +1,10 @@
 import { Zoomable } from '../components/Lightbox.jsx';
 
-/* Two WordPress websites for clients in Japan, on the same shell as every
+/* WordPress websites for clients in Japan, on the same shell as every
    case study: the brief in words, then Horita DM Clinic's screens in
    pictures — the home page at desktop width, the same page on a phone, and
-   the inner pages — and then Kuwahara Lab, which has a placeholder where its
-   screens will go.
+   the inner pages — and then the other sites, each with a placeholder where
+   its screens will go.
 
    The clinic's pictures are the frames of the Figma file its site was built
    from, cut at section edges and kept in the repository, so they are plain
@@ -45,7 +45,7 @@ export default function blocks(project, onZoom) {
             body: (
                 <>
                     <p>
-                        Two WordPress websites for clients in Japan, built to be
+                        Three websites for clients in Japan, built in WordPress to be
                         responsive and to work as designed.
                     </p>
                     <p>
@@ -56,8 +56,9 @@ export default function blocks(project, onZoom) {
                         arrived as a Figma file, and my part was to build it in WordPress.
                     </p>
                     <p>
-                        <strong>Kuwahara Lab</strong> is the second site, which the team
-                        created and which is live at blog.kuwatechno.jp.
+                        <strong>Kuwahara Lab</strong> and <strong>FotoLib Kyoto</strong> are
+                        the other two, which the team created and which are live at
+                        blog.kuwatechno.jp and fotolib-kyoto.com.
                     </p>
                 </>
             ),
@@ -67,7 +68,7 @@ export default function blocks(project, onZoom) {
             label: 'Role',
             body: (
                 <ul className="case-list">
-                    <li>WordPress development of both websites</li>
+                    <li>WordPress development of all three websites</li>
                     <li>Horita DM Clinic: building the supplied Figma designs, from the desktop and phone frames</li>
                     <li>Horita DM Clinic: the header, the phone navigation panel and the footer</li>
                     <li>Horita DM Clinic: the booking and LINE buttons that stay with the reader down the page</li>
@@ -130,17 +131,18 @@ export default function blocks(project, onZoom) {
                 </div>
             ),
         },
-        {
-            key: 'kuwahara',
-            label: 'Kuwahara Lab',
+        /* The sites with no screens yet, each a labelled placeholder. */
+        ...project.pending.map(({ key, label, shot }) => ({
+            key,
+            label,
             wide: true,
             body: (
                 <div className="case-stack">
                     {/* REPLACE: a labelled placeholder. Its path, size and alt
                         text are on the project record. */}
-                    <Shot shot={project.kuwahara} ext="svg" onZoom={onZoom} />
+                    <Shot shot={shot} ext="svg" onZoom={onZoom} />
                 </div>
             ),
-        },
+        })),
     ];
 }
