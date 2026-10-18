@@ -357,7 +357,7 @@ export const projects = [
         coverCaption: 'Dino The Diamond.',
         facts: [
             ['Project', 'Dino The Diamond'],
-            ['Type', 'NFT collection'],
+            ['Type', 'NFT collection of 10,000'],
             ['Platform', 'OpenSea'],
             [
                 'Collection',
@@ -370,6 +370,14 @@ export const projects = [
                     ],
                 },
             ],
+        ],
+        /* The picture the collection started from, which was found rather than
+           made, so it is the page's own and not the cover. Name, width,
+           height and alt, as the screens on the Japan page are. */
+        inspiration: [
+            'inspiration', 1024, 1024,
+            'The inspiration image: a small blue creature with large eyes and a faceted, ' +
+            'glowing crystal for a head, standing beside a green gem.',
         ],
         /* The way out is the way in: back to the strip this came from. */
         next: {
