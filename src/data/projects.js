@@ -240,21 +240,21 @@ export const projects = [
             'Kuwahara Lab and FotoLib Kyoto \u2014 including translating provided Figma ' +
             'designs into functional and responsive sites.',
         go: 'View the project',
-        /* A collage of the sites, made for the card: the clinic's home page
-           at desktop width and on a phone beside a labelled placeholder for
-           each of the other two. REPLACE those with real screens — see
-           CONTENT-TODO.md §2 — and re-cut the file. */
+        /* A collage made for the card: the clinic's home page at desktop
+           width and on a phone, beside the top of the FotoLib page. Kuwahara
+           Lab has no pictures and is in the card by name and link only. */
         cover: img('wordpress-japan', 'cover.webp'),
         coverAlt:
             'Three websites for clients in Japan: the Horita DM Clinic home page at desktop ' +
-            'width and on a phone, beside placeholders for the Kuwahara Lab and FotoLib Kyoto websites.',
+            'width and on a phone, beside the top of the FotoLib Kyoto page.',
         href: 'work/wordpress-japan.html',
 
         /* The case study page: the hero with its lead and facts, then one
            block per part of the work. The sites share it, because they are
-           the same kind of work for the same kind of client: the clinic's,
-           which has its screens, and the others, which have a placeholder
-           each until they do. The blocks are src/case-studies/wordpress-japan.jsx.
+           the same kind of work for the same kind of client: the clinic's
+           and FotoLib's, which have screens, and Kuwahara Lab's, which has
+           only its link, in the facts and in the context. The blocks are
+           src/case-studies/wordpress-japan.jsx.
 
            The clinic's pictures are the Figma file's own frames, exported and
            cut at section edges (public/assets/images/projects/wordpress-japan/),
@@ -289,21 +289,14 @@ export const projects = [
                 },
             ],
         ],
-        /* The sites that have no screens yet, one block each, in page order:
-           the key and label of the block, and a 1440×900 placeholder. REPLACE
-           an entry's picture with a real screen of the site (a webp beside the
-           clinic's, in screens) and write a real alt. */
-        pending: [
-            {
-                key: 'kuwahara',
-                label: 'Kuwahara Lab',
-                shot: ['kuwahara-placeholder', 1440, 900, 'Placeholder for a screen of the Kuwahara Lab website.'],
-            },
-            {
-                key: 'fotolib',
-                label: 'FotoLib Kyoto',
-                shot: ['fotolib-placeholder', 1440, 900, 'Placeholder for a screen of the FotoLib Kyoto website.'],
-            },
+        /* FotoLib Kyoto, from the PNG export of its design: the whole page
+           shrunk into a strip about 260px wide, so these are crops of it,
+           enlarged 2×, and soft. REPLACE with crops of a full-size export
+           (Figma, Export, PNG at 2×) and the three can be re-cut sharp. */
+        fotolib: [
+            ['fotolib-hero', 510, 610, 'The top of the FotoLib Kyoto page: an orange header, a photograph of a woman in a kimono on a Kyoto street, two album plans with their prices, and three photographs of Arashiyama.'],
+            ['fotolib-pages', 510, 510, 'The FotoLib Kyoto page\u2019s list of what each album page includes, set as speech bubbles beside small illustrations of people.'],
+            ['fotolib-plans', 510, 580, 'The FotoLib Kyoto page\u2019s two plans side by side, a \u201cCreate My Kyoto Album\u201d button, and the first of the six ordering steps.'],
         ],
         screens: {
             top: [

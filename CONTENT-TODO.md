@@ -55,20 +55,17 @@ other four are covers and captions: they carry no `href`, so the carousel
 shows them without making them links, and nothing about them is published as
 a page.
 
-**Kuwahara Lab and FotoLib Kyoto need screens.** Both share the
-`wordpress-japan` card and page with Horita DM Clinic, and have no pictures
-of their own yet, so each carries a labelled placeholder in two places:
+**FotoLib Kyoto's pictures are soft.** They are cut from a PNG export of its
+Figma design in which the whole page is squeezed into a strip about 260px
+wide, then enlarged 2×: `fotolib-hero`, `fotolib-pages` and `fotolib-plans`
+under `public/assets/images/projects/wordpress-japan/`, and the right half of
+`cover.webp`. They read as an impression of the page, not a sharp picture.
+Export the frame again at full size (Figma, Export, PNG at 2×, or share the
+file as "anyone with the link can view") and they can be re-cut properly.
 
-| Where | What to replace it with |
-|---|---|
-| `kuwahara-placeholder.svg` / `fotolib-placeholder.svg` in `public/assets/images/projects/wordpress-japan/` | A 1440×900 screen of the site, then update that entry in `pending` on the record in `src/data/projects.js` (name, size, alt) and the `ext` on its block in `src/case-studies/wordpress-japan.jsx` |
-| Its panel in `public/assets/images/projects/wordpress-japan/cover.webp` | The same screen, in the card's collage. It was cut with a small script from the clinic's frames, so it is simplest to send the screens and have the cover re-cut |
-
-Their page text says only what is known: that the team created the sites and
-where they live. Say what the work was on each and it can be given a block of
-its own. FotoLib's Figma file could not be opened from the session that
-wrote this, so nothing from it is used; share it as "anyone with the link can
-view" and its frames can be cut the way the clinic's were.
+**Kuwahara Lab has a link and nothing else.** It is named in the page and
+linked from its facts, with no pictures, by choice. Send a screen and what the
+work was and it can be given a block of its own.
 
 Giving one a case study is three edits made together:
 

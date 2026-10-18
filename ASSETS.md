@@ -66,9 +66,8 @@ they gain a case study.
 | `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/amanoya-mascot/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/flowid-collateral/cover.*` | 1600 × 1000 | 16:10 | Home |
-| `public/assets/images/projects/wordpress-japan/cover.webp` | 1600 × 1000 | 16:10 | Home. A collage of the three sites; the Kuwahara Lab and FotoLib Kyoto panels are **placeholders** |
-| `public/assets/images/projects/wordpress-japan/*.webp` | 1440 or 375 wide | — | Case study: frames of the clinic's Figma file, cut at section edges |
-| `public/assets/images/projects/wordpress-japan/{kuwahara,fotolib}-placeholder.svg` | 1440 × 900 | 16:10 | Case study. **Placeholders** — replace each with a real screen |
+| `public/assets/images/projects/wordpress-japan/cover.webp` | 1600 × 1000 | 16:10 | Home. A collage of the Horita DM Clinic and FotoLib Kyoto screens |
+| `public/assets/images/projects/wordpress-japan/*.webp` | 1440 or 375 wide (clinic), 510 wide (FotoLib, enlarged from a thumbnail) | — | Case study: frames of the clinic's Figma file, cut at section edges, and crops of FotoLib's |
 | `public/assets/images/projects/ai-video/cover.*` | 1600 × 1000 | 16:10 | Home |
 
 Each cover appears in the **glass carousel** that is the whole of

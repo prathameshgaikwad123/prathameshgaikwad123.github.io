@@ -3,8 +3,8 @@ import { Zoomable } from '../components/Lightbox.jsx';
 /* WordPress websites for clients in Japan, on the same shell as every
    case study: the brief in words, then Horita DM Clinic's screens in
    pictures — the home page at desktop width, the same page on a phone, and
-   the inner pages — and then the other sites, each with a placeholder where
-   its screens will go.
+   the inner pages — and then FotoLib Kyoto, from the export of its design.
+   Kuwahara Lab has no screens and appears by name and link only.
 
    The clinic's pictures are the frames of the Figma file its site was built
    from, cut at section edges and kept in the repository, so they are plain
@@ -16,8 +16,8 @@ import { Zoomable } from '../components/Lightbox.jsx';
 
 const DIR = '/assets/images/projects/wordpress-japan/';
 
-function Shot({ shot: [file, w, h, alt], ext = 'webp', eager, onZoom }) {
-    const src = `${DIR}${file}.${ext}`;
+function Shot({ shot: [file, w, h, alt], eager, onZoom }) {
+    const src = `${DIR}${file}.webp`;
     return (
         <figure className="frame">
             <span className="frame__media">
@@ -56,9 +56,10 @@ export default function blocks(project, onZoom) {
                         arrived as a Figma file, and my part was to build it in WordPress.
                     </p>
                     <p>
-                        <strong>Kuwahara Lab</strong> and <strong>FotoLib Kyoto</strong> are
-                        the other two, which the team created and which are live at
-                        blog.kuwatechno.jp and fotolib-kyoto.com.
+                        <strong>FotoLib Kyoto</strong> is a photo-album service for visitors
+                        to Kyoto, live at fotolib-kyoto.com; its page is shown below.{' '}
+                        <strong>Kuwahara Lab</strong>, the third, is a website the team
+                        created, live at blog.kuwatechno.jp.
                     </p>
                 </>
             ),
@@ -131,18 +132,23 @@ export default function blocks(project, onZoom) {
                 </div>
             ),
         },
-        /* The sites with no screens yet, each a labelled placeholder. */
-        ...project.pending.map(({ key, label, shot }) => ({
-            key,
-            label,
+        {
+            key: 'fotolib',
+            label: 'FotoLib Kyoto',
             wide: true,
             body: (
-                <div className="case-stack">
-                    {/* REPLACE: a labelled placeholder. Its path, size and alt
-                        text are on the project record. */}
-                    <Shot shot={shot} ext="svg" onZoom={onZoom} />
-                </div>
+                <>
+                    <p className="case-block__note">
+                        A page that explains a Kyoto photo-album service: two plans, what each
+                        page of the album includes, and a six-step order process.
+                    </p>
+                    <div className="case-phones">
+                        {project.fotolib.map((shot) => (
+                            <Shot shot={shot} onZoom={onZoom} key={shot[0]} />
+                        ))}
+                    </div>
+                </>
             ),
-        })),
+        },
     ];
 }
