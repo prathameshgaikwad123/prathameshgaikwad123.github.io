@@ -49,9 +49,9 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Seven projects are in `src/data/projects.js`. Three have a case study page
-(VOEPL, FLOWID, and the three Japan WordPress sites under `wordpress-japan`). The
-other four are covers and captions: they carry no `href`, so the carousel
+Seven projects are in `src/data/projects.js`. Four have a case study page
+(VOEPL, FLOWID, the three Japan WordPress sites under `wordpress-japan`, and
+the NFT project). The other three are covers and captions: they carry no `href`, so the carousel
 shows them without making them links, and nothing about them is published as
 a page.
 
@@ -62,6 +62,12 @@ under `public/assets/images/projects/wordpress-japan/`, and the right half of
 `cover.webp`. They read as an impression of the page, not a sharp picture.
 Export the frame again at full size (Figma, Export, PNG at 2×, or share the
 file as "anyone with the link can view") and they can be re-cut properly.
+
+**The NFT project's cover is a placeholder.** `nft-projects/cover.webp` is the
+Dino The Diamond artwork centred on its own flat grey (800px square in a
+1600×1000 frame, so the card can crop it to either shape). The page text is
+the owner's own wording, lightly punctuated. Replace the cover with a real
+1600×1000 upload and `cover` on the record with its Cloudinary path.
 
 **Kuwahara Lab has a link and nothing else.** It is named in the page and
 linked from its facts, with no pictures, by choice. Send a screen and what the

@@ -337,9 +337,47 @@ export const projects = [
         summary:
             'Contributed to concept development, creative direction, project setup, ' +
             'execution, management, and coordination of NFT projects.',
-        cover: cdn('v1789371082/6_unamem.png'),
-        coverAlt: 'Cover image for the NFT projects creation and management work.',
-        href: null,
+        go: 'View the project',
+        /* REPLACE: Dino The Diamond's artwork, set on its own flat grey so the
+           card can crop it to either shape and the ground carries on. It is
+           the placeholder for the cover; swap it for the real one, a 1600×1000
+           upload on Cloudinary, when there is one. */
+        cover: img('nft-projects', 'cover.webp'),
+        coverAlt:
+            'Dino The Diamond: a pink, crystal-headed creature with large dark eyes, three ' +
+            'small flying saucers circling its head and a green gem at its feet.',
+        href: 'work/nft-projects.html',
+
+        /* The case study page: the project in its owner's own words, and where
+           to find it. The blocks are src/case-studies/nft-projects.jsx. The
+           cover is the page's cover as well, so it is replaced in one place. */
+        caseTitle: 'Dino The Diamond',
+        caseCategory: 'NFT Project',
+        lead: 'Born from passion, creativity, and the joy of building something timeless.',
+        coverCaption: 'Dino The Diamond.',
+        facts: [
+            ['Project', 'Dino The Diamond'],
+            ['Type', 'NFT collection'],
+            ['Platform', 'OpenSea'],
+            [
+                'Collection',
+                {
+                    links: [
+                        {
+                            text: 'View on OpenSea',
+                            href: 'https://opensea.io/collection/dino-the-diamond-2/overview',
+                        },
+                    ],
+                },
+            ],
+        ],
+        /* The way out is the way in: back to the strip this came from. */
+        next: {
+            href: '../index.html#work',
+            title: 'Back to Selected Work',
+            aria: 'Back to Selected Work',
+            back: true,
+        },
     },
 
     {
