@@ -4510,6 +4510,71 @@ button.shelf__vol { cursor: pointer; }
     .case-gallery > *:first-child:nth-last-child(odd) .frame__media img { aspect-ratio: 16 / 9; }
 }
 
+/* --- Videos -----------------------------------------------------------
+   The videos of a case study (src/components/CaseVideo.jsx). Each is a
+   16:9 frame holding a still and a play control until it is pressed,
+   then the player in the same box, so nothing on the page moves when it
+   starts. They lay out like the gallery's plates: two across, and an odd
+   one out leading at full width. */
+
+.case-videos { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 3.5vw, 2.75rem); }
+
+@media (min-width: 48rem) {
+    .case-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .case-videos > *:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+}
+
+.case-video__media { aspect-ratio: 16 / 9; }
+
+.case-video__media > iframe,
+.case-video__media > video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+}
+
+.case-video__media--empty { display: grid; place-items: center; padding: 1rem; text-align: center; }
+
+.case-video__play { position: absolute; inset: 0; display: block; color: #fff; cursor: pointer; }
+
+.case-video__play img { width: 100%; height: 100%; object-fit: cover; }
+
+.case-video__button {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: grid;
+    place-items: center;
+    width: clamp(3.5rem, 8vw, 4.75rem);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: background-color var(--t-fast) var(--ease-io), transform var(--t-mid) var(--ease);
+}
+
+.case-video__button svg { width: 44%; height: 44%; margin-left: 6%; }
+
+.case-video__play:hover .case-video__button,
+.case-video__play:focus-visible .case-video__button {
+    background: rgba(0, 0, 0, 0.82);
+    transform: translate(-50%, -50%) scale(1.06);
+}
+
+.case-video figcaption {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.875rem;
+    font-size: var(--t-meta);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--ink-3);
+}
+
+.case-video__title { color: var(--ink); font-size: var(--t-small); letter-spacing: 0; }
+
 /* --- Zoom ------------------------------------------------------------- */
 
 .zoom-btn {

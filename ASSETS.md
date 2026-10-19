@@ -55,9 +55,8 @@ around while images load.
 
 ## Project images
 
-Seven projects. One of them has a case study and so has gallery plates
-as well; the other six are covers only, and gain a gallery if and when
-they gain a case study.
+Seven projects. Some have a case study and so carry more than a cover; the
+rest are covers only, and gain a page if and when they gain a case study.
 
 | Path | Size | Ratio | Used on |
 |---|---|---|---|
@@ -70,7 +69,12 @@ they gain a case study.
 | `public/assets/images/projects/wordpress-japan/*.webp` | 1440 or 375 wide (clinic), 510 wide (FotoLib, enlarged from a thumbnail) | — | Case study: frames of the clinic's Figma file, cut at section edges, and crops of FotoLib's |
 | `public/assets/images/projects/nft-projects/cover.webp` | 1600 × 1000 | 16:10 | Home + case study. **Placeholder**: the Dino The Diamond artwork on its own flat grey. Replace with the real cover |
 | `public/assets/images/projects/nft-projects/inspiration.webp` | 1024 × 1024 | 1:1 | Case study. The image the collection was based on |
-| `public/assets/images/projects/ai-video/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/ai-video/cover.*` | 1600 × 1000 | 16:10 | Home. Not used while `cover` on the record points at Cloudinary |
+| Video posters (optional) | 1600 × 900 | 16:9 | AI video case study. YouTube supplies its own still, so a poster is only needed for Vimeo or a direct file; set `poster` on the video's entry in `src/data/projects.js` |
+
+The AI video page's **videos are not images and are not stored here.** They are
+hosted on YouTube (unlisted) or Vimeo and named by id on the `ai-video` record;
+see `src/components/CaseVideo.jsx`.
 
 Each cover appears in the **glass carousel** that is the whole of
 Selected Work it is cropped from the centre to 4:3 or 4:5 — the strip

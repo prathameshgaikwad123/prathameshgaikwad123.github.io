@@ -395,11 +395,45 @@ export const projects = [
         short: 'AI-Assisted Video',
         title: 'AI-Assisted Video Creation',
         summary:
-            'Created videos using AI-powered tools for concept development, visual ' +
-            'creation, and video production.',
+            'Created videos for the VOEPL HSE department using AI-powered tools for ' +
+            'concept development, visual creation, and video production.',
+        go: 'Watch the videos',
         cover: cdn('v1789371083/7_kwczeb.png'),
         coverAlt: 'Cover image for the AI-assisted video creation work.',
-        href: null,
+        href: 'work/ai-video.html',
+
+        /* The case study page. The blocks are src/case-studies/ai-video.jsx. */
+        caseTitle: 'AI-Assisted Video for the HSE Department',
+        caseCategory: 'AI / Video Production',
+        lead:
+            'Videos made with AI-powered tools for the Health, Safety and Environment ' +
+            'department at VOEPL, from concept to finished video.',
+        coverCaption: 'AI-assisted video creation for the VOEPL HSE department.',
+        facts: [
+            ['Role', 'Video creation — concept, visuals and production'],
+            ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
+            ['Department', 'Health, Safety and Environment (HSE)'],
+            ['Method', 'AI-assisted'],
+        ],
+
+        /* REPLACE: the videos. The files are not kept in the repository; they
+           are uploaded to YouTube (unlisted is fine) or Vimeo and named here
+           by their id. See src/components/CaseVideo.jsx for the fields. An
+           entry with no `id` renders as a labelled placeholder. Add, remove
+           or reorder entries freely — the page lays out whatever is here. */
+        videos: [
+            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
+            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
+            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
+        ],
+
+        /* The way out is the way in: back to the strip this came from. */
+        next: {
+            href: '../index.html#work',
+            title: 'Back to Selected Work',
+            aria: 'Back to Selected Work',
+            back: true,
+        },
     },
 ];
 

@@ -49,9 +49,9 @@ rather than a dead one, so leaving that field null is a valid answer.
 
 ## 2. Case studies for the new carousel projects
 
-Seven projects are in `src/data/projects.js`. Four have a case study page
-(VOEPL, FLOWID, the three Japan WordPress sites under `wordpress-japan`, and
-the NFT project). The other three are covers and captions: they carry no `href`, so the carousel
+Seven projects are in `src/data/projects.js`. Five have a case study page
+(VOEPL, FLOWID, the three Japan WordPress sites under `wordpress-japan`, the
+NFT project, and the AI-assisted video work). The other two are covers and captions: they carry no `href`, so the carousel
 shows them without making them links, and nothing about them is published as
 a page.
 
@@ -68,6 +68,18 @@ Dino The Diamond artwork centred on its own flat grey (800px square in a
 1600×1000 frame, so the card can crop it to either shape). The page text is
 the owner's own wording, lightly punctuated. Replace the cover with a real
 1600×1000 upload and `cover` on the record with its Cloudinary path.
+
+**The AI-assisted video page is waiting for the videos.** The page, its facts
+and its layout are done; the three video slots are labelled placeholders
+(`data-todo="ai-video-01"` and so on). Upload each video to YouTube (unlisted
+is fine) or Vimeo, then in `src/data/projects.js`, on the `ai-video` record,
+set each entry's `id` to the video's id (the part after `v=` in a YouTube URL),
+and write its real `title` and one-line `note`. Add or remove entries to match
+how many there are. Do not commit the video files themselves. Two more things
+from the same record: replace the cover with a frame from one of the videos
+(1600×1000, on Cloudinary), and confirm with VOEPL that the HSE videos may be
+shown publicly. An unlisted video can still be opened by anyone who has the
+link, and this page is that link.
 
 **Kuwahara Lab has a link and nothing else.** It is named in the page and
 linked from its facts, with no pictures, by choice. Send a screen and what the
