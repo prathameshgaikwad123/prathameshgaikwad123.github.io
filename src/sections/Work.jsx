@@ -3,7 +3,7 @@ import Words from '../components/Words.jsx';
 import { useReducedMotion } from '../hooks/dom.js';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import lineReveal from '../animations/lineReveal.js';
-import { projects } from '../data/projects.js';
+import { carouselProjects } from '../data/projects.js';
 
 /* The centre of the site, and now one thing rather than two: the
    heading, and the covers as a single rigid row behind a pane of
@@ -50,7 +50,7 @@ export default function Work() {
                         {/* Counted from the data, like the carousel's own
                             counter, so the two cannot disagree and adding
                             a project is one edit rather than three. */}
-                        <b className="num">{`01 — ${String(projects.length).padStart(2, '0')}`}</b>
+                        <b className="num">{`01 — ${String(carouselProjects.length).padStart(2, '0')}`}</b>
                     </p>
                 </div>
             </div>
@@ -61,7 +61,7 @@ export default function Work() {
                 page's content box, so full bleed here is `width: 100%`
                 and never the viewport unit that would also count the
                 scrollbar and push the strip a few pixels off centre. */}
-            <WorkCarousel items={projects} reduced={reduced} />
+            <WorkCarousel items={carouselProjects} reduced={reduced} />
         </section>
     );
 }
