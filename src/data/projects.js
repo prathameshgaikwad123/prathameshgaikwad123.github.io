@@ -398,6 +398,11 @@ export const projects = [
             'Created videos for the VOEPL HSE department using AI-powered tools for ' +
             'concept development, visual creation, and video production.',
         go: 'Watch the videos',
+        /* Not in the home carousel. The record is still a project, so the
+           page is built and the navigation panel lists it; `carousel: false`
+           is only what keeps its card out of the strip and its count out of
+           the index. Delete the line to put the card back. */
+        carousel: false,
         cover: cdn('v1789371083/7_kwczeb.png'),
         coverAlt: 'Cover image for the AI-assisted video creation work.',
         href: 'work/ai-video.html',
@@ -436,5 +441,9 @@ export const projects = [
         },
     },
 ];
+
+/* The projects that get a card in the home carousel, which is all of them
+   but the ones whose record says `carousel: false`. */
+export const carouselProjects = projects.filter((p) => p.carousel !== false);
 
 export const projectBySlug = (slug) => projects.find((p) => p.slug === slug);

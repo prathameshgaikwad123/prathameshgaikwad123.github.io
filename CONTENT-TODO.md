@@ -69,7 +69,7 @@ Dino The Diamond artwork centred on its own flat grey (800px square in a
 the owner's own wording, lightly punctuated. Replace the cover with a real
 1600×1000 upload and `cover` on the record with its Cloudinary path.
 
-**The AI-assisted video page is waiting for the videos.** The page, its facts
+**The AI-assisted video page is waiting for the videos.** It is not in the home carousel (`carousel: false` on its record); the page is still built and linked from the navigation panel. The page, its facts
 and its layout are done; the three video slots are labelled placeholders
 (`data-todo="ai-video-01"` and so on). Upload each video to YouTube (unlisted
 is fine) or Vimeo, then in `src/data/projects.js`, on the `ai-video` record,
