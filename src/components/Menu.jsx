@@ -1,6 +1,6 @@
 import { SECTIONS, SITE } from '../data/site.js';
 import { projects } from '../data/projects.js';
-import MenuClimber from './MenuClimber.jsx';
+import MenuBuilders from './MenuBuilders.jsx';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
 /* The navigation — the only one the site has — and the layer underneath
@@ -85,7 +85,7 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                     ))}
                 </ul>
 
-                <MenuClimber open={open} />
+                <MenuBuilders open={open} />
 
                 <div className="menu__bottom">
                     <div className="menu__foot">
