@@ -181,4 +181,4 @@ export function buildScene(cols, rows, dark) {
 }
 
 export const MIN_COLS = 105;
-export const MIN_ROWS = 60;
+export const MIN_ROWS = 50;
