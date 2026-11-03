@@ -1,4 +1,4 @@
-import { MENU_END, SECTIONS, SITE } from '../data/site.js';
+import { SECTIONS, SITE } from '../data/site.js';
 import { projects } from '../data/projects.js';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
@@ -12,8 +12,7 @@ import { useEnhanced, usePathname } from '../hooks/dom.js';
    src/hooks/useUnderlayNav.js; this file is only the document.
 
    Everything the site is navigated by is in here, which is what earns
-   it the width: four sections and the line that closes them, then the
-   six case studies and the elsewhere links below. `base` and `work`
+   it the width: four sections, then the six case studies and the elsewhere links below. `base` and `work`
    differ per page because the site is a set of documents, so the home
    page links to its own anchors and a case study links back up to the
    index.
@@ -79,27 +78,10 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                 href={`${base}#${section.id}`}
                                 aria-current={current === section.id ? 'true' : undefined}
                             >
-                                <span className="nav__num" aria-hidden="true">
-                                    {section.no}
-                                </span>
                                 {section.said}
                             </a>
                         </li>
                     ))}
-
-                    {/* The end of the list, said out loud. It is not an
-                        anchor and has no href, because there is no
-                        section under it and a row that cannot be
-                        followed should not look like one — so it takes
-                        the list's own measure and one step down the
-                        ramp, and the reveal draws it in with the four
-                        rows above it. */}
-                    <li className="menu__end" data-menu-reveal="l">
-                        <span className="nav__num" aria-hidden="true">
-                            {MENU_END.no}
-                        </span>
-                        {MENU_END.said}
-                    </li>
                 </ul>
 
                 <div className="menu__bottom">
@@ -139,9 +121,6 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                                     : undefined
                                             }
                                         >
-                                            <span className="nav__num" aria-hidden="true">
-                                                {project.no}
-                                            </span>
                                             {project.short}
                                         </a>
                                     </li>
