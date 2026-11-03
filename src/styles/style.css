@@ -2096,7 +2096,10 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     position: relative;
     flex: 1 1 0;
     min-height: 0;
-    max-height: 15rem;
+    max-height: 26rem;
+    /* Pulled up through the panel's own gap so the scene begins just under
+       the last row of the list: the wall rises almost to it. */
+    margin-top: calc(0.5rem - clamp(1.5rem, 4vh, 2.5rem));
 }
 
 .menu__climb canvas {

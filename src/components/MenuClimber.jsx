@@ -24,8 +24,11 @@ import { MIN_COLS, MIN_ROWS, buildScene } from './climber/scene.js';
    phone, a small laptop window) nothing is drawn: the flex item simply
    shrinks to nothing, which is what an unused gap should do. */
 
-const PX = 3;            /* css px per drawn pixel */
-const GRAVITY = 70;      /* rows per second per second */
+const PX = 2;            /* css px per drawn pixel */
+/* Speeds below were tuned at 3 css px per pixel; K keeps them the same
+   on screen at any other size. */
+const K = 3 / PX;
+const GRAVITY = 70 * K;  /* rows per second per second */
 
 const DUST = ['#d9cfbc', '#c2b79f', '#e8e0d0'];
 const CRUMBS = ['#b8382c', '#e0654c', '#7a2119', '#d9cfbc'];
@@ -62,7 +65,7 @@ function step(s, sc, dt) {
         case 'walk':
             s.dir = 1;
             if (s.t < 0.5) break;            /* look at the wall a moment */
-            s.x += 14 * dt;
+            s.x += 14 * K * dt;
             if (s.x >= sc.baseX) {
                 s.x = sc.baseX;
                 s.willSlip = Math.random() < 0.65;
@@ -72,13 +75,13 @@ function step(s, sc, dt) {
             break;
 
         case 'climb': {
-            s.y -= 8 * dt;
+            s.y -= 8 * K * dt;
             const climbTop = sc.standY + 8;
             const progress = (sc.floorY - s.y) / (sc.floorY - climbTop);
             if (s.willSlip && progress >= s.slipAt) {
                 s.willSlip = false;
-                s.slipTo = Math.min(sc.floorY, s.y + 9);
-                burst(s, s.x + 9, s.y + 3, CRUMBS, 7, 14, 6);
+                s.slipTo = Math.min(sc.floorY, s.y + Math.round(9 * K));
+                burst(s, s.x + 9, s.y + 3, CRUMBS, 7, 14 * K, 6 * K);
                 go(s, 'slip');
             } else if (s.y <= climbTop) {
                 s.y = climbTop;
@@ -88,7 +91,7 @@ function step(s, sc, dt) {
         }
 
         case 'slip':
-            s.y += 34 * dt;
+            s.y += 34 * K * dt;
             if (s.y >= s.slipTo) {
                 s.y = s.slipTo;
                 go(s, 'beat');
@@ -120,8 +123,8 @@ function step(s, sc, dt) {
             if (s.t > 1.3) {
                 /* A jump that lands back near where the walk began,
                    whatever the height of the wall. */
-                const target = sc.homeX + Math.random() * 8;
-                const vy = -16;
+                const target = sc.homeX + Math.random() * 8 * K;
+                const vy = -16 * K;
                 const drop = sc.floorY - s.y;
                 const flight = (-vy + Math.sqrt(vy * vy + 2 * GRAVITY * drop)) / GRAVITY;
                 s.vx = (target - s.x) / flight;
@@ -136,7 +139,7 @@ function step(s, sc, dt) {
             s.y += s.vy * dt;
             if (s.y >= sc.floorY && s.vy > 0) {
                 s.y = sc.floorY;
-                burst(s, s.x + 5, sc.groundY - 1, DUST, 9, 26, 7);
+                burst(s, s.x + 5, sc.groundY - 1, DUST, 9, 26 * K, 7 * K);
                 go(s, 'land');
             }
             break;

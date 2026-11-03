@@ -157,9 +157,9 @@ export function buildScene(cols, rows, dark) {
 
     /* ---- the spare bricks ---- */
 
-    const homeX = Math.max(2, x0 - 10 - 30);
-    if (homeX >= 20) {
-        const sx = homeX - 18;
+    const homeX = Math.max(2, x0 - 10 - 45);
+    if (homeX >= 30) {
+        const sx = homeX - 27;
         drawBrick(g, rnd, sx, groundY - BRICK_H, null, { loose: true });
         drawBrick(g, rnd, sx + PITCH_X, groundY - BRICK_H, null, { loose: true });
         drawBrick(g, rnd, sx + 4, groundY - BRICK_H * 2, null, { loose: true });
@@ -180,5 +180,5 @@ export function buildScene(cols, rows, dark) {
     };
 }
 
-export const MIN_COLS = 70;
-export const MIN_ROWS = 40;
+export const MIN_COLS = 105;
+export const MIN_ROWS = 60;
