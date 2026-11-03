@@ -36,6 +36,14 @@ const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
    order. */
 const cdn = (file) => `https://res.cloudinary.com/duhuxaukd/image/upload/${file}`;
 
+/* `tile` is what the home carousel draws for a card: a flat brand-coloured
+   placeholder with the project's mark (or its name, set as a mark) in white,
+   in public/assets/images/projects/<slug>/tile.webp. It is only the carousel's —
+   `cover` is still the project's real picture, which the case study page, its
+   view transition and the share previews keep using. Delete a record's `tile`
+   line and its card goes back to showing its cover. Tiles are 1600×1000
+   with the mark held inside the central 4:5, so neither card shape crops it. */
+
 /* `short` is the index label — the name this project answers to in a
    list rather than on a page. The navigation panel's work list is set
    from it, and that list carries only the projects that have somewhere
@@ -57,6 +65,7 @@ export const projects = [
         meta: ['Web Design', 'UX', 'Information Architecture', 'Odoo', 'SEO'],
         go: 'Read the case study',
         cover: cdn('v1789371081/1_ivtwne.png'),
+        tile: img('voepl-website', 'tile.webp'),
         coverAlt: 'Cover image for the VOEPL corporate website case study.',
         /* The one project with a case study, so the one card that is a
            link. The URL is the one the carousel used to build from the
@@ -114,6 +123,7 @@ export const projects = [
             'Created the logo and overall brand identity, establishing a cohesive ' +
             'visual presence for the brand.',
         cover: cdn('v1789371081/2_cxup32.png'),
+        tile: img('gem-opalus-identity', 'tile.webp'),
         coverAlt: 'Cover image for the Gem Opalus logo and brand identity project.',
         href: null,
     },
@@ -128,6 +138,7 @@ export const projects = [
             'Designed and developed a mascot concept, contributing to the brand\u2019s ' +
             'visual identity and character development.',
         cover: cdn('v1789371082/4_dtll6y.png'),
+        tile: img('amanoya-mascot', 'tile.webp'),
         coverAlt: 'Cover image for the Amanoya mascot creation project.',
         href: null,
     },
@@ -151,6 +162,7 @@ export const projects = [
            strip gives this slot (every even card is tall), so the glass
            crops nothing off it. */
         cover: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
+        tile: img('flowid-collateral', 'tile.webp'),
         coverAlt: 'The FLOWID exhibition banner artwork.',
         href: 'work/flowid-collateral.html',
 
@@ -244,6 +256,7 @@ export const projects = [
            width and on a phone, beside the top of the FotoLib page. Kuwahara
            Lab has no pictures and is in the card by name and link only. */
         cover: img('wordpress-japan', 'cover.webp'),
+        tile: img('wordpress-japan', 'tile.webp'),
         coverAlt:
             'Three websites for clients in Japan: the Horita DM Clinic home page at desktop ' +
             'width and on a phone, beside the top of the FotoLib Kyoto page.',
@@ -343,6 +356,7 @@ export const projects = [
            the placeholder for the cover; swap it for the real one, a 1600×1000
            upload on Cloudinary, when there is one. */
         cover: img('nft-projects', 'cover.webp'),
+        tile: img('nft-projects', 'tile.webp'),
         coverAlt:
             'Dino The Diamond: a pink, crystal-headed creature with large dark eyes, three ' +
             'small flying saucers circling its head and a green gem at its feet.',

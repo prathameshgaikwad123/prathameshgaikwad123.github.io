@@ -279,7 +279,7 @@ export default function WorkCarousel({ items, reduced }) {
                         <li className="glass__cell" key={item.slug}>
                             <Cell className="glass__cell-link" {...cellProps}>
                                 <img
-                                    {...responsive(item.cover, STRIP_SIZES)}
+                                    {...responsive(item.tile || item.cover, STRIP_SIZES)}
                                     alt=""
                                     width="1600"
                                     height="1000"
