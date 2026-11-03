@@ -1,44 +1,53 @@
 /* The building site the crew works on, painted once into an off-screen
-   bitmap: grass and dirt, a pole scaffold, a pile of spare bricks and a
-   brick wall that is not finished.
+   bitmap: a hatched strip of ground, a pole scaffold, a pile of spare
+   bricks and a brick wall that is not finished.
 
-   The wall runs off the right edge of the picture. Its left end is
-   ragged: every other course stops half a brick short of the one below
-   it, so bricks stand out of the end in teeth, and the top left corner
-   is missing in three steps. Those gaps are the work. Each missing brick
-   is a "slot" with a little bitmap of its own, which the simulation
-   throws into place one at a time and draws over this bitmap, so that
-   finishing the wall is only a matter of filling every slot — and
-   starting over is a matter of emptying them.
+   The look is the site's own rather than a game's. Everything is ink and
+   paper except the brickwork, which is the one red thing in the picture,
+   and the brickwork is fine and flat — long thin bricks in running bond
+   with a hair of mortar between them — instead of chunky bevelled
+   blocks.
+
+   The wall runs off the right edge. Its top left corner is missing, in a
+   staircase: every missing brick is a "slot" with a little bitmap of its
+   own, which the simulation throws into place one at a time and draws
+   over this bitmap. Finishing the wall is only a matter of filling every
+   slot, and starting over is a matter of emptying them.
 
    Everything is placed by a seeded generator, so the same site comes
-   back every time the panel opens, and everything is one cell — one
-   "pixel" of the picture — at a time. */
+   back every time the panel opens. */
 
-import { SPRITE_H } from './art.js';
+import { FIG_H } from './rig.js';
 
-export const BRICK_W = 8;       /* the brick itself, in cells */
+export const BRICK_W = 7;       /* the brick itself, in cells */
 export const HALF_W = 3;        /* the half brick that squares off an end */
-export const BRICK_H = 4;
+export const BRICK_H = 2;
 export const PITCH_X = BRICK_W + 1;   /* brick plus a column of mortar */
 export const PITCH_Y = BRICK_H + 1;   /* brick plus a row of mortar */
-export const GROUND_H = 4;
-const HEADROOM = SPRITE_H + 5;        /* room above the top of the wall */
+export const GROUND_H = 3;
+const HEADROOM = 12;                  /* rows above the top course */
+const ZONE = 5;                       /* courses at the top that are unfinished */
 
 const BRICKS = [
-    { base: '#b8382c', hi: '#e0654c', sh: '#7a2119', dark: '#962a20', lite: '#cf4f3b' },
-    { base: '#c4442e', hi: '#e8704f', sh: '#82251a', dark: '#a03022', lite: '#d9593f' },
-    { base: '#a93126', hi: '#d05642', sh: '#6e1c15', dark: '#8b2820', lite: '#c0463a' },
+    { top: '#cb513c', bottom: '#b13d2b', spk: '#9a3123' },
+    { top: '#c64a36', bottom: '#ac3827', spk: '#963022' },
+    { top: '#d25a44', bottom: '#b84330', spk: '#a13626' },
 ];
 
-const GROUND = {
-    grass: '#5aa63f', grassHi: '#85cf5e', grassLo: '#3d7d2c',
-    dirt: '#8a5a38', dirtLo: '#6e4529', dirtHi: '#a87048', dirtDeep: '#59371f',
+const TONES = {
+    light: {
+        mortar: '#e4ded2', line: '#17161b', hatch: 'rgba(23, 22, 27, 0.30)', hatch2: 'rgba(23, 22, 27, 0.14)',
+        scaffold: '#8d8a84', plank: '#6c6a73', plankHi: '#8d8a84', pebble: '#8d8a84',
+    },
+    dark: {
+        mortar: '#3a322e', line: '#f0eee8', hatch: 'rgba(240, 238, 232, 0.28)', hatch2: 'rgba(240, 238, 232, 0.12)',
+        scaffold: '#6f6c66', plank: '#9b988f', plankHi: '#b4b1a8', pebble: '#6f6c66',
+    },
 };
 
-const WOOD = { base: '#9b6b3e', hi: '#bf8c55', lo: '#6b4526', pole: '#7a4f2b', poleHi: '#a37444' };
-
-export const MORTAR = { light: '#d9cfbc', dark: '#4a3d38' };
+export function tonesFor(dark) {
+    return dark ? TONES.dark : TONES.light;
+}
 
 function seeded(seed) {
     let a = seed >>> 0;
@@ -51,40 +60,22 @@ function seeded(seed) {
     };
 }
 
-/* One brick, `w` cells wide, with the mortar round it — the row above and
-   the column to the right — when it is part of a wall. */
+/* One brick, `w` cells wide: two rows, the upper a shade lighter, and now
+   and then a speck. With a mortar colour it gets the row above it and the
+   column to its right, which is what a brick in a wall looks like. */
 export function drawBrick(g, rnd, x, y, w, mortar) {
     if (mortar) {
         g.fillStyle = mortar;
         g.fillRect(x, y - 1, w + 1, BRICK_H + 1);
     }
-
     const c = BRICKS[Math.floor(rnd() * BRICKS.length)];
-    g.fillStyle = c.base;
-    g.fillRect(x, y, w, BRICK_H);
-
-    /* Lit from the upper left. */
-    g.fillStyle = c.hi;
+    g.fillStyle = c.top;
     g.fillRect(x, y, w, 1);
-    g.fillRect(x, y, 1, BRICK_H);
-    g.fillStyle = c.sh;
-    g.fillRect(x, y + BRICK_H - 1, w, 1);
-    g.fillRect(x + w - 1, y + 1, 1, BRICK_H - 1);
-
-    /* Grain. */
-    const grains = w > 5 ? 3 + Math.floor(rnd() * 4) : 1 + Math.floor(rnd() * 2);
-    for (let i = 0; i < grains; i += 1) {
-        g.fillStyle = rnd() < 0.55 ? c.dark : c.lite;
-        g.fillRect(x + 1 + Math.floor(rnd() * (w - 2)), y + 1 + Math.floor(rnd() * (BRICK_H - 2)), 1, 1);
-    }
-
-    /* The odd cracked brick. */
-    if (w > 5 && rnd() < 0.12) {
-        const cx = x + 2 + Math.floor(rnd() * 3);
-        g.fillStyle = c.sh;
-        g.fillRect(cx, y + 1, 1, 1);
-        g.fillRect(cx + 1, y + 2, 1, 1);
-        g.fillRect(cx + 1, y + 3, 1, 1);
+    g.fillStyle = c.bottom;
+    g.fillRect(x, y + 1, w, 1);
+    if (w > 4 && rnd() < 0.55) {
+        g.fillStyle = c.spk;
+        g.fillRect(x + 1 + Math.floor(rnd() * (w - 2)), y + Math.floor(rnd() * 2), 1, 1);
     }
 }
 
@@ -96,27 +87,41 @@ function line(g, x0, y0, x1, y1) {
     }
 }
 
-function plank(g, x, y, w) {
-    g.fillStyle = WOOD.base;
-    g.fillRect(x, y, w, 3);
-    g.fillStyle = WOOD.hi;
+function plank(g, tones, x, y, w) {
+    g.fillStyle = tones.plank;
+    g.fillRect(x, y, w, 2);
+    g.fillStyle = tones.plankHi;
     g.fillRect(x, y, w, 1);
-    g.fillStyle = WOOD.lo;
-    g.fillRect(x, y + 2, w, 1);
-    for (let jx = x + 8; jx < x + w; jx += 9) g.fillRect(jx, y + 1, 1, 1);
 }
 
-function ladder(g, x, yTop, yBottom) {
-    g.fillStyle = WOOD.pole;
+function ladder(g, tones, x, yTop, yBottom) {
+    g.fillStyle = tones.scaffold;
     g.fillRect(x, yTop, 1, yBottom - yTop);
     g.fillRect(x + 4, yTop, 1, yBottom - yTop);
-    g.fillStyle = WOOD.poleHi;
     for (let y = yTop + 2; y < yBottom; y += 3) g.fillRect(x + 1, y, 3, 1);
+}
+
+/* The brick of a slot on its own — no mortar — flat, and stood on end, for
+   the one that is in the air and tumbling. Cut from the slot's own bitmap
+   so the brick that lands is exactly the brick that was thrown. */
+function flightBitmaps(cell, w) {
+    const flat = document.createElement('canvas');
+    flat.width = w;
+    flat.height = BRICK_H;
+    flat.getContext('2d').drawImage(cell, 0, 1, w, BRICK_H, 0, 0, w, BRICK_H);
+    const on = document.createElement('canvas');
+    on.width = BRICK_H;
+    on.height = w;
+    const g = on.getContext('2d');
+    g.translate(BRICK_H, 0);
+    g.rotate(Math.PI / 2);
+    g.drawImage(flat, 0, 0);
+    return { flat, on };
 }
 
 export function buildScene(cols, rows, dark) {
     const rnd = seeded(20260311);
-    const mortar = dark ? MORTAR.dark : MORTAR.light;
+    const tones = tonesFor(dark);
     const groundY = rows - GROUND_H;
 
     const layer = document.createElement('canvas');
@@ -124,129 +129,116 @@ export function buildScene(cols, rows, dark) {
     layer.height = rows;
     const g = layer.getContext('2d');
 
-    const courses = Math.max(5, Math.floor((groundY - HEADROOM) / PITCH_Y));
+    const courses = Math.max(ZONE + 4, Math.floor((groundY + 1 - HEADROOM) / PITCH_Y));
     const T = courses - 1;
     const x0 = Math.round(cols * 0.58);
     const bodyY = (c) => groundY - (c + 1) * PITCH_Y + 1;
 
     /* ---- the wall, and the bricks it is missing ---- */
 
-    const missing = { [T]: 5, [T - 1]: 3, [T - 2]: 1 };
+    /* The top left corner is missing in steps, widest at the top, so that
+       every missing brick has a course under it and nothing over it. */
+    const gap = {};
+    let prev = 0;
+    for (let i = 0; i < ZONE; i += 1) {
+        const c = T - ZONE + 1 + i;
+        const start = c % 2 ? PITCH_X >> 1 : 0;
+        let m = Math.max(1, Math.ceil((8 + 5 * i - start) / PITCH_X));
+        while (start + m * PITCH_X < prev) m += 1;
+        gap[c] = m;
+        prev = start + m * PITCH_X;
+    }
+
     const slots = [];
+    const slotFor = (c, x, w) => {
+        const cellCanvas = document.createElement('canvas');
+        cellCanvas.width = w + 1;
+        cellCanvas.height = BRICK_H + 1;
+        drawBrick(cellCanvas.getContext('2d'), rnd, 0, 1, w, tones.mortar);
+        slots.push({ c, x, y: bodyY(c), w, canvas: cellCanvas, fly: flightBitmaps(cellCanvas, w) });
+    };
 
     for (let c = 0; c < courses; c += 1) {
         const odd = c % 2 === 1;
-        const start = x0 + (odd ? PITCH_X >> 1 : 0);
-        const gap = missing[c] || 0;
-        let k = 0;
+        const m = gap[c] || 0;
 
         if (odd) {
-            /* The half brick that would make this end square. */
-            const cell = document.createElement('canvas');
-            cell.width = HALF_W + 1;
-            cell.height = BRICK_H + 1;
-            drawBrick(cell.getContext('2d'), rnd, 0, 1, HALF_W, mortar);
-            slots.push({ c, x: x0, y: bodyY(c), w: HALF_W, canvas: cell });
+            if (m) slotFor(c, x0, HALF_W);
+            else drawBrick(g, rnd, x0, bodyY(c), HALF_W, tones.mortar);
         }
 
-        for (let x = start; x < cols; x += PITCH_X, k += 1) {
-            if (k < gap) {
-                const cell = document.createElement('canvas');
-                cell.width = BRICK_W + 1;
-                cell.height = BRICK_H + 1;
-                drawBrick(cell.getContext('2d'), rnd, 0, 1, BRICK_W, mortar);
-                slots.push({ c, x, y: bodyY(c), w: BRICK_W, canvas: cell });
-            } else {
-                drawBrick(g, rnd, x, bodyY(c), BRICK_W, mortar);
-            }
+        let k = 0;
+        for (let x = x0 + (odd ? PITCH_X >> 1 : 0); x < cols; x += PITCH_X, k += 1) {
+            if (k < m) slotFor(c, x, BRICK_W);
+            else drawBrick(g, rnd, x, bodyY(c), BRICK_W, tones.mortar);
         }
     }
 
     /* Bottom to top, and left to right along a course. */
     slots.sort((a, b) => a.c - b.c || a.x - b.x);
 
+    /* ---- who stands where ---- */
+
+    const xA = x0 - 40;
+    const spots = {
+        A: { x: xA, y: groundY - FIG_H },
+        B: { x: x0 - 12, y: bodyY(T) - 4 },
+        C: null,
+    };
+    if (spots.A.y - spots.B.y >= 44) {
+        spots.C = { x: x0 - 17, y: Math.round((spots.A.y + spots.B.y) / 2) };
+    }
+
     /* ---- the scaffold ---- */
 
-    const hasMid = T >= 8;
-    const topFeet = bodyY(T) + 7;                              /* feet row of whoever stands up top */
-    const midFeet = hasMid ? Math.round((bodyY(T - 7) + bodyY(T - 3)) / 2) + 6 : 0;
+    const topFeet = spots.B.y + FIG_H - 1;
+    const midFeet = spots.C ? spots.C.y + FIG_H - 1 : 0;
+    const xl = x0 - 25;
+    const xr = x0 - 4;
+    const polesTop = topFeet - 6;
 
-    const xl = x0 - 29;
-    const xr = x0 - 6;
-    const polesTop = topFeet - 7;
-
-    g.fillStyle = WOOD.pole;
-    [xl, xr].forEach((px) => {
-        g.fillRect(px, polesTop, 2, groundY - polesTop);
-        g.fillStyle = WOOD.poleHi;
-        g.fillRect(px, polesTop, 1, groundY - polesTop);
-        g.fillStyle = WOOD.pole;
-    });
+    g.fillStyle = tones.scaffold;
+    g.fillRect(xl, polesTop, 1, groundY - polesTop);
+    g.fillRect(xr, polesTop, 1, groundY - polesTop);
 
     /* Diagonal bracing across the bottom bay, where nobody stands. */
-    const lowest = (hasMid ? midFeet : topFeet) + 1;
-    g.fillStyle = WOOD.pole;
-    line(g, xl + 2, groundY - 1, xr - 1, lowest + 3);
-    line(g, xr - 1, groundY - 1, xl + 2, lowest + 3);
+    const lowest = (spots.C ? midFeet : topFeet) + 1;
+    line(g, xl + 1, groundY - 1, xr - 1, lowest + 2);
+    line(g, xr - 1, groundY - 1, xl + 1, lowest + 2);
 
-    plank(g, xl - 1, topFeet + 1, x0 - xl);
-    if (hasMid) plank(g, xl - 1, midFeet + 1, x0 - xl);
+    plank(g, tones, xl - 1, topFeet + 1, x0 - xl);
+    if (spots.C) plank(g, tones, xl - 1, midFeet + 1, x0 - xl);
 
     /* Ladders up the outside, which nobody is using. */
-    ladder(g, xl - 7, hasMid ? midFeet + 1 : topFeet + 1, groundY);
-    if (hasMid) ladder(g, xl - 7, topFeet + 1, midFeet + 1);
+    ladder(g, tones, xl - 7, spots.C ? midFeet + 1 : topFeet + 1, groundY);
+    if (spots.C) ladder(g, tones, xl - 7, topFeet + 1, midFeet + 1);
 
     /* ---- the ground ---- */
 
-    g.fillStyle = GROUND.grass;
+    g.fillStyle = tones.line;
     g.fillRect(0, groundY, cols, 1);
-    g.fillStyle = GROUND.dirt;
-    g.fillRect(0, groundY + 1, cols, rows - groundY - 1);
-    g.fillStyle = GROUND.dirtDeep;
-    g.fillRect(0, rows - 1, cols, 1);
-
     for (let x = 0; x < cols; x += 1) {
-        const r = rnd();
-        if (r < 0.2) { g.fillStyle = GROUND.grassHi; g.fillRect(x, groundY, 1, 1); }
-        else if (r < 0.33) { g.fillStyle = GROUND.grassLo; g.fillRect(x, groundY, 1, 1); }
-
-        if (rnd() < 0.1) {
-            g.fillStyle = GROUND.grass;
-            g.fillRect(x, groundY - 1, 1, 1);
-            if (rnd() < 0.4) g.fillRect(x + (rnd() < 0.5 ? 1 : -1), groundY - 1, 1, 1);
-        }
-        if (rnd() < 0.3) { g.fillStyle = GROUND.grassLo; g.fillRect(x, groundY + 1, 1, 1); }
-
-        for (let y = groundY + 2; y < rows - 1; y += 1) {
-            const s = rnd();
-            if (s < 0.22) { g.fillStyle = GROUND.dirtLo; g.fillRect(x, y, 1, 1); }
-            else if (s < 0.3) { g.fillStyle = GROUND.dirtHi; g.fillRect(x, y, 1, 1); }
-        }
+        if (x % 2 === 0) { g.fillStyle = tones.hatch; g.fillRect(x, groundY + 1, 1, 1); }
+        if (x % 4 === 1) { g.fillStyle = tones.hatch2; g.fillRect(x, groundY + 2, 1, 1); }
+    }
+    g.fillStyle = tones.pebble;
+    for (let i = 0; i < Math.floor(cols / 26); i += 1) {
+        g.fillRect(Math.floor(rnd() * cols), groundY - 1, 1 + Math.floor(rnd() * 2), 1);
     }
 
     /* ---- the pile of spare bricks ---- */
 
-    const xA = x0 - 46;
-    const pileX = xA - 28;
-    [[0, 0], [9, 0], [18, 0], [4, 1], [13, 1], [9, 2]].forEach(([dx, lvl]) => {
-        drawBrick(g, rnd, pileX + dx, groundY - BRICK_H * (lvl + 1), BRICK_W, null);
+    /* Three stacks of them beside the one who feeds the line, the nearest
+       a brick short: its top brick belongs to the simulation, which takes
+       it away when somebody picks it up and puts another there a moment
+       later. */
+    const stacks = [[xA - 22, 3], [xA - 14, 2], [xA - 6, 1]];
+    stacks.forEach(([sx, height]) => {
+        for (let lvl = 0; lvl < height; lvl += 1) {
+            drawBrick(g, rnd, sx, groundY - PITCH_Y * (lvl + 1) + 1, BRICK_W, null);
+        }
     });
-
-    /* Who stands where, as the top-left of a sprite. */
-    const feetToY = (feet) => feet - (SPRITE_H - 1);
-    const spots = {
-        A: { x: xA, y: groundY - SPRITE_H },
-        B: { x: x0 - 13, y: feetToY(topFeet) },
-        C: hasMid ? { x: x0 - 22, y: feetToY(midFeet) } : null,
-    };
-
-    /* Who throws a brick into which slot: whoever stands nearest its
-       height. */
-    slots.forEach((s) => {
-        if (s.c >= T - 2) s.thrower = 'B';
-        else if (hasMid && s.c >= T - 7) s.thrower = 'C';
-        else s.thrower = 'A';
-    });
+    const pickable = { x: xA - 6, y: groundY - PITCH_Y * 2 + 1 };
 
     return {
         layer,
@@ -258,10 +250,11 @@ export function buildScene(cols, rows, dark) {
         x0,
         slots,
         spots,
-        pile: { x: pileX, y: groundY - BRICK_H * 3 },
-        flag: { x: x0 + 3, y: bodyY(T) - 1 },
+        tones,
+        dark,
+        pickable,
     };
 }
 
-export const MIN_COLS = 132;
-export const MIN_ROWS = 50;
+export const MIN_COLS = 120;
+export const MIN_ROWS = 56;

@@ -6,14 +6,14 @@ import { createSim, drawSim, finish, stepSim } from './builders/sim.js';
 /* The empty stretch of the menu, put to use: a building crew of three
    finishing a brick wall. One takes bricks off a pile and throws them up
    a line of two more standing on a scaffold, and the last of them throws
-   each into its gap in the wall, until the wall is done, a flag goes up
-   and they cheer. Then the wall comes apart and they begin again.
+   each into its gap in the wall, until the wall is done and they cheer.
+   Then the wall comes apart and they begin again.
 
    It is a canvas drawn one "pixel" at a time — PX css pixels square, the
    browser scaling the small bitmap up with image-rendering: pixelated.
    There are no image files in it. The set is painted once off-screen by
    ./builders/scene.js and copied under the crew every frame; the crew is
-   assembled from the art in ./builders/art.js and moved by the
+   drawn from a few numbers a frame by ./builders/rig.js and moved by the
    simulation in ./builders/sim.js.
 
    It only runs while the panel is open. Closed, the panel is behind the
@@ -55,7 +55,7 @@ export default function MenuBuilders({ open }) {
                 return;
             }
             dark = activeTheme() === 'dark';
-            sim = createSim(buildScene(cols, rows, dark));
+            sim = createSim(buildScene(cols, rows, dark), dark);
             if (reduced) {
                 finish(sim);
                 drawSim(ctx, sim);
@@ -79,6 +79,7 @@ export default function MenuBuilders({ open }) {
                     /* Same set, same slots, same bricks landed: only the
                        paint is swapped. */
                     const fresh = buildScene(cv.width, cv.height, dark);
+                    sim.dark = dark;
                     sim.sc.layer = fresh.layer;
                     fresh.slots.forEach((s, i) => { sim.sc.slots[i].canvas = s.canvas; });
                 }
