@@ -2087,6 +2087,32 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
+/* The gap between the list and the foot, which used to be blank: a pixel
+   person climbing a wall — see src/components/MenuClimber.jsx. It takes
+   whatever room is left and no more, and collapses to nothing when there
+   is none. The canvas is out of flow so its bitmap size never argues
+   with the room it is given. */
+.menu__climb {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 26rem;
+    /* Pulled up through the panel's own gap so the scene begins just under
+       the last row of the list: the wall rises almost to it. */
+    margin-top: calc(0.5rem - clamp(1.5rem, 4vh, 2.5rem));
+}
+
+.menu__climb canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+html:not(.js) .menu__climb { display: none; }
+
 /* --- The foot ---------------------------------------------------------
    Two registers of small links under one hairline: the six case
    studies, which are the only other pages the site has, and the
