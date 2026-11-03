@@ -4,8 +4,6 @@ export const SITE = {
     name: 'Prathamesh Gaikwad',
     role: 'Multidisciplinary Digital Designer',
     email: 'prathameshg83800@gmail.com',
-    phone: '+91 83800 84093',
-    phoneHref: 'tel:+918380084093',
     place: 'Nashik, India',
     linkedin: 'https://www.linkedin.com/in/prathamesh-gaikwad-224734171',
     github: 'https://github.com/prathameshgaikwad123',
