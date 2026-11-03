@@ -2087,47 +2087,6 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
-/* The last row, which is the end of the list rather than a way out of
-   it. It takes the list's own measure and metrics so it reads as one
-   of the rows, and one step down the ramp with no hovered state at
-   all, because there is nothing under it to be offered: a row that
-   answered the cursor would be promising a section that does not
-   exist. Not an anchor either — see src/components/Menu.jsx. */
-.menu__end {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    padding: 0.4375rem 0.625rem;
-    font-family: var(--font-display);
-    font-size: var(--menu-type);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--ink-3);
-}
-
-/* The index numerals belong to the editorial registers — the section
-   tags, the carousel's counter, and this panel. The name is the last thing left
-   of the plate's copy of the section list, and it is kept rather than
-   renamed because every row of the only navigation the site has is
-   marked with it: .nav__num has no rule of its own anywhere, only the
-   descendant blocks here — the rows and the line that closes them —
-   and the one under .menu__small. */
-.menu__link .nav__num,
-.menu__end .nav__num {
-    flex: none;
-    font-family: var(--font-text);
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    font-variant-numeric: tabular-nums;
-    color: var(--rule-2);
-    transition: color var(--t-fast) var(--ease-io);
-}
-
-.menu__link:hover:not([aria-current]) .nav__num,
-.menu__link:focus-visible:not([aria-current]) .nav__num { color: var(--signal); }
-.menu__link[aria-current] .nav__num { color: var(--on-signal); opacity: 0.6; }
-
 /* --- The foot ---------------------------------------------------------
    Two registers of small links under one hairline: the six case
    studies, which are the only other pages the site has, and the
@@ -2181,20 +2140,6 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     color: var(--ink-2);
     transition: color var(--t-fast) var(--ease-io);
 }
-
-.menu__small .nav__num {
-    flex: none;
-    font-size: var(--t-micro);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    font-variant-numeric: tabular-nums;
-    color: var(--rule-2);
-    transition: color var(--t-fast) var(--ease-io);
-}
-
-.menu__small:hover .nav__num,
-.menu__small:focus-visible .nav__num,
-.menu__small[aria-current] .nav__num { color: var(--signal); }
 
 .menu__small:hover,
 .menu__small:focus-visible { color: var(--signal); }
@@ -2374,8 +2319,7 @@ html:not(.js) .menu__list {
    one of these rows is filled with the signal to say where the reader
    is, and a ground that stops at the letterforms is not a row. What
    comes off here goes back into the list's column gap above. */
-html:not(.js) .menu__link,
-html:not(.js) .menu__end {
+html:not(.js) .menu__link {
     font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
     padding-inline: 0.25rem;
     gap: 0.4375rem;

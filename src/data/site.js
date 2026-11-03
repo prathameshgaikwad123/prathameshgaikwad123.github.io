@@ -31,25 +31,13 @@ export const SITE = {
 
    `id` is the section the row scrolls to and is not the label: Play is
    Side Quests, which is what the band, its heading and every anchor
-   pointing at it still are. Only the row's name changed.
-
-   The numerals are the panel's own count, not the page's. A section
-   numbers itself in its own header — Selected Behance Work is 02 on the
-   page and absent from this list, and neither is wrong, because they
-   are counting different things: the page counts its bands, the panel
-   counts its destinations. */
+   pointing at it still are. Only the row's name changed. */
 export const SECTIONS = [
-    { id: 'about',       no: '01', label: 'About',   said: 'Me.' },
-    { id: 'work',        no: '02', label: 'Work',    said: 'The work.' },
-    { id: 'side-quests', no: '03', label: 'Play',    said: 'Just because.' },
-    { id: 'contact',     no: '04', label: 'Contact', said: 'Say hi.' },
+    { id: 'about',       label: 'About',   said: 'Me.' },
+    { id: 'work',        label: 'Work',    said: 'The work.' },
+    { id: 'side-quests', label: 'Play',    said: 'Just because.' },
+    { id: 'contact',     label: 'Contact', said: 'Say hi.' },
 ];
-
-/* The last row of the panel, and the only one that goes nowhere. There
-   is no fifth section and inventing one to receive this would be a page
-   built to justify a word: it is the sign-off on the list, so it is
-   written as the end of the list and not as a link to be followed. */
-export const MENU_END = { no: '05', label: 'End', said: "That's it." };
 
 export const INTRO_PHRASE = 'Hold that thought';
 
