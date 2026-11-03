@@ -259,7 +259,6 @@ export function buildScene(cols, rows, dark) {
         slots,
         spots,
         pile: { x: pileX, y: groundY - BRICK_H * 3 },
-        flag: { x: x0 + 3, y: bodyY(T) - 1 },
     };
 }
 

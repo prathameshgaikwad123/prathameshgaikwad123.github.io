@@ -10,7 +10,7 @@
    throws to somebody who is not ready, so the line fills up and runs
    like a chain of buckets.
 
-   When the last gap is filled the wall is finished: a flag goes up, the
+   When the last gap is filled the wall is finished: the
    three of them cheer, a shine runs across the bricks — and then the
    wall comes apart brick by brick and they start again.
 
@@ -60,7 +60,7 @@ export function createSim(sc) {
 }
 
 function reset(st) {
-    st.sc.slots.forEach((s) => { s.filled = false; s.filledAt = 0; s.goneAt = 0; });
+    st.sc.slots.forEach((s) => { s.filled = false; s.filledAt = 0; s.goneAt = 0; s.gone = false; });
     st.workers.forEach((w) => {
         w.mode = 'idle'; w.t = Math.random() * 2; w.reserved = false; w.brick = null; w.dir = 1;
     });
@@ -360,22 +360,6 @@ function drawSparkle(ctx, x, y, big) {
     }
 }
 
-function drawFlag(ctx, sc, t) {
-    const rise = Math.min(1, t / 0.4);
-    const h = Math.round(12 * rise);
-    const { x, y } = sc.flag;
-    ctx.fillStyle = '#4a3a2e';
-    ctx.fillRect(x, y - h, 1, h);
-    if (rise < 1) return;
-    const wave = Math.floor(t * 3) % 2;
-    ctx.fillStyle = '#e63946';
-    ctx.fillRect(x + 1, y - 12, 5, 4);
-    ctx.fillStyle = '#a8222e';
-    ctx.fillRect(x + 1, y - 9, 5, 1);
-    ctx.fillStyle = '#e63946';
-    ctx.fillRect(x + 6, y - 11 + wave, 1, 2);
-}
-
 export function drawSim(ctx, st) {
     const { sc } = st;
     ctx.clearRect(0, 0, sc.cols, sc.rows);
@@ -407,8 +391,6 @@ export function drawSim(ctx, st) {
         }
         ctx.restore();
     }
-
-    if (st.phase === 'cheer' && st.phaseT > 0.25) drawFlag(ctx, sc, st.phaseT - 0.25);
 
     st.workers.forEach((w) => drawWorker(ctx, w, st.phase));
 

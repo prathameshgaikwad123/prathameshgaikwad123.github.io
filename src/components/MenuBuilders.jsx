@@ -6,8 +6,8 @@ import { createSim, drawSim, finish, stepSim } from './builders/sim.js';
 /* The empty stretch of the menu, put to use: a building crew of three
    finishing a brick wall. One takes bricks off a pile and throws them up
    a line of two more standing on a scaffold, and the last of them throws
-   each into its gap in the wall, until the wall is done, a flag goes up
-   and they cheer. Then the wall comes apart and they begin again.
+   each into its gap in the wall, until the wall is done and they
+   cheer. Then the wall comes apart and they begin again.
 
    It is a canvas drawn one "pixel" at a time — PX css pixels square, the
    browser scaling the small bitmap up with image-rendering: pixelated.
