@@ -2089,13 +2089,14 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
 
 /* The gap between the list and the foot, which used to be blank: a pixel
    person climbing a wall — see src/components/MenuClimber.jsx. It takes
-   whatever room is left and no more, and collapses to nothing when there
-   is none. The canvas is out of flow so its bitmap size never argues
-   with the room it is given. */
+   whatever room is left, but never less than a wall and a person need:
+   on a short window the panel, which already scrolls, scrolls a little
+   rather than the scene quietly disappearing. The canvas is out of flow
+   so its bitmap size never argues with the room it is given. */
 .menu__climb {
     position: relative;
     flex: 1 1 0;
-    min-height: 0;
+    min-height: 6.5rem;
     max-height: 26rem;
     /* Pulled up through the panel's own gap so the scene begins just under
        the last row of the list: the wall rises almost to it. */
