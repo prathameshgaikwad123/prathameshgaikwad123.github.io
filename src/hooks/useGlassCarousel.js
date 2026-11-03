@@ -96,7 +96,7 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
        the driver took with it. */
     const [generation, setGeneration] = useState(0);
 
-    const sources = useMemo(() => items.map((item) => item.cover), [items]);
+    const sources = useMemo(() => items.map((item) => item.tile || item.cover), [items]);
 
     /* One mutable bag for everything the frame touches. Refs rather
        than state throughout: none of it should cause a render. */
