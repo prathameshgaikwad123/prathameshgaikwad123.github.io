@@ -122,9 +122,8 @@ arrive.
 **Email.** The site uses `prathameshg83800@gmail.com`, taken from the old
 repository. Your work address was not used — a portfolio should outlive a job.
 
-**Phone number.** `+91 83800 84093` was already public in the old repository, so
-it was kept. It is in `src/data/site.js`, shown by the Contact section, if you
-would rather remove it; most design portfolios do not list one.
+**Phone number.** Removed from the Contact section and from `src/data/site.js`;
+the site no longer lists one.
 
 **Location.** "Nashik, India" in Contact and structured data; "Based in India"
 in the hero, per your brief.
