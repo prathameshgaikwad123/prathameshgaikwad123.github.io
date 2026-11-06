@@ -1,6 +1,4 @@
-import CaseGallery from '../components/CaseGallery.jsx';
-
-export default function blocks(project, onZoom) {
+export default function blocks() {
     return [
         {
             key: 'ctx',
@@ -96,36 +94,6 @@ export default function blocks(project, onZoom) {
                         quick to update correctly mattered as much as how they first looked.
                     </p>
                 </>
-            ),
-        },
-        {
-            key: 'work',
-            label: 'Selected work',
-            wide: true,
-            body: (
-                <CaseGallery
-                    project={project}
-                    onZoom={onZoom}
-                    note={
-                        <>
-                            Placeholders below. Replace with real screens — see <code>ASSETS.md</code>{' '}
-                            for filenames and dimensions.
-                        </>
-                    }
-                />
-            ),
-        },
-        {
-            key: 'out',
-            label: 'Outcome',
-            body: (
-                <p>
-                    <span className="tbd" data-todo="outcome-voepl-website">
-                        Outcome to be provided — only verifiable results will be published here.
-                        If no measurable outcome can be shared, this section will be removed
-                        rather than filled with estimates.
-                    </span>
-                </p>
             ),
         },
     ];
