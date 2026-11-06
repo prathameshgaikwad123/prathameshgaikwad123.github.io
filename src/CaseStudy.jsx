@@ -11,7 +11,7 @@ import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
 
 import { projectBySlug } from './data/projects.js';
 import { cld, responsive } from './data/cloudinary.js';
-import { caseBlocks } from './case-studies/index.js';
+import { caseBlocks, caseOpenings } from './case-studies/index.js';
 
 import useIntro from './hooks/useIntro.js';
 import useMenu from './hooks/useMenu.js';
@@ -134,6 +134,15 @@ export default function CaseStudy({ slug }) {
     const closeRef = useScrollEffect(closePanel);
 
     const blocks = caseBlocks[slug](project, setZoomed);
+    const Opening = caseOpenings[slug];
+
+    const facts = (
+        <dl className="case-facts">
+            {project.facts.map(([label, value]) => (
+                <Fact label={label} value={value} key={label} />
+            ))}
+        </dl>
+    );
 
     return (
         <>
@@ -182,18 +191,25 @@ export default function CaseStudy({ slug }) {
 
                             <p className="lead case-hero__lead">{project.lead}</p>
 
-                            <dl className="case-facts">
-                                {project.facts.map(([label, value]) => (
-                                    <Fact label={label} value={value} key={label} />
-                                ))}
-                            </dl>
+                            {Opening ? null : facts}
                         </section>
+
+                        {/* ---------- OPENING ---------- */}
+                        {/* A case study with its own opening shows it in the
+                            cover's place, and the facts follow it so that the
+                            first screen is the work and not a table. */}
+                        {Opening ? (
+                            <>
+                                <Opening project={project} onZoom={setZoomed} />
+                                <div className="shell case-facts-after">{facts}</div>
+                            </>
+                        ) : null}
 
                         {/* ---------- COVER ---------- */}
                         {/* The cover is cut to 16:10. A project whose first
                             picture must not be cut sets `caseCover: false`
                             and opens its first block with it instead. */}
-                        {project.caseCover === false ? null : (
+                        {project.caseCover === false || Opening ? null : (
                             <div className="shell">
                                 <figure className="case-figure case-figure--cover frame">
                                     {/* REPLACE: the cover is a 1600×1000 placeholder. Its

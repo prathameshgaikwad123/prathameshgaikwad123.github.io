@@ -4906,27 +4906,266 @@ button.shelf__vol { cursor: pointer; }
 
 
 /* --- Gem Opalus (src/case-studies/gem-opalus-identity.jsx) ------------
-   The brand guidelines document as a page: its pages one under another,
-   each with its number and headline beneath it, and the three things set
-   as type rather than shown as a picture — the essence, the four traits
-   and the palette. The pages are never cropped. */
+   A case study that opens with the work rather than a table: five tiles
+   straight under the title that read as the whole identity in one screen
+   (the glance), then the brand guidelines' pages one chapter at a time
+   (the explorer), each chapter a row of whole pages to swipe through. */
 
-.case-gem {
+/* The glance. Twelve columns and three rows from 62rem, with the ring and
+   the phone standing the full height and the logo, signet and palette
+   between them; two columns below that. Every tile is a crop of the
+   document and a way in to its chapter. */
+.gem-glance {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2rem, 4vw, 3.25rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(8rem, 26vw, 11rem);
+    gap: var(--gap);
 }
 
-.case-gem__plate figcaption {
+.gem-glance__tile { min-width: 0; min-height: 0; }
+.gem-glance__tile--ring { grid-column: 1 / -1; grid-row: span 2; }
+.gem-glance__tile--logo,
+.gem-glance__tile--pack { grid-row: span 2; }
+.gem-glance__tile--phone,
+.gem-glance__tile--palette { grid-row: span 2; }
+
+.gem-glance__tile > a {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+}
+
+.gem-glance__tile img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease);
+}
+
+/* The logo sits on white in the document and is shown on white here, so
+   it is contained and centred, not cropped. */
+.gem-glance__tile--logo > a { background: #fff; }
+.gem-glance__tile--logo img { object-fit: contain; padding: 8%; }
+
+.gem-glance__label {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.375rem 0.625rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.gem-glance__stripes {
+    position: absolute;
+    inset: 0;
+    display: flex;
+}
+
+.gem-glance__stripes span {
+    flex: 1 1 0;
+    background: var(--swatch);
+    transition: flex-grow 0.6s var(--ease);
+}
+
+@media (hover: hover) {
+    .gem-glance__tile > a:hover img { transform: scale(1.04); }
+    .gem-glance__stripes span:hover { flex-grow: 2.4; }
+}
+
+.gem-glance__tile > a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+@media (min-width: 62rem) {
+    .gem-glance {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-auto-rows: clamp(8.5rem, 13vw, 11.5rem);
+    }
+
+    .gem-glance__tile--ring { grid-column: 1 / span 3; grid-row: 1 / span 3; }
+    .gem-glance__tile--logo { grid-column: 4 / span 3; grid-row: 1 / span 2; }
+    .gem-glance__tile--pack { grid-column: 7 / span 3; grid-row: 1 / span 2; }
+    .gem-glance__tile--phone { grid-column: 10 / span 3; grid-row: 1 / span 3; }
+    .gem-glance__tile--palette { grid-column: 4 / span 6; grid-row: 3; }
+}
+
+/* The explorer. */
+.gem-explore {
+    margin-top: clamp(3rem, 7vw, 5.5rem);
+    scroll-margin-top: calc(var(--bar, 5rem) + 0.5rem);
+}
+
+.gem-explore__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+}
+
+.gem-explore__title {
+    font-family: var(--font-display);
+    font-size: var(--t-title);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+    color: var(--ink);
+}
+
+.gem-explore__pdf {
+    font-size: var(--t-small);
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+}
+
+.gem-tabs {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--rule);
+}
+
+.gem-tabs::-webkit-scrollbar { display: none; }
+
+.gem-tabs button {
+    flex: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.875rem 0;
+    margin-bottom: -1px;
+    font-size: var(--t-small);
+    font-weight: 500;
+    color: var(--ink-3);
+    background: none;
+    border-bottom: 2px solid transparent;
+    transition: color var(--t-fast) var(--ease-io), border-color var(--t-fast) var(--ease-io);
+}
+
+.gem-tabs button .num {
+    font-size: var(--t-micro);
+    letter-spacing: 0.1em;
+    color: var(--mark);
+}
+
+.gem-tabs button:hover { color: var(--ink); }
+.gem-tabs button[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--ink); }
+.gem-tabs button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.gem-panel { padding-top: clamp(1.5rem, 3.5vw, 2.5rem); }
+
+.gem-panel__intro { display: grid; gap: 0.75rem 3rem; margin-bottom: clamp(1.25rem, 3vw, 2rem); }
+
+.gem-panel__title {
+    font-family: var(--font-display);
+    font-size: var(--t-statement);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: var(--ink);
+}
+
+.gem-panel__text { font-size: var(--t-body); line-height: 1.7; color: var(--ink-2); max-width: 52ch; }
+
+@media (min-width: 62rem) {
+    .gem-panel__intro { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; }
+}
+
+/* Chapters that set something natively sit it between the words and
+   the pages. */
+.gem-panel .case-gem__traits,
+.gem-panel .case-gem__palette { margin-bottom: clamp(1.5rem, 3.5vw, 2.5rem); }
+
+/* The row of pages. Each page is shown whole, as tall as will fit the
+   window beneath the bar, and the next one shows at the edge so the row
+   reads as something to swipe. */
+.gem-reel__track {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.25rem;
+    display: flex;
+    gap: var(--gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.gem-reel__track::-webkit-scrollbar { display: none; }
+.gem-reel__track:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+.gem-reel__slide {
+    flex: 0 0 min(88%, calc((100svh - 12rem) * 1.4151));
+    min-width: 0;
+    scroll-snap-align: start;
+}
+
+.gem-reel__slide .frame__media { display: block; }
+.gem-reel__slide img { display: block; width: 100%; height: auto; }
+
+.gem-reel__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.875rem;
+}
+
+.gem-reel__caption {
     display: flex;
     align-items: baseline;
     gap: 0.875rem;
-    margin-top: 0.875rem;
     font-size: var(--t-meta);
     letter-spacing: 0.04em;
     line-height: 1.5;
     color: var(--ink-3);
+    margin: 0;
 }
+
+.gem-reel__ctl { display: flex; align-items: center; gap: 0.5rem; flex: none; }
+
+.gem-reel__count {
+    margin-right: 0.5rem;
+    font-size: var(--t-micro);
+    letter-spacing: 0.1em;
+    color: var(--mark);
+}
+
+.gem-reel__ctl button {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--rule-2);
+    transition: background-color var(--t-fast) var(--ease-io), color var(--t-fast) var(--ease-io);
+}
+
+.gem-reel__ctl button:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.gem-reel__ctl button:disabled { opacity: 0.3; cursor: default; }
+.gem-reel__ctl button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.gem-reel__ctl svg { width: 1rem; height: 1rem; }
+
+/* Without script there is nothing to switch between, so the chapters are
+   all shown one after another and the row of pages scrolls on its own. */
+html:not(.js) .gem-tabs { display: none; }
+html:not(.js) .gem-panel[hidden] { display: block; }
+html:not(.js) .gem-reel__ctl { display: none; }
 
 .case-gem__no {
     flex: none;
@@ -4934,14 +5173,6 @@ button.shelf__vol { cursor: pointer; }
     font-weight: 500;
     letter-spacing: 0.1em;
     color: var(--mark);
-}
-
-.case-gem__essence {
-    font-family: var(--font-display);
-    font-size: var(--t-statement);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    color: var(--ink);
 }
 
 .case-gem__traits {
@@ -4998,7 +5229,7 @@ button.shelf__vol { cursor: pointer; }
 
 .case-gem__chip {
     display: block;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 5 / 2;
     margin-bottom: 0.5rem;
     background: var(--swatch);
     border: 1px solid var(--rule);
@@ -5016,7 +5247,6 @@ button.shelf__vol { cursor: pointer; }
     color: var(--ink);
     font-weight: 500;
 }
-
 
 /* --- Next project --------------------------------------------------- */
 

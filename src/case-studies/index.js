@@ -1,5 +1,5 @@
 import voeplWebsite from './voepl-website.jsx';
-import gemOpalus from './gem-opalus-identity.jsx';
+import gemOpalus, { Opening as gemOpalusOpening } from './gem-opalus-identity.jsx';
 import flowid from './flowid-collateral.jsx';
 import wordpressJapan from './wordpress-japan.jsx';
 import nft from './nft-projects.jsx';
@@ -21,4 +21,11 @@ export const caseBlocks = {
     'wordpress-japan': wordpressJapan,
     'nft-projects': nft,
     'ai-video': aiVideo,
+};
+
+/* A case study that opens with something other than the cover: a component
+   shown full width under the title in place of it, with the facts moved to
+   follow it. It is given the project and the lightbox's opener. */
+export const caseOpenings = {
+    'gem-opalus-identity': gemOpalusOpening,
 };
