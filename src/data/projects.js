@@ -129,7 +129,51 @@ export const projects = [
         cover: cdn('v1789371081/2_cxup32.png'),
         tile: img('gem-opalus-identity', 'tile.webp'),
         coverAlt: 'Cover image for the Gem Opalus logo and brand identity project.',
-        href: null,
+        go: 'View the project',
+        href: 'work/gem-opalus-identity.html',
+
+        /* The case study page: the brand identity guidelines document, in
+           its own order, under its own section names. The blocks are
+           src/case-studies/gem-opalus-identity.jsx; the pages are
+           public/assets/images/projects/gem-opalus-identity/brand-NN.webp
+           (NN is the page in the PDF) and the PDF itself is
+           public/assets/gem-opalus-brand-identity.pdf.
+
+           No 16:10 cover: the document's own cover opens the first block
+           uncut instead. */
+        caseTitle: 'Gem Opalus',
+        caseCategory: 'Logo Design & Brand Identity',
+        caseCover: false,
+        lead:
+            'The logo and the whole brand identity for a gemstone trader and analyst: a ' +
+            'gold-leaf symbol, a quiet palette and typography, and the rules that carry ' +
+            'them from Instagram posts to stationery, packaging and signage.',
+        facts: [
+            ['Client', 'Gem Opalus'],
+            ['Role', 'Logo design and brand identity'],
+            [
+                'Deliverables',
+                'Logo system \u00b7 Colour and type \u00b7 Photography direction \u00b7 Stationery and packaging \u00b7 Social templates',
+            ],
+            [
+                'Guidelines',
+                {
+                    links: [
+                        {
+                            text: 'Download the PDF',
+                            href: '/assets/gem-opalus-brand-identity.pdf',
+                        },
+                    ],
+                },
+            ],
+        ],
+        /* The way out is the way in: back to the strip this came from. */
+        next: {
+            href: '../index.html#work',
+            title: 'Back to Selected Work',
+            aria: 'Back to Selected Work',
+            back: true,
+        },
     },
 
     {
