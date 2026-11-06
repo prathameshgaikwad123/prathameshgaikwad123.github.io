@@ -62,7 +62,9 @@ rest are covers only, and gain a page if and when they gain a case study.
 |---|---|---|---|
 | `public/assets/images/projects/voepl-website/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
 | `public/assets/images/projects/voepl-website/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
-| `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Home |
+| `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Not used while `cover` on the record points at Cloudinary |
+| `public/assets/images/projects/gem-opalus-identity/brand-NN.webp` | 2000 × 1413 | A4 landscape | Case study. Pages of the brand identity PDF, rendered at 2000 px wide (NN is the page number in the PDF; pages 2 and 27 are not used). To update, re-render the PDF's pages to the same names |
+| `public/assets/gem-opalus-brand-identity.pdf` | 27 pages, 12 MB | A4 landscape | Case study. The full guidelines, offered as a download in the facts and at the foot of the page |
 | `public/assets/images/projects/amanoya-mascot/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/flowid-collateral/cover.*` | 1600 × 1000 | 16:10 | Home |
 | `public/assets/images/projects/wordpress-japan/cover.webp` | 1600 × 1000 | 16:10 | Home. A collage of the Horita DM Clinic and FotoLib Kyoto screens |

@@ -4905,6 +4905,119 @@ button.shelf__vol { cursor: pointer; }
 }
 
 
+/* --- Gem Opalus (src/case-studies/gem-opalus-identity.jsx) ------------
+   The brand guidelines document as a page: its pages one under another,
+   each with its number and headline beneath it, and the three things set
+   as type rather than shown as a picture — the essence, the four traits
+   and the palette. The pages are never cropped. */
+
+.case-gem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.25rem);
+}
+
+.case-gem__plate figcaption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    margin-top: 0.875rem;
+    font-size: var(--t-meta);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--ink-3);
+}
+
+.case-gem__no {
+    flex: none;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--mark);
+}
+
+.case-gem__essence {
+    font-family: var(--font-display);
+    font-size: var(--t-statement);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.case-gem__traits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--rule);
+}
+
+.case-gem__traits li {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+}
+
+.case-gem__traits h3 { margin: 0; }
+.case-gem__traits p { margin: 0; font-size: var(--t-small); line-height: 1.6; }
+
+@media (min-width: 48rem) {
+    .case-gem__traits { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.25rem, 3vw, 2.5rem); }
+}
+
+@media (min-width: 62rem) {
+    .case-gem__traits { grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+    .case-gem__traits li { border-bottom: 0; }
+}
+
+/* The palette. A swatch is the colour, its name, its value and where the
+   brand took it from; the value is real text, so it can be selected. The
+   chip is outlined so Pearl and White do not vanish into the page. */
+.case-gem__palette {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (min-width: 48rem) {
+    .case-gem__palette { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.case-gem__swatch {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 0.25rem;
+}
+
+.case-gem__chip {
+    display: block;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 0.5rem;
+    background: var(--swatch);
+    border: 1px solid var(--rule);
+}
+
+.case-gem__swatch-name { font-size: var(--t-small); font-weight: 500; color: var(--ink); }
+.case-gem__swatch-hex { font-size: var(--t-meta); letter-spacing: 0.08em; color: var(--ink-2); }
+.case-gem__swatch-note { font-size: var(--t-meta); line-height: 1.45; color: var(--ink-3); }
+
+.case-gem__download {
+    display: inline-block;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    color: var(--ink);
+    font-weight: 500;
+}
+
+
 /* --- Next project --------------------------------------------------- */
 
 /* The document's ending, and the same one the home page has: the ground
