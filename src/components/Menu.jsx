@@ -1,5 +1,4 @@
 import { SECTIONS, SITE } from '../data/site.js';
-import { projects } from '../data/projects.js';
 import MenuBuilders from './MenuBuilders.jsx';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
@@ -94,43 +93,6 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                             last thing to arrive. */}
                         <span className="menu__rule" aria-hidden="true" />
 
-                        {/* The two labels name their lists rather than
-                            heading them. The panel comes before the page in
-                            the document, so a heading here would be an h2
-                            standing in front of the page's h1 — and a list
-                            with a name is what a reader of the panel
-                            actually wants from them. */}
-                        <div className="menu__col">
-                            <p className="eyebrow" id="menu-work" data-menu-reveal="s">
-                                Selected Work
-                            </p>
-                            <ul className="menu__links" aria-labelledby="menu-work">
-                                {/* The projects with somewhere to go. A
-                                    carousel card without a case study is
-                                    a cover and a caption, and a panel row
-                                    that cannot be followed is worse than
-                                    no row — so the list is the linked
-                                    ones, and it grows as they do. */}
-                                {projects
-                                    .filter((project) => project.href)
-                                    .map((project) => (
-                                    <li data-menu-reveal="s" key={project.slug}>
-                                        <a
-                                            className="menu__small"
-                                            href={`${work}${project.slug}.html`}
-                                            aria-current={
-                                                path.endsWith(`/work/${project.slug}.html`)
-                                                    ? 'page'
-                                                    : undefined
-                                            }
-                                        >
-                                            {project.short}
-                                        </a>
-                                    </li>
-                                    ))}
-                            </ul>
-                        </div>
-
                         <div className="menu__col">
                             <p className="eyebrow" id="menu-elsewhere" data-menu-reveal="s">
                                 Elsewhere
@@ -180,11 +142,6 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                 */}
                             </ul>
                         </div>
-                    </div>
-
-                    <div className="menu__meta" data-menu-reveal="s">
-                        <p className="eyebrow">{SITE.where}</p>
-                        <p className="eyebrow">{SITE.disciplines}</p>
                     </div>
                 </div>
             </div>

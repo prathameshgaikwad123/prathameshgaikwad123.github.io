@@ -2172,12 +2172,6 @@ html:not(.js) .menu__climb { display: none; }
 .menu__small:focus-visible { color: var(--signal); }
 .menu__small[aria-current] { color: var(--signal); }
 
-.menu__meta {
-    display: grid;
-    gap: 0.25rem;
-    padding-top: clamp(1rem, 2.5vh, 1.5rem);
-}
-
 /* Side by side needs room for two measures. Below that the registers
    stack, and the panel scrolls to whichever of them the reader is
    after. */
@@ -2335,7 +2329,6 @@ html:not(.js) .menu {
 }
 
 html:not(.js) .menu__inner { padding: 0; overflow: visible; }
-html:not(.js) .menu__meta { display: none; }
 
 html:not(.js) .menu__list {
     flex-flow: row wrap;
