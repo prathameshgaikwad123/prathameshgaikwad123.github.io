@@ -81,6 +81,10 @@ export const projects = [
         facts: [
             ['Role', 'Digital Marketing Executive — design, web and communication'],
             ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
+            [
+                'Live site',
+                { links: [{ text: 'www.voepl.com', href: 'https://www.voepl.com' }] },
+            ],
             ['Disciplines', 'Web Design · UX · Information Architecture · Odoo · SEO'],
             [
                 'Areas of work',
