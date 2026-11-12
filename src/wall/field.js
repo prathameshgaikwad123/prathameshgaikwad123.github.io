@@ -62,20 +62,41 @@ export function tone(ink) {
 
 export function createField(cols, rows) {
     const width = cols * 2;
-    const bricks = [];
+    const all = [];
     for (let r = 0; r < rows; r += 1) {
         if (r % 2 === 0) {
-            for (let c = 0; c < cols; c += 1) bricks.push([r, c * 2, 2]);
+            for (let c = 0; c < cols; c += 1) all.push([r, c * 2, 2]);
         } else {
-            bricks.push([r, 0, 1]);
-            for (let c = 0; c < cols - 1; c += 1) bricks.push([r, 1 + c * 2, 2]);
-            bricks.push([r, width - 1, 1]);
+            all.push([r, 0, 1]);
+            for (let c = 0; c < cols - 1; c += 1) all.push([r, 1 + c * 2, 2]);
+            all.push([r, width - 1, 1]);
         }
     }
 
+    /* A wall that is not finished, and not finished differently at each
+       end: the left runs back in small, careful steps and never far, the
+       right in uneven bites that get deeper the higher it goes. Both are
+       walks down the courses from the bottom, which is whole. */
+    const left = seeded(31337), right = seeded(90210);
+    const cutL = new Uint8Array(rows), cutR = new Uint8Array(rows);
+    let a = 0, b = 0;
+    for (let r = 0; r < rows; r += 1) {
+        const k = r / rows;
+        a = Math.max(0, Math.min(2 + Math.round(4 * k), a + Math.floor(left() * 3) - 1));
+        b = Math.max(0, Math.min(1 + Math.round(7 * k * k + 2 * k), b + Math.floor(right() * 5) - 2));
+        cutL[r] = a;
+        cutR[r] = b;
+    }
+    const bricks = all.filter(([r, u, len]) => u >= cutL[r] && u + len <= width - cutR[r]);
+    const lo = new Uint16Array(rows).fill(width), hi = new Uint16Array(rows);
+    bricks.forEach(([r, u, len]) => {
+        if (u < lo[r]) lo[r] = u;
+        if (u + len > hi[r]) hi[r] = u + len;
+    });
+
     const n = bricks.length;
     const f = {
-        cols, rows, width, n,
+        cols, rows, width, n, lo, hi,   /* lo, hi: the units each course runs from and to */
         row: new Uint16Array(n),
         from: new Uint16Array(n),       /* first unit the brick covers */
         span: new Uint8Array(n),        /* and how many: 2, or 1 for a half */
