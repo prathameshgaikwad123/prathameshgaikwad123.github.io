@@ -125,6 +125,7 @@ export function createRenderer(canvas) {
     const bed = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bed);
     gl.bufferData(gl.ARRAY_BUFFER, STRIDE * 4, gl.DYNAMIC_DRAW);
+    let bedCapacity = STRIDE;
     const bricksArray = array(bricks);
     const bedArray = array(bed);
     let capacity = 0;
@@ -213,14 +214,18 @@ export function createRenderer(canvas) {
             gl.bindTexture(gl.TEXTURE_2D, shadow);
             gl.uniform1i(at.uShadow, 0);
 
-            /* The bed: one record, a slab the size of what has been
-               laid so far. */
+            /* The bed: a strip a course, as wide as that course has been
+               laid, so a ragged edge shows what is behind it, not a slab. */
             gl.bindBuffer(gl.ARRAY_BUFFER, bed);
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, scene.bedAt);
+            if (scene.bedAt.length > bedCapacity) {
+                gl.bufferData(gl.ARRAY_BUFFER, scene.bedAt.byteLength, gl.DYNAMIC_DRAW);
+                bedCapacity = scene.bedAt.length;
+            }
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, scene.bedAt, 0, scene.bedCount * STRIDE);
             gl.uniform1i(at.uMode, 1);
             gl.uniform3fv(at.uDim, scene.bedDim);
             gl.bindVertexArray(bedArray);
-            gl.drawArraysInstanced(gl.TRIANGLES, 0, 36, 1);
+            gl.drawArraysInstanced(gl.TRIANGLES, 0, 36, scene.bedCount);
 
             gl.uniform1i(at.uMode, 0);
             gl.uniform3fv(at.uDim, scene.dim);

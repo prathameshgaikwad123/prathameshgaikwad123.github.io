@@ -21,10 +21,6 @@ import { GLAZE, tone } from './field.js';
 
 export const CREW = ['ui/ux', 'web', 'brand', 'motion'];
 
-/* The project tiles' own colours, in carousel order — the six cards
-   that have a tile. Sampled from public/assets/images/projects/…/tile.webp. */
-const TILES = ['#1b4db0', '#0e8b8a', '#8a3fae', '#ff7a2c', '#c7112e', '#0e8f5f'];
-
 const SERIF = "Castoro, 'Iowan Old Style', Georgia, serif";
 const MONO = "ui-monospace, 'SF Mono', Menlo, Consolas, monospace";
 
@@ -111,46 +107,6 @@ export const PICTURES = {
         },
     },
 
-    /* A path with its handles out: the pen tool, mid-stroke. The curve
-       is heavy and the handles are fine, and the wall keeps the
-       difference — the handles come out as bricks only part turned. */
-    pen: {
-        say: 'drawn, not found.', by: 2,
-        draw(g, W, H) {
-            const a = [W * 0.14, H * 0.7], b = [W * 0.86, H * 0.3];
-            const ca = [W * 0.3, H * 0.12], cb = [W * 0.7, H * 0.88];
-            g.lineCap = 'round';
-            g.lineWidth = 1.1;
-            g.beginPath();
-            g.moveTo(a[0], a[1]); g.lineTo(ca[0], ca[1]);
-            g.moveTo(b[0], b[1]); g.lineTo(cb[0], cb[1]);
-            g.stroke();
-            g.lineWidth = 2.8;
-            g.beginPath();
-            g.moveTo(a[0], a[1]);
-            g.bezierCurveTo(ca[0], ca[1], cb[0], cb[1], b[0], b[1]);
-            g.stroke();
-            [ca, cb].forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 1.9, 0, Math.PI * 2); g.fill(); });
-            [a, b].forEach(([x, y]) => { g.fillRect(x - 3, y - 2.5, 6, 5); });
-        },
-    },
-
-    /* Six tiles in two rows of three, cut to whole bricks. */
-    work: {
-        say: 'the work.', by: 'all',
-        draw(g, W, H) {
-            const gap = 4;
-            const w = Math.floor((W - 6 - gap * 2) / 6) * 2;
-            const h = Math.floor((H - 6 - 2) / 2);
-            const x = Math.round((W - (w * 3 + gap * 2)) / 4) * 2;
-            const y = Math.round((H - (h * 2 + 2)) / 2);
-            TILES.forEach((hex, n) => {
-                g.fillStyle = hex;
-                g.fillRect(x + (n % 3) * (w + gap), y + Math.floor(n / 3) * (h + 2), w, h);
-            });
-        },
-    },
-
     /* Not a picture: a rule, asked again every frame. Stripes bent by a
        second, slower wave, so the bands of ink wander across the wall
        and never quite repeat. */
@@ -185,11 +141,11 @@ export const PICTURES = {
 };
 
 /* The order they come round in when nobody is asking for one. */
-export const REEL = ['hi', 'type', 'pointer', 'code', 'play', 'pen', 'work', 'field', 'rest'];
+export const REEL = ['hi', 'type', 'pointer', 'code', 'play', 'field', 'rest'];
 
 /* And the one each row of the navigation asks for, by the section the
    row leads to. */
-export const ASKED = { about: 'hi', work: 'work', 'side-quests': 'field', contact: 'clock' };
+export const ASKED = { about: 'hi', 'side-quests': 'field', contact: 'clock' };
 
 const SCALE = 4;
 const linear = (v) => Math.pow(v / 255, 2.2);

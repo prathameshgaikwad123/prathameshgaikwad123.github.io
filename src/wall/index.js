@@ -1,4 +1,4 @@
-import { createRenderer } from './renderer.js';
+import { STRIDE, createRenderer } from './renderer.js';
 import { aim, createField, press, ripple, settle, step } from './field.js';
 import { ASKED, CREW, PICTURES, REEL, createPainter } from './pictures.js';
 import { createCrew } from './crew.js';
@@ -21,7 +21,7 @@ import { intoSlab, lookAt, multiply, ortho, perspective, placement, project } fr
 
      the reader    a row of the navigation under the pointer, or given
                    focus, turns the wall to what is behind that row.
-                   Me is a greeting; the work is the six tiles; Just
+                   Me is a greeting; Just
                    because is a pattern that does not hold still; Say hi
                    is the time where the reply would be coming from.
 
@@ -61,9 +61,9 @@ const SWEEP = COURSE * 4;
 const LEAD = 0.45;
 
 /* The same bricks in both themes; only the room changes. All linear. */
-const PAPER = [0.93, 0.93, 0.925];
-/* The wall's orange, #FF5E00, in linear light. */
-const INK = [1.0, 0.112, 0.0];
+const PAPER = [0.93, 0.93, 0.93];
+/* Plain black, a hair off, in linear light. */
+const INK = [0.008, 0.008, 0.008];
 const ROOM = {
     light: { sky: 0.8, floor: 0.6, sun: 0.56, bed: 0.5 },
     dark: { sky: 0.42, floor: 0.2, sun: 0.9, bed: 0.0 },
@@ -110,7 +110,7 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         slab: new Float32Array(16), vp, lightVP,
         light: new Float32Array(3), eye: new Float32Array(3),
         dim: new Float32Array([0.95, 0.45, 0.45]), bedDim: new Float32Array(3),
-        bedAt: new Float32Array([0, 0, -0.62, 0, 0, 1, 1, 1, 0, 0, 0, 0]),
+        bedAt: new Float32Array(STRIDE), bedCount: 0,
         paper: new Float32Array(PAPER), ink: new Float32Array(INK), bed: new Float32Array(3),
         sky: new Float32Array(3), floor: new Float32Array(3), sun: new Float32Array(3),
         bevel: 0.085,
@@ -187,6 +187,13 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         paint = createPainter(field);
         angles = new Float32Array(field.n);
         glazes = new Float32Array(field.n * 3);
+
+        /* One bed strip a course, as wide as the bricks in it. */
+        scene.bedAt = new Float32Array(rows * STRIDE);
+        for (let r = 0; r < rows; r += 1) {
+            const o = r * STRIDE;
+            scene.bedAt.set([(field.lo[r] + field.hi[r]) / 2 - cols, r + 0.5 - rows / 2, -0.62, 0, 0, 1, 1, (field.hi[r] - field.lo[r]) / 2], o);
+        }
 
         if (mode === 'build' && fresh && laidFrom < 0) {
             /* Every brick put away, with the moment it is due: a course
@@ -349,10 +356,8 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         const up = mode === 'build' && laidFrom >= 0
             ? Math.min(rows, Math.max(0, (time - laidFrom - LEAD) / COURSE - 2))
             : mode === 'build' ? 0 : rows;
-        scene.bedDim[0] = cols;
-        scene.bedDim[1] = up / 2;
-        scene.bedDim[2] = 0.04;
-        scene.bedAt[1] = (up - rows) / 2;
+        scene.bedDim.set([1, 0.505, 0.04]);
+        scene.bedCount = Math.min(rows, Math.floor(up));
 
         /* The key light, swung a little towards wherever the pointer
            is, so the shadows and the shine on the ink move with it. */
