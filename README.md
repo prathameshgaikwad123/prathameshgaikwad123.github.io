@@ -34,11 +34,22 @@ the stylesheet holds the resting composition, and the effect may only move
 things away from it and back. Nothing on the page depends on an animation
 having run.
 
-**WebGL2, by hand**, draws one thing: the glass carousel at the top of Selected
-Work. It is in `src/carousel/`, it pulls in no library, and every constant in
-it was measured off a recording rather than chosen — `src/carousel/config.js`
-says what each number was fitted against, and `src/carousel/warp.js` explains
-the one piece of the maths that is not obvious.
+**WebGL2, by hand**, draws two things, and neither pulls in a library. The
+glass carousel at the top of Selected Work is in `src/carousel/`, and every
+constant in it was measured off a recording rather than chosen —
+`src/carousel/config.js` says what each number was fitted against, and
+`src/carousel/warp.js` explains the one piece of the maths that is not obvious.
+
+The other is the wall in the navigation panel, in `src/wall/`: a few hundred
+bricks that turn about their long axis, with a paper face, an ink face a
+quarter turn on and a glazed face behind. A brick stopped part way shows some
+of each, so the wall draws in greys — a word in Castoro, a pen path, the colours
+of the project tiles. The rows of the navigation are its
+switches: the row under the pointer turns the wall to what is behind that row.
+It is one instanced draw and a shadow pass, every brick turns on a spring, and
+the head of `src/wall/index.js` says who gets to tell it what. None of it is
+in any page's first load — the chunk is fetched the first time the panel
+opens.
 
 **Plain DOM transforms** drive the second moving strip: the plate rail in
 Selected Behance Work (`src/hooks/usePlateRail.js`). It has no library at all —
@@ -62,6 +73,7 @@ is written down at the point it matters — the top of stylesheet sections 9 and
 | `src/sections/` | The six bands of the home page. |
 | `src/components/` | The masthead's two plates, the navigation panel fixed under the page, the overlay that travels with the page, the loader, the glass carousel's document half, the plate rail's, the image lightbox, the reticle, the grid overlay, the shared page furniture. |
 | `src/carousel/` | The glass carousel: the virtual axis, the scroll model, the warp table, the shaders and the WebGL2 renderer. No dependencies. |
+| `src/wall/` | The wall in the navigation panel: the bricks and their springs, the pictures it is told to draw, the crew that lays it, the shaders and the WebGL2 renderer. No dependencies. |
 | `src/case-studies/` | The written body of each case study. |
 | `src/data/` | Project records, site constants, the page list. |
 | `src/hooks/` | Theme, scroll chrome and the section spy, the navigation's state and its reveal choreography, what the identity chip says when it is pointed at, entrance reveals, the carousel's frame loop and input, and the plate rail's. |
