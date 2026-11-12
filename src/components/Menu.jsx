@@ -1,5 +1,5 @@
 import { SECTIONS, SITE } from '../data/site.js';
-import MenuBuilders from './MenuBuilders.jsx';
+import MenuWall from './MenuWall.jsx';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
 /* The navigation — the only one the site has — and the layer underneath
@@ -84,7 +84,7 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                     ))}
                 </ul>
 
-                <MenuBuilders open={open} />
+                <MenuWall open={open} />
 
                 <div className="menu__bottom">
                     <div className="menu__foot">

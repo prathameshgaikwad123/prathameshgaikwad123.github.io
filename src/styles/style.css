@@ -2087,32 +2087,143 @@ html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
     background: var(--signal);
 }
 
-/* The gap between the list and the foot, which used to be blank: a pixel
-   person climbing a wall — see src/components/MenuClimber.jsx. It takes
-   whatever room is left, but never less than a wall and a person need:
-   on a short window the panel, which already scrolls, scrolls a little
-   rather than the scene quietly disappearing. The canvas is out of flow
-   so its bitmap size never argues with the room it is given. */
-.menu__climb {
+/* The gap between the list and the foot, which used to be blank: a wall
+   of bricks that turn — see src/components/MenuWall.jsx and src/wall/.
+   It takes whatever room is left, but never less than a few courses
+   need: on a short window the panel, which already scrolls, scrolls a
+   little rather than the wall quietly disappearing. The canvas is out
+   of flow so its bitmap size never argues with the room it is given.
+
+   Three layers in one box. The canvas is the wall. Over it, the crew:
+   four pointers that are ordinary elements, so their labels are set in
+   the site's own type and coloured from its own tokens. Under it, in
+   the last 26px — the wall's script leaves exactly that clear — the
+   line the wall is saying, in the register of every other small label
+   on the site. */
+.menu__wall {
     position: relative;
     flex: 1 1 0;
     min-height: 6.5rem;
     max-height: 26rem;
-    /* Pulled up through the panel's own gap so the scene begins just under
-       the last row of the list: the wall rises almost to it. */
+    /* Pulled up through the panel's own gap so the wall begins just
+       under the last row of the list. */
     margin-top: calc(0.5rem - clamp(1.5rem, 4vh, 2.5rem));
 }
 
-.menu__climb canvas {
+/* It answers the pointer, so it takes it; but a finger dragged down it
+   is still scrolling the panel. */
+.menu__wall canvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    image-rendering: pixelated;
+    touch-action: pan-y;
+}
+
+.menu__wall-crew {
+    position: absolute;
+    inset: 0;
     pointer-events: none;
 }
 
-html:not(.js) .menu__climb { display: none; }
+.menu__wall-says {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    margin: 0;
+    font-size: var(--t-micro);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--ink-3);
+    pointer-events: none;
+}
+
+.menu__wall-says b {
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+}
+
+/* One of the crew: an arrow and a name, placed by transform from
+   src/wall/crew.js and shown and hidden by class. The arrow's tip is
+   the element's own origin, so what the script sends it to is where it
+   points. */
+.wall-hand {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: flex-start;
+    color: var(--ink);
+    opacity: 0;
+    will-change: transform;
+    transition: opacity 0.35s var(--ease);
+}
+
+.wall-hand.is-on { opacity: 1; }
+
+.wall-hand svg {
+    flex: none;
+    overflow: visible;
+}
+
+.wall-hand path {
+    fill: currentColor;
+    stroke: var(--paper);
+    stroke-width: 1;
+}
+
+.wall-hand > span {
+    margin: 11px 0 0 -2px;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    color: var(--paper);
+    background: var(--ink);
+}
+
+/* The press: the arrow dips and a ring opens from its tip, which is
+   where the next picture is about to spread from. */
+.wall-hand::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.3);
+}
+
+.wall-hand.is-press::before { animation: wall-ring 0.55s var(--ease); }
+.wall-hand.is-press svg { animation: wall-press 0.3s var(--ease); }
+
+@keyframes wall-ring {
+    from { opacity: 0.9; transform: scale(0.3); }
+    to   { opacity: 0;   transform: scale(1.7); }
+}
+
+@keyframes wall-press {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.78); }
+    100% { transform: scale(1); }
+}
+
+html:not(.js) .menu__wall { display: none; }
 
 /* --- The foot ---------------------------------------------------------
    Two registers of small links under one hairline: the six case
