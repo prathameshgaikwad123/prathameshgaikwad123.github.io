@@ -32,7 +32,6 @@ import { activeTheme, onMedia, useReducedMotion } from '../hooks/dom.js';
    Where the browser has no WebGL2, or the room is too short to hold
    enough courses to draw with, nothing is drawn and nothing is said. */
 
-const FACE = '/assets/images/wall-face.png';
 const LAID = 'wall-laid';
 
 function laid() {
@@ -127,7 +126,7 @@ export default function MenuWall({ open }) {
                 if (!alive || wall.current) return;
                 const made = createWall(
                     { canvas: canvas.current, stage: stage.current, count: count.current, say: say.current },
-                    { face: FACE, built: laid(), onBuilt: remember },
+                    { built: laid(), onBuilt: remember },
                 );
                 wall.current = made || false;
                 if (made) run(made);

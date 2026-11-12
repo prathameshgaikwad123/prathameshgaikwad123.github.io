@@ -14,14 +14,14 @@ import { intoSlab, lookAt, multiply, ortho, perspective, placement, project } fr
    It is a wall of bricks that turn. Each has a paper face, an ink face
    a quarter turn away and a glazed face behind, and can be stopped
    anywhere between — so the wall draws in greys, and what it draws is
-   whatever it is told: a word, the portrait from the masthead, the
-   colours of the project tiles.
+   whatever it is told: a word, a pair of letters, the colours of the
+   project tiles.
 
    What it is told comes from three places, in this order of say:
 
      the reader    a row of the navigation under the pointer, or given
                    focus, turns the wall to what is behind that row.
-                   Me is the portrait; the work is the six tiles; Just
+                   Me is a greeting; the work is the six tiles; Just
                    because is a pattern that does not hold still; Say hi
                    is the time where the reply would be coming from.
 

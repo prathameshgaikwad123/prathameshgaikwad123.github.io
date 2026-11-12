@@ -43,8 +43,8 @@ constant in it was measured off a recording rather than chosen —
 The other is the wall in the navigation panel, in `src/wall/`: a few hundred
 bricks that turn about their long axis, with a paper face, an ink face a
 quarter turn on and a glazed face behind. A brick stopped part way shows some
-of each, so the wall draws in greys — a word in Castoro, the portrait from the
-masthead, the colours of the project tiles. The rows of the navigation are its
+of each, so the wall draws in greys — a word in Castoro, a pen path, the colours
+of the project tiles. The rows of the navigation are its
 switches: the row under the pointer turns the wall to what is behind that row.
 It is one instanced draw and a shadow pass, every brick turns on a spring, and
 the head of `src/wall/index.js` says who gets to tell it what. None of it is

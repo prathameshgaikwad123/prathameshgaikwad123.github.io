@@ -70,22 +70,6 @@ export const PICTURES = {
         draw(g, W, H) { set(g, W, H, 'hi.', `italic %px ${SERIF}`, 1.0, 0.76, 0.9); },
     },
 
-    /* The portrait from the masthead, as a small grey cut-out — and the
-       one picture that is fired rather than turned. A brick stopped
-       half way is a stripe of paper over a stripe of ink, which reads
-       as grey in a letter's edge and as noise in a face; so every brick
-       of a photograph goes right round to its glaze, and the glaze is
-       fired the grey that brick needs. A portrait in tile, the way
-       they are made on walls that are not screens. */
-    face: {
-        say: 'yes, that’s my face.', by: 2, photo: true,
-        draw(g, W, H, kit) {
-            if (!kit.face) return;
-            const s = Math.min(H * 1.05, W * 0.98);
-            g.drawImage(kit.face, (W - s) / 2, H - s + 0.5, s, s);
-        },
-    },
-
     type: {
         say: 'type & identity', by: 2,
         draw(g, W, H) { set(g, W, H, 'Aa', `%px ${SERIF}`, 0.92, 0.78, 0.9); },
@@ -201,11 +185,11 @@ export const PICTURES = {
 };
 
 /* The order they come round in when nobody is asking for one. */
-export const REEL = ['hi', 'face', 'type', 'pointer', 'code', 'play', 'pen', 'work', 'field', 'rest'];
+export const REEL = ['hi', 'type', 'pointer', 'code', 'play', 'pen', 'work', 'field', 'rest'];
 
 /* And the one each row of the navigation asks for, by the section the
    row leads to. */
-export const ASKED = { about: 'face', work: 'work', 'side-quests': 'field', contact: 'clock' };
+export const ASKED = { about: 'hi', work: 'work', 'side-quests': 'field', contact: 'clock' };
 
 const SCALE = 4;
 const linear = (v) => Math.pow(v / 255, 2.2);
