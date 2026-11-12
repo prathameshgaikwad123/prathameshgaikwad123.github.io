@@ -62,8 +62,8 @@ const LEAD = 0.45;
 
 /* The same bricks in both themes; only the room changes. All linear. */
 const PAPER = [0.93, 0.93, 0.925];
-/* The site's one red, #CC021F, in linear light. */
-const INK = [0.604, 0.0006, 0.0097];
+/* The wall's orange, #FF5E00, in linear light. */
+const INK = [1.0, 0.112, 0.0];
 const ROOM = {
     light: { sky: 0.8, floor: 0.6, sun: 0.56, bed: 0.5 },
     dark: { sky: 0.42, floor: 0.2, sun: 0.9, bed: 0.0 },
