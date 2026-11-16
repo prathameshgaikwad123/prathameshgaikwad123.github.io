@@ -533,12 +533,21 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
             wake();
         };
 
+        /* Whether the card at an index leads anywhere. `is-over` is what
+           turns the cursor into a pointer and writes "Open" on the
+           reticle, and a project with no page behind it answers a click
+           with nothing — so it must not be offered as one. Such a card
+           is still part of the strip: it keeps the grab cursor and the
+           plain reticle, which is the truth about it. */
+        const leads = (index) => index >= 0 && !!(items[index] && items[index].href);
+
         const onMove = (event) => {
             if (engine.pointer !== event.pointerId) {
                 /* Not a drag: the cursor is only passing over, and the
-                   one thing to decide is whether it is over a card. */
+                   one thing to decide is whether it is over a card that
+                   opens something. */
                 if (engine.pointer === null && event.pointerType !== 'touch') {
-                    stage.classList.toggle('is-over', under(event) >= 0);
+                    stage.classList.toggle('is-over', leads(under(event)));
                 }
                 return;
             }
@@ -644,7 +653,7 @@ export default function useGlassCarousel({ items, reduced, onOpen }) {
             stage.removeEventListener('keydown', onKey);
             stage.classList.remove('is-over');
         };
-    }, [live, items.length, wake]);
+    }, [live, items, wake]);
 
     return { stageRef, canvasRef, labelRef, shown, live, fallback };
 }

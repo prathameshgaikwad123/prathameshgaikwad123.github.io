@@ -137,12 +137,13 @@ export default function About() {
                         <div className="about__aside" data-reveal="">
                             <figure className="about__portrait frame">
                                 <span className="frame__media">
-                                    {/* OPTIONAL. REPLACE: public/assets/images/portrait.svg
-                                        → your own 1000×1250 portrait (JPG/WebP), or delete
-                                        this <figure>. */}
+                                    {/* The same illustrated portrait the header's identity
+                                        chip crops square (public/pNG.png) — cut from its
+                                        ground and given room to breathe, rather than a
+                                        second, different image standing in for it. */}
                                     <img
-                                        src="/assets/images/portrait.svg"
-                                        alt={`Placeholder for a portrait photograph of ${SITE.name}.`}
+                                        src="/assets/images/portrait.webp"
+                                        alt={`Illustrated portrait of ${SITE.name}.`}
                                         width="1000"
                                         height="1250"
                                         loading="lazy"
@@ -193,8 +194,8 @@ export default function About() {
                             <p className="practice__copy">
                                 Design decisions survive contact with implementation, or they don't survive
                                 at all. A lot of my web work happens in the browser rather than only in
-                                Figma — this portfolio included, which is hand-written HTML, CSS and
-                                vanilla JavaScript with no framework.
+                                Figma — this portfolio included, which is React and hand-written CSS,
+                                with no template or UI kit behind it.
                             </p>
 
                             <GitHubChart />

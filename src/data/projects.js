@@ -77,7 +77,7 @@ export const projects = [
             'Contributing to the digital presence of an Indian OEM/ODM manufacturing ' +
             'company by working across website design, content structure, digital ' +
             'communication and ongoing optimisation.',
-        coverCaption: 'Placeholder — replace with a wide view of the website.',
+        coverCaption: 'The VOEPL corporate website.',
         facts: [
             ['Role', 'Digital Marketing Executive — design, web and communication'],
             ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
