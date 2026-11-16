@@ -149,7 +149,7 @@ reach from the width of the row, so nothing else needs touching.
 | `public/assets/og-image.png` | 1200 × 630 | **Done** — typographic placeholder, replace if you want |
 | `public/assets/images/avatar.png` | 128 × 128 (1:1) | **Done** — the mark at the left of the header |
 | `public/assets/images/avatar.webp` | 128 × 128 (1:1) | **Done** — the same square as WebP (q85), which the header serves first; re-export it whenever `avatar.png` changes |
-| `public/assets/images/portrait.*` | 1000 × 1250 (4:5) | **Optional** — About section |
+| `public/assets/images/portrait.webp` | 1000 × 1250 (4:5) | **Done** — the header's identity-chip artwork, cut from its ground and given room, rather than a second portrait |
 
 `og-image.png` is what appears when the site is shared on LinkedIn, Slack or
 WhatsApp. The generated one is typographic and works; a version with your own
