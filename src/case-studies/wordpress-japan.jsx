@@ -45,8 +45,11 @@ export default function blocks(project, onZoom) {
             body: (
                 <>
                     <p>
-                        Three websites for clients in Japan, built in WordPress to be
-                        responsive and to work as designed.
+                        Between December 2025 and March 2026 I delivered four client websites,
+                        and several smaller WordPress projects, for businesses in Japan. The
+                        work came through LinkedIn outreach and ran alongside my full-time
+                        role, with the sites built to be responsive and to match the Figma
+                        designs they were given. Three of them are shown here.
                     </p>
                     <p>
                         <strong>Horita DM Clinic</strong> is a diabetes and
@@ -58,8 +61,13 @@ export default function blocks(project, onZoom) {
                     <p>
                         <strong>FotoLib Kyoto</strong> is a photo-album service for visitors
                         to Kyoto, live at fotolib-kyoto.com; its page is shown below.{' '}
-                        <strong>Kuwahara Lab</strong>, the third, is a website the team
-                        created, live at blog.kuwatechno.jp.
+                        <strong>Kuwahara Lab</strong>, an inspection, finishing and
+                        quality-improvement lab, publishes its news and articles at
+                        blog.kuwatechno.jp, and that site is shown last.
+                    </p>
+                    <p>
+                        On every one of them I also owned the conversation with the client:
+                        scope, timelines and QA, through to handover.
                     </p>
                 </>
             ),
@@ -70,6 +78,7 @@ export default function blocks(project, onZoom) {
             body: (
                 <ul className="case-list">
                     <li>WordPress development of all three websites</li>
+                    <li>Client communication, scope, timelines and QA through handover</li>
                     <li>Horita DM Clinic: building the supplied Figma designs, from the desktop and phone frames</li>
                     <li>Horita DM Clinic: the header, the phone navigation panel and the footer</li>
                     <li>Horita DM Clinic: the booking and LINE buttons that stay with the reader down the page</li>
@@ -140,12 +149,33 @@ export default function blocks(project, onZoom) {
                 <>
                     <p className="case-block__note">
                         A page that explains a Kyoto photo-album service: two plans, what each
-                        page of the album includes, and a six-step order process.
+                        page of the album includes, and a six-step order process. Captured
+                        from the live site.
                     </p>
                     <div className="case-phones">
                         {project.fotolib.map((shot) => (
                             <Shot shot={shot} onZoom={onZoom} key={shot[0]} />
                         ))}
+                    </div>
+                </>
+            ),
+        },
+        {
+            key: 'kuwahara',
+            label: 'Kuwahara Lab',
+            wide: true,
+            body: (
+                <>
+                    <p className="case-block__note">
+                        The Kuwahara Lab blog: the featured-article carousel, the navigation
+                        and the recommended topics, at desktop width and on a phone. Captured
+                        from the live site.
+                    </p>
+                    <div className="case-stack">
+                        <Shot shot={project.kuwahara[0]} onZoom={onZoom} />
+                    </div>
+                    <div className="case-phones">
+                        <Shot shot={project.kuwahara[1]} onZoom={onZoom} />
                     </div>
                 </>
             ),

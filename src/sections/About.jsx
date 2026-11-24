@@ -138,7 +138,7 @@ export default function About() {
                             <figure className="about__portrait frame">
                                 <span className="frame__media">
                                     {/* The same illustrated portrait the header's identity
-                                        chip crops square (public/pNG.png) — cut from its
+                                        chip crops square — cut from its
                                         ground and given room to breathe, rather than a
                                         second, different image standing in for it. */}
                                     <img
@@ -165,8 +165,9 @@ export default function About() {
                             </p>
                             <div className="prose about__prose">
                                 <p>
-                                    Over the past 3+ years, I have worked across graphic design, websites,
-                                    UI/UX, social media and digital communication. This range has shaped how
+                                    Over the past five years, I have worked across brand identity, graphic design,
+                                    websites, UI/UX, social media, print, motion and digital communication, as
+                                    an in-house designer, in consultancy and as a freelancer. This range has shaped how
                                     I approach design: I don't see interfaces, brands and communication as
                                     isolated outputs, but as connected parts of an experience.
                                 </p>

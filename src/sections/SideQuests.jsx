@@ -206,7 +206,7 @@ export default function SideQuests() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag quests__tag" data-reveal="">
-                        <span className="tag__no num">04</span>Side Quests
+                        <span className="tag__no num">05</span>Side Quests
                     </p>
                     <h2 className="statement quests__statement" id="side-quests-title" data-reveal="">
                         <Words
@@ -217,7 +217,8 @@ export default function SideQuests() {
                     </h2>
                     <p className="lead quests__lead" data-reveal="">
                         No brief, no client, no deadline. Experiments, small builds and
-                        whatever else I was curious about that week.
+                        whatever else I was curious about that week. This wall is still
+                        being filled in; each plate goes live as it is ready.
                     </p>
 
                     {/* The rail is a control, so it is only offered where

@@ -60,7 +60,7 @@ export default function CaseVideo({ video, no }) {
             <figure className="frame case-video">
                 <span className="frame__media case-video__media case-video__media--empty">
                     <span className="tbd" data-todo={`ai-video-${no}`}>
-                        Video to be added — see CONTENT-TODO.md
+                        Uploading soon
                     </span>
                 </span>
                 {caption}

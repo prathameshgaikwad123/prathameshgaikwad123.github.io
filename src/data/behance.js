@@ -5,9 +5,10 @@
    study behind it — so a record is only what the rail needs: the
    plate, what to call it, what it is, and where it goes.
 
-   REPLACE: every `cover` below points at a labelled SVG placeholder in
-   public/assets/images/behance/, and every `href` points at the profile
-   rather than at a project, because a project URL cannot be invented.
+   UPLOADING SOON: every `cover` below points at an "Uploading soon" plate
+   in public/assets/images/behance/, and every `href` points at the
+   profile rather than at a project, because a project URL cannot be
+   invented.
    Replace both together — the cover with a real 1600×1200 export (swap
    the extension here) and the href with that project's own Behance URL
    — and rewrite the `alt` beside it. See ASSETS.md and CONTENT-TODO.md,
@@ -33,54 +34,54 @@ export const behance = [
         id: 'brand-campaign',
         no: '01',
         title: 'Brand & Campaign Visuals',
-        type: 'Brand · Campaign',
+        type: 'Brand · Campaign · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('01-brand-campaign.svg'),
-        alt: 'Placeholder for a Behance project of brand and campaign visuals.',
+        alt: 'A Behance project of brand and campaign visuals, uploading soon.',
     },
     {
         id: 'web-ui',
         no: '02',
         title: 'Web & Interface Explorations',
-        type: 'UI · Web',
+        type: 'UI · Web · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('02-web-ui.svg'),
-        alt: 'Placeholder for a Behance project of web and interface explorations.',
+        alt: 'A Behance project of web and interface explorations, uploading soon.',
     },
     {
         id: 'social-systems',
         no: '03',
         title: 'Social Media Design Systems',
-        type: 'Social · Systems',
+        type: 'Social · Systems · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('03-social-systems.svg'),
-        alt: 'Placeholder for a Behance project of social media design systems.',
+        alt: 'A Behance project of social media design systems, uploading soon.',
     },
     {
         id: 'print-collateral',
         no: '04',
         title: 'Print & Corporate Collateral',
-        type: 'Print · Collateral',
+        type: 'Print · Collateral · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
-        alt: 'Placeholder for a Behance project of print and corporate collateral.',
+        alt: 'A Behance project of print and corporate collateral, uploading soon.',
     },
     {
         id: 'visual-studies',
         no: '05',
         title: 'Visual & Typographic Studies',
-        type: 'Type · Visual',
+        type: 'Type · Visual · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('05-visual-studies.svg'),
-        alt: 'Placeholder for a Behance project of visual and typographic studies.',
+        alt: 'A Behance project of visual and typographic studies, uploading soon.',
     },
     {
         id: 'motion-concepts',
         no: '06',
         title: 'Motion & Concept Work',
-        type: 'Motion · Concept',
+        type: 'Motion · Concept · Uploading soon',
         href: BEHANCE_PROFILE,
         cover: plate('06-motion-concepts.svg'),
-        alt: 'Placeholder for a Behance project of motion and concept work.',
+        alt: 'A Behance project of motion and concept work, uploading soon.',
     },
 ];

@@ -59,9 +59,9 @@ export const projects = [
         title: 'Building a Corporate Digital Presence',
         /* The index entry on the home page. */
         summary:
-            'Contributing to the digital presence of an Indian OEM/ODM manufacturing ' +
-            'company by working across website design, content structure, digital ' +
-            'communication and ongoing optimisation.',
+            'Designed, built and wrote the corporate website of an Indian OEM/ODM ' +
+            'electronics manufacturer on Odoo \u2014 structure, page layouts, responsive ' +
+            'UI and all of the content \u2014 and maintain it.',
         meta: ['Web Design', 'UX', 'Information Architecture', 'Odoo', 'SEO'],
         go: 'Read the case study',
         cover: cdn('v1789371081/1_ivtwne.png'),
@@ -74,12 +74,11 @@ export const projects = [
         href: 'work/voepl-website.html',
         /* The case study page. */
         lead:
-            'Contributing to the digital presence of an Indian OEM/ODM manufacturing ' +
-            'company by working across website design, content structure, digital ' +
-            'communication and ongoing optimisation.',
+            'The corporate website of an Indian OEM/ODM electronics manufacturer, ' +
+            'designed, built and written end to end on Odoo, and maintained since.',
         coverCaption: 'The VOEPL corporate website.',
         facts: [
-            ['Role', 'Digital Marketing Executive — design, web and communication'],
+            ['Role', 'Senior Executive, Digital Marketing & Design \u2014 design, build, content and upkeep'],
             ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
             [
                 'Live site',
@@ -91,10 +90,12 @@ export const projects = [
                 'Website design, publishing and maintenance; responsive layouts; product and capability presentation',
             ],
         ],
+        /* Captured from the live site at 1440 px wide, and the phone plate at
+           390 px, so what is shown is what the site actually looks like. */
         gallery: [
-            [img('voepl-website', '01.svg'), 'Placeholder for a VOEPL website page layout.'],
-            [img('voepl-website', '02.svg'), 'Placeholder for a VOEPL website product or capability page.'],
-            [img('voepl-website', '03.svg'), 'Placeholder for VOEPL website responsive layouts.'],
+            [img('voepl-website', '01.webp'), 'The VOEPL home page at desktop width: the navigation, the \u201cDesign, Manufacture, Delight\u201d hero and the opening company statement.'],
+            [img('voepl-website', '02.webp'), 'The VOEPL \u201cOur Products\u201d page: air conditioners, LED lighting, water dispensers, commercial freezers, washing machines and compressors, each given an icon tile.'],
+            [img('voepl-website', '03.webp'), 'The VOEPL website on a phone, three pages side by side: the home page, the products page and the electronics manufacturing services page.'],
         ],
         /* The only line of this record that had to change. It pointed
            at the second case study, and there is no second case study
@@ -296,9 +297,9 @@ export const projects = [
         short: 'WordPress Development',
         title: 'WordPress Website Development — Japan',
         summary:
-            'Developed WordPress websites for clients in Japan \u2014 Horita DM Clinic, ' +
-            'Kuwahara Lab and FotoLib Kyoto \u2014 including translating provided Figma ' +
-            'designs into functional and responsive sites.',
+            'Delivered four WordPress websites for businesses in Japan, including Horita DM ' +
+            'Clinic, Kuwahara Lab and FotoLib Kyoto, building supplied Figma designs into ' +
+            'responsive sites and owning scope, timelines and QA through handover.',
         go: 'View the project',
         /* A collage made for the card: the clinic's home page at desktop
            width and on a phone, beside the top of the FotoLib page. Kuwahara
@@ -332,13 +333,15 @@ export const projects = [
         caseCategory: 'WordPress Development',
         caseCover: false,
         lead:
-            'Built WordPress websites for clients in Japan: a diabetes clinic in Gifu, ' +
-            'from supplied Figma designs for desktop and for phones, and the Kuwahara ' +
-            'Lab and FotoLib Kyoto websites.',
+            'Four WordPress websites for businesses in Japan, won through LinkedIn ' +
+            'outreach and delivered between December 2025 and March 2026: a diabetes ' +
+            'clinic in Gifu, built from supplied Figma designs for desktop and phone, ' +
+            'and the Kuwahara Lab and FotoLib Kyoto sites.',
         facts: [
             ['Clients', 'Horita DM Clinic (\u5800\u7530DM\u30af\u30ea\u30cb\u30c3\u30af) \u00b7 Kuwahara Lab \u00b7 FotoLib Kyoto'],
             ['Location', 'Japan'],
-            ['Role', 'WordPress development'],
+            ['Role', 'Freelance web developer \u2014 Figma to WordPress'],
+            ['Period', 'December 2025 \u2013 March 2026'],
             [
                 'Live sites',
                 {
@@ -350,14 +353,18 @@ export const projects = [
                 },
             ],
         ],
-        /* FotoLib Kyoto, from the PNG export of its design: the whole page
-           shrunk into a strip about 260px wide, so these are crops of it,
-           enlarged 2×, and soft. REPLACE with crops of a full-size export
-           (Figma, Export, PNG at 2×) and the three can be re-cut sharp. */
+        /* FotoLib Kyoto, cropped from a 3\u00d7 capture of the live page at phone
+           width and kept at 780 px wide, so the three are sharp. */
         fotolib: [
-            ['fotolib-hero', 510, 610, 'The top of the FotoLib Kyoto page: an orange header, a photograph of a woman in a kimono on a Kyoto street, two album plans with their prices, and three photographs of Arashiyama.'],
-            ['fotolib-pages', 510, 510, 'The FotoLib Kyoto page\u2019s list of what each album page includes, set as speech bubbles beside small illustrations of people.'],
-            ['fotolib-plans', 510, 580, 'The FotoLib Kyoto page\u2019s two plans side by side, a \u201cCreate My Kyoto Album\u201d button, and the first of the six ordering steps.'],
+            ['fotolib-hero', 780, 1189, 'The top of the FotoLib Kyoto page: an orange header, a photograph of a woman in a kimono on a Kyoto street, two album plans with their prices, and three photographs of Arashiyama.'],
+            ['fotolib-pages', 780, 1133, 'The FotoLib Kyoto page\u2019s list of what each album page includes, set as speech bubbles beside small illustrations of people.'],
+            ['fotolib-plans', 780, 1283, 'The FotoLib Kyoto page\u2019s two plans side by side, a \u201cCreate My Kyoto Album\u201d button, and the first of the six ordering steps.'],
+        ],
+        /* Kuwahara Lab's blog, from the live site: the top of the home page at
+           desktop width, and the same page on a phone. */
+        kuwahara: [
+            ['kuwahara-pc', 1440, 1080, 'The Kuwahara Lab blog at desktop width: the Kuwahara Lab logo and search, a row of navigation links, a carousel of featured articles and the start of the recommended-topics section.'],
+            ['kuwahara-sp', 780, 1688, 'The Kuwahara Lab blog on a phone: the logo, search box and menu button above the featured-article carousel and the first recommended topic.'],
         ],
         screens: {
             top: [
@@ -489,9 +496,9 @@ export const projects = [
            entry with no `id` renders as a labelled placeholder. Add, remove
            or reorder entries freely — the page lays out whatever is here. */
         videos: [
-            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
-            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
-            { title: 'Video title', note: 'One line on what it covers.', provider: 'youtube', id: null },
+            { title: 'Film 01 \u2014 uploading soon', note: 'Made for the HSE department with AI-assisted tools. Being prepared for upload.', provider: 'youtube', id: null },
+            { title: 'Film 02 \u2014 uploading soon', note: 'Made for the HSE department with AI-assisted tools. Being prepared for upload.', provider: 'youtube', id: null },
+            { title: 'Film 03 \u2014 uploading soon', note: 'Made for the HSE department with AI-assisted tools. Being prepared for upload.', provider: 'youtube', id: null },
         ],
 
         /* The way out is the way in: back to the strip this came from. */

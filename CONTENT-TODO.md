@@ -12,7 +12,7 @@ Nothing on this list has been guessed or filled in on your behalf.
 
 ---
 
-## 1. Behance projects — blocking
+## 1. Behance projects — shown as "Uploading soon"
 
 The Behance rail ships with six labelled placeholders and no real project
 URLs, because a project URL cannot be guessed. Both halves of each record are
@@ -36,7 +36,7 @@ export.
 
 ---
 
-## 1b. Side quests — blocking
+## 1b. Side quests — shown as "In the making"
 
 `src/data/sideQuests.js` ships six records describing the *kind* of thing that
 belongs there, with placeholder plates and `href: null`. Replace each with a
@@ -55,13 +55,11 @@ NFT project, and the AI-assisted video work). The other two are covers and capti
 shows them without making them links, and nothing about them is published as
 a page.
 
-**FotoLib Kyoto's pictures are soft.** They are cut from a PNG export of its
-Figma design in which the whole page is squeezed into a strip about 260px
-wide, then enlarged 2×: `fotolib-hero`, `fotolib-pages` and `fotolib-plans`
-under `public/assets/images/projects/wordpress-japan/`, and the right half of
-`cover.webp`. They read as an impression of the page, not a sharp picture.
-Export the frame again at full size (Figma, Export, PNG at 2×, or share the
-file as "anyone with the link can view") and they can be re-cut properly.
+**FotoLib Kyoto, Kuwahara Lab and the VOEPL pages are now captured from the live
+sites** (Nov 2026), at 3× for the phone-width FotoLib crops and 1440 px for
+desktop, so nothing on them is soft any more and the Japan case study has a
+Kuwahara Lab block. If a client redesigns its site, re-capture; the plates live in
+`public/assets/images/projects/wordpress-japan/` and `voepl-website/`.
 
 **The NFT project's cover is a placeholder.** `nft-projects/cover.webp` is the
 Dino The Diamond artwork centred on its own flat grey (800px square in a
@@ -69,7 +67,7 @@ Dino The Diamond artwork centred on its own flat grey (800px square in a
 the owner's own wording, lightly punctuated. Replace the cover with a real
 1600×1000 upload and `cover` on the record with its Cloudinary path.
 
-**The AI-assisted video page is waiting for the videos.** It is not in the home carousel (`carousel: false` on its record); the page is still built and linked from the navigation panel. The page, its facts
+**The AI-assisted video page is waiting for the videos** (the three slots now read "Uploading soon"). It is not in the home carousel (`carousel: false` on its record); the page is still built and linked from the navigation panel. The page, its facts
 and its layout are done; the three video slots are labelled placeholders
 (`data-todo="ai-video-01"` and so on). Upload each video to YouTube (unlisted
 is fine) or Vimeo, then in `src/data/projects.js`, on the `ai-video` record,
@@ -80,10 +78,6 @@ from the same record: replace the cover with a frame from one of the videos
 (1600×1000, on Cloudinary), and confirm with VOEPL that the HSE videos may be
 shown publicly. An unlisted video can still be opened by anyone who has the
 link, and this page is that link.
-
-**Kuwahara Lab has a link and nothing else.** It is named in the page and
-linked from its facts, with no pictures, by choice. Send a screen and what the
-work was and it can be given a block of its own.
 
 Giving one a case study is three edits made together:
 
@@ -123,7 +117,11 @@ arrive.
 repository. Your work address was not used — a portfolio should outlive a job.
 
 **Phone number.** Removed from the Contact section and from `src/data/site.js`;
-the site no longer lists one.
+the site no longer lists one. The résumé has one; it is deliberately not published.
+
+**Résumé download.** The Experience band (src/data/experience.js) is written from the
+résumé, but the PDF itself is not hosted, because it carries a personal phone number.
+To offer it, save a copy without the number as `public/assets/resume.pdf` and link it.
 
 **Location.** "Nashik, India" in Contact and structured data; "Based in India"
 in the hero, per your brief.
@@ -196,6 +194,6 @@ None of it was carried forward in any form.
 - "I design Stuff." as the bio
 - "Built with ❤️"
 
-**Education and certifications now have no section at all.** They are not in the
-information architecture you specified. If you want to add real ones, tell me
-and I will build the section properly rather than leaving an empty shell.
+**Education, certifications and languages are back**, under the Experience band, from
+the résumé: B.E. and Diploma in Mechanical Engineering, the Google UX Design
+Professional Certificate and the Project Management Certificate, and four languages.
