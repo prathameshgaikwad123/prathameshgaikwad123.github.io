@@ -130,3 +130,31 @@ export const IconPin = () => (
         <circle cx="12" cy="10" r="3" />
     </svg>
 );
+
+export const IconDownload = () => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M12 3v12M7 10.5l5 5 5-5M4 20h16" />
+    </svg>
+);
+
+export const IconExternal = () => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+);

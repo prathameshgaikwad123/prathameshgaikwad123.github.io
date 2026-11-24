@@ -423,7 +423,7 @@ export const projects = [
         caseTitle: 'Dino The Diamond',
         caseCategory: 'NFT Project',
         lead: 'Born from passion, creativity, and the joy of building something timeless.',
-        coverCaption: 'Dino The Diamond.',
+        coverCaption: 'Dino The Diamond. The cover artwork is being updated.',
         facts: [
             ['Project', 'Dino The Diamond'],
             ['Type', 'NFT collection of 10,000'],

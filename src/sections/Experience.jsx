@@ -1,3 +1,5 @@
+import { SITE } from '../data/site.js';
+import { ArrowDown } from '../components/Icons.jsx';
 import { SUMMARY, FIGURES, ROLES, SKILLS, EDUCATION, LANGUAGES } from '../data/experience.js';
 import Words from '../components/Words.jsx';
 import useScrollEffect from '../hooks/useScrollEffect.js';
@@ -37,6 +39,13 @@ export default function Experience() {
                     </h2>
                     <p className="lead exp__lead" data-reveal="">
                         {SUMMARY}
+                    </p>
+
+                    <p className="exp__cv" data-reveal="">
+                        <a className="btn btn--primary btn--down" href={SITE.resume} download>
+                            Download résumé (PDF)
+                            <ArrowDown />
+                        </a>
                     </p>
 
                     <ul className="exp__figures" data-reveal="">

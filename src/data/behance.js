@@ -5,7 +5,7 @@
    study behind it — so a record is only what the rail needs: the
    plate, what to call it, what it is, and where it goes.
 
-   UPLOADING SOON: every `cover` below points at an "Uploading soon" plate
+   UPDATE COMING SOON: every `cover` below points at an "Update coming soon" plate
    in public/assets/images/behance/, and every `href` points at the
    profile rather than at a project, because a project URL cannot be
    invented.
@@ -34,54 +34,54 @@ export const behance = [
         id: 'brand-campaign',
         no: '01',
         title: 'Brand & Campaign Visuals',
-        type: 'Brand · Campaign · Uploading soon',
+        type: 'Brand · Campaign · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('01-brand-campaign.svg'),
-        alt: 'A Behance project of brand and campaign visuals, uploading soon.',
+        alt: 'A Behance project of brand and campaign visuals, update coming soon.',
     },
     {
         id: 'web-ui',
         no: '02',
         title: 'Web & Interface Explorations',
-        type: 'UI · Web · Uploading soon',
+        type: 'UI · Web · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('02-web-ui.svg'),
-        alt: 'A Behance project of web and interface explorations, uploading soon.',
+        alt: 'A Behance project of web and interface explorations, update coming soon.',
     },
     {
         id: 'social-systems',
         no: '03',
         title: 'Social Media Design Systems',
-        type: 'Social · Systems · Uploading soon',
+        type: 'Social · Systems · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('03-social-systems.svg'),
-        alt: 'A Behance project of social media design systems, uploading soon.',
+        alt: 'A Behance project of social media design systems, update coming soon.',
     },
     {
         id: 'print-collateral',
         no: '04',
         title: 'Print & Corporate Collateral',
-        type: 'Print · Collateral · Uploading soon',
+        type: 'Print · Collateral · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
-        alt: 'A Behance project of print and corporate collateral, uploading soon.',
+        alt: 'A Behance project of print and corporate collateral, update coming soon.',
     },
     {
         id: 'visual-studies',
         no: '05',
         title: 'Visual & Typographic Studies',
-        type: 'Type · Visual · Uploading soon',
+        type: 'Type · Visual · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('05-visual-studies.svg'),
-        alt: 'A Behance project of visual and typographic studies, uploading soon.',
+        alt: 'A Behance project of visual and typographic studies, update coming soon.',
     },
     {
         id: 'motion-concepts',
         no: '06',
         title: 'Motion & Concept Work',
-        type: 'Motion · Concept · Uploading soon',
+        type: 'Motion · Concept · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('06-motion-concepts.svg'),
-        alt: 'A Behance project of motion and concept work, uploading soon.',
+        alt: 'A Behance project of motion and concept work, update coming soon.',
     },
 ];

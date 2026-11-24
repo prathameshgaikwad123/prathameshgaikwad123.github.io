@@ -60,7 +60,7 @@ export default function CaseVideo({ video, no }) {
             <figure className="frame case-video">
                 <span className="frame__media case-video__media case-video__media--empty">
                     <span className="tbd" data-todo={`ai-video-${no}`}>
-                        Uploading soon
+                        I’m uploading these soon
                     </span>
                 </span>
                 {caption}

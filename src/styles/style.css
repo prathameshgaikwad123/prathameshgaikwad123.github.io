@@ -1189,6 +1189,7 @@ em { font-style: italic; }
 }
 
 .btn:hover svg { transform: translateX(0.25rem); }
+.btn--down:hover svg { transform: translateY(0.2rem); }
 
 /* --- Not here yet -----------------------------------------------------
    The label on a slot whose content is on its way: a quiet tracked-caps
@@ -3664,6 +3665,11 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .exp__lead      { grid-column: 5 / span 7; }
 }
 
+.exp__cv { grid-column: 1 / -1; margin-top: clamp(1.5rem, 3vw, 2rem); }
+
+@media (min-width: 48rem) { .exp__cv { grid-column: 4 / -1; } }
+@media (min-width: 62rem) { .exp__cv { grid-column: 5 / -1; } }
+
 .exp__figures {
     grid-column: 1 / -1;
     display: grid;
@@ -4828,7 +4834,22 @@ button.shelf__vol { cursor: pointer; }
     background: #000;
 }
 
-.case-video__media--empty { display: grid; place-items: center; padding: 1rem; text-align: center; }
+.case-video__media--empty {
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    text-align: center;
+    background: linear-gradient(135deg, #1C7ED6, #7048E8);
+}
+
+/* On a coloured ground the label is white, whatever the theme. */
+.case-video__media--empty .tbd {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.case-video__media--empty .tbd::before { background: #FFFFFF; }
 
 .case-video__play { position: absolute; inset: 0; display: block; color: #fff; cursor: pointer; }
 

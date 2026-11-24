@@ -1,11 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" role="img" aria-label="IN THE MAKING: CSS experiments">
-  <rect width="1600" height="1200" fill="#EDEDED"/>
-  <rect x="48" y="48" width="1504" height="1104" fill="none" stroke="#D0D0D0" stroke-width="2"/>
-  <path d="M48 120V48h72M1480 48h72v72M1552 1080v72h-72M120 1152H48v-72" fill="none" stroke="#000000" stroke-width="3"/>
-  <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">
-    <rect x="770" y="430" width="60" height="10" fill="#000000"/>
-    <text x="800" y="540" font-size="44" font-weight="600" letter-spacing="10" fill="#000000">IN THE MAKING</text>
-    <text x="800" y="680" font-size="86" font-weight="500" fill="#1A1A1A">CSS experiments</text>
-    <text x="800" y="775" font-size="38" fill="#4F4F4F" letter-spacing="3">Creative coding</text>
+  <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F03E3E"/><stop offset="1" stop-color="#D6336C"/></linearGradient></defs>
+  <rect width="1600" height="1200" fill="url(#g3)"/>
+  <circle cx="1330" cy="230" r="360" fill="#FFFFFF" fill-opacity="0.10"/>
+  <circle cx="230" cy="1020" r="300" fill="#FFFFFF" fill-opacity="0.10"/>
+  <circle cx="1240" cy="980" r="110" fill="#FFFFFF" fill-opacity="0.14"/>
+  <rect x="48" y="48" width="1504" height="1104" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/>
+  <path d="M48 120V48h72M1480 48h72v72M1552 1080v72h-72M120 1152H48v-72" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <g font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle" fill="#FFFFFF">
+    <rect x="770" y="430" width="60" height="10" fill="#FFFFFF"/>
+    <text x="800" y="540" font-size="44" font-weight="700" letter-spacing="10">IN THE MAKING</text>
+    <text x="800" y="680" font-size="70" font-weight="600">CSS experiments</text>
+    <text x="800" y="775" font-size="38" fill-opacity="0.92" letter-spacing="2">I&#x27;m updating this one soon · Creative coding</text>
   </g>
 </svg>

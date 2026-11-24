@@ -2,14 +2,16 @@
 
 export const SITE = {
     name: 'Prathamesh Gaikwad',
-    role: 'Multidisciplinary Digital Designer',
+    role: 'Brand & Digital Designer',
     email: 'prathameshg83800@gmail.com',
     place: 'Nashik, India',
     linkedin: 'https://www.linkedin.com/in/prathamesh-gaikwad-224734171',
     github: 'https://github.com/prathameshgaikwad123',
+    behance: 'https://www.behance.net/prathamgaikwad1',
+    resume: '/assets/Prathamesh-Gaikwad-Resume.pdf',
     githubHandle: '@prathameshgaikwad123',
     where: 'Based in India · Available Worldwide',
-    disciplines: 'UI/UX · Web · Brand · Digital Experiences',
+    disciplines: 'Brand · Web · UI/UX · Print & Motion',
 };
 
 /* What the navigation offers, which is deliberately less than what the
