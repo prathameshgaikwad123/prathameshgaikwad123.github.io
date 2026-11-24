@@ -12,7 +12,7 @@ Nothing on this list has been guessed or filled in on your behalf.
 
 ---
 
-## 1. Behance projects — shown as colourful "Update coming soon" plates
+## 1. Behance projects — shown as red "Update coming soon" plates
 
 The Behance rail ships with six labelled placeholders and no real project
 URLs, because a project URL cannot be guessed. Both halves of each record are
@@ -36,7 +36,7 @@ export.
 
 ---
 
-## 1b. Side quests — shown as colourful "In the making" plates
+## 1b. Side quests — shown as red "In the making" plates
 
 `src/data/sideQuests.js` ships six records describing the *kind* of thing that
 belongs there, with placeholder plates and `href: null`. Replace each with a
@@ -62,7 +62,7 @@ Kuwahara Lab block. If a client redesigns its site, re-capture; the plates live 
 `public/assets/images/projects/wordpress-japan/` and `voepl-website/`.
 
 **The NFT project's cover is a stand-in.** `nft-projects/cover.webp` is the
-Dino The Diamond artwork, now on a blue-violet gradient in place of its flat grey, with a caption saying the cover is being updated. It was the artwork centred on flat grey (800px square in a
+Dino The Diamond artwork, now on flat red in place of its grey, with a caption saying the cover is being updated. It was the artwork centred on flat grey (800px square in a
 1600×1000 frame, so the card can crop it to either shape). The page text is
 the owner's own wording, lightly punctuated. Replace the cover with a real
 1600×1000 upload and `cover` on the record with its Cloudinary path.
