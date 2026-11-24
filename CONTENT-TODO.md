@@ -117,8 +117,8 @@ arrive.
 repository. Your work address was not used — a portfolio should outlive a job.
 
 **Résumé and phone number.** The résumé PDF, with its phone number, is published at
-`public/assets/Prathamesh-Gaikwad-Resume.pdf` and linked from the Experience band, the
-Contact section and the menu, at your request. The number is not written anywhere else on
+`public/assets/Prathamesh-Gaikwad-Resume.pdf` and linked from the Contact section
+and the menu, at your request. The number is not written anywhere else on
 the site or in the structured data. To update the résumé, replace that file.
 
 **Location.** "Nashik, India" in Contact and structured data; "Based in India"
@@ -192,6 +192,4 @@ None of it was carried forward in any form.
 - "I design Stuff." as the bio
 - "Built with ❤️"
 
-**Education, certifications and languages are back**, under the Experience band, from
-the résumé: B.E. and Diploma in Mechanical Engineering, the Google UX Design
-Professional Certificate and the Project Management Certificate, and four languages.
+**Education, certifications and languages have no section.** The résumé PDF is the place for them; the site only links to it.
