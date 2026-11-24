@@ -61,7 +61,7 @@ rest are covers only, and gain a page if and when they gain a case study.
 | Path | Size | Ratio | Used on |
 |---|---|---|---|
 | `public/assets/images/projects/voepl-website/cover.*` | 1600 × 1000 | 16:10 | Home + case study |
-| `public/assets/images/projects/voepl-website/01–03.*` | 1400 × 1050 | 4:3 | Case study gallery |
+| `public/assets/images/projects/voepl-website/01–03.webp` | 1400 × 1050 | 4:3 | Case study, "The site". Captured from www.voepl.com: home and products at 1440 px, and a composite of three pages on a phone |
 | `public/assets/images/projects/gem-opalus-identity/cover.*` | 1600 × 1000 | 16:10 | Not used while `cover` on the record points at Cloudinary |
 | `public/assets/images/projects/gem-opalus-identity/brand-NN.webp` | 2000 × 1413 | A4 landscape | Case study. Pages of the brand identity PDF, rendered at 2000 px wide (NN is the page number in the PDF; pages 2 and 27 are not used). To update, re-render the PDF's pages to the same names |
 | `public/assets/images/projects/gem-opalus-identity/glance-*.webp` | ~1000 wide | Cropped | Case study. The four photographic tiles in the opening mosaic (ring, logo, packaging, Instagram phone), cropped from PDF pages 1, 5, 18 and 20. The palette tile is built in CSS |

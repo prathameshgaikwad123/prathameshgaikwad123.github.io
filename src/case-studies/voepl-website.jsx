@@ -1,4 +1,26 @@
-export default function blocks() {
+import { Zoomable } from '../components/Lightbox.jsx';
+
+/* The site itself, from the live pages: the home page and the products
+   page at desktop width, and three pages on a phone. The plates are on the
+   project record (src/data/projects.js), 1400 by 1050. */
+function Plate({ plate: [src, alt], eager, onZoom }) {
+    return (
+        <figure className="frame">
+            <span className="frame__media">
+                <Zoomable
+                    src={src}
+                    alt={alt}
+                    width="1400"
+                    height="1050"
+                    loading={eager ? 'eager' : 'lazy'}
+                    onZoom={onZoom}
+                />
+            </span>
+        </figure>
+    );
+}
+
+export default function blocks(project, onZoom) {
     return [
         {
             key: 'ctx',
@@ -12,9 +34,10 @@ export default function blocks() {
                         organisation actually makes and what it is capable of.
                     </p>
                     <p>
-                        I joined the in-house team working on that digital presence, and
-                        contributed across the site's design, its structure and the ongoing
-                        work of keeping it current.
+                        I joined VOEPL in April 2024 and own the site. I designed it,
+                        built it on Odoo, wrote its page content, and maintain it, so the
+                        structure, the layouts and the words were decided together rather
+                        than handed from one person to the next.
                     </p>
                 </>
             ),
@@ -44,20 +67,36 @@ export default function blocks() {
             body: (
                 <>
                     <p>
-                        This was collaborative, in-house work. The areas below are the ones
-                        I contributed to — not a claim to have delivered the site alone.
+                        The website is one part of a wider job as VOEPL's only in-house
+                        designer. What follows is what I did on the site itself.
                     </p>
                     <ul className="case-list">
-                        <li>Website design</li>
-                        <li>Website publishing and maintenance</li>
-                        <li>Information architecture</li>
+                        <li>Site structure and information architecture</li>
+                        <li>Page layouts and responsive UI</li>
+                        <li>All page content, written for the site</li>
                         <li>Product and capability presentation</li>
-                        <li>Responsive design</li>
-                        <li>Odoo implementation</li>
-                        <li>HTML, CSS and JavaScript work</li>
-                        <li>SEO support</li>
-                        <li>Technical website optimisation</li>
+                        <li>Odoo implementation, with custom HTML, CSS and JavaScript where the platform falls short</li>
+                        <li>Publishing and ongoing maintenance</li>
+                        <li>Planning a separate laboratory-testing website: structure, testing-category pages and enquiry journeys</li>
                     </ul>
+                </>
+            ),
+        },
+        {
+            key: 'site',
+            label: 'The site',
+            wide: true,
+            body: (
+                <>
+                    <p className="case-block__note">
+                        Captured from the live site at www.voepl.com: desktop width, and a
+                        phone.
+                    </p>
+                    <div className="case-stack">
+                        {project.gallery.map((plate, i) => (
+                            <Plate plate={plate} eager={false} onZoom={onZoom} key={plate[0]} />
+                        ))}
+                    </div>
                 </>
             ),
         },
