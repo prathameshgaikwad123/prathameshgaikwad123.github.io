@@ -9,7 +9,6 @@ import Hero from './sections/Hero.jsx';
 import Work from './sections/Work.jsx';
 import Behance from './sections/Behance.jsx';
 import About from './sections/About.jsx';
-import Experience from './sections/Experience.jsx';
 import SideQuests from './sections/SideQuests.jsx';
 import Contact from './sections/Contact.jsx';
 
@@ -19,9 +18,9 @@ import useChrome from './hooks/useChrome.js';
 import useUnderlayNav from './hooks/useUnderlayNav.js';
 import useReveal from './hooks/useReveal.js';
 
-/* The home page: one scrolling document, six bands under the hero —
-   Selected Work, Selected Behance Work, About, Experience, Side Quests and
-   Contact. Five of the six are in the navigation panel; the other one, the
+/* The home page: one scrolling document, five bands under the hero —
+   Selected Work, Selected Behance Work, About, Side Quests and Contact.
+   Four of the five are in the navigation panel; the other one, the
    Behance rail, is arrived at by reading, which is the difference
    between a destination and a section.
 
@@ -68,7 +67,6 @@ export default function App() {
                     <Work />
                     <Behance />
                     <About />
-                    <Experience />
                     <SideQuests />
                     <Contact />
                 </main>

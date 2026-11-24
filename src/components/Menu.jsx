@@ -123,23 +123,21 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                                         Email
                                     </a>
                                 </li>
-                                {/* CV — no CV file exists in this
-                                    repository yet. Save the PDF as
-                                    public/assets/prathamesh-gaikwad-cv.pdf,
-                                    then uncomment the row below. Not
-                                    before the file exists: it would be
-                                    a broken link.
-
                                 <li data-menu-reveal="s">
                                     <a
                                         className="menu__small"
-                                        href="/assets/prathamesh-gaikwad-cv.pdf"
-                                        download
+                                        href={SITE.behance}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
-                                        CV ↓
+                                        Behance ↗
                                     </a>
                                 </li>
-                                */}
+                                <li data-menu-reveal="s">
+                                    <a className="menu__small" href={SITE.resume} download>
+                                        Résumé ↓
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

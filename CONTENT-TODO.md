@@ -12,7 +12,7 @@ Nothing on this list has been guessed or filled in on your behalf.
 
 ---
 
-## 1. Behance projects — shown as "Uploading soon"
+## 1. Behance projects — shown as colourful "Update coming soon" plates
 
 The Behance rail ships with six labelled placeholders and no real project
 URLs, because a project URL cannot be guessed. Both halves of each record are
@@ -36,7 +36,7 @@ export.
 
 ---
 
-## 1b. Side quests — shown as "In the making"
+## 1b. Side quests — shown as colourful "In the making" plates
 
 `src/data/sideQuests.js` ships six records describing the *kind* of thing that
 belongs there, with placeholder plates and `href: null`. Replace each with a
@@ -61,13 +61,13 @@ desktop, so nothing on them is soft any more and the Japan case study has a
 Kuwahara Lab block. If a client redesigns its site, re-capture; the plates live in
 `public/assets/images/projects/wordpress-japan/` and `voepl-website/`.
 
-**The NFT project's cover is a placeholder.** `nft-projects/cover.webp` is the
-Dino The Diamond artwork centred on its own flat grey (800px square in a
+**The NFT project's cover is a stand-in.** `nft-projects/cover.webp` is the
+Dino The Diamond artwork, now on a blue-violet gradient in place of its flat grey, with a caption saying the cover is being updated. It was the artwork centred on flat grey (800px square in a
 1600×1000 frame, so the card can crop it to either shape). The page text is
 the owner's own wording, lightly punctuated. Replace the cover with a real
 1600×1000 upload and `cover` on the record with its Cloudinary path.
 
-**The AI-assisted video page is waiting for the videos** (the three slots now read "Uploading soon"). It is not in the home carousel (`carousel: false` on its record); the page is still built and linked from the navigation panel. The page, its facts
+**The AI-assisted video page is waiting for the videos** (the three slots are a coloured block reading "I'm uploading these soon"). It is not in the home carousel (`carousel: false` on its record); the page is still built and linked from the navigation panel. The page, its facts
 and its layout are done; the three video slots are labelled placeholders
 (`data-todo="ai-video-01"` and so on). Upload each video to YouTube (unlisted
 is fine) or Vimeo, then in `src/data/projects.js`, on the `ai-video` record,
@@ -116,12 +116,10 @@ arrive.
 **Email.** The site uses `prathameshg83800@gmail.com`, taken from the old
 repository. Your work address was not used — a portfolio should outlive a job.
 
-**Phone number.** Removed from the Contact section and from `src/data/site.js`;
-the site no longer lists one. The résumé has one; it is deliberately not published.
-
-**Résumé download.** The Experience band (src/data/experience.js) is written from the
-résumé, but the PDF itself is not hosted, because it carries a personal phone number.
-To offer it, save a copy without the number as `public/assets/resume.pdf` and link it.
+**Résumé and phone number.** The résumé PDF, with its phone number, is published at
+`public/assets/Prathamesh-Gaikwad-Resume.pdf` and linked from the Contact section
+and the menu, at your request. The number is not written anywhere else on
+the site or in the structured data. To update the résumé, replace that file.
 
 **Location.** "Nashik, India" in Contact and structured data; "Based in India"
 in the hero, per your brief.
@@ -194,6 +192,4 @@ None of it was carried forward in any form.
 - "I design Stuff." as the bio
 - "Built with ❤️"
 
-**Education, certifications and languages are back**, under the Experience band, from
-the résumé: B.E. and Diploma in Mechanical Engineering, the Google UX Design
-Professional Certificate and the Project Management Certificate, and four languages.
+**Education, certifications and languages have no section.** The résumé PDF is the place for them; the site only links to it.

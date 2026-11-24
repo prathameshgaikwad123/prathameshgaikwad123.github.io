@@ -2,14 +2,16 @@
 
 export const SITE = {
     name: 'Prathamesh Gaikwad',
-    role: 'Multidisciplinary Digital Designer',
+    role: 'Brand & Digital Designer',
     email: 'prathameshg83800@gmail.com',
     place: 'Nashik, India',
     linkedin: 'https://www.linkedin.com/in/prathamesh-gaikwad-224734171',
     github: 'https://github.com/prathameshgaikwad123',
+    behance: 'https://www.behance.net/prathamgaikwad1',
+    resume: '/assets/Prathamesh-Gaikwad-Resume.pdf',
     githubHandle: '@prathameshgaikwad123',
     where: 'Based in India · Available Worldwide',
-    disciplines: 'UI/UX · Web · Brand · Digital Experiences',
+    disciplines: 'Brand · Web · UI/UX · Print & Motion',
 };
 
 /* What the navigation offers, which is deliberately less than what the
@@ -18,7 +20,8 @@ export const SITE = {
    page does not need a row for the page it opened over. Selected
    Behance Work is not here either: it is a section a reader arrives at
    by reading, between Work and About, rather than one they are sent
-   to. Capabilities is not here because it is not anywhere any more.
+   to. Experience and Capabilities are not here because they are not
+   anywhere any more.
 
    Two names per row, and only one of them is painted. `said` is the
    reader being told, in their own words, what is down there, and it is
@@ -34,7 +37,6 @@ export const SITE = {
 export const SECTIONS = [
     { id: 'about',       label: 'About',   said: 'Me.' },
     { id: 'work',        label: 'Work',    said: 'The work.' },
-    { id: 'experience',  label: 'Experience', said: 'The résumé.' },
     { id: 'side-quests', label: 'Play',    said: 'Just because.' },
     { id: 'contact',     label: 'Contact', said: 'Say hi.' },
 ];

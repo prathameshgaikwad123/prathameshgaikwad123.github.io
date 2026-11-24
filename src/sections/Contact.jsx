@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SITE } from '../data/site.js';
 import { SiteFoot } from '../components/Chrome.jsx';
 import Shelf from '../components/Shelf.jsx';
-import { IconGitHub, IconLinkedIn, IconPin } from '../components/Icons.jsx';
+import { IconDownload, IconExternal, IconGitHub, IconLinkedIn, IconPin } from '../components/Icons.jsx';
 import useScrollEffect from '../hooks/useScrollEffect.js';
 import closePanel from '../animations/closePanel.js';
 import lineReveal from '../animations/lineReveal.js';
@@ -172,6 +172,14 @@ export default function Contact() {
                                 <a href={SITE.github} target="_blank" rel="noopener noreferrer">
                                     <IconGitHub />
                                     GitHub
+                                </a>
+                                <a href={SITE.behance} target="_blank" rel="noopener noreferrer">
+                                    <IconExternal />
+                                    Behance
+                                </a>
+                                <a href={SITE.resume} download>
+                                    <IconDownload />
+                                    Résumé (PDF)
                                 </a>
                                 <span>
                                     <IconPin />
