@@ -210,6 +210,8 @@ export function createGlass(canvas, sources, onTextureReady) {
             gl.uniform2f(cards.uniforms.uCoverScale, sx, sy);
             gl.uniform2f(cards.uniforms.uCoverOffset, (1 - sx) / 2, (1 - sy) / 2);
             gl.uniform2f(cards.uniforms.uHair, (2.2 * dpr) / cw, (2.2 * dpr) / ch);
+            gl.uniform2f(cards.uniforms.uSize, cw, ch);
+            gl.uniform1f(cards.uniforms.uRadius, Math.min(cw, ch) * 0.06);
             gl.uniform1f(cards.uniforms.uFade, slot.fade);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         }
