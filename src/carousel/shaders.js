@@ -25,7 +25,7 @@ void main() {
    edges — measured in the reference as a cool near-white a single pixel
    wide, heavier on the top and left, which is a light source at the
    upper left and the one thing that stops the cards reading as holes
-   cut in the ground. No radius. No shadow. */
+   cut in the ground. Rounded corners, no shadow. */
 export const CARD_FRAG = `#version 300 es
 precision highp float;
 in vec2 vUv;
@@ -37,6 +37,8 @@ uniform vec2 uHair;        /* hairline width as a fraction of the card */
 uniform float uEdge;
 uniform float uFade;       /* cards resolve in as their texture arrives */
 uniform vec3 uGround;
+uniform vec2 uSize;        /* card size, device pixels */
+uniform float uRadius;     /* corner radius, device pixels */
 void main() {
     vec3 colour = texture(uImage, vUv * uCoverScale + uCoverOffset).rgb;
 
@@ -81,7 +83,13 @@ void main() {
        the ground the card is actually sitting on. */
     float dir = mix(1.0, -1.0, lit);
     colour = clamp(colour + lift * dir * 0.072, 0.0, 1.0);
-    fragColor = vec4(mix(uGround, colour, uFade), 1.0);
+    /* Rounded corners: signed distance to a rounded rect, antialiased
+       over one pixel and blended back to the ground outside it. */
+    vec2 p = (vUv - 0.5) * uSize;
+    vec2 q = abs(p) - (0.5 * uSize - uRadius);
+    float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uRadius;
+    float cover = 1.0 - smoothstep(-0.5, 0.5, d);
+    fragColor = vec4(mix(uGround, colour, uFade * cover), 1.0);
 }`;
 
 export const SCREEN_VERT = `#version 300 es
