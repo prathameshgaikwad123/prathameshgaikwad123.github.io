@@ -10,7 +10,7 @@
 <link rel="canonical" href="https://prathameshgaikwad123.github.io/">
 
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: dark)">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -69,8 +69,7 @@
 (function () {
     var root = document.documentElement;
     try {
-        var saved = localStorage.getItem('pg-theme');
-        if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+        root.setAttribute('data-theme', 'light'); /* light only — no theme switch */
     } catch (e) { /* storage blocked — fall through to the system preference */ }
     root.classList.add('js');
 

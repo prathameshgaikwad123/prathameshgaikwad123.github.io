@@ -1,7 +1,4 @@
-import { useRef } from 'react';
 import { SITE } from '../data/site.js';
-import { IconMoon, IconSun } from './Icons.jsx';
-import useTheme from '../hooks/useTheme.js';
 import useSaying from '../hooks/useSaying.js';
 
 /* The masthead: two plates, one at each end of the screen, and nothing
@@ -36,9 +33,6 @@ import useSaying from '../hooks/useSaying.js';
    home page links to its own top, a case study links back up to the
    index, and the 404 page links to the site root. */
 export default function Navigation({ home, menuOpen = false, onMenuToggle, menuButtonRef }) {
-    const toggleRef = useRef(null);
-    useTheme(toggleRef);
-
     const say = useSaying();
 
     return (
@@ -117,17 +111,6 @@ export default function Navigation({ home, menuOpen = false, onMenuToggle, menuB
             </div>
 
             <div className="masthead__inner masthead__inner--actions">
-                <button
-                    className="theme-toggle"
-                    id="theme-toggle"
-                    type="button"
-                    aria-label="Switch to dark theme"
-                    ref={toggleRef}
-                >
-                    <IconSun />
-                    <IconMoon />
-                </button>
-
                 {/* The control that opens the navigation, and the only
                     navigation control the site has: what is behind it is
                     the whole index.
