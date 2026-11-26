@@ -174,7 +174,7 @@ function build(gsap, isOpen) {
         }, 0)
 
         .to(bars[0], {
-            y: '0.25em',
+            y: 3.5,
             rotation: 45,
             duration: 0.35,
             ease: 'back.out(1.4)',
@@ -182,7 +182,7 @@ function build(gsap, isOpen) {
         }, 0.05)
 
         .to(bars[1], {
-            y: '-0.25em',
+            y: -3.5,
             rotation: -45,
             duration: 0.35,
             ease: 'back.out(1.4)',
