@@ -1932,9 +1932,11 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
     display: inline-flex;
     align-items: center;
     flex: none;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 0;
     height: var(--nav-item);
-    padding-inline: 0.6875rem;
+    width: var(--nav-item);
+    padding-inline: 0;
     border-radius: var(--nav-r-in);
     background: var(--nav-chip);
     font-size: var(--t-micro);
@@ -1959,7 +1961,9 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
 }
 
 .menu-btn__text {
-    display: flex;
+    /* Icon-only: the Menu/Close words stay in the DOM so the open/close
+       timeline keeps its timing, but take no space and are not drawn. */
+    display: none;
     flex: none;
     flex-direction: column;
     align-items: flex-start;
