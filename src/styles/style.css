@@ -2013,11 +2013,11 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__label { transform: none
 
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:first-child,
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child {
-    top: 0;
     transform: none;
 }
 
-html.nav-live .menu-btn__bar:last-child { top: calc(100% - 1px); }
+html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:first-child { top: 0; }
+html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: calc(100% - 1px); }
 
 
 /* --- The navigation ---------------------------------------------------
