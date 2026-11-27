@@ -1,13 +1,12 @@
+import { ArrowDown } from '../components/Icons.jsx';
 import useTypewriter from '../hooks/useTypewriter.js';
 
 const STATEMENT = [
-    { text: 'Brand' },
+    { text: 'Just' },
     { text: ' ', space: true },
-    { text: 'and' },
+    { text: 'a' },
     { text: ' ', space: true },
-    { text: 'digital' },
-    { text: ' ', space: true },
-    { text: 'designer' },
+    { text: 'designer', em: true },
     { text: '.', stop: true },
 ];
 
@@ -73,6 +72,13 @@ export default function Hero({ ready = false }) {
                                 );
                             })}
                         </h1>
+                    </div>
+
+                    <div className="hero__foot">
+                        <a className="hero__scroll" href="#work">
+                            Scroll
+                            <ArrowDown />
+                        </a>
                     </div>
                 </div>
             </div>

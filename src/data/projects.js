@@ -51,7 +51,7 @@ export const projects = [
         next: {
             href: '../index.html#contact',
             label: 'Next',
-            title: 'Open to opportunities, get in touch',
+            title: 'Open to Opportunities — get in touch',
             aria: 'Continue',
         },
     },
@@ -61,7 +61,7 @@ export const projects = [
         no: '02',
         category: 'Brand Identity / Logo Design',
         short: 'Gem Opalus',
-        title: 'Gem Opalus logo design and brand identity',
+        title: 'Logo Design & Brand Identity — Gem Opalus',
         summary:
             'Created the logo and overall brand identity, establishing a cohesive ' +
             'visual presence for the brand.',
@@ -111,7 +111,7 @@ export const projects = [
         no: '03',
         category: 'Character Design / Brand Identity',
         short: 'Amanoya Mascot',
-        title: 'Amanoya mascot design, Japan',
+        title: 'Mascot Creation — Amanoya, Japan',
         summary:
             'Designed and developed a mascot concept, contributing to the brand\u2019s ' +
             'visual identity and character development.',
@@ -127,7 +127,7 @@ export const projects = [
         category: 'Graphic Design / Marketing Collateral',
 
         short: 'FLOWID Collateral',
-        title: 'FLOWID brochure and banner design, Netherlands',
+        title: 'Brochure & Banner Design — FLOWID, Netherlands',
         summary:
             'Created brochures and banners aligned with the company\u2019s branding and ' +
             'communication requirements.',
@@ -198,7 +198,7 @@ export const projects = [
         no: '05',
         category: 'Web Development / WordPress',
         short: 'WordPress Development',
-        title: 'WordPress website development, Japan',
+        title: 'WordPress Website Development — Japan',
         summary:
             'Delivered four WordPress websites for businesses in Japan, including Horita DM ' +
             'Clinic, Kuwahara Lab and FotoLib Kyoto, building supplied Figma designs into ' +
@@ -252,7 +252,7 @@ export const projects = [
                 ['pc-top-hero', 1440, 950, 'The Horita DM Clinic home page at desktop width: the header with the clinic’s phone number, online booking and LINE buttons, the hero with its consultation-hours table, and a notice banner.'],
                 ['pc-top-features', 1440, 830, 'The home page’s “Features” section: three numbered reasons to choose the clinic, each with a photograph and a short paragraph.'],
                 ['pc-top-service', 1440, 1350, 'The home page’s “Service” section: the diabetes and metabolic medicine departments as offset cards beside photographs.'],
-                ['pc-top-diabetes', 1440, 1020, 'The home page’s “About diabetes” section: four headed columns, types, treatment, tests and medicines, each with an outline icon and a list of links.'],
+                ['pc-top-diabetes', 1440, 1020, 'The home page’s “About diabetes” section: four headed columns — types, treatment, tests and medicines — each with an outline icon and a list of links.'],
             ],
             phone: [
                 ['sp-top-1', 375, 1540, 'The home page on a phone, top: the hero with booking and LINE buttons, the notice, and the news list.'],
@@ -282,7 +282,7 @@ export const projects = [
         no: '06',
         category: 'Creative Direction / Web3',
         short: 'NFT Projects',
-        title: 'NFT projects, from creation to management',
+        title: 'NFT Projects — End-to-End Creation & Management',
         summary:
             'Contributed to concept development, creative direction, project setup, ' +
             'execution, management, and coordination of NFT projects.',
@@ -354,7 +354,7 @@ export const projects = [
             'department at VOEPL, from concept to finished video.',
         coverCaption: 'AI-assisted video creation for the VOEPL HSE department.',
         facts: [
-            ['Role', 'Video creation, concept, visuals and production'],
+            ['Role', 'Video creation — concept, visuals and production'],
             ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
             ['Department', 'Health, Safety and Environment (HSE)'],
             ['Method', 'AI-assisted'],
