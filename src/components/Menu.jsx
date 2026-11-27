@@ -1,4 +1,5 @@
 import { SECTIONS, SITE } from '../data/site.js';
+import MenuWall from './MenuWall.jsx';
 import { useEnhanced, usePathname } from '../hooks/dom.js';
 
 export default function Menu({ base, work, current = null, open, panelRef, onClick }) {
@@ -30,6 +31,8 @@ export default function Menu({ base, work, current = null, open, panelRef, onCli
                         </li>
                     ))}
                 </ul>
+
+                <MenuWall open={open} />
 
                 <div className="menu__bottom">
                     <div className="menu__foot">
