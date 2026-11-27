@@ -8,7 +8,7 @@ export const behance = [
     {
         id: 'brand-campaign',
         no: '01',
-        title: 'Brand and campaign visuals',
+        title: 'Brand & Campaign Visuals',
         type: 'Brand · Campaign · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('01-brand-campaign.svg'),
@@ -17,7 +17,7 @@ export const behance = [
     {
         id: 'web-ui',
         no: '02',
-        title: 'Web and interface explorations',
+        title: 'Web & Interface Explorations',
         type: 'UI · Web · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('02-web-ui.svg'),
@@ -26,7 +26,7 @@ export const behance = [
     {
         id: 'social-systems',
         no: '03',
-        title: 'Social media design systems',
+        title: 'Social Media Design Systems',
         type: 'Social · Systems · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('03-social-systems.svg'),
@@ -35,7 +35,7 @@ export const behance = [
     {
         id: 'print-collateral',
         no: '04',
-        title: 'Print and corporate collateral',
+        title: 'Print & Corporate Collateral',
         type: 'Print · Collateral · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
@@ -44,7 +44,7 @@ export const behance = [
     {
         id: 'visual-studies',
         no: '05',
-        title: 'Visual and typographic studies',
+        title: 'Visual & Typographic Studies',
         type: 'Type · Visual · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('05-visual-studies.svg'),
@@ -53,7 +53,7 @@ export const behance = [
     {
         id: 'motion-concepts',
         no: '06',
-        title: 'Motion and concept work',
+        title: 'Motion & Concept Work',
         type: 'Motion · Concept · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('06-motion-concepts.svg'),

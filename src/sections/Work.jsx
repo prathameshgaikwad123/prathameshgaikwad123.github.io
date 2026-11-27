@@ -14,12 +14,12 @@ export default function Work() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag work__tag" data-reveal="">
-                        Work
+                        <span className="tag__no num">01</span>Selected Work
                     </p>
                     <h2 className="statement work__statement" id="work-title" data-reveal="">
 
                         <Words
-                            text="Projects in brand identity, web and UI design, and print."
+                            text={'Work across interfaces, websites, brand systems and digital\u00A0communication.'}
                             className="sw"
                             inner
                         />

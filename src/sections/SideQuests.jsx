@@ -142,13 +142,19 @@ export default function SideQuests() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag quests__tag" data-reveal="">
-                        Side projects
+                        <span className="tag__no num">04</span>Side Quests
                     </p>
                     <h2 className="statement quests__statement" id="side-quests-title" data-reveal="">
-                        <Words text="Experiments and side projects." className="sw" inner />
+                        <Words
+                            text={'Things I made because I\u00A0wanted\u00A0to.'}
+                            className="sw"
+                            inner
+                        />
                     </h2>
                     <p className="lead quests__lead" data-reveal="">
-                        Experiments, small builds and other things I was curious about. This section is still being filled in, and each project goes up when it is ready.
+                        No brief, no client, no deadline. Experiments, small builds and
+                        whatever else I was curious about that week. This wall is still
+                        being filled in; each plate goes live as it is ready.
                     </p>
 
                     {enhanced ? (

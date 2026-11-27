@@ -20,10 +20,14 @@ export default function Behance() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag beh__tag" data-reveal="">
-                        Behance
+                        <span className="tag__no num">02</span>Selected Behance Work
                     </p>
                     <h2 className="statement beh__statement" id="behance-title" data-reveal="">
-                        <Words text="More work on Behance." className="sw" inner />
+                        <Words
+                            text={'Selected creative work and visual\u00A0explorations.'}
+                            className="sw"
+                            inner
+                        />
                     </h2>
                 </div>
             </div>
