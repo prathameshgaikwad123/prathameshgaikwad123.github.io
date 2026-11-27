@@ -1760,7 +1760,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .glass {
     --glass-card-w: 0.225;
     --glass-card-h: 0.46;
-    --glass-gap: 0.122;
+    --glass-gap: 0.09;
     --glass-strip-y: 0.505;
     --glass-label: 1;
 
@@ -1798,6 +1798,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .glass[data-live] .glass__canvas { display: block; }
 
 .glass__label {
+    display: none;
     position: absolute;
     left: 50%;
     top: calc(15.1% - 0.35em);

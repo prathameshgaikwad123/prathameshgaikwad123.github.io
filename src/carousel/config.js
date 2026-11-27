@@ -23,7 +23,7 @@ export const CARD_EDGE = 1;
 
 export const CARD_W = 0.225; /* of stage width — 324px of 1440 */
 export const CARD_H = 0.46; /* ceiling, as a fraction of stage height */
-export const GAP = 0.122; /* of card height — 39.6px of 324 */
+export const GAP = 0.09; /* of card height */
 export const STRIP_Y = 0.505; /* of stage height — the row's centre line */
 
 export const ASPECT_WIDE = 4 / 3;
