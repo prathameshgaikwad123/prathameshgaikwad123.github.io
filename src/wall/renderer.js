@@ -1,22 +1,5 @@
 import { BRICK_FRAG, BRICK_VERT, DEPTH_FRAG, DEPTH_VERT } from './shaders.js';
 
-/* ===================================================================
-   THE WALL'S RENDERER
-   -------------------------------------------------------------------
-   WebGL2, by hand, like the carousel's — and for the same reason: the
-   scene is one box drawn a few hundred times, which is less than any
-   library would charge to describe it.
-
-     pass one   every brick, from the light, into a depth texture
-     pass two   the bed and every brick, from the camera, reading that
-                texture back for the shadows they throw on each other
-
-   Two draw calls a pass. Everything that changes from frame to frame is
-   in one buffer of twelve floats a brick, which the simulation fills
-   and this file uploads; the box itself is thirty-six vertices that
-   never change.
-   =================================================================== */
-
 export const STRIDE = 12;       /* floats per brick in the instance buffer */
 const SHADOW = 1024;
 
@@ -51,10 +34,6 @@ function link(gl, vertexSource, fragmentSource, names) {
     return { program, at };
 }
 
-/* The box: six faces, each with the normal it was authored with, its
-   own two axes and its own coordinates across them, so the fragment
-   shader knows which face it is on and how far it is from an edge.
-   Wound anticlockwise seen from outside. */
 function box() {
     const faces = [
         [[0, 0, 1], [1, 0, 0], [0, 1, 0]],
@@ -100,8 +79,6 @@ export function createRenderer(canvas) {
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh);
     gl.bufferData(gl.ARRAY_BUFFER, box(), gl.STATIC_DRAW);
 
-    /* One vertex array per instance buffer: the bricks', which is
-       rewritten every frame, and the bed's, which is one record. */
     function array(instances) {
         const vao = gl.createVertexArray();
         gl.bindVertexArray(vao);
@@ -166,9 +143,6 @@ export function createRenderer(canvas) {
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         },
 
-        /* `scene` is everything about the frame that is not a brick:
-           the three matrices, the light, the eye, the brick's and the
-           bed's half extents, and the palette — all in linear light. */
         draw(data, count, scene) {
             gl.bindBuffer(gl.ARRAY_BUFFER, bricks);
             if (count > capacity) {
@@ -177,8 +151,6 @@ export function createRenderer(canvas) {
             }
             gl.bufferSubData(gl.ARRAY_BUFFER, 0, data, 0, count * STRIDE);
 
-            /* From the light. Back faces only, so a face never shadows
-               itself. */
             gl.bindFramebuffer(gl.FRAMEBUFFER, target);
             gl.viewport(0, 0, SHADOW, SHADOW);
             gl.clear(gl.DEPTH_BUFFER_BIT);
@@ -214,8 +186,6 @@ export function createRenderer(canvas) {
             gl.bindTexture(gl.TEXTURE_2D, shadow);
             gl.uniform1i(at.uShadow, 0);
 
-            /* The bed: a strip a course, as wide as that course has been
-               laid, so a ragged edge shows what is behind it, not a slab. */
             gl.bindBuffer(gl.ARRAY_BUFFER, bed);
             if (scene.bedAt.length > bedCapacity) {
                 gl.bufferData(gl.ARRAY_BUFFER, scene.bedAt.byteLength, gl.DYNAMIC_DRAW);
@@ -244,9 +214,7 @@ export function createRenderer(canvas) {
             gl.deleteFramebuffer(target);
             gl.deleteProgram(brick.program);
             gl.deleteProgram(depth.program);
-            /* Not loseContext(): under React's double mount the canvas
-               is the same element, and a context lost on purpose is the
-               one the next mount would be handed back. */
+
         },
     };
 }

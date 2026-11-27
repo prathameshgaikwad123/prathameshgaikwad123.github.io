@@ -1,8 +1,4 @@
-/* The little linear algebra the wall needs, and no more of it: four by
-   four matrices, column-major, as Float32Arrays the way WebGL takes
-   them. Six functions for building a view and two for using one. The
-   scene is one camera, one light and one tilting slab, so a maths
-   library would be mostly unread. */
+
 
 export function identity() {
     const m = new Float32Array(16);
@@ -64,10 +60,6 @@ export function lookAt(eye, at, up) {
     return m;
 }
 
-/* The slab's own placement: moved by (`tx`, `ty`), then leaned `ry` about
-   the upright and `rx` about the level. A pure rotation and a translation,
-   which is what lets the pointer be taken back through it by transpose
-   rather than by a general inverse. */
 export function placement(ry, rx, tx, ty, out = new Float32Array(16)) {
     const cy = Math.cos(ry), sy = Math.sin(ry), cx = Math.cos(rx), sx = Math.sin(rx);
     out[0] = cy; out[1] = 0; out[2] = -sy; out[3] = 0;
@@ -86,9 +78,6 @@ export function project(m, x, y, z, out) {
     return out;
 }
 
-/* A world-space point or direction taken back into the slab's own
-   space: the transpose of the rotation, after the translation is
-   undone. `w` is 1 for a point and 0 for a direction. */
 export function intoSlab(m, x, y, z, w, out) {
     const px = x - m[12] * w, py = y - m[13] * w, pz = z - m[14] * w;
     out[0] = m[0] * px + m[1] * py + m[2] * pz;

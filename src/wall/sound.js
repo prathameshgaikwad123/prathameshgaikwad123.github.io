@@ -1,19 +1,4 @@
-/* The wall being struck, synthesised rather than loaded — the same
-   arrangement as the typing sound (src/hooks/keystroke.js) and the
-   books going over (src/hooks/shelfsound.js), and written around the
-   same rule: the sound is a courtesy and never a condition.
 
-   It is heard in exactly one circumstance, which is the reader pressing
-   the wall. That press is itself the gesture a browser wants before it
-   will play anything, so the context is built inside it and nothing has
-   to be armed, offered or announced. Nothing the wall does on its own —
-   the crew, the pictures arriving, the rows of the navigation — makes a
-   sound, because nobody asked it to.
-
-   What a press sounds like is what it looks like: a ring going out
-   through the bricks, each one clacking as it is kicked. So it is not
-   one click but a short run of them, quick and close at the start and
-   thinning out as the ring gets further away. */
 
 let ctx = null;
 let noise = null;
@@ -42,15 +27,12 @@ export function clatter() {
         const start = ctx.currentTime + 0.01;
 
         for (let n = 0; n < 16; n += 1) {
-            /* Later and quieter the further out the ring has gone, and
-               never quite evenly spaced: bricks are not a metronome. */
+
             const at = start + (n / 16) ** 1.5 * 0.5 + Math.random() * 0.012;
             const source = ctx.createBufferSource();
             source.buffer = noise;
             source.playbackRate.value = 0.8 + Math.random() * 0.5;
 
-            /* Fired clay on clay: a knock in the middle of the band,
-               with the thud and the hiss either side taken off. */
             const band = ctx.createBiquadFilter();
             band.type = 'bandpass';
             band.frequency.value = 1500 + Math.random() * 1400;
@@ -65,8 +47,7 @@ export function clatter() {
             source.stop(at + 0.06);
         }
     } catch (error) {
-        /* No audio on this device, or none allowed. Silence is the
-           fallback and the reader is told nothing. */
+
         ctx = null;
         noise = null;
     }

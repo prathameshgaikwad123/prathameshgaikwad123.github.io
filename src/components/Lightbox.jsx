@@ -4,10 +4,6 @@ import { useEnhanced } from '../hooks/dom.js';
 const dialogSupported = () =>
     typeof HTMLDialogElement === 'function' && typeof HTMLDialogElement.prototype.showModal === 'function';
 
-/* An image that can be opened full size. The control is added after mount
-   rather than shipped in the markup, so the pages stay plain HTML and keep
-   working without JavaScript — the same reason the previous build created
-   this button in script. */
 export function Zoomable({ src, srcSet, sizes, zoom, alt, width, height, loading, fetchPriority, onZoom }) {
     const enhanced = useEnhanced();
     const ref = useRef(null);
@@ -36,9 +32,7 @@ export function Zoomable({ src, srcSet, sizes, zoom, alt, width, height, loading
             aria-label="Expand image"
             onClick={(e) => {
                 const img = ref.current;
-                /* `zoom` is the picture at the size the dialog shows it,
-                   which a responsive figure's own choice — made for the
-                   column it sits in — can be well short of. */
+
                 onZoom({
                     src: zoom || (img ? img.currentSrc || img.src : src),
                     alt: alt || '',
@@ -51,8 +45,6 @@ export function Zoomable({ src, srcSet, sizes, zoom, alt, width, height, loading
     );
 }
 
-/* The modal itself. One per page, closed by the button, the backdrop or
-   Escape — which <dialog> handles on its own. */
 export default function Lightbox({ item, onClose }) {
     const ref = useRef(null);
     const opener = useRef(null);
@@ -92,10 +84,7 @@ export default function Lightbox({ item, onClose }) {
             }}
         >
             {review ? (
-                /* A book: the cover and the note on it, side by side where
-                   there is room and stacked where there is not. The
-                   caption bar is the title here, so the note is not
-                   introduced twice. */
+
                 <div className="lightbox__book">
                     <img className="lightbox__cover" src={item.src} alt={item.alt} />
                     <article className="lightbox__review" aria-labelledby="lightbox-review-title">

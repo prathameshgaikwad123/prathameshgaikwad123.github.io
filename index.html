@@ -78,7 +78,7 @@
     var seen = true;
     try { seen = sessionStorage.getItem('pg-intro') === 'seen'; } catch (e) {}
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!seen && !reduce) root.classList.add('is-intro');
+    
     try { sessionStorage.setItem('pg-intro', 'seen'); } catch (e) {}
 })();
 </script>

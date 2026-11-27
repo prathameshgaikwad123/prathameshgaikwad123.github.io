@@ -1,21 +1,6 @@
 import { useEffect } from 'react';
 import { motionOK } from './dom.js';
 
-/* One entrance rule for the whole site: a small rise and a fade, staggered
-   by position within its own group, played once and then forgotten. The
-   animation itself is declared in CSS — this only decides when each element
-   has arrived, so nothing about the entrance changed in the migration.
-
-   `data-reveal-draw` is the third variant and the odd one: the hand-drawn
-   annotation in About, which is a stroke being drawn rather than a block
-   arriving. It is here rather than in src/animations/ because it is an
-   entrance, not choreography — it happens once, at one point on the page,
-   and tying it to the scroll would let the reader undraw it. Keeping it
-   here is also what lets a narrow window have it: the scroll system does
-   not load its library below 62rem, and this one does not need it.
-
-   `ready` is the intro: a first-time visitor should see the page arrive
-   rather than a page that has already arrived. */
 export default function useReveal(ready) {
     useEffect(() => {
         const revealed = [].slice.call(
@@ -25,18 +10,11 @@ export default function useReveal(ready) {
         );
         if (!revealed.length) return undefined;
 
-        /* Stagger is per parent, so a list of six projects counts one to six
-           rather than continuing a page-wide tally. */
         const seen = [];
         const counts = [];
 
         revealed.forEach((el) => {
-            /* A rule is not a list item. It is one line at the top of one
-               band, arriving on its own as that band is reached, and a
-               band that waited its turn behind the three above it would
-               be waiting on sections the reader passed minutes ago. So
-               it neither takes a number nor spends one — the tally below
-               is for things that arrive together. */
+
             if (el.hasAttribute('data-reveal-rule')) return;
 
             const parent = el.parentNode;

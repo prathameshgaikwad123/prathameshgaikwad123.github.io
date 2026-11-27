@@ -1,39 +1,14 @@
-/* ===================================================================
-   SELECTED BEHANCE WORK
-   One record per plate in the Behance rail on the home page. The
-   section is a gallery rather than an index — nothing here has a case
-   study behind it — so a record is only what the rail needs: the
-   plate, what to call it, what it is, and where it goes.
 
-   UPDATE COMING SOON: every `cover` below points at an "Update coming soon" plate
-   in public/assets/images/behance/, and every `href` points at the
-   profile rather than at a project, because a project URL cannot be
-   invented.
-   Replace both together — the cover with a real 1600×1200 export (swap
-   the extension here) and the href with that project's own Behance URL
-   — and rewrite the `alt` beside it. See ASSETS.md and CONTENT-TODO.md,
-   and note what ASSETS.md says about the crop: the rail pans the
-   picture behind its frame, so the outer eighth of an export is not
-   always on screen.
-   =================================================================== */
 
 export const BEHANCE_PROFILE = 'https://www.behance.net/prathamgaikwad1';
 
 const plate = (file) => `/assets/images/behance/${file}`;
 
-/* Nothing here says anything about the layout. The plates used to
-   carry a `span` and a `drop` — their own width across the twelve
-   columns and their own starting height — and the section is a rail
-   now, so the stylesheet sets one width for all of them and a record is
-   only the project: the plate, what to call it, what it is, and where
-   it goes. Order is the one thing the list still decides, and it is the
-   reading order on every screen — and, because the rail wraps, the
-   order they come back round in. */
 export const behance = [
     {
         id: 'brand-campaign',
         no: '01',
-        title: 'Brand & Campaign Visuals',
+        title: 'Brand and campaign visuals',
         type: 'Brand · Campaign · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('01-brand-campaign.svg'),
@@ -42,7 +17,7 @@ export const behance = [
     {
         id: 'web-ui',
         no: '02',
-        title: 'Web & Interface Explorations',
+        title: 'Web and interface explorations',
         type: 'UI · Web · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('02-web-ui.svg'),
@@ -51,7 +26,7 @@ export const behance = [
     {
         id: 'social-systems',
         no: '03',
-        title: 'Social Media Design Systems',
+        title: 'Social media design systems',
         type: 'Social · Systems · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('03-social-systems.svg'),
@@ -60,7 +35,7 @@ export const behance = [
     {
         id: 'print-collateral',
         no: '04',
-        title: 'Print & Corporate Collateral',
+        title: 'Print and corporate collateral',
         type: 'Print · Collateral · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('04-print-collateral.svg'),
@@ -69,7 +44,7 @@ export const behance = [
     {
         id: 'visual-studies',
         no: '05',
-        title: 'Visual & Typographic Studies',
+        title: 'Visual and typographic studies',
         type: 'Type · Visual · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('05-visual-studies.svg'),
@@ -78,7 +53,7 @@ export const behance = [
     {
         id: 'motion-concepts',
         no: '06',
-        title: 'Motion & Concept Work',
+        title: 'Motion and concept work',
         type: 'Motion · Concept · Update coming soon',
         href: BEHANCE_PROFILE,
         cover: plate('06-motion-concepts.svg'),

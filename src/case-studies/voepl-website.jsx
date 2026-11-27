@@ -1,8 +1,5 @@
 import { Zoomable } from '../components/Lightbox.jsx';
 
-/* The site itself, from the live pages: the home page and the products
-   page at desktop width, and three pages on a phone. The plates are on the
-   project record (src/data/projects.js), 1400 by 1050. */
 function Plate({ plate: [src, alt], eager, onZoom }) {
     return (
         <figure className="frame">

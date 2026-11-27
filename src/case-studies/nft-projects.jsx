@@ -1,10 +1,5 @@
 import { Zoomable } from '../components/Lightbox.jsx';
 
-/* Dino The Diamond, on the same shell as every case study. The page is the
-   project in its owner's own words, the picture it started from, and a link
-   to where it lives. The artwork is the cover the shell already sets at the
-   top, so nothing here repeats it. */
-
 export default function blocks(project, onZoom) {
     const [file, w, h, alt] = project.inspiration;
     /* The collection's link is the one on the record, so it is written once. */

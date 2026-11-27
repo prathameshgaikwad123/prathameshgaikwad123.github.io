@@ -1,62 +1,4 @@
-/* ===================================================================
-   PRATHAMESH GAIKWAD — MULTIDISCIPLINARY DIGITAL DESIGNER
-   Design system: "REGISTER"
 
-   Identity   An editorial register: a 12-column grid that is allowed
-              to show itself, hairline rules, tabular index numerals
-              and crop-mark ticks on every image frame — set in two
-              tones and no more. White page, black type, greys between
-              them; in dark, the same ramp read from the other end.
-
-              It used to be warm paper with two inverted zones — the
-              work and the contact band — carrying the rhythm. The
-              zones are gone: a two-tone system has no third ground to
-              put one on, and a zone that inverts is only the other
-              theme showing through the middle of this one. What
-              carried the rhythm now is the hairline at the top of each
-              band and the index numeral beside it.
-   Type       Castoro is rationed — hero, section statements, project
-              titles, quoted figures, the mail address. Everything that
-              is interface (labels, metadata, navigation, body copy,
-              numerals) is Inter.
-   Model      One scrolling document. Sections are anchors, not slides.
-   Chrome     The only rounded things on the site: two floating
-              translucent plates pinned to the gutters — the identity at
-              the left edge, the theme switch and the menu toggle at the
-              right — rather than a header the page wears. The
-              navigation itself is the panel fixed under the page, and
-              it is the only one. Section 7.
-   Themes     One ramp, declared four times: light at :root, dark under
-              the system preference and again under an explicit choice
-              — so both resolve, and the choice wins in either
-              direction — and reset once more for print. Nothing on the
-              site names a colour of its own; every rule reads the ramp,
-              which is what makes the two modes whole rather than
-              nearly whole. Section 1 is the only place a hex appears.
-
-              --signal and --mark are written as references into the
-              ramp rather than as values, so they cannot fall out of
-              step with it, and they follow it into the two surfaces
-              that re-declare it.
-   =================================================================== */
-
-/* ====== 0. FACES =====================================================
-   The two families, served from this site rather than from Google
-   Fonts. They are the same files Google Fonts delivers for
-   Castoro:ital@0;1 and Inter:wght@400..600 to a current browser — same
-   subsets, same unicode ranges, same font-display — so nothing about
-   how the type looks has changed. What has changed is the path to it:
-   the stylesheet that listed them was a render-blocking request to one
-   origin and the files were on a second, so a first visit opened two
-   extra connections before the first paint on a slow network. Here
-   they are hashed into /_build with the rest of the build and ride
-   the connection the page is already on.
-
-   A range only downloads when a character in it is drawn, so on this
-   site only the three latin faces are ever fetched; the others are here
-   so that a name or a quote in another script renders exactly as it
-   did before. The two faces the first screen is set in are preloaded
-   from the document head. */
 
 /* Castoro italic 400, latin-ext */
 @font-face {
@@ -171,110 +113,29 @@
 /* ====== 1. TOKENS =================================================== */
 
 :root {
-    /* --- Colour: light -----------------------------------------------
-       The system is strictly two-tone: one neutral ramp from paper to
-       ink, and nothing with a hue in it anywhere. Every grey below is
-       the luminance-faithful neutral of the warm value it replaces, so
-       the contrast relationships the layout was set against are the
-       ones it still has.
 
-       Ratios against --paper (#FFFFFF): --ink 21:1 · --ink-2 8.1:1
-       --ink-3 5.4:1                                                   */
     --paper:       #FFFFFF;
-    /* One step off the page, and the only thing that separates a
-       surface from the ground now that neither has a hue: the two
-       panels that arrive by opening out (the cut and the close), the
-       menu's hovered row, the lightbox and the contribution plate.
-       Kept light enough to still read as white — a section is white,
-       a surface is a shade of it. */
+
     --paper-2:     #F2F2F2;
-    /* The page's own ground, kept out of reach of the inverted zones —
-       every other colour token is re-declared inside one, so this is
-       the only way a component *within* a zone can still ask what the
-       document's ground is. The closing panel needs exactly that: the
-       ink has to arrive over something. */
+
     --paper-base:  #FFFFFF;
     --ink:         #000000;
     --ink-2:       #4F4F4F;
     --ink-3:       #6B6B6B;
     --rule:        #D5D5D5;
     --rule-2:      #B9B9B9;
-    /* The accent was the one colour on the site. Monochrome, it is not
-       a colour any more, so it stops being a value of its own and
-       becomes the ink — written as a reference rather than a literal so
-       it cannot desync from it at any of the declaration sites below,
-       and so it is still correct inside a surface that re-declares the
-       ramp. Its companion is the ground for the same reason.
 
-       What the accent used to carry, it no longer can: a mark that was
-       orange to be *distinct* would now be the same black as the type
-       beside it. Those marks are on --ink-3 instead — see section 4 —
-       and this token is left to the two jobs that want the strongest
-       ink there is: the focus ring, and the selection fill. */
     --signal:      var(--ink);
     --signal-soft: rgba(0, 0, 0, 0.06);
     --on-signal:   var(--paper);
-    /* The other half of what the accent used to do. Every tabular
-       index numeral on the site — the section eyebrows, the figure
-       numbers, the plate counters, the case-study block numbers — was
-       orange in order to be *subordinate but distinct*: a numeral you can find without reading. Pointed at
-       the ink it would simply be the type beside it. So it is pointed
-       one step down the ramp instead, which is the monochrome way of
-       saying the same thing. The decorative stops and the short
-       hairline ticks come with it.
 
-       A reference, not a literal, so it follows the ramp into a
-       surface that re-declares one, and so the whole register moves
-       from here rather than from forty-odd selectors. */
     --mark:        var(--ink-3);
-    /* The one hue left on the site, and the only token that is never
-       painted at rest. --signal gave up being a colour when the ramp
-       went to two tones, because an accent that is only ever decoration
-       has nowhere to sit on a monochrome page. This is kept for the one
-       thing a two-tone system genuinely cannot say: that a phrase is
-       being touched right now.
 
-       It is the portrait's own red, and not an orange approximating it.
-       #CC021F is sampled from the ground of
-       public/assets/images/avatar.png — the same red the mark in the
-       masthead is cut out of and the same red the icon puts on a home
-       screen — so the one hue on the page and the one hue on the icon
-       are one hue, rather than two that nearly agree. On the dark ramp
-       it is lifted to hsl of the same hue: the sampled value is 2.7:1
-       on black, which is a colour you can see is there rather than one
-       you can read.
-
-       It is never at rest anywhere. The statement takes it under the
-       cursor (section 8); a Behance plate and a side quest take it the
-       same way, on the same gesture (sections 9.1 and 12). That is the
-       whole of its use, and the rule it is under: a colour that only
-       ever appears while something is being touched is not a third
-       tone, which is what lets the register stay two-tone with this
-       in it.                                                         */
     --flow:        #CC021F;
     --scrim:       rgba(0, 0, 0, 0.6);
-    /* The reticle, and the one declaration in this file that is not
-       reading the ramp — because it is not a colour. The mark that
-       follows the pointer over a picture has to be legible over a
-       picture, and a picture is the one surface on the site whose
-       tones nothing here controls: a grey off the ramp is invisible
-       over half the covers in the carousel and the other half of the
-       plates on the Behance grid.
 
-       So it is not painted, it is differenced. White against the
-       difference blend is the operand that returns the exact opposite
-       of whatever is underneath it, at every pixel, in both themes and
-       over every image the site will ever carry — which is a rule about
-       contrast rather than a third tone, and is why it can be one value
-       declared once instead of a pair declared per theme. */
     --invert:      #FFFFFF;
 
-    /* --- The header's plates -------------------------------------------
-       Two translucent plates that ride over the page, sharing one set of
-       tokens, declared per theme so they keep the same weight on either
-       ground. --nav-chip is the ground under the monogram, under a
-       hovered theme switch and under the menu toggle at rest;
-       --nav-chip-2 is that toggle hovered.                             */
     --nav-plate:   rgba(255, 255, 255, 0.66);
     --nav-plate-2: rgba(255, 255, 255, 0.90);
     --nav-opaque:  rgba(255, 255, 255, 0.97);
@@ -308,55 +169,16 @@
 
     /* --- Grid --------------------------------------------------------- */
     --shell:  92rem;             /* 1472px */
-    /* The display cutout is folded in here rather than at each of the
-       nine places the gutter is spent, so a phone held sideways clears
-       its notch everywhere at once. Both edges take the larger of the
-       two insets: an even margin still reads as the composition, an
-       uneven one reads as a fault. */
+
     --gutter: max(clamp(1.25rem, 4.2vw, 4rem),
                   env(safe-area-inset-left, 0px),
                   env(safe-area-inset-right, 0px));
     --gap:    clamp(0.875rem, 1.5vw, 1.5rem);
 
-    /* --- The header's geometry ------------------------------------------
-       Every chip in either plate is one --nav-item square; a plate is
-       that plus its own padding and hairline. --bar stays what it has
-       always been — the space the page keeps clear at the top — only
-       now it is measured from a floating plate rather than from a
-       full-width header. Both plates are one --nav-h tall, so there is
-       still one clearance to keep and the split does not touch it.
-
-       The square is sized for the thumb first. The header holds three
-       controls and that is all it holds — the monogram, the theme
-       switch and the menu toggle — and since the toggle is now the only
-       way into the navigation, a chip small enough for a cursor is not
-       a target this can afford to leave to a finger. So the step down
-       to the cursor's size is asked of the pointer rather than of the
-       window: a wide screen someone is touching keeps the larger chip.
-
-       The first three move together, and the step below is the only
-       place any of them is set: the monogram and the theme mark are
-       drawn as a fraction of the chip, so a chip that changes without
-       them leaves a letterform adrift in the middle of it.
-
-       What the chip says is not one of the three, deliberately. It is
-       a voice rather than chrome sized to a pointer: one measure on
-       every screen that shows it, so the lockup's proportion follows
-       the chip. Where a long phrase runs out of room it wraps rather
-       than shrinks — a line that changed size with the window would be
-       a different line, said differently.                            */
     --nav-item: 2.5rem;
-    /* The portrait's chip, and the one thing in either plate that is
-       not a full --nav-item square: a face at the size of a control is
-       a profile photograph, and this is a signature. Read off the
-       square rather than set beside it, so it steps down with the
-       plates and can never outgrow the padding it sits in — the plate
-       keeps its own height from --nav-h whatever is in it, so the two
-       ends of the header stay level. */
+
     --nav-face: min(2rem, var(--nav-item));
-    /* The portrait's treatment, and the only thing about it that is per
-       theme. It carries its own neutral ground, so it is not inverted
-       on the dark one, only kept from glaring off it. */
+
     --nav-face-tone: none;
     --nav-mark: 0.9375rem;                        /* the monogram in its chip */
     --nav-icon: 1.0625rem;                        /* the theme mark in its chip */
@@ -368,31 +190,11 @@
     --nav-r:    0.875rem;
     --nav-r-in: calc(var(--nav-r) - var(--nav-pad));
 
-    /* --- The underlay navigation ----------------------------------------
-       One measure, spent twice: the width of the panel fixed under the
-       page, and — read back off that panel by the timeline rather than
-       restated there — the distance the page travels to uncover it.
-       Everything that has to agree with the reveal is written against
-       it, so the three steps below are the only place it is set.
-
-       On a phone the page keeps a hand's width of itself on screen, so
-       a reader can see what they are still on and reach back to it.
-       From the tablet step it is a measure rather than a fraction: a
-       panel that grows with the window stops being a panel and becomes
-       half the page.
-
-       The type follows the panel, not the viewport. The overlay menu
-       this replaces was set at 8vw, which is a headline that fits the
-       screen it was measured against and overruns a column three
-       tenths of its width.                                            */
     --menu-width: min(80vw, 21rem);
     --menu-type:  clamp(1.625rem, 7.4vw, 2rem);
     --menu-pad:   clamp(1.25rem, 5vw, 1.5rem);
     --menu-frame: 0.75rem;
-    /* The page does not go dark, it goes quiet. A scrim heavy enough to
-       read as "switched off" turns a white page into a grey slab and
-       takes the composition with it; this is the least that still says
-       the page is behind something. */
+
     --menu-scrim: rgba(0, 0, 0, 0.22);
 
     /* --- Space -------------------------------------------------------- */
@@ -407,63 +209,18 @@
     --t-slow:  0.7s;
     --t-mid:   0.42s;
     --t-fast:  0.18s;
-    /* The statement's sweep (section 8), and the only duration on the
-       site measured in seconds rather than fractions of one. It is long
-       on purpose: the colour has to read as travelling through the
-       phrase rather than arriving on it, and anything near --t-slow
-       reads as a switch that was slow rather than as a crossing. */
+
     --t-flow:  1.35s;
 
     /* Intro (section 6): the line fills, then the overlay clears. */
     --intro-fill: 0.85s;
     --intro-exit: 0.4s;
 
-    /* --- The clipped panel (section 13) --------------------------------
-       Written out in full, all four sides, and read back by its
-       animation rather than restated there. Two reasons, and the second
-       one is not obvious:
-
-       A browser normalises `inset(9% 4% 0% 4%)` to `inset(9% 4% 0%)` —
-       it drops the fourth value whenever left equals right, and the
-       third whenever top equals bottom. An animation that reads the
-       computed value and interpolates it towards `inset(0% 0% 0% 0%)`
-       is then matching three numbers against four, and the side that
-       fell off the end snaps to zero on the first frame. Handing the
-       animation the same declared string both sides start from is what
-       keeps the panel opening evenly.
-
-       The rule that raises it carries the same three conditions every
-       part of the scroll system does, and each answers a different way
-       the system can fail to be there:
-
-         @media (min-width: 62rem)                 a window wide enough
-         (prefers-reduced-motion: no-preference)   a reader who wants it
-         .js:not(.motion-off)                      a script that ran, and
-                                                   a library that loaded
-
-       The preference is a media query rather than a class so that it
-       answers the same question the timelines do, at the same moment: a
-       reader who changes it mid-visit watches the layout and the
-       animations stand down together, rather than one of them being
-       left holding a state the other has abandoned.
-
-       `.js` and `.motion-off` are the two things a media query cannot
-       know — whether the document's script ran at all, and whether the
-       animation chunk reached the browser (core.js sets the second on
-       a failed load). Without them, a reader with JavaScript off would
-       be handed a panel clipped open at a transition that is never
-       going to play. */
     --close-inset:   9% 4% 0% 4%;
 
     color-scheme: light;
 }
 
-/* Both plates return to their cursor-sized geometry — a wide window
-   being pointed at with something precise. A wide window being touched
-   is not, so the query asks for both: the menu toggle is the whole
-   navigation now, and 30px of it is a target for a mouse, not a thumb.
-   --nav-h and --bar are written against --nav-item, so the page's top
-   clearance follows without being restated. */
 @media (min-width: 62rem) and (pointer: fine) {
     :root {
         --nav-item: 1.875rem;
@@ -472,10 +229,6 @@
     }
 }
 
-/* The panel's two steps up. Both are measures: the panel is the same
-   width on a 1280 window as on a 2560 one, because what it holds is a
-   list of six words and two columns of small links, and none of them
-   gets better for being spread. */
 @media (min-width: 48rem) {
     :root {
         --menu-width: 26rem;
@@ -505,34 +258,15 @@
         --ink:         #FFFFFF;
         --ink-2:       #A1A1A1;
         --ink-3:       #868686;
-        /* Rules are a white transparency rather than a grey, so a
-           hairline drawn on an elevated surface reads as strongly as
-           one drawn on the page. Both are also used as a solid fill
-           for the short ticks in Experience and the case captions,
-           which sit on the page ground and composite correctly. */
+
         --rule:        rgba(255, 255, 255, 0.15);
         --rule-2:      rgba(255, 255, 255, 0.24);
-        /* --signal and --on-signal are not restated here. They are
-           written at :root as var(--ink) and var(--paper), so they
-           follow whichever ramp is in force — including inside a
-           surface that re-declares it — and cannot fall out of step
-           with the theme the way eight literal copies could. */
+
         --signal-soft: rgba(255, 255, 255, 0.10);
-        /* The one token that does restate here, because it is the one
-           that is a colour rather than a reference into the ramp: the
-           value that reads on paper is mud on a black ground, and the
-           value that reads on black is neon on paper. Same hue as the
-           portrait's red, carried up the ramp until it reads on black
-           — 5.5:1, where the sampled value is 2.7:1. */
+
         --flow:        #FF1A3C;
         --scrim:       rgba(0, 0, 0, 0.72);
-        /* The one token whose polarity has to turn over. The scrim
-           says the page behind the panel is not the one being read,
-           and it said it by darkening — which a black wash over a
-           black page cannot do at any alpha. So on this ground the
-           page is lifted instead of sunk. Same cue, same weight
-           (~18 sRGB units, as the warm pair carried), opposite
-           direction, because the ground left it no other one. */
+
         --menu-scrim:  rgba(255, 255, 255, 0.07);
         --nav-plate:   rgba(26, 26, 26, 0.62);
         --nav-plate-2: rgba(26, 26, 26, 0.86);
@@ -557,32 +291,15 @@
     --ink:         #FFFFFF;
     --ink-2:       #A1A1A1;
     --ink-3:       #868686;
-    /* Rules are a white transparency rather than a grey, so a
-       hairline drawn on an elevated surface reads as strongly as
-       one drawn on the page. Both are also used as a solid fill
-       for the short ticks in Experience and the case captions,
-       which sit on the page ground and composite correctly. */
+
     --rule:        rgba(255, 255, 255, 0.15);
     --rule-2:      rgba(255, 255, 255, 0.24);
-    /* --signal and --on-signal are not restated here. They are
-       written at :root as var(--ink) and var(--paper), so they
-       follow whichever ramp is in force — including inside a
-       surface that re-declares it — and cannot fall out of step
-       with the theme the way eight literal copies could. */
+
     --signal-soft: rgba(255, 255, 255, 0.10);
-    /* The one token that does restate here, because it is the one that
-       is a colour rather than a reference into the ramp: the value that
-       reads on paper is mud on a black ground, and the value that reads
-       on black is neon on paper. */
+
     --flow:        #FF1A3C;
     --scrim:       rgba(0, 0, 0, 0.72);
-    /* The one token whose polarity has to turn over. The scrim
-       says the page behind the panel is not the one being read,
-       and it said it by darkening — which a black wash over a
-       black page cannot do at any alpha. So on this ground the
-       page is lifted instead of sunk. Same cue, same weight
-       (~18 sRGB units, as the warm pair carried), opposite
-       direction, because the ground left it no other one. */
+
     --menu-scrim:  rgba(255, 255, 255, 0.07);
     --nav-plate:   rgba(26, 26, 26, 0.62);
     --nav-plate-2: rgba(26, 26, 26, 0.86);
@@ -598,54 +315,12 @@
     color-scheme: dark;
 }
 
-/* --- Zones, and what became of them ----------------------------------
-   The site carried two: an inverted zone that turned its ground to ink
-   in light — Contact and the footer inside it, the navigation panel,
-   the frame drawn under it, a case study's closing block — and a warm
-   zone that stood Selected Work on a greige plate. Both re-declared
-   the whole ramp for themselves, and between them they are the reason
-   the footer stayed black and the carousel stayed off-white when the
-   page was asked to be light.
-
-   A two-tone system has nowhere to put them. There is no third ground
-   between white and black for a zone to be, and a zone that inverts is
-   only the other theme showing through in the middle of this one. So
-   they no longer invert: each paints the ramp that is in force, which
-   is what makes the work, the carousel, the contact band and the
-   footer the same white in light and the same black in dark.
-
-   The classes stay in the markup rather than being stripped out of it,
-   because painting is still their job and one component depends on
-   their doing it: the carousel reads `.glass`'s own computed
-   backgroundColor back off the element and clears its canvas to it
-   (section 9), so that ground has to be explicit and opaque rather
-   than merely inherited. Inverting is what they stopped doing. */
 .zone-invert,
 .zone-warm {
     background: var(--paper);
     color: var(--ink);
 }
 
-
-/* --- Surfaces ---------------------------------------------------------
-   What the zones used to supply by inverting, three things still
-   genuinely need: a panel the page lies on top of, a plate that
-   arrives by opening out, and a dialog over a dimmed page. One step of
-   the ramp does it, declared in both directions — that is --paper-2,
-   in section 1.
-
-   The navigation panel takes two steps rather than one, and did before
-   this change. It is not a band in the flow of the page: the page is a
-   layer above it that slides aside to uncover it, and two surfaces one
-   step apart do not read as one being in front of the other, however
-   cleanly the seam is cut. The frame goes with the panel because the
-   frame is the panel's ground drawn on the overlay, and the two have
-   to agree.
-
-   Declared as tokens rather than literals so the pair is written once
-   for each theme instead of once for each selector in each theme,
-   which is how the ladders below fell out of step with one another
-   before. */
 :root {
     --surface-2: #F7F7F7;
     --surface-3: #EFEFEF;
@@ -668,7 +343,6 @@
 
 .menu { --paper-2: var(--surface-3); }
 
-
 /* ====== 2. RESET & BASE ============================================= */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -677,17 +351,10 @@
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    /* A tap otherwise paints a grey box over whatever was pressed —
-       a whole index row, in the one place it would be most visible.
-       Every control here already answers a press in its own terms. */
+
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
-    /* The menu locks the document's scroll while it is open, and on a
-       platform whose scrollbar takes up room that would take the
-       page's width back and shift every line on it by a few pixels
-       mid-animation. The gutter is kept whether it is in use or not.
-       Where scrollbars are drawn over the page — every phone, and the
-       Mac — this is nothing. */
+
     scrollbar-gutter: stable;
     /* On the scroll container rather than each target, so a fragment in the
        URL on first load clears the floating navigation too. */
@@ -776,7 +443,6 @@ em { font-style: italic; }
     border: 0;
 }
 
-
 /* ====== 3. GRID & BANDS ============================================= */
 
 .shell {
@@ -797,32 +463,8 @@ em { font-style: italic; }
     .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }
 
-/* Bands are the vertical unit. The rule at the top of each one is the
-   only divider the page needs.
-
-   Four selectors used to stand here suppressing that rule around the
-   two zones, on the grounds that a zone divides itself: where the
-   ground changed from paper to ink, a hairline as well would have been
-   saying the same thing twice. The grounds no longer change, so the
-   hairline is the only thing left to say it, and the two seams that
-   suppression used to remove — Work into About, Experience into
-   Contact — are back to being the same rule as every other. */
 .band { position: relative; padding-block: var(--band-y); }
 
-/* The divider is drawn by the band rather than bordered onto it, for
-   one reason: a border cannot be scaled and a pseudo-element can.
-   Section 6 has carried an entrance for a rule that draws itself from
-   its left edge since the site was written, and there was never an
-   element to give it to — the divider was a border, and a border is not
-   a box. Same place, same weight, same token; what changes is that the
-   line is now something the entrance can reach.
-
-   The layer is named because the last band paints a ground of its own
-   over its whole padding box (.close__ground, section 12), and a
-   hairline underneath that is a hairline nobody sees. Two is above both
-   the ground and the composition, which for a line one pixel tall at
-   the very top edge of a section costs nothing and settles the one case
-   where the order would otherwise be decided by tree order. */
 .band + .band::before {
     content: '';
     position: absolute;
@@ -858,7 +500,6 @@ em { font-style: italic; }
     color: var(--ink);
     max-width: 34ch;
 }
-
 
 /* ====== 4. TYPE PRIMITIVES ========================================= */
 
@@ -914,37 +555,18 @@ em { font-style: italic; }
 
 .statement em { color: var(--ink); }
 
-/* The statement, split for the line reveal (src/animations/lineReveal.js).
-
-   At rest these are inline spans with nothing said about them, and the
-   sentence is exactly the sentence: one line of prose, selectable,
-   searchable, read whole. Everything that turns a word into a box is
-   held behind the attribute the effect writes and is taken off again
-   when it reverts — so a phone, a reader who has asked for less motion
-   and a document with no script in it are given the composition that
-   was always here, down to the pixel. */
 .statement[data-lines] .sw {
     display: inline-block;
     overflow: hidden;
-    /* An inline-block that hides its overflow takes its baseline from
-       the bottom of its own box rather than from the type inside it,
-       which would drop every word on the line by the depth of a
-       descender. Aligned to the bottom of the line box instead, so all
-       of them are answered the same way and the line stays straight. */
+
     vertical-align: bottom;
-    /* The box is opened below the type so the mask does not cut the
-       descenders off, and pulled back by the same amount so that
-       nothing in the composition moves to make room for it. */
+
     padding-bottom: 0.22em;
     margin-bottom: -0.22em;
 }
 
 .statement[data-lines] .sw > span { display: block; }
 
-/* The annotated phrase in About is not masked. Its stroke is an
-   absolutely positioned SVG hanging a third of an em below the baseline
-   (section 10), and a box that clipped the word to the word would take
-   the drawing off it. */
 .statement[data-lines] .sw--free { overflow: visible; }
 
 .lead {
@@ -987,15 +609,6 @@ em { font-style: italic; }
 
 /* ====== 5. UI LANGUAGE ============================================= */
 
-/* --- Image frame + crop ticks ----------------------------------------
-   Every image on the site sits in one of these. The two ticks are the
-   repeated detail that ties covers, portraits and case figures
-   together; they go to signal when the frame is the active one.
-
-   The frame is a grid so the ticks can be pinned to the media row: an
-   absolutely positioned child of a grid container takes its named grid
-   area as its containing block, which keeps the lower tick on the image
-   instead of dragging it below the caption.                           */
 .frame {
     position: relative;
     display: grid;
@@ -1049,27 +662,6 @@ em { font-style: italic; }
     background: var(--paper-2);
 }
 
-/* --- The reticle -------------------------------------------------------
-   The same register mark as above, carried by the pointer, and drawn
-   only where there is a picture under it — the gate and the hit-test
-   are in src/components/Reticle.jsx and ReticleMark.jsx. Four corners
-   here rather than two: the pair above is a crop mark on a plate that
-   is not going anywhere, and this one is a frame being held over
-   something, which needs all four of its corners to read as a frame.
-
-   Differenced rather than painted. Everything else on the site sits on
-   a ground the stylesheet chose; this sits on whatever the photograph
-   underneath it happens to be, and there is no value on the ramp that
-   is legible over both a white studio shot and a black one. The blend
-   returns the opposite of the backdrop at every pixel instead, which is
-   the only answer that is right over an image nobody has seen yet. See
-   --invert in section 1.
-
-   It never takes a pointer event and it never hides the cursor. The
-   cursor is carrying real information here — the carousel writes grab,
-   grabbing and pointer onto itself depending on whether there is a card
-   under the pointer or only the ground between two — and a decoration
-   that erased that would be taking something away to add something.  */
 .reticle {
     --reticle: 2.75rem;
     --reticle-tick: 0.5rem;
@@ -1118,7 +710,6 @@ em { font-style: italic; }
 }
 
 .reticle[data-open] .reticle__say { opacity: 1; }
-
 
 /* Figure caption — numbered, quiet, always the same shape. */
 .cap {
@@ -1171,9 +762,7 @@ em { font-style: italic; }
 }
 
 .btn--primary { background: var(--ink); color: var(--paper); }
-/* The fill is the ink, so the state cannot be "take the accent" any
-   more — it is a step along the ramp: the button lightens in light and
-   dims in dark, by the same one step either way. */
+
 .btn--primary:hover,
 .btn--primary:focus-visible { background: var(--ink-2); border-color: var(--ink-2); color: var(--paper); }
 
@@ -1189,12 +778,6 @@ em { font-style: italic; }
 }
 
 .btn:hover svg { transform: translateX(0.25rem); }
-
-/* --- Not here yet -----------------------------------------------------
-   The label on a slot whose content is on its way: a quiet tracked-caps
-   tag with a small mark in the site's orange, so the page says what is
-   happening ("Uploading soon", "In the making") instead of looking
-   broken. */
 
 .tbd {
     display: inline-flex;
@@ -1226,26 +809,12 @@ em { font-style: italic; }
 .theme-switch *::before,
 .theme-switch *::after { transition: none !important; }
 
-/* With one exemption, and it is the control that asked for the swap. The
-   rule above exists because a ground that flips while its text
-   cross-fades leaves some of that text briefly unreadable — a colour
-   problem, and the two marks in the chip are not a colour problem. They
-   are the site's only stateful control, and the state they are in is the
-   answer to the press. Suppressed along with everything else the answer
-   would land in the same frame as the question, which is the one thing a
-   toggle must not do.
-
-   Held inside no-preference because the durations it restates would
-   otherwise outrank section 16: `*` carries no specificity and this
-   selector carries plenty, so an unconditional !important here would
-   reinstate the crossing for a reader who has asked for less motion. */
 @media (prefers-reduced-motion: no-preference) {
     .theme-switch .theme-toggle svg {
         transition: opacity var(--t-fast) var(--ease-io),
                     transform var(--t-mid) var(--ease) !important;
     }
 }
-
 
 /* ====== 6. ENTRANCE MOTION ========================================== */
 /* One rule for the whole site: a small rise and a fade, staggered by
@@ -1263,12 +832,6 @@ em { font-style: italic; }
                 transform var(--t-slow) var(--ease) var(--d, 0s);
 }
 
-/* A rule drawing itself from its left edge: the hairline at the top of
-   every band but the first (section 3). The attribute goes on the band
-   and the transform goes on the line the band draws, for the same
-   reason the annotation below marks a <span> and animates the <path>
-   inside it — what is observed has to be an element, and what moves is
-   a pseudo-element it owns. */
 .js [data-reveal-rule]::before { transform: scaleX(0); transform-origin: left; }
 
 .js [data-reveal-rule].is-in::before {
@@ -1276,17 +839,6 @@ em { font-style: italic; }
     transition: transform 0.9s var(--ease) var(--d, 0s);
 }
 
-/* A stroke being drawn rather than a block arriving: the hand-drawn
-   annotation in About, and the only thing on the site that uses it.
-
-   Each path carries `pathLength="1"` in the markup, which normalises
-   its length whatever its actual geometry — so a dash of 1 is the
-   whole stroke and an offset of 1 is none of it, with no measuring in
-   script and no number here that has to be kept in step with a curve.
-
-   The second stroke follows the first rather than accompanying it.
-   Two strokes drawn together are a double rule; drawn in sequence,
-   they are a hand going over its own line. */
 .js [data-reveal-draw] path { stroke-dasharray: 1; stroke-dashoffset: 1; }
 
 .js [data-reveal-draw].is-in path {
@@ -1298,14 +850,6 @@ em { font-style: italic; }
     transition-duration: 0.72s;
     transition-delay: calc(var(--d, 0s) + 0.16s);
 }
-
-/* --- Intro -----------------------------------------------------------
-   The first page of a session opens on the phrase with one orange line
-   filling under it, then hands over to the entrance above. Roughly a
-   second in total, and nothing else moves. The overlay clears itself
-   here rather than in script, so the page is revealed even if the
-   script never arrives. Whether it plays at all is decided before the
-   first paint — once per session, never for reduced motion.          */
 
 .intro { display: none; }
 
@@ -1325,10 +869,6 @@ em { font-style: italic; }
 
 .intro__stop { color: var(--mark); }
 
-/* The scroll indicator's own language: the same orange, scaled from its
-   left edge, and — like that one — at a constant rate. An eased fill
-   hesitates at both ends, which in a second is all one would see. Its
-   full width is the width of the phrase above it. */
 .intro__line {
     width: 100%;
     height: 2px;
@@ -1342,58 +882,27 @@ em { font-style: italic; }
 @keyframes intro-say  { from { opacity: 0; } }
 @keyframes intro-fill { to   { transform: none; } }
 
-/* Visibility is carried to the very end of the fade rather than left to
-   the script, so that a page whose script never arrives is not left
-   under a transparent sheet that still takes the clicks. */
 @keyframes intro-clear {
     from { opacity: 1; visibility: visible; }
     99%  { opacity: 0; visibility: visible; }
     to   { opacity: 0; visibility: hidden; }
 }
 
-
 /* ====== 7. THE HEADER, AND THE NAVIGATION =========================== */
-/* Not a header the page wears, but two shrink-to-fit translucent plates
-   that float over it, one pinned to each gutter: the identity at the
-   left edge, the theme switch and the menu toggle at the right, and
-   nothing between them. The navigation itself is not here — it is the
-   panel further down this section, fixed under the page.
-
-   The strip the plates hang in spans the viewport so the two can be
-   pushed to opposite ends of it, and takes no pointer events, so the
-   open span between them leaves the page beneath live.
-
-   Both plates carry the same .masthead__inner, deliberately: the
-   ground, the hairline, the blur, the cast, the tuck on scroll, the
-   opaque fallback where there is no backdrop filter, the forced-colours
-   hairline and the print rule are each written once against that class
-   and apply to both without being restated. Give either plate a class
-   of its own and it silently loses all seven.                        */
 
 .masthead {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    /* Above the overlay, which is the one thing here that has to be
-       stated rather than inherited: .underlay covers the viewport and
-       takes pointer events for the whole of the reveal, and it is the
-       right-hand plate — the one carrying the toggle that closes the
-       menu — that it would otherwise be sitting on top of. */
+
     z-index: 110;
     display: flex;
-    /* Two plates, two ends. With one child this would pin it left
-       rather than centre it, which is why the controls plate also
-       claims the space itself below. */
+
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--gap);
-    /* The plates align to the site's own grid, not to the raw edge of
-       the window. Below the shell's full measure the two are the same
-       thing; above it the viewport gutter is outboard of the column the
-       hero and the bands are both set against, and a plate hanging out
-       there reads as chrome the page forgot. Same idiom as
-       html:not(.js) .menu, for the same reason. */
+
     padding: var(--nav-top)
              max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)))
              0;
@@ -1404,12 +913,7 @@ em { font-style: italic; }
     pointer-events: auto;
     display: flex;
     align-items: center;
-    /* Stated rather than left to the content, because the two ends no
-       longer hold the same thing: the controls are --nav-item chips and
-       the identity is a smaller portrait, and two plates of different
-       heights at opposite ends of the same strip read as one of them
-       having gone wrong. --nav-h is that height with the padding and
-       the hairline already in it, and the box is a border box. */
+
     min-height: var(--nav-h);
     gap: clamp(0.25rem, 0.9vw, 0.625rem);
     min-width: 0;
@@ -1427,25 +931,6 @@ em { font-style: italic; }
                 transform var(--t-mid) var(--ease);
 }
 
-/* The brand plate holds the portrait and the line beside it; the
-   controls plate holds two chips and sets them tighter than a lockup
-   wants. The brand plate spends no gap of its own — the line carries
-   its own approach as padding, which is the only way the two can be
-   set optically rather than to the same number as the chips at the
-   other end. `margin-left: auto` is belt and braces for the
-   space-between above: it pins the controls plate to the right edge
-   even if it is ever the only plate rendered.
-
-   The two plates answer width pressure differently, and have to. What
-   the chip says is a line of running text whose length is not known
-   here — "oh, hi." at rest, and up to thirty-four characters of aside
-   under a cursor — so on a narrow phone the two plates can want more
-   room between them than the screen has. All of that shortfall is
-   given to the brand plate, which has something it can do with it: the
-   line wraps. Left to the default both plates would shrink by their
-   share, and the controls plate has nothing to shrink — its chips are
-   `flex: none` — so it would spill them out through its own rounded
-   edge. */
 .masthead__inner--brand { gap: 0; }
 
 .masthead__inner--actions {
@@ -1454,9 +939,6 @@ em { font-style: italic; }
     flex: none;
 }
 
-/* Scrolled: both plates gather a little more ground and tuck up by a
-   couple of pixels, in unison — the class is written on the strip, not
-   on either plate. Enough to register, never enough to jump. */
 .masthead.is-solid .masthead__inner {
     background: var(--nav-plate-2);
     box-shadow: var(--nav-cast-2);
@@ -1472,21 +954,7 @@ em { font-style: italic; }
 
 /* Scroll position, on the top edge of the viewport — the navigation no
    longer spans it to carry the line itself. */
-/* --- The reading line, and the folio ----------------------------------
-   The line across the top of the window is what it has always been, but
-   it is a ruler now rather than a gauge: the fill is a layer of its own
-   so that the ticks beside it can hold still while it passes over them.
-   That is the whole reason for the extra element — a bar that is itself
-   scaled cannot carry anything that is not scaled with it.
 
-   --p is still written to the container, and the fill reads it from
-   there, because a custom property set on a parent is inherited and a
-   transform is not. One write per frame, as before.
-
-   .progress--bar went with the restructuring. It restated the three
-   declarations the class beside it already made, which was harmless
-   while there was one element and misleading the moment there were
-   three.                                                             */
 .progress {
     position: fixed;
     top: 0;
@@ -1505,17 +973,6 @@ em { font-style: italic; }
     transform-origin: left;
 }
 
-/* The running head, in the left margin, set the way a folio is set.
-
-   It is shown from 75rem because that is the first step at which the
-   margin is genuinely a margin — wide enough to hold eleven-pixel type
-   with air either side of it, rather than a strip the type is wedged
-   into. Below that the line at the top of the screen goes on doing the
-   whole job on its own, which is what it did before any of this.
-
-   Never visible while the navigation is open. The page slides off the
-   panel and this does not travel with it, so a running head left
-   showing would be a caption from one layer lying over another.      */
 .folio {
     position: fixed;
     top: 0;
@@ -1534,24 +991,12 @@ em { font-style: italic; }
     .js .folio[data-on] { display: grid; opacity: 1; }
 }
 
-/* Above the first band there is no band to name; and while the
-   navigation is open the page has slid off the panel and this does not
-   travel with it, so a running head left showing would be a caption from
-   one layer lying over another.
-
-   Both are written at the weight the rule above them carries — two
-   classes and an attribute — rather than at the weight that reads most
-   easily. A state that loses on specificity to the state it exists to
-   override is not a state at all, and the media query the rule above
-   sits in does nothing to change that. */
 .js .folio[data-on][data-empty],
 .js body[data-menu-status='open'] .folio[data-on] { opacity: 0; }
 
 .folio__line {
     writing-mode: vertical-rl;
-    /* Read from the foot of the page upwards, which is the direction a
-       folio in a left margin is set in and the only one that does not
-       ask the reader to tilt their head the wrong way. */
+
     transform: rotate(180deg);
     display: flex;
     align-items: center;
@@ -1564,16 +1009,8 @@ em { font-style: italic; }
     color: var(--ink-3);
 }
 
-/* The window each half of the head turns inside. Without it the two
-   would cross-fade, and a running head that dissolves is a caption; one
-   that turns is a page being turned, which is the thing this is a
-   picture of. */
 .folio__slot { display: block; overflow: hidden; }
 
-/* A band that does not number itself — the close, which spends its
-   opening line on the shelf rather than on its own name. The slot is
-   still there and still turns; what it holds is nothing, so the lead in
-   front of the name goes with it. */
 .folio[data-unnumbered] .folio__line { gap: 0; }
 
 .folio__no { color: var(--mark); font-variant-numeric: tabular-nums; }
@@ -1581,63 +1018,16 @@ em { font-style: italic; }
 .folio.is-turn .folio__no,
 .folio.is-turn .folio__name { animation: folio-turn var(--t-mid) var(--ease) both; }
 
-/* The name follows the numeral rather than arriving with it, for the
-   same reason the two strokes of the annotation in About are drawn in
-   sequence: together they are one block changing, one after the other
-   they are somebody turning a page. */
 .folio.is-turn .folio__name { animation-delay: 60ms; }
 
 @keyframes folio-turn {
     from { opacity: 0; transform: translateY(0.8em); }
 }
 
-/* --- The identity ----------------------------------------------------
-   A face, cropped tight and held in one small chip: the site has no
-   logo, and two letters in a box are a placeholder for one. The
-   portrait is the mark that could only be this person's, which is what
-   an identity in the corner of a page is for.
-
-   It is deliberately smaller than the chips at the other end. A
-   portrait at the size of a control reads as a profile photograph
-   wired into the interface; at two thirds of the plate's height it
-   reads as a signature the plate happens to be carrying. The plate
-   keeps the height either way — .masthead__inner states it — so the
-   two ends of the strip stay level.
-
-   Monochrome, because the page is. The asset carries its own neutral
-   ground rather than the source's red, and --nav-face-tone is the last
-   of the treatment: grey held to grey on the light ground, and the same
-   grey brought down a little on the dark one so a lit face does not
-   glare out of a black plate. Declared per theme with the rest of the
-   ramp in section 1, so there is nothing here to keep in step.
-
-   At rest the mark says nothing, and the plate is one chip wide. What
-   it says under a cursor, a finger or the keyboard is beside it at
-   every width and is not the name: "oh, hi." the first time and then
-   the asides in src/data/site.js, one line, no card, no menu, and the
-   only thing on the site that answers a gesture with words. Painted at
-   every width, unlike the name it replaces — on a phone the gesture is
-   a tap, and a chip that only spoke to a cursor would say nothing at
-   all there.
-
-   The phrase is set small and quiet, in the display face and the
-   site's own lower case. It is somebody speaking, not a label:
-   uppercase and letter-spaced, the way the name was set, would make an
-   aside read as a second wordmark.
-
-   What the reader is told does not depend on any of it, because the
-   link's accessible name is written on the anchor
-   (src/components/Navigation.jsx) rather than read off whatever is
-   currently visible.                                                 */
-
 .wordmark {
     display: inline-flex;
     align-items: center;
-    /* Shrinkable, where it used to be rigid: what it now holds is a
-       line of unknown length, and on a narrow phone the plate hands it
-       less room than it wants (see .masthead__inner--actions). Taking
-       that shortfall here is what lets the line wrap inside the plate
-       rather than the anchor overrun it. */
+
     flex: 0 1 auto;
     min-width: 0;
     color: var(--ink);
@@ -1653,9 +1043,7 @@ em { font-style: italic; }
     border-radius: calc(var(--nav-r-in) - 0.125rem);
     overflow: hidden;
     background: var(--nav-chip);
-    /* Inset, so the edge is drawn inside the crop rather than around
-       the box: a border would grow the mark and a shadow outside it
-       would be a ring hanging in the plate's padding. */
+
     box-shadow: inset 0 0 0 1px var(--nav-edge);
     transition: box-shadow var(--t-fast) var(--ease-io),
                 transform var(--t-mid) var(--ease);
@@ -1669,97 +1057,37 @@ em { font-style: italic; }
     filter: var(--nav-face-tone);
 }
 
-/* Touched, the mark takes the accent as an edge and lifts by a
-   twentieth. The site's one hue is never painted at rest and is not
-   here either — it is the same sentence the statement and the covers
-   answer a cursor with, said on the smallest thing on the page. */
 .wordmark:hover .wordmark__face,
 .wordmark:focus-visible .wordmark__face {
     transform: scale(1.05);
     box-shadow: inset 0 0 0 1px var(--flow);
 }
 
-/* The line the mark says. The approach is the span's own padding
-   rather than the plate's gap, for the reason given at
-   .masthead__inner--brand: the chip and a line of type want to be set
-   optically, and a gap is one number for both sides. */
 .wordmark__say {
     padding: 0 0.375rem 0 0.5rem;
-    /* Not a target — the anchor is. Which is not decoration: each
-       phrase is a NEW element (Navigation.jsx keys the span on the
-       text, so the fade below has something to play on), and an element
-       that can be pointed at going out from under the cursor is a
-       pointerout, followed by a pointerover on whatever is behind it.
-       React reads that pair as the cursor having left the link and come
-       back, which called for a second phrase inside one hover and made
-       the chip cycle where the brief says it holds. A line the pointer
-       passes straight through is never the target it leaves, so the
-       swap raises no boundary events at all. The click still lands: it
-       falls through to the link the same way. */
+
     pointer-events: none;
     font-family: var(--font-display);
     font-size: var(--nav-say);
-    /* A little leading, so centring the box centres the type rather
-       than hanging it off its own cap height — and so a phrase that
-       wraps on a small phone reads as two lines of one thing. */
+
     line-height: 1.25;
     /* Quieter than the mark it belongs to. An aside said at full
        strength is not an aside. */
     color: var(--ink-2);
-    /* One line wherever a line fits, which is every screen from about
-       the tablet step up. Below that the longest of the asides is
-       longer than the room between the two plates, so it wraps: the
-       plate grows downwards for as long as the phrase is up and the
-       controls stay level with the top of it (.masthead is
-       align-items: flex-start). Wrapping is the concession the
-       narrowest phones get, and it is the right one — the alternative
-       is a phrase with its end cut off, which is a phrase not worth
-       putting up.
 
-       break-word is the floor under that: on a 320px screen the
-       shortfall can be deep enough that even one word is wider than
-       what is left, and a word is the one thing wrapping cannot
-       divide. It does not change how wide the line ASKS to be, so it
-       never makes the plate narrower than it had to be — it only
-       catches the case that would otherwise overrun the plate's
-       rounded edge. */
     overflow-wrap: break-word;
-    /* Each phrase is a new element (Navigation.jsx keys the span on
-       the text), so it arrives on its own — every hover, not only the
-       first. Shortened to nothing for a reader who has asked for less
-       motion, by the blanket rule in section 17.
 
-       Here the measure is left alone and only the ink moves: below the
-       tablet step a long phrase wraps, and a measure opening from zero
-       would re-wrap it on every frame. */
     animation: say-in var(--t-mid) var(--ease-io) both;
 }
 
 @keyframes say-in {
     from {
         opacity: 0;
-        /* Half a line's rise, downwards — the phrase comes up out of
-           the plate rather than sliding in from the side, which would
-           read as the plate having something to reveal. */
+
         transform: translateY(0.2em);
     }
 }
 
-/* From the tablet step the line always fits on one, so the plate can
-   open to it rather than jump to it. That jump was the whole of what
-   read as abrupt: the ink arrived gently onto a plate that had already
-   snapped to its full width in a single frame, so the gentleness was
-   spent on a shape that had finished moving. Opening the measure with
-   the ink is the gesture the name it replaced was given, and it is
-   back here for the same reason — the plate is the thing that is
-   speaking, so the plate should be seen to speak.
-
-   The clip is what makes an opening measure legible: the line is at
-   its full length from the first frame and uncovered left to right,
-   rather than being set narrow and squeezed. Once open nothing
-   overflows it — the cap clears the longest phrase in the pool by a
-   wide margin, and it has to be a cap rather than `none` because a
-   keyframe cannot animate to an intrinsic width. */
 @media (min-width: 48rem) {
     .wordmark__say {
         white-space: nowrap;
@@ -1784,10 +1112,6 @@ em { font-style: italic; }
 
 /* --- Theme switch ---------------------------------------------------- */
 
-/* Both chips hold their size. The wrapper that used to carry the group
-   was flex: none; the plate that replaced it is a .masthead__inner and
-   inherits min-width: 0, so under width pressure the plate overflows as
-   one object rather than squeezing the chips out of square. */
 .theme-toggle {
     display: grid;
     place-items: center;
@@ -1798,16 +1122,7 @@ em { font-style: italic; }
     border-radius: var(--nav-r-in);
     color: var(--ink-3);
     background: transparent;
-    /* The press is answered before the wipe is: a chip that gives under
-       the finger is the only part of this the reader can feel inside one
-       frame, and everything after it — the snapshot, the circle — is
-       then something that happened to a control that had already
-       replied. `manipulation` is the other half of the same sentence.
-       Without it a browser may hold the click back to see whether a
-       second tap is coming and a double-tap zoom is meant, which on a
-       phone is up to 300ms of nothing at all. The site is laid out to
-       the device width and has no zoom to offer here, so there is
-       nothing to wait for. */
+
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     transition: color var(--t-fast) var(--ease-io),
@@ -1819,19 +1134,6 @@ em { font-style: italic; }
 
 .theme-toggle:active { transform: scale(0.9); }
 
-/* Both marks are drawn as a fraction of the chip, so they hold the same
-   proportion whichever size the chip is, rather than sitting adrift in
-   the middle of the larger square. One token, set with --nav-item.
-
-   They are stacked in one cell rather than swapped in and out of the
-   layout, because `display` cannot be animated and the chip was the one
-   place on the site where a state change simply appeared. Both are in
-   the document at all times; --mark-in says which of them is the one on
-   duty, and it is the only thing any of the rules below set. Opacity
-   and transform are the pair that can be interpolated without touching
-   layout, which is what lets the crossing run over the top of the one
-   thing here that is expensive: the whole palette re-resolving under
-   it. */
 .theme-toggle svg {
     grid-area: 1 / 1;
     width: var(--nav-icon);
@@ -1843,10 +1145,6 @@ em { font-style: italic; }
                 transform var(--t-mid) var(--ease);
 }
 
-/* The two marks turn opposite ways, so one is always arriving from where
-   the other left. Which of them is lit is the same set of selectors the
-   `display` pair used to be written as — the logic is unchanged, only
-   what it sets. */
 .theme-toggle .icon-sun  { --mark-dir: -1; --mark-in: 1; }
 .theme-toggle .icon-moon { --mark-dir:  1; --mark-in: 0; }
 
@@ -1860,46 +1158,12 @@ em { font-style: italic; }
     :root[data-theme="light"] .theme-toggle .icon-moon { --mark-in: 0; }
 }
 
-/* --- The two layers --------------------------------------------------
-   The whole effect is these two rules. The navigation is fixed to the
-   right of the screen at z-index 1; everything else the page consists
-   of lives in one layer above it at z-index 2. At rest the page is
-   simply covering the navigation, which is why the panel needs no
-   entrance of its own: opening the menu slides the page off it.
-
-   The page layer carries a ground of its own because it has to be
-   opaque — --paper-base rather than --paper, since half the sections
-   on the page re-declare --paper for their own zone and one of them
-   would otherwise let the panel show through at rest.
-
-   Nothing else moves. The header's two plates, the reading-progress
-   line, the intro and the skip link all stay where they are; the page
-   layer and the overlay that travels with it are the only things that
-   go anywhere.                                                       */
-
-/* The page layer carries no cast. It used to drop one onto the panel it
-   slides off, to say which of the two surfaces was in front; the seam
-   the two make is enough to say that on its own, and a shadow the width
-   of the screen is a heavier thing to put on the page than the
-   distinction it was drawing. */
 [data-main] {
     position: relative;
     z-index: 2;
     background: var(--paper-base);
 }
 
-/* Before the timeline arrives — and, for a reader who has asked for
-   less motion, where it never will — the page still has to move. This
-   is that, in one declaration. The global reduced-motion rule in
-   section 17 shortens it to nothing, which is exactly right: the menu
-   opens, it just does not travel to get there.
-
-   Every rule here is behind :not(.nav-live), and the transform has to
-   be: the page carries no transform at rest, so on the first frame of
-   an open this rule is the only thing saying where the page is — and
-   the timeline reads the page to find out where to start from. Left
-   live, it would read a page this rule has already moved the whole way
-   and animate it from there to there. */
 html:not(.nav-live) [data-main],
 html:not(.nav-live) .underlay {
     transition: transform var(--t-slow) var(--ease);
@@ -1916,17 +1180,6 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay {
 }
 
 html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; }
-
-
-/* --- The menu toggle -------------------------------------------------
-   The controls plate's one filled affordance, and the only navigation
-   control on the site: what is behind it is the whole index.
-
-   Two labels stacked in a window one line tall, and two bars — both
-   real elements rather than the pseudo-elements they were, because the
-   timeline has to be able to reach them. What is declared here is what
-   a reader without that timeline gets: the same swap and the same
-   cross, done in CSS off aria-expanded.                              */
 
 .menu-btn {
     display: inline-flex;
@@ -1951,10 +1204,6 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
 
 .menu-btn:hover { background: var(--nav-chip-2); }
 
-/* Open, the toggle takes the signal — the same mark the current link in
-   the panel carries. Here rather than in the timeline: a colour written
-   inline would have to be captured before a theme change and cleared
-   after the close, and this follows both for nothing. */
 .menu-btn[aria-expanded="true"] {
     color: var(--paper);
     background: var(--ink);
@@ -2005,10 +1254,6 @@ html:not(.nav-live) body[data-menu-status="open"] .underlay__dark { opacity: 1; 
 html.nav-live .menu-btn__label,
 html.nav-live .menu-btn__bar { transition: none; }
 
-/* The label and the bars are put at their resting values inline by the
-   timeline, which is enough to keep these two rules out of its way. The
-   page is not, which is why its own fallback above is written the other
-   way round. */
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__label { transform: none; }
 
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:first-child,
@@ -2018,27 +1263,6 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child {
 
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:first-child { top: 0; }
 html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: calc(100% - 1px); }
-
-
-/* --- The navigation ---------------------------------------------------
-   Fixed to the right of the screen, full height, one measure wide, and
-   underneath the page at every moment — including this one, before
-   anything has been opened. It does not slide, fade or resize; the page
-   in front of it does the moving.
-
-   The ground is an inverted zone: the same one Selected Work and
-   Contact are set on, so the panel reads as a field the page has been
-   lifted off rather than a drawer that has arrived from somewhere. Every
-   component inside it works untouched, in either theme.
-
-   The links are the site's own: the top of the page and the five
-   sections above — six rows, and the first of them is load-bearing, as
-   the only thing the spy can mark before the first section is reached —
-   then the six case studies and the elsewhere links below. The section
-   links keep the .menu__link class they have always had, and
-   `.menu__link[href^="#"]` is now the whole of what the scroll spy in
-   useChrome looks for, so every aria-current on the site is written
-   into this panel.                                                    */
 
 .menu {
     position: fixed;
@@ -2051,10 +1275,6 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 
     flex-direction: column;
 }
 
-/* Clipped across, scrolling down: the large links arrive from beyond
-   the right edge, and an inner box that let that count as width would
-   hand the panel a horizontal scrollbar for the length of the
-   entrance. */
 .menu__inner {
     display: flex;
     flex: 1;
@@ -2085,9 +1305,6 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 
                 background-color var(--t-fast) var(--ease-io);
 }
 
-/* A full-bleed row has no margin for a ring drawn outside it, and the
-   inner box would clip the outer edge of one. Inset, as the skip link
-   is. */
 .menu__link:focus-visible { outline-offset: -3px; }
 
 .menu__link:hover:not([aria-current]),
@@ -2096,28 +1313,11 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 
     background: var(--paper-2);
 }
 
-/* The current page or section, filled. The one place on the site where
-   the signal is a ground rather than a mark, and it is the reference's
-   own detail: at this size a coloured word is a word, and a coloured
-   row is where you are. */
 .menu__link[aria-current] {
     color: var(--on-signal);
     background: var(--signal);
 }
 
-/* The gap between the list and the foot, which used to be blank: a wall
-   of bricks that turn — see src/components/MenuWall.jsx and src/wall/.
-   It takes whatever room is left, but never less than a few courses
-   need: on a short window the panel, which already scrolls, scrolls a
-   little rather than the wall quietly disappearing. The canvas is out
-   of flow so its bitmap size never argues with the room it is given.
-
-   Three layers in one box. The canvas is the wall. Over it, the crew:
-   four pointers that are ordinary elements, so their labels are set in
-   the site's own type and coloured from its own tokens. Under it, in
-   the last 26px — the wall's script leaves exactly that clear — the
-   line the wall is saying, in the register of every other small label
-   on the site. */
 .menu__wall {
     position: relative;
     flex: 1 1 0;
@@ -2170,10 +1370,6 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 
     color: var(--ink);
 }
 
-/* One of the crew: an arrow and a name, placed by transform from
-   src/wall/crew.js and shown and hidden by class. The arrow's tip is
-   the element's own origin, so what the script sends it to is where it
-   points. */
 .wall-hand {
     position: absolute;
     left: 0;
@@ -2243,16 +1439,6 @@ html.nav-live .menu-btn[aria-expanded="true"] .menu-btn__bar:last-child  { top: 
 
 html:not(.js) .menu__wall { display: none; }
 
-/* --- The foot ---------------------------------------------------------
-   Two registers of small links under one hairline: the six case
-   studies, which are the only other pages the site has, and the
-   elsewhere links, which are the same four the contact band carries.
-   The rule is drawn in with the rest of the choreography rather than
-   being there from the start — it is the last thing to arrive.       */
-
-/* The list is held to the top of the panel and this to the floor of it,
-   so the two registers and the meta line stay together as the panel
-   grows rather than being spread down it. */
 .menu__bottom { flex: none; }
 
 .menu__foot {
@@ -2301,17 +1487,10 @@ html:not(.js) .menu__wall { display: none; }
 .menu__small:focus-visible { color: var(--signal); }
 .menu__small[aria-current] { color: var(--signal); }
 
-/* Side by side needs room for two measures. Below that the registers
-   stack, and the panel scrolls to whichever of them the reader is
-   after. */
 @media (max-width: 40rem) {
     .menu__foot { flex-direction: column; gap: 1.5rem; }
 }
 
-/* A finger, again: the large rows are already a thumb's height from
-   their own type, and only the small links need the box built out
-   around them — taken out of the gap they already sit in, so the
-   rhythm of each register is the one the type set. */
 @media (pointer: coarse) {
     /* The large rows are within a pixel of a target from their own type,
        and a pixel is not a rounding error on a finger. */
@@ -2319,27 +1498,6 @@ html:not(.js) .menu__wall { display: none; }
     .menu__links { gap: 0; }
     .menu__small { align-items: center; min-height: 2.75rem; }
 }
-
-
-/* --- The overlay ------------------------------------------------------
-   One fixed layer that travels with the page and does three jobs at
-   once: it takes the click that closes the menu, it carries the
-   dimming the page goes under, and it draws the frame that turns the
-   page into a plate lifted off the panel's ground.
-
-   The frame is a bar on the top and bottom edges of the screen and a
-   fillet at the right-hand end of each — the bars slide in from off
-   screen, the fillets scale up from nothing, so the corner arrives
-   rather than being cut. The -1px on the right closes a subpixel seam
-   that otherwise shows as a hairline of page between the frame and the
-   panel at some window widths.
-
-   It sits above the page and below the header. This layer covers the
-   viewport and takes the pointer for the whole of the reveal, and it
-   sweeps out over the right-hand edge — which is where the controls
-   plate is pinned. Above the overlay is therefore where the header has
-   to be, or the layer takes the clicks meant for the toggle that
-   closes the menu.                                                   */
 
 .underlay {
     position: fixed;
@@ -2358,11 +1516,6 @@ html:not(.js) .menu__wall { display: none; }
     opacity: 0;
 }
 
-/* The frame is set on the panel's own ground, and the surest way to
-   know that colour in every theme is to stand the frame in the same
-   zone the panel is in and read --paper back out of it. The zone's own
-   ground is turned off here: what paints is the two bars and the two
-   fillets, never the box that holds them. */
 .underlay__frame {
     position: absolute;
     inset: 0;
@@ -2400,42 +1553,8 @@ html:not(.js) .menu__wall { display: none; }
     transform-origin: 100% 100%;
 }
 
-
-/* --- Without JavaScript ----------------------------------------------
-   The toggle cannot open anything and the panel is under a page that is
-   never going to move off it, so the panel takes its place in the
-   document instead: a plain index at the top, which is what a
-   navigation is when nothing can be revealed. At every width now — the
-   header no longer carries a copy of the section list to stand in for
-   this above the desktop breakpoint, so this block is the whole of the
-   navigation a reader without a script is given, and hiding it there
-   would leave them none.
-
-   Which is also why the panel's inert is written on the client rather
-   than into the markup (src/components/Menu.jsx): the prerendered
-   document is rendered closed, and an inert attribute shipped in the
-   HTML would hand this reader a navigation they can read and cannot
-   follow.
-
-   Laid across rather than down. The panel's own type is a measure for a
-   column of six headlines; the same six words in a band at the top of a
-   page want a line, not half a screen.
-
-   And the foot comes with them, which it did not before. Off the home
-   page the six case studies are otherwise reachable only through the
-   work carousel — and one of them has no next-case link either, so from
-   there the rest of the work was a page away. Nine small links is the
-   price of every page being able to reach every other one. The meta
-   line stays out: it is two lines of decoration, and the contact band
-   carries the same words.                                            */
 html:not(.js) .menu-btn { display: none; }
 
-/* The switch is JavaScript too — useTheme binds the click — so without
-   it the chip is a control that does nothing, wearing a label that is
-   wrong half the time. It goes, and with the toggle already gone the
-   plate that held them both is an empty translucent nub at the right
-   edge, so it goes too. What is left is the identity, which is a link
-   and works. */
 html:not(.js) .theme-toggle,
 html:not(.js) .masthead__inner--actions { display: none; }
 
@@ -2448,12 +1567,7 @@ html:not(.js) .menu {
     padding: calc(var(--bar) + 1.5rem)
              max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)))
              0;
-    /* Static, this is a block at the top of the document rather than a
-       layer beneath it, and its ground used to be inverted — which was
-       the whole of the separation from the page below. One step off the
-       paper is not, so the seam is stated. A box-shadow rather than a
-       border, so the block's height and the page's first line are
-       exactly where they were. */
+
     box-shadow: 0 1px 0 var(--rule);
 }
 
@@ -2464,37 +1578,16 @@ html:not(.js) .menu__list {
     gap: 0.125rem clamp(0.25rem, 1.6vw, 1.25rem);
 }
 
-/* The inline padding is cut back rather than to nothing: on a case study
-   one of these rows is filled with the signal to say where the reader
-   is, and a ground that stops at the letterforms is not a row. What
-   comes off here goes back into the list's column gap above. */
 html:not(.js) .menu__link {
     font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
     padding-inline: 0.25rem;
     gap: 0.4375rem;
 }
 
-/* The foot's own two registers lay themselves out unchanged — side by
-   side from 40rem, stacked below it. All it wants here is a little more
-   room above its hairline, which was measured against a panel with a
-   screen of height to spend and is tight under a band. */
 html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
-
 
 /* ====== 8. HERO ===================================================== */
 
-/* One screen, one statement.
-
-   The stage takes whatever height is left between the navigation and the
-   floor of the screen, so the headline sits on the centre of the first
-   view at any window height rather than at a fixed distance from the
-   top. Everything that used to share the screen with it is gone and the
-   space is left open: that space is the composition now, not a gap
-   waiting to be filled.
-
-   The stage holds the statement and nothing else. One quiet register
-   stays on the floor — the scroll cue — and it keeps its own height
-   whatever the stage does. */
 .hero {
     position: relative;
     display: flex;
@@ -2513,13 +1606,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     flex: 1;
 }
 
-/* Two rows: the stage takes the slack and the foot keeps its content
-   height. It was three — the strip of disciplines had the middle one —
-   and what that row was holding is not replaced, it is given to the
-   stage, so the statement sits nearer the centre of the first screen
-   than it did rather than standing above a space where a strip used to
-   be. Below 48rem `.grid` is a single column, which changes nothing
-   here: both children still span it in order. */
 .hero__grid {
     flex: 1;
     grid-template-rows: 1fr auto;
@@ -2547,93 +1633,17 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     transition: color var(--t-fast) var(--ease-io);
 }
 
-/* The statement answered the cursor by taking the stop's colour, the
-   stop holding still while the line came up to meet it. The line is at
-   full ink to begin with now and has nowhere to travel, so the journey
-   is made from the other end: the stop comes up to the line. The same
-   two marks meeting on the same gesture, in the one direction a
-   two-tone ramp leaves open. */
 .hero__title:hover .hero__stop { color: var(--ink); }
 
-/* One line, and the pieces it is typed in (src/sections/Hero.jsx): a
-   run per word, a box per character, and nothing declared here that
-   would take any of them out of the line. The two blocks the heading
-   used to be are gone with the statement that needed them.
-
-   The word is what a break is allowed to fall between. Every character
-   has a box of its own, and a box is a break opportunity — run
-   together, the statement would come apart mid-word at the narrow end,
-   so each word is one unbreakable run and the spaces between them keep
-   theirs. */
 .hero__word { white-space: nowrap; }
-/* The space between two runs, which is the one place the line is
-   allowed to break. Its box holds nothing else, so the space is
-   preserved explicitly rather than left to survive collapsing — and
-   preserved in the one way that still lets the break happen. */
+
 .hero__space { white-space: pre-wrap; }
 .hero__title em { font-style: italic; letter-spacing: -0.03em; }
 .hero__stop { color: var(--mark); }
 
-/* --- The statement under the cursor ----------------------------------
-   The colour is not switched, it is poured. One gradient — the site's
-   orange behind the ink — is laid across the heading three times its
-   own width and clipped to the glyphs, so the phrase is a window onto
-   it rather than a thing with a colour. At rest the window sits over
-   the far end of the image, which is ink from edge to edge and is
-   therefore indistinguishable from the heading before this rule
-   existed. Hovered, the window travels to the near end, and the seam
-   between the two colours crosses the phrase from left to right,
-   arriving letter by letter in the order the phrase is read.
-
-   Only the seam moves, which is why the two ends are flat: the first
-   40% of the image is orange and the last 40% is ink, with the blend
-   confined to the middle fifth — one box-width of soft edge. The
-   margin that leaves at either extreme is what keeps the resting state
-   honestly ink and the hovered state honestly orange at any window
-   size, and what lets the gradient be raked slightly off the
-   horizontal (100deg) so the second line takes the colour a beat after
-   the first, rather than the two changing as one bar.
-
-   The ramp is read, not restated: --ink is whichever end of it the
-   theme is at, so light stays black-to-orange and dark stays
-   white-to-orange with nothing here to keep in step.
-
-   The stop is not in the sweep and cannot be: it carries its own
-   colour, one step down the ramp, and a gradient sized to a box the
-   width of a full stop has nowhere to travel. It is timed into the sweep
-   instead — held at --mark until the seam has all but reached it, then
-   given the same orange, so the one mark the phrase ends on lands with
-   the phrase rather than ahead of it.
-
-   Its two numbers are read off the curve rather than off the clock,
-   which is the whole reason they are not halves. --ease is a quintic
-   settle: it spends nine tenths of its travel in the first third of
-   its time, so the seam reaches the end of the phrase around a sixth
-   of the way in and the last of the ink is gone by around four tenths
-   — not at the end. A stop timed to the duration would come up most of
-   a second after the phrase it belongs to had finished. Leaving, the
-   ink returns from the right and the stop is the first thing it
-   reaches, so the wait is in the hovered rule alone.
-
-   Gated on the clip: without it, `color: transparent` is a heading
-   that is not there. The rule above this one — the stop coming up to
-   the ink — is the whole effect in a browser that cannot do this, and
-   is left standing for exactly that reason.                          */
 @supports ((background-clip: text) or (-webkit-background-clip: text)) {
     .hero__title {
-        /* The image is sized to the box, and the box is not the ink. The
-           line box is 0.94 of the em and Castoro's is a full one, so the
-           J stands about 0.03em above the line and the italic g hangs
-           about 0.04em below it. Painted through the glyphs, anything
-           the image does not reach is not drawn at all — the ascender
-           and the descender come off the statement.
 
-           So the painting area is grown to hold the ink and the growth
-           is handed straight back: background-origin is the padding
-           box, and an equal negative margin leaves the margin box the
-           size it was. The heading is a flex item centred in a column,
-           laid out by that margin box, so nothing above or below it
-           moves and nothing about the line is different. */
         padding: 0.1em 0.14em;
         margin: -0.1em -0.14em;
         background-image: linear-gradient(100deg,
@@ -2650,19 +1660,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
         transition: background-position var(--t-flow) var(--ease);
     }
 
-    /* `transition` is a shorthand and this element's is already spoken
-       for: the entrance in section 6 declares it on `[data-reveal].is-in`,
-       which is three classes to this rule's one and so takes the whole
-       list — the sweep included, leaving a heading that changes colour
-       in a single frame. It cannot be added to the entrance's rule
-       either, which is every revealed element on the site.
-
-       So the list is stated once more, here, at a specificity that
-       clears it and in one place rather than two: the sweep, and the
-       entrance's own fade and rise written from the same three tokens
-       the entrance writes them from. The rule above is what a reader
-       without JavaScript gets, where there is no entrance to share
-       with. */
     .js .hero__title[data-reveal] {
         transition: background-position var(--t-flow) var(--ease),
                     opacity var(--t-slow) var(--ease-io) var(--d, 0s),
@@ -2682,11 +1679,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
                     calc(var(--t-flow) * 0.17);
     }
 
-    /* Text painted through its own glyphs has no fill of its own, and a
-       selection drawn over it would otherwise be a band of --signal
-       with nothing legible in it. The fill is given back for the length
-       of the selection, on both sites: the heading's own text, and the
-       text of the spans inside it. */
     .hero__title::selection,
     .hero__title ::selection {
         background: var(--signal);
@@ -2695,64 +1687,22 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     }
 }
 
-/* --- The statement, typed --------------------------------------------
-   The line writes itself out once, character by character, on the first
-   screen (src/hooks/useTypewriter.js). Everything below is the hiding —
-   the cadence, the caret's position and when the whole thing stops are
-   the hook's, and the reader who has asked for less motion never gets
-   here at all: the hook reads the preference itself and returns without
-   typing, the same way the carousel and the scroll system do, so there
-   is nothing in section 17 to undo.
-
-   The image stands down for the length of it. The sweep above is a
-   background painted through the glyphs, and a background cannot be
-   held back a character at a time — an untyped character would still be
-   drawn by the image its parent is painting. So the ink is handed back
-   instead, which is what the resting state of that sweep looks like
-   anyway, and the sweep is given the finished line the moment the
-   attribute comes off. It is an attribute rather than a class because
-   the entrance marks this same element with one from outside React —
-   see the note in src/sections/Hero.jsx.                              */
 .hero__title[data-typing] {
     background-image: none;
     color: var(--ink);
 }
 
-/* Hidden rather than transparent, and hidden rather than unrendered:
-   visibility keeps every character's box, so the line is laid out at
-   its full measure from the first frame and nothing on the screen
-   reflows as it fills. It is also the one way of hiding a character
-   that the character's own caret can opt back out of. */
 .hero__title[data-typing] .hero__char { visibility: hidden; }
 .hero__title[data-typing] .hero__char.is-on { visibility: visible; }
 
-/* Positioned only while the class is on, and that is not a detail. A
-   relatively positioned inline is a positioned descendant, and a
-   positioned descendant's glyphs are painted after the box's own
-   background rather than into it — so they are not in the mask the
-   sweep above is clipped to, and a statement whose characters were
-   permanently positioned would be painted through nothing at all the
-   moment the typing handed it back. It only needs a containing block
-   for as long as there is a caret to hang off it, which is exactly as
-   long as this attribute is on the heading. */
 .hero__title[data-typing] .hero__char { position: relative; }
 
-/* The caret stands at the head of the next character to arrive, so it
-   advances with the line and is gone the moment there is no next
-   character — which is the same moment the attribute comes off. One step
-   down the ramp, the register every subordinate mark on the site is
-   set in, so it reads on either ground without a second declaration.
-   Its measure is in em: the statement is a clamp, and a caret set in
-   pixels would be a hairline at one end of it and a slab at the
-   other. */
 .hero__title[data-typing] .hero__char.is-caret::before {
     content: '';
     visibility: visible;
     position: absolute;
     left: -0.055em;
-    /* Cap height to baseline, measured off the face rather than the
-       line box: the box is 0.94 of the em and Castoro's cap sits about
-       0.07 below the top of its content area. */
+
     top: 0.07em;
     width: 0.05em;
     height: 0.8em;
@@ -2781,16 +1731,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .hero__scroll svg { width: 0.625rem; height: 0.625rem; color: currentColor; }
 
-
 /* ====== 9. SELECTED WORK =========================================== */
-/* The visual centre: a heading on a warm ground, and the six covers as
-   one rigid row behind a pane of glass.
-
-   There is no second list under it. The numbered index that used to
-   stand here said the same six things the strip already says, and the
-   height it needed — most of it the empty columns its travelling plate
-   moved through — was a screen and a half of ground between the work
-   and the next section. The links it carried are on the covers now. */
 
 .work__tag { grid-column: 1 / -1; }
 
@@ -2816,23 +1757,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .work__statement { grid-column: 1 / span 7; }
 }
 
-/* --- The glass carousel -----------------------------------------------
-   The six covers as one rigid row behind a pane of glass: neutral
-   across the middle, refracting hard at the rims. The picture itself is
-   WebGL — src/carousel/ — and everything below is the frame around it:
-   the stage the canvas is measured against, the label and counter that
-   ride over it, and the plain strip a reader gets before the canvas
-   arrives or in place of it if it never does.
-
-   The ratios the renderer reads back out of this stylesheet are the
-   reference's own, taken from the recording: a card is 22.5% of the
-   stage's width — capped so it can never be more than 46% of its
-   height — the gap between two cards is 12.2% of a card, and the row's
-   centre line sits at 50.5%. Width, not height, because how many cards
-   reach across the rim is what the rhythm is made of.
-
-   They are declared here rather than in the module so a breakpoint can
-   change the rhythm without changing the code. */
 .glass {
     --glass-card-w: 0.225;
     --glass-card-h: 0.46;
@@ -2841,10 +1765,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     --glass-label: 1;
 
     position: relative;
-    /* Full bleed. The element is a child of the band rather than of the
-       shell, so this is already the page's content box — no viewport
-       unit, and therefore no scrollbar counted into the width and no
-       few pixels of drift between the lens's centre and the reader's. */
+
     width: 100%;
     margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
     aspect-ratio: 16 / 10;
@@ -2858,9 +1779,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 }
 
 .glass[data-live] { cursor: grab; }
-/* Over a card there is something to open; over the ground between two
-   there is only the strip to throw. Written by the pointer handler in
-   src/hooks/useGlassCarousel.js, which hit-tests through the lens. */
+
 .glass[data-live].is-over { cursor: pointer; }
 .glass[data-live].is-held,
 .glass[data-live].is-held.is-over { cursor: grabbing; }
@@ -2872,29 +1791,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     inset: 0;
     width: 100%;
     height: 100%;
-    /* The element exists for a beat before the renderer presents its
-       first frame, and an unpainted canvas is transparent. Costs
-       nothing — the frames that follow are opaque and cover it — and
-       it means the gap shows the page's ground rather than whatever
-       the compositor had there. */
+
     background: var(--paper);
 }
 
 .glass[data-live] .glass__canvas { display: block; }
 
-/* The label. Crossfaded through zero rather than dissolved — the
-   opacity is written per frame by the loop, because the fade has to be
-   able to turn round mid-way when the reader flicks past three cards
-   in a row.
-
-   Deliberately not promoted with will-change. The fade is six frames
-   long and text opacity is cheap; a permanent compositor layer for it
-   costs the type its subpixel rendering for the other fifty-four. */
-/* It is also the section's one visible link: the project in the middle
-   of the glass, named and openable, which is what gives a keyboard
-   something to land on. Shrink-wrapped rather than given a width, so the
-   box a click lands in is the text and not the six centimetres of glass
-   either side of it — the cards there are the canvas's to answer for. */
 .glass__label {
     position: absolute;
     left: 50%;
@@ -2944,15 +1846,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 /* The counter, as the reference has it: a small translucent plate a
    little darker than the ground, no border, no shadow. */
-/* 80 × 39 at the reference's scale, radius 7, on a fill nine per cent
-   darker than the ground. The padding is in em so it holds at any
-   size. */
-/* Said once a session, under the counter, where there is ground rather
-   than a cover: the strip's own cards stop a little above it and
-   nothing else is down here. It is drawn in the same chip the counter
-   sits in so the two read as one instrument rather than as a notice
-   stuck to the glass, and it never takes a pointer — a hint you can
-   click is a control, and this is a sentence. */
+
 .glass__drag {
     position: absolute;
     left: 50%;
@@ -2974,19 +1868,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     animation: drag-say var(--t-slow) var(--ease-io) both;
 }
 
-/* Spent. It goes on the reader's own gesture, so it goes at the speed
-   of an answer rather than of an arrival — and it is the gesture, not
-   this, that they are looking at by then. */
 .glass__drag[data-spent] {
     opacity: 0;
     transition: opacity var(--t-mid) var(--ease-io);
     animation: none;
 }
 
-/* The one part of the line that is not a word, and it is the part that
-   is actually the instruction. It travels the distance a strip would,
-   which is small and sideways and not a loop — a mark that animates
-   forever is a thing on the page rather than a thing being said. */
 .glass__drag-mark { animation: drag-swing 2.4s var(--ease-io) 3; }
 
 @keyframes drag-say {
@@ -3015,14 +1902,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     pointer-events: none;
 }
 
-/* What is in the document before the canvas exists, and what stays if
-   WebGL never answers: the same six covers, the same rhythm, still
-   scrollable sideways. No glass, and no apology for it.
-
-   It is also where the six links live as markup — one per cover — so
-   the prerendered document a crawler or a reader without a script is
-   handed lists the whole of the work, and the canvas is an enhancement
-   on top of it rather than the only way in. */
 .glass__strip {
     position: absolute;
     left: 0;
@@ -3073,11 +1952,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .glass__cell:nth-child(odd) img { aspect-ratio: 4 / 3; }
 .glass__cell:nth-child(even) img { aspect-ratio: 4 / 5; }
 
-/* Each cover's project, and what the label opens: both are in the
-   document for the reasons the visible text cannot carry them — an
-   image whose alt is empty because the link around it is what is being
-   named, and a title that says which project without saying what
-   following it does. Print takes the first of them back. */
 .glass__name,
 .glass__hint {
     position: absolute;
@@ -3091,21 +1965,8 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .glass[data-live] .glass__strip { display: none; }
 
-/* And on a scripted page, not until it is known to be needed. The
-   renderer answers within a frame of the script arriving, and in that
-   gap the strip used to be on the page — below the first screen, but
-   inside the distance a browser starts fetching lazy images from — so
-   its seven covers were being downloaded at the start of every visit,
-   on the same connection as the script the first screen was waiting
-   for, to be hidden the moment the glass went live. Without a script
-   (no .js on the root) it is there from the first byte as before, and
-   data-strip brings it back wherever the glass cannot run. */
 .js .glass:not([data-live]):not([data-strip]) .glass__strip { display: none; }
 
-/* Narrower windows keep the reference's proportions by changing the
-   stage's shape rather than the strip's: a card stays 36% of whatever
-   height it is given, so the rhythm holds and only the count of cards
-   across the rim changes. */
 @media (max-width: 62rem) {
     .glass { aspect-ratio: 4 / 3; --glass-card-w: 0.34; }
 }
@@ -3116,39 +1977,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .glass__count { top: 88%; }
 }
 
-
-
 /* ====== 9.1 SELECTED BEHANCE WORK =================================== */
-/* The other half of the same practice, and deliberately not set like
-   the half above it.
-
-   It was a grid — six plates at one width and one shape on shared
-   column and row lines — and a grid was the right answer to "these are
-   a set" and the wrong one to what a set of pictures is for. A grid is
-   read the way a table is, all at once and by comparison, and six
-   covers laid out to be compared are six covers nobody looks at.
-
-   So it is a rail: one endless row, thrown by hand, with the picture
-   inside each plate sitting a little behind its own crop so that it
-   lags the frame it is in. A set you move through rather than scan.
-
-   It is the second moving strip on the page and it is not the first
-   one again. Selected Work is a rigid row passing behind a pane of
-   glass: the row is flat, the field is the whole of the effect, and it
-   snaps so the reader is always looking at one project. Here the field
-   is flat, the depth is in the plates, and nothing snaps — a gallery
-   has no one thing to be looking at, so it is never brought to a stop
-   on one.
-
-   WHAT THIS FILE OWNS, AND WHAT IT DOES NOT. Everything below is the
-   resting state: the plate's width, the gap, the crop, the caption,
-   the gutter the row starts at, and the horizontal scroller the row
-   *is* before any script has run. The loop in
-   src/hooks/usePlateRail.js reads that layout back off the browser and
-   writes one transform per plate on top of it — so a breakpoint added
-   here changes the rhythm of the rail without a line of JavaScript
-   changing, and taking the script away leaves a gallery rather than a
-   ruin.                                                              */
 
 .beh__tag { grid-column: 1 / -1; }
 .beh__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -3160,14 +1989,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .beh__count     { grid-column: 11 / span 2; margin-top: 0; }
 }
 
-/* --- The stage --------------------------------------------------------
-   Full bleed. The element is a child of the band rather than of the
-   shell, so this is already the page's content box — no viewport unit,
-   and therefore no scrollbar counted into the width and no few pixels
-   of drift between the gate and the middle of the reader's screen.
-
-   The padding is the gate's: the two register ticks sit in it, above
-   the row and below it, and the row keeps clear of them.              */
 .beh__stage {
     position: relative;
     width: 100%;
@@ -3175,23 +1996,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     padding-block: 1.125rem;
 }
 
-/* --- The rail ---------------------------------------------------------
-   The plate's width is a fraction of the row rather than a measure,
-   because how many plates reach across the stage is what the rhythm is
-   made of — the same reasoning the carousel's card width is set from
-   the stage's width and not its height. One and a third across a
-   phone, two and a bit across a tablet, three and a half across a
-   desktop, with a plate cut by each edge at every width: a row that
-   ended cleanly at both edges would be a row with two ends, which is
-   the one thing an endless rail must not look like.
-
-   Before the script runs — and for a reader who has asked for less
-   motion — it is a horizontal scroller with snap points, which is a
-   perfectly good gallery and is what the prerendered document ships.
-   The scrollbar is hidden because the state lasts one frame for almost
-   everybody and a bar that appears and then vanishes is a layout shift;
-   what says there is more of it is the plate cut by the right edge,
-   which says so at every width and in every state.                    */
 .beh__rail {
     --beh-plate: 74%;
     --beh-gap: clamp(0.875rem, 1.6vw, 1.75rem);
@@ -3213,11 +2017,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 @media (min-width: 62rem) { .beh__rail { --beh-plate: 33%; } }
 @media (min-width: 75rem) { .beh__rail { --beh-plate: 27%; } }
 
-/* Live, the scroller stops being one: the row is wrapped and placed by
-   the loop, and a box that could also be scrolled natively would be
-   two instruments disagreeing about where the row is. Vertical panning
-   still belongs to the page — a gallery that swallowed it would be a
-   trap three quarters of the way down a document. */
 .beh__rail[data-live] {
     overflow: hidden;
     scroll-snap-type: none;
@@ -3227,23 +2026,10 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     user-select: none;
 }
 
-/* Grab, and grab only — where the carousel next door writes `pointer`
-   over a card and `grab` over the ground between two. The difference is
-   what is under the pointer: there, most of the stage is ground, so the
-   cursor can afford to change over a card and still have somewhere to
-   say `grab`. Here almost the whole row is plates, and a cursor that
-   read `pointer` everywhere would have nowhere left to say the row can
-   be thrown at all. What says a plate opens is the reticle, which is
-   already over it and already says `Open`. */
 .beh__rail[data-live].is-held { cursor: grabbing; }
 
 .beh__rail:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
 
-/* One flex row in ordinary flow, which is the whole trick: the browser
-   decides every plate's width and position from the rules above, the
-   loop reads that back and moves each plate away from it, and the
-   revert is to stop writing. The block padding is the crop ticks' —
-   they sit a little outside the picture, and the rail clips. */
 .beh__track {
     display: flex;
     align-items: flex-start;
@@ -3265,18 +2051,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .beh__figure .frame__media { aspect-ratio: 4 / 3; }
 
-/* The picture, and the one element on the page that is genuinely
-   behind something. At rest it is exactly its own crop — no scale, no
-   offset — because that is the state the fallback needs and the state
-   a revert has to be able to get back to. Live, the loop writes the
-   lag, the smear and the scale that pays for them, all three in one
-   transform.
-
-   The transition is the fallback's. It is what lets a hovered plate
-   ease in behind its crop where there is no loop to do anything more
-   interesting, and it is taken off the moment there is one: a property
-   being written sixty times a second must not also be being eased
-   toward its last value. */
 .beh__shot {
     display: block;
     width: 100%;
@@ -3296,16 +2070,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .beh__link:focus-visible .frame::before,
 .beh__link:focus-visible .frame::after { border-color: var(--flow); }
 
-/* --- The gate ---------------------------------------------------------
-   Two register ticks on the stage's centre line, one above the row and
-   one below it. It is the axis the parallax is measured from and the
-   point the focus falls away from, and it is the site's own mark
-   rather than a new device: the same hairline tick that sits on the
-   corner of every framed picture on the page, turned to mark a middle
-   instead of a corner.
-
-   Written only while the rail is live — see PlateRail.jsx. A mark
-   across a gallery that is not moving would be pointing at nothing. */
 .beh__gate {
     position: absolute;
     inset-block: 0;
@@ -3328,15 +2092,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .beh__gate::before { top: 0; }
 .beh__gate::after { bottom: 0; }
 
-/* --- The caption ------------------------------------------------------
-   The site's, with one column added: the numeral it has always had,
-   the name and the discipline, and the mark that says this one leaves
-   the site.
-
-   The mark sits with the name rather than at the plate's right edge.
-   Pinned to the edge it was a different distance from the words on
-   every plate, and a gap that changes size with no rule behind it
-   reads as something that came loose rather than as alignment. */
 .beh__cap {
     position: relative;
     display: grid;
@@ -3347,11 +2102,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     border-top: 1px solid var(--rule);
 }
 
-/* Two layers on one edge — the hairline as the border and the accent as
-   a pseudo-element scaled over the top of it — so that nothing moves,
-   nothing reflows, and the line is the same weight drawn or not. The
-   rule earns itself at rest as well: in a row of plates it is what
-   sets a caption off from the picture above it. */
 .beh__cap::after {
     content: '';
     position: absolute;
@@ -3398,12 +2148,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .beh__link:hover .beh__go,
 .beh__link:focus-visible .beh__go { transform: translate(0.2rem, -0.2rem); color: var(--flow); }
 
-/* --- The instrument line ----------------------------------------------
-   Back on the twelve columns, under a full-bleed row: where in the lap
-   the reader is, the lap itself drawn as a hairline, and the way out of
-   the section. One line, so the rail is closed the way every other band
-   on the site is closed — by a rule the whole measure wide with
-   something set on it.                                                */
 .beh__foot {
     grid-column: 1 / -1;
     margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
@@ -3425,18 +2169,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .beh__lap { flex: none; }
 .beh__lap b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
 
-/* The lap, drawn. A hairline the width of the column with one plate's
-   worth of it inked, travelling — which is the one readout an endless
-   row can honestly give: not how far through it the reader is, because
-   there is no through, but where in the set they are standing.
-
-   Two runs, a lap apart, so the meter is endless in the same way the
-   rail is: as the first leaves the right edge the second is already
-   entering from the left, and there is no frame where the mark is
-   nowhere. The travel is written as a multiple of the run's own width
-   because that is the one unit both of them share — at --beh-lap of 1
-   the first has moved exactly the width of the meter and the second is
-   standing where the first began. */
 .beh__meter {
     --beh-lap: 0;
     --beh-n: 6;
@@ -3473,10 +2205,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     gap: 0.5rem;
     font-size: var(--t-micro);
     font-weight: 500;
-    /* The tag's own line box, so that the counter at one end of the
-       foot and this at the other sit on one baseline: both boxes are
-       centred in the same row, and two boxes of different heights
-       centred together have their type at two different levels. */
+
     line-height: 1.35;
     letter-spacing: 0.01em;
     text-transform: none;
@@ -3492,7 +2221,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .beh__cta:hover span,
 .beh__cta:focus-visible span { transform: translate(0.2rem, -0.2rem); }
-
 
 /* ====== 10. ABOUT =================================================== */
 
@@ -3520,17 +2248,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .about__portrait { max-width: 22rem; }
 .about__portrait .frame__media img { aspect-ratio: 4 / 5; }
 
-/* --- The one annotated phrase ----------------------------------------
-   `disciplines` is the word the statement turns on, and the only word
-   on the site that is marked by hand. Two strokes that do not quite
-   retrace each other, in the site's orange: one clean sweep would read
-   as an underline the interface drew, which is the opposite of the
-   point. The mark only means something while it is the only one.
-
-   The finished mark is the resting state. Drawing it is an override —
-   see src/animations/annotation.js — so a reader who has asked for
-   less motion, and a document whose script never arrives, both still
-   get the annotation. */
 .mark {
     position: relative;
     display: inline-block;
@@ -3557,10 +2274,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     stroke-linejoin: round;
 }
 
-/* --- The statement the reading reveal plays across --------------------
-   The words are already spans in the markup (src/components/Words.jsx).
-   They need no rule of their own: full weight is the resting state, and
-   src/animations/wordReveal.js only ever brings them up to it. */
 .about__lede {
     font-family: var(--font-display);
     font-size: var(--t-sub);
@@ -3602,14 +2315,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     max-width: 46ch;
 }
 
-/* The contribution chart is a third-party image — ghchart.rshah.org —
-   with its own light ground and its own green scale baked into the
-   bytes. Neither reads the page, so this is the one plate on the site
-   that is deliberately the same in both themes: a light panel, because
-   the picture inside it is a light picture, and a fixed neutral border
-   because --rule-2 is a white transparency in dark and would not read
-   on it. The image is desaturated on the way in, so the last hue the
-   site had goes with the rest of them. */
 .chart {
     min-width: 0;
     background: #F2F2F2;
@@ -3634,11 +2339,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .chart .cap__no { color: #000000; }
 .chart .cap a { color: #000000; }
 
-/* The plate does not follow the theme, so the two rules that are
-   written in terms of the ink's polarity — the focus ring in section 2
-   and the selection fill above it — have to be pinned here too. In dark
-   both resolve to white, which on this one light panel is a ring and a
-   highlight that are not there. */
 .chart .cap a:focus-visible { outline-color: #000000; }
 .chart ::selection { background: #000000; color: #FFFFFF; }
 
@@ -3646,22 +2346,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .practice { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: start; }
 }
 
-
 /* ====== 11. SIDE QUESTS ============================================= */
-/* A rail, and a grid that answers it.
-
-   The section used to be a wall of plates pinned a degree or two off
-   true, and the tilt was doing all the work of saying "these are
-   different" — which is the wrong kind of different: a grid that has
-   been knocked rather than a section that is playful. What is playful
-   now is what the reader does. The grid never goes ragged; the rail
-   is where the character is.
-
-   Nothing here is a new idiom. The chips are the interface voice the
-   whole site is set in, the counts are the tabular numerals every
-   index on the page uses, the plates are .frame with its two crop
-   ticks, and the accent arrives the way it arrives everywhere else —
-   under the cursor, never at rest. */
 
 .quests__tag { grid-column: 1 / -1; }
 .quests__statement { grid-column: 1 / -1; margin-top: 1.25rem; }
@@ -3673,20 +2358,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     .quests__lead      { grid-column: 4 / span 6; margin-top: 1.5rem; }
 }
 
-/* --- The rail ---------------------------------------------------------
-   One hairline across the measure with the families sitting on it, so
-   it reads as the top rule of the grid below rather than as a widget
-   parked above it. */
 .quests__rail {
     grid-column: 1 / -1;
     margin-top: clamp(2.5rem, 5vw, 4rem);
     border-bottom: 1px solid var(--rule);
 }
 
-/* The chips scroll rather than wrap on a narrow screen: a control that
-   reflows to two lines stops being a rail. The scrollbar is left to the
-   platform, and the row keeps a little end padding so the last chip is
-   not flush against the edge it scrolls to. */
 .quests__chips {
     position: relative;
     display: flex;
@@ -3729,23 +2406,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .quests__chip[aria-pressed='true'] .quests__count { color: var(--flow); }
 
-/* The rule that travels. Both edges are written as insets, and each is
-   given its own duration: the edge going towards the destination
-   arrives first and the one behind it catches up, so the rule stretches
-   across the gap and settles at the far end instead of sliding over as
-   a rigid block. Two durations, no library, and the direction is the
-   only thing script has to say.
-
-   It is 2px rather than a hairline because it sits on one: a 1px mark
-   on a 1px rule is a rule that changed colour.
-
-   --ease-io rather than --ease, and this is the one place on the site
-   that wants the difference. --ease spends nine tenths of its travel
-   in the first third of its time, which collapses the gap between the
-   two edges into about fifty milliseconds — the stretch happens, but
-   it reads as a flicker rather than as a rule crossing a gap. The
-   in-out curve spreads both edges over the whole duration, so the lag
-   between them is legible for as long as the travel lasts. */
 .quests__marker {
     position: absolute;
     bottom: -1px;
@@ -3759,9 +2419,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
                 opacity var(--t-fast) var(--ease-io);
 }
 
-/* Only once script has measured it. Before that the chip's own colour
-   is the whole of the state, and an unplaced rule would sit at the
-   left edge at full width. */
 .quests__rail[data-placed] .quests__marker { opacity: 1; }
 
 .quests__rail[data-dir='fwd'] .quests__marker {
@@ -3772,11 +2429,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     transition-duration: var(--t-mid), calc(var(--t-mid) * 1.45), var(--t-fast);
 }
 
-/* --- The grid ---------------------------------------------------------
-   Three columns, then two, then one, and every card the same width and
-   the same ratio in all three. The families are sized so each state of
-   the rail fills the columns exactly, which is what lets the content
-   change without the composition going ragged. */
 .quests {
     grid-column: 1 / -1;
     margin-top: clamp(2rem, 4vw, 3rem);
@@ -3795,14 +2447,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .quest { min-width: 0; }
 
-/* The whole tile is the target, and it carries no colour of its own:
-   what answers the cursor is the plate, the title and the rule.
-
-   Four rows, and the note's is the one that takes the slack: the tile
-   is stretched to its row by the grid above, so a note that runs to
-   three lines beside one that runs to two leaves the difference under
-   the note rather than pushing its rule down past its neighbour's.
-   The rules across a row read as one line because they are one. */
 .quest__link {
     position: relative;
     display: grid;
@@ -3861,9 +2505,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
 .quest__go { display: inline-block; transition: transform var(--t-mid) var(--ease); }
 
-/* The rule under the tile, drawn from the left on the gesture. Two
-   layers on one element: the hairline is the border, the accent is the
-   scaled pseudo-element over it, so nothing moves and nothing reflows. */
 .quest__rule {
     position: absolute;
     left: 0;
@@ -3883,10 +2524,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     transition: transform var(--t-slow) var(--ease);
 }
 
-/* One gesture, four answers: the plate lifts, its picture eases in
-   behind the crop, the ticks and the title take the accent, and the
-   rule draws itself across. :focus-within carries the whole of it for
-   a reader arriving by keyboard. */
 .quest__link:hover .quest__plate,
 .quest__link:focus-visible .quest__plate { transform: translateY(-0.375rem); }
 
@@ -3907,16 +2544,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .quest__link:hover .quest__rule::after,
 .quest__link:focus-visible .quest__rule::after { transform: scaleX(1); }
 
-/* --- The settle -------------------------------------------------------
-   What the cards do when the rail changes under them. It is the
-   entrance in section 6 with a shorter rise and a stagger read off the
-   card's own index, and it plays on mount because the key changes with
-   the family — so a card that was already on screen arrives again with
-   the ones that are new, which is what makes the grid read as one
-   thing re-composing rather than as items being added to a list.
-
-   Capped at the sixth so a long family never ends on a card that waits
-   half a second to appear. */
 @keyframes quest-settle {
     from { opacity: 0; transform: translateY(0.75rem); }
     to   { opacity: 1; transform: none; }
@@ -3927,23 +2554,8 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     animation-delay: calc(min(var(--i), 5) * 55ms);
 }
 
-
 /* ====== 12. CONTACT & FOOTER ======================================== */
 
-/* --- The close -------------------------------------------------------
-   The last band's ground is lifted into a layer of its own so that it
-   can arrive as a contained panel and open out to the edges. The
-   section itself is painted in the page's ground rather than the
-   zone's, which is the only thing the ink can arrive *over*.
-
-   Full bleed is the resting state, declared here with no clip at all,
-   so a phone, a reader who has asked for less motion and a document
-   whose script never arrives get the band exactly as it has always
-   been. The starting inset is added only where the scroll system is
-   running — a wide window, and a reader who has not asked for less
-   motion — and it is kept smaller than the shell's own left offset at
-   every width in that range, so the composition is never read through
-   a moving edge. */
 .close { position: relative; background: var(--paper-base); }
 
 .close__ground {
@@ -3962,51 +2574,12 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 .contact__statement { grid-column: 1 / -1; }
 
 @media (min-width: 48rem) {
-    /* The heading and the shelf share a row from here up, which is the
-       only way the rule can be where it is: the books stand on it, the
-       address hangs under it, and the whole of that has to come up
-       beside the sentence rather than queue below it. They can share
-       one because they never meet — the sentence is seven columns at
-       the left and the books are kept to the far right of the same
-       line, with the rule they stand on running the width of both. */
+
     .contact__statement { grid-column: 1 / span 7; grid-row: 1; }
 }
 
-
-/* --- The shelf -------------------------------------------------------
-   Four books on a rule, in the cell the supporting line used to hold.
-   The geometry is declared here, once, and read by everything below it
-   and by src/components/Shelf.jsx — the lean measures its own reach
-   from the distance between two spines, so the numbers in this block
-   are the only place the row is sized.
-
-   --shelf-room is the one that is not a taste. A book turns about its
-   bottom corner, so a cover of height h leaning by θ reaches h·sinθ
-   past the edge it started at, and at twelve degrees that is a fifth of
-   its own height. The room either side of the row is that overhang,
-   which is what keeps a book at either end of the shelf inside the box
-   the grid gave it instead of out over the gutter — it is why this
-   section can be left to overflow visibly without ever widening the
-   page. Raise --shelf-h or the lean in the component and this has to
-   come up with them.
-
-   Nothing here is painted in anything but the ramp: a cover is --ink
-   and the type on it is --paper, so the shelf is black on white on the
-   light theme and white on black on the dark one without a second
-   declaration anywhere.                                              */
 .shelf {
-    /* The floor on the width is set by a wrapped title rather than by
-       taste: below 48rem a cover is at its narrowest and the longest
-       title here needs two lines to fit down it, so the cover has to be
-       wide enough to stand them side by side — two lines of --t-micro
-       at this leading, and the padding either side. Take it lower and a
-       spine runs out over its own edge.
 
-       --shelf-room is the other one that is not a taste. A book turns
-       about its bottom corner, so a cover of height h leaning by θ
-       reaches h·sinθ past the edge it started at; the room at each end
-       of the row is that overhang, which is what keeps the last book on
-       the shelf inside the page instead of out over the gutter. */
     --shelf-w:    clamp(2.25rem, 3.6vw, 2.375rem);
     --shelf-h:    clamp(8.5rem, 10.5vw, 8.75rem);
     --shelf-gap:  clamp(0.3125rem, 0.6vw, 0.5rem);
@@ -4014,32 +2587,21 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
 
     grid-column: 1 / -1;
     margin-top: clamp(1.25rem, 2.6vw, 2rem);
-    /* The shelf's box is the full width of the grid and the heading's
-       is the left seven columns of it, so from 48rem one lies over the
-       other. Nothing in the empty part of it should be catching a
-       press that was meant for the sentence underneath — and nothing
-       needs to, because the lean is listened for on the window rather
-       than on any of this. The covers take theirs back, so a title is
-       still a thing a reader can select. */
+
     pointer-events: none;
 }
 
 @media (min-width: 48rem) {
     .shelf {
         grid-row: 1;
-        /* Hugging the foot of the row rather than stretching to it, so
-           the rule is the bottom of the composition and not a line
-           somewhere inside a taller empty box. */
+
         align-self: end;
         margin-top: 0;
     }
 }
 
 .shelf__row {
-    /* Positioned so that a book's offsetLeft is measured against the
-       row. The component reads the spines that way rather than off a
-       client rect, because a client rect is measured through the
-       rotation the component is writing — see the note there. */
+
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -4047,17 +2609,7 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     padding-inline: var(--shelf-room);
     margin: 0;
     list-style: none;
-    /* At the far end of the line, at every width. The rule under the
-       books is the full width of the grid on a phone as much as on a
-       desk, and four small objects standing at the start of a long line
-       read as the start of a list — at the end of it they read as the
-       end of a shelf. They were left-aligned below 48rem on the grounds
-       that a phone's lines all start at the left; the shelf is not a
-       line of text, and the two layouts disagreeing about where the
-       books stand was the one thing on the band that changed character
-       between a phone and a laptop. The room at the end is the same
-       overhang allowance as ever, so the last cover leaning right still
-       stays inside the page. */
+
     justify-content: flex-end;
 }
 
@@ -4070,16 +2622,6 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     height: calc(var(--shelf-h) * var(--tall, 1));
 }
 
-/* The cover, and the only thing in the row that moves. It is a layer of
-   its own because the list item above it is already carrying the site's
-   entrance — a rise and a fade, section 6 — and an element cannot hold
-   two transforms without one of them being the one that survives.
-
-   It is a <button> wherever a script ran and the browser has a dialog
-   to open, and a <span> everywhere else, so the reset below is written
-   for both: a button brings a border, a background, a padding, a font
-   and a text alignment of its own, and every one of them is something
-   this rule is about to set for itself. */
 .shelf__vol {
     appearance: none;
     border: 0;
@@ -4097,55 +2639,25 @@ html:not(.js) .menu__foot { padding-top: clamp(1.25rem, 3vh, 1.75rem); }
     /* Square against the spine, eased at the fore edge — the only thing
        on the cover that says which way round the book is. */
     border-radius: 1px 3px 3px 1px;
-    /* A hairline of the ground round every cover. Two books leaning
-       into the same gap end up over one another, and two --ink
-       rectangles overlapping are one --ink shape: the row stops being
-       books at exactly the moment it is doing the thing it is here to
-       do. This is the page showing through between them, which is the
-       only separator a two-tone system has — a ring rather than a
-       shadow, at the width of every other line on the site, and in the
-       gap at rest where nothing can see it. */
+
     box-shadow: 0 0 0 1px var(--paper);
     transform: translateX(var(--slide, 0px)) rotate(var(--lean, 0deg));
     transform-origin: var(--pivot, 50%) 100%;
 }
 
-/* A spine that opens something says so the way every other target on
-   the site says it, and with nothing else: no hover fill, no lift, no
-   mark in the corner. The row already answers the pointer — a cover
-   that also changed colour under it would be the shelf explaining
-   itself twice. */
 button.shelf__vol { cursor: pointer; }
 
-/* Down the spine, head to the right, which is the way a book on a
-   shelf is read. A title too long for the cover wraps to a second line
-   beside the first rather than being cut, for the same reason a real
-   one does. */
 .shelf__spine {
     writing-mode: vertical-rl;
     text-orientation: mixed;
     max-height: 100%;
-    /* The face the band's own heading is set in, which is what a book
-       is titled in and what the small interface caps this used to carry
-       were not. It comes with the case: Castoro set in caps at eleven
-       pixels is a label, and the titles are written as titles in
-       src/data/books.js — so they are printed as written, the way the
-       sentence beside them is. */
+
     font-family: var(--font-display);
     font-size: var(--t-micro);
     line-height: 1.32;
     letter-spacing: 0.02em;
 }
 
-/* The shelf and the rule the address hangs under are the same line.
-
-   That rule was a border on .contact__mail-wrap and has been handed
-   over to this: same place, same weight, same token, one line where
-   there would otherwise have been two a few pixels apart with four
-   books balanced on the upper one. What it gains by the move is an
-   entrance — it is drawn from its left edge by the same attribute the
-   band dividers carry, for the reason stated in section 3, that a
-   border cannot be scaled and a pseudo-element can. */
 .shelf__board {
     position: relative;
     height: 1px;
@@ -4158,22 +2670,11 @@ button.shelf__vol { cursor: pointer; }
     background: var(--ink);
 }
 
-/* The address is the focal point of the last screen. The rule above it
-   is drawn by the shelf standing on it (below), which is why there is
-   no border here and nothing between the two: the books are on that
-   line, so the line has to be one thing. */
 .contact__mail-wrap {
     grid-column: 1 / -1;
     padding-top: 1.25rem;
 }
 
-/* Two lines in one cell: the address, and what the address says when it
-   has just been copied. Both are always in the box, so the box is
-   always the width of the address and nothing in the composition can be
-   moved by a word arriving. Grid rather than absolute positioning
-   because the wrap above still has to be sized by something, and the
-   address is the only one of the two that should ever be doing the
-   sizing. */
 .contact__mail {
     display: inline-grid;
     font-family: var(--font-display);
@@ -4190,10 +2691,6 @@ button.shelf__vol { cursor: pointer; }
     transition: background-size var(--t-slow) var(--ease);
 }
 
-/* The rule drawing itself under the address is the whole of the state.
-   A colour change went with it, from the ink to the accent; monochrome
-   that is the ink to the ink, so it is gone and its transition segment
-   with it. */
 .contact__mail:hover { background-size: 100% 1px; }
 
 .contact__mail > * { grid-area: 1 / 1; }
@@ -4201,10 +2698,6 @@ button.shelf__vol { cursor: pointer; }
 .contact__mail-text,
 .contact__mail-said { transition: opacity var(--t-fast) var(--ease-io); }
 
-/* The one hue, on the one rule it is kept for: something that is being
-   touched, for as long as it is being touched and no longer. A word
-   that appears on a press and is gone a second and a half later is the
-   most literal reading of that rule on the site. */
 .contact__mail-said { color: var(--flow); opacity: 0; }
 
 .contact__mail[data-said] .contact__mail-text { opacity: 0; }
@@ -4290,10 +2783,7 @@ button.shelf__vol { cursor: pointer; }
 
 /* Case-study pages carry a page footer rather than living in a zone. */
 .page-foot {
-    /* The home indicator sits about 34px up from the bottom edge and
-       the resting padding here is 32px, so the last line of the page is
-       the one place on the site a phone could crop. The home page's
-       bands are already deeper than the inset and ask for nothing. */
+
     padding: 1.5rem var(--gutter)
              calc(clamp(2rem, 5vh, 3rem) + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--rule);
@@ -4320,34 +2810,6 @@ button.shelf__vol { cursor: pointer; }
 
 .page-foot a:hover { color: var(--ink); }
 
-
-/* --- Who else is here -------------------------------------------------
-   The live count, and the count of everyone who ever got this far. Both
-   footers take it — the one inside the contact band and the one that
-   closes a case study — and it is the same element in each, because
-   what it says does not change with the page it is on.
-
-   It sits on a line of its own rather than as a fourth thing in the
-   footer's row. That row is three fixed statements spread edge to edge
-   by space-between, and a figure that changes while it is being read
-   cannot be one of them without pushing the other two around every
-   time it does. `flex-basis: 100%` is the whole of how it gets that
-   line: a wrapping flex row hands a full-width item the next one down,
-   which puts this under the colophon at the bottom left — the last
-   thing on the page, below the sentence that says who built it.
-
-   No box, no rule and no heading. It is set in the type the footer
-   already declares for its paragraphs, one step of the ramp louder on
-   the two numerals and no louder anywhere else.
-
-   Nothing is rendered at all until a real number arrives — see
-   src/components/Presence.jsx — so a reader without JavaScript, a page
-   whose endpoint is not there and a first request still in the air all
-   get the footer exactly as it has always been rather than a
-   placeholder or a zero. Which is also what lets the entrance be an
-   animation rather than a transition: the element is inserted, and an
-   animation on a newly inserted element plays, where a transition
-   between two states the element was never in does not.            */
 .presence {
     flex-basis: 100%;
     margin-top: clamp(0.375rem, 1.2vw, 0.75rem);
@@ -4359,38 +2821,12 @@ button.shelf__vol { cursor: pointer; }
 
 .presence__line + .presence__line { margin-top: 0.25rem; }
 
-/* Everything in this footer is one step off the ink already, which
-   leaves nowhere below for a numeral to be subordinate — the register
-   the site puts index numerals in (--mark, section 1) is the colour
-   the label beside it is wearing. So it goes the other way: the two
-   figures are the only things down here at full ink, which is what
-   makes them findable without making them loud at this size.
-
-   Everything else about it is the site's numeral idiom: tabular, and
-   tracked one notch tighter than the words beside it. Tabular matters
-   more here than anywhere else it is used — this is the only numeral
-   on the site that changes while it is being looked at, and
-   proportional digits would shuffle the sentence after it every time
-   it did.                                                          */
 .presence__no {
     color: var(--ink);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.1em;
 }
 
-/* Inline rather than a flex row, so the line wraps like the sentence
-   it is if a five-figure count ever makes it too long for a phone, and
-   so the space after the numeral is a word space rather than a gap
-   that has to be guessed at.
-
-   Nudged up off the baseline: a circle centred on the x-height of
-   uppercase micro type sits optically low if it is left on it.
-
-   It rests at the fainter of the two hairline values, which is where
-   it stays if a heartbeat fails — the last good numbers stay exactly
-   where they are, and the dot is the only thing that admits the
-   connection has gone. Live, it comes up one step, to the register
-   every index numeral on the site is in.                          */
 .presence__dot {
     display: inline-block;
     width: 0.375rem;
@@ -4403,24 +2839,6 @@ button.shelf__vol { cursor: pointer; }
 
 .presence[data-state='live'] .presence__dot { background-color: var(--mark); }
 
-/* --- The breath -------------------------------------------------------
-   The accent is not allowed to rest anywhere on this site (section 1),
-   and a live indicator is exactly the kind of thing that would ask to
-   be the exception. It does not get to be one: the dot is declared in
-   the ramp and is in the ramp whenever nothing is animating it —
-   reduced motion, a stale connection, a printed page, a forced-colours
-   ground. The orange exists only in the middle of a four-second
-   crossing and is never where the dot comes to rest, which is the same
-   bargain the statement's sweep makes under the cursor.
-
-   Four seconds and an in-out curve, because the point is a pulse
-   rather than a blink: at --t-slow it would flash, and on the site's
-   default ease it would spend nine tenths of the crossing at one end
-   and read as a switch. It is also the only repeating animation on the
-   site, which is the other reason it asks the preference itself rather
-   than leaning on section 17 to stop it. Colour only — nothing moves,
-   nothing is laid out again, and the whole of it is a six-pixel
-   repaint.                                                          */
 @media (prefers-reduced-motion: no-preference) {
     .presence[data-state='live'] .presence__dot {
         animation: presence-beat 4s var(--ease-io) infinite;
@@ -4431,7 +2849,6 @@ button.shelf__vol { cursor: pointer; }
     0%, 100% { background-color: var(--mark); }
     50%      { background-color: var(--flow); }
 }
-
 
 /* ====== 13. CASE STUDY PAGES ======================================== */
 
@@ -4546,9 +2963,6 @@ button.shelf__vol { cursor: pointer; }
 
 .case-facts__val { font-size: var(--t-small); line-height: 1.55; color: var(--ink); margin: 0; }
 
-/* A fact that is a link to somewhere else: underlined, because nothing
-   else in the strip is, and the underline is what says it can be pressed.
-   One to a line when there are two. */
 .case-facts__link {
     display: block;
     width: fit-content;
@@ -4602,13 +3016,6 @@ button.shelf__vol { cursor: pointer; }
     .case-gallery > *:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
     .case-gallery > *:first-child:nth-last-child(odd) .frame__media img { aspect-ratio: 16 / 9; }
 }
-
-/* --- Videos -----------------------------------------------------------
-   The videos of a case study (src/components/CaseVideo.jsx). Each is a
-   16:9 frame holding a still and a play control until it is pressed,
-   then the player in the same box, so nothing on the page moves when it
-   starts. They lay out like the gallery's plates: two across, and an odd
-   one out leading at full width. */
 
 .case-videos { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 3.5vw, 2.75rem); }
 
@@ -4720,15 +3127,10 @@ button.shelf__vol { cursor: pointer; }
     max-height: 94dvh;
     padding: 0;
     border: 1px solid var(--rule-2);
-    /* One step off the page rather than the page itself: a dialog
-       covering the document has to be distinguishable from it, and on
-       a #000000 ground --paper is the same black as what it covers. */
+
     background: var(--paper-2);
     color: var(--ink);
-    /* The reset at the top of this file takes every margin to zero,
-       and a modal <dialog> is centred by nothing but its UA margin of
-       auto — without this line it opens pinned to the top left of the
-       window. */
+
     margin: auto;
 }
 
@@ -4760,12 +3162,6 @@ button.shelf__vol { cursor: pointer; }
 .lightbox__close:hover,
 .lightbox__close:focus-visible { color: var(--ink); }
 
-/* A book on the shelf opens as its cover and a note on it. The dialog
-   is sized by the cover rather than stretched to the window: a 2:3
-   poster in an 82rem box is a narrow picture in a wide grey field,
-   which is what this replaced. Stacked on a phone, where the dialog
-   scrolls as one thing; side by side from 48rem, where the cover sets
-   the height and the note scrolls inside it if it has to. */
 .lightbox--book {
     width: min(94vw, 62rem);
     overflow: auto;
@@ -4877,9 +3273,6 @@ button.shelf__vol { cursor: pointer; }
     counter-increment: caseblock;
 }
 
-/* Case blocks number themselves, in the same idiom as the section tags:
-   numeral, hairline tick, label. The tick is drawn inside the numeral's
-   own box so the three parts stay in order. */
 .case-block__label::before {
     content: counter(caseblock, decimal-leading-zero);
     flex: none;
@@ -4960,23 +3353,12 @@ button.shelf__vol { cursor: pointer; }
 
 /* A single figure quoted inside a case study. */
 
-
-/* --- Uncut plates -----------------------------------------------------
-   The pictures in FLOWID's blocks (src/case-studies/flowid-collateral.jsx),
-   which are given a width and never a shape: each is as wide as its
-   place in the body column and as tall as its own proportions make it,
-   so the banner, the photographs and the pages are none of them cut. */
-
 .case-plate .frame__media img,
 .case-expo .frame__media img,
 .case-pages .frame__media img,
 .case-stack .frame__media img,
 .case-phones .frame__media img { object-fit: contain; }
 
-/* The expo: rows that fill the column, every photograph in a row the
-   same height and as wide as its ratio (`--ar`) makes its share. Which
-   photographs share a row is decided in the block and marked by a break
-   between rows. Stacked on a phone. */
 .case-expo {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -5005,11 +3387,6 @@ button.shelf__vol { cursor: pointer; }
     }
 }
 
-/* The screens of a site (src/case-studies/wordpress-japan.jsx). A stack
-   is desktop-width plates one under another, each the width of the
-   column; the phones are the same site at 375px, two to a row and three
-   from 48rem, each at its own height — they are frames of different
-   lengths, so the rows start at the top and are left to be ragged. */
 .case-stack,
 .case-phones {
     display: grid;
@@ -5027,9 +3404,6 @@ button.shelf__vol { cursor: pointer; }
     .case-phones { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-/* The brochure: its pages in order, two to a row from 48rem, with each
-   page's number in the same place under it. The same gaps as the
-   gallery in any other case study. */
 .case-pages {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -5049,17 +3423,6 @@ button.shelf__vol { cursor: pointer; }
     color: var(--mark);
 }
 
-
-/* --- Gem Opalus (src/case-studies/gem-opalus-identity.jsx) ------------
-   A case study that opens with the work rather than a table: five tiles
-   straight under the title that read as the whole identity in one screen
-   (the glance), then the brand guidelines' pages one chapter at a time
-   (the explorer), each chapter a row of whole pages to swipe through. */
-
-/* The glance. Twelve columns and three rows from 62rem, with the ring and
-   the phone standing the full height and the logo, signet and palette
-   between them; two columns below that. Every tile is a crop of the
-   document and a way in to its chapter. */
 .gem-glance {
     list-style: none;
     margin: 0;
@@ -5236,9 +3599,6 @@ button.shelf__vol { cursor: pointer; }
 .gem-panel .case-gem__traits,
 .gem-panel .case-gem__palette { margin-bottom: clamp(1.5rem, 3.5vw, 2.5rem); }
 
-/* The row of pages. Each page is shown whole, as tall as will fit the
-   window beneath the bar, and the next one shows at the edge so the row
-   reads as something to swipe. */
 .gem-reel__track {
     list-style: none;
     margin: 0;
@@ -5349,9 +3709,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .case-gem__traits li { border-bottom: 0; }
 }
 
-/* The palette. A swatch is the colour, its name, its value and where the
-   brand took it from; the value is real text, so it can be selected. The
-   chip is outlined so Pearl and White do not vanish into the page. */
 .case-gem__palette {
     list-style: none;
     margin: 0;
@@ -5395,12 +3752,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 
 /* --- Next project --------------------------------------------------- */
 
-/* The document's ending, and the same one the home page has: the ground
-   arrives as a contained panel and opens out to the edges of the screen
-   (src/animations/closePanel.js, and the .close rules in section 12,
-   which this shares outright rather than restating). Everything the
-   band needs is already in those two places; what is left here is the
-   plate that sits on it. */
 .case-close { padding-block: clamp(1rem, 3vw, 2rem); }
 
 .case-next { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
@@ -5458,11 +3809,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 .case-next a[data-back]:hover .case-next__title { transform: translateX(-0.5rem); }
 .case-next a[data-back]:hover .case-next__go svg { transform: translateX(-0.3rem); }
 
-/* The next project's cover, where the record carries one. The plate is
-   still one link and still reads top to bottom on a narrow window; the
-   two columns are what a wide one is for, and they are asked for by the
-   attribute rather than by the class, so a `next` with nothing to show
-   is not given a second column to leave empty. */
 .case-next__cover {
     display: block;
     margin-top: clamp(1.75rem, 4vw, 2.75rem);
@@ -5502,7 +3848,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
     }
 }
 
-
 /* ====== 14. 404 ===================================================== */
 
 .notfound {
@@ -5541,11 +3886,7 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .notfound__actions { grid-template-columns: minmax(0, 1fr); max-width: none; }
 }
 
-
 /* ====== 15. VIEW TRANSITIONS ======================================= */
-/* Cross-document only: the cover of the project being opened settles
-   into the case study. Progressive — browsers without the API navigate
-   normally.                                                            */
 
 @view-transition { navigation: auto; }
 
@@ -5554,10 +3895,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 @media (prefers-reduced-motion: no-preference) {
     .case-figure--cover img { view-transition-name: project-cover; }
 
-    /* Both snapshots carry the document's own ground. Without it the
-       cross-fade happens over whatever the browser puts behind them,
-       which between two pages of a themed site is a frame of the wrong
-       colour — the one place a navigation could still flash. */
     ::view-transition-old(root),
     ::view-transition-new(root) { background: var(--paper-base); }
 
@@ -5568,19 +3905,10 @@ html:not(.js) .gem-reel__ctl { display: none; }
     @keyframes vt-in  { from { opacity: 0; } }
 }
 
-/* The cover the transition is carrying, while the reader is on their way
-   to it. At rest the name belongs to this page's own cover, which is
-   what a project arriving from the index settles into; from the press on
-   the plate at the foot of the page until the document is replaced, it
-   belongs to the plate instead, so what settles into the next project's
-   cover is the picture of the next project. Never both — see the note in
-   src/CaseStudy.jsx for what a browser does with a name it is handed
-   twice.                                                              */
 @media (prefers-reduced-motion: no-preference) {
     html[data-going] .case-figure--cover img { view-transition-name: none; }
     html[data-going] .case-next__cover img { view-transition-name: project-cover; }
 }
-
 
 /* ====== 16. PREFERENCE OVERRIDES =================================== */
 
@@ -5601,70 +3929,27 @@ html:not(.js) .gem-reel__ctl { display: none; }
         scroll-behavior: auto !important;
     }
 
-    /* The grid re-composing under the rail (section 12) is shortened to
-       nothing by the rule above, which leaves the stagger: a card
-       waiting its turn in front of a change that no longer takes any
-       time. The wait goes with it, so the new set is simply there. */
     .js .quest[data-settle] { animation-delay: 0s; }
 
     /* Anything positional is removed outright rather than shortened. */
     .js [data-reveal] { opacity: 1; transform: none; }
     .js [data-reveal-rule]::before { transform: none; }
-    /* The statement's sweep (section 8) is shortened to nothing by the
-       rule above, which leaves its stop waiting most of a second in
-       front of a change that no longer takes any time. A delay is the
-       only part of that gesture the rule above does not reach, so it is
-       taken here. */
+
     .hero__title:hover .hero__stop { transition-delay: 0s; }
-    /* The folio's two halves turn one after the other, which the rule
-       above shortens to nothing while leaving the wait in front of it:
-       the name would sit at the start of its own animation — which is
-       out of sight — for sixty milliseconds, on every band, every time.
-       The same correction the side quests' grid and the hero's stop
-       already carry, for the same reason. */
+
     .folio.is-turn .folio__name { animation-delay: 0s; }
 
-    /* The navigation's travel is positional too, and this is the one place
-       where shortening is not enough: a hundredth of a millisecond is
-       still a transition, with a frame to start it and a frame to finish
-       it, and a main thread with a canvas awake on it can make a reader
-       wait for both. Removed, the page is simply where it belongs — which
-       is what the timeline would never be asked to do here anyway, since
-       it is never loaded for a reader who has set this. */
     html:not(.nav-live) [data-main],
     html:not(.nav-live) .underlay { transition: none; }
     /* Both plates stay where they rest rather than tucking up on scroll. */
     .masthead.is-solid .masthead__inner { transform: none; }
-    /* Two systems are not listed here, and for the same reason: they
-       read this preference themselves rather than being overridden
-       after the fact.
 
-       The carousel asks the media query itself and drops the coasting
-       at source, keeping the lens — which is a static optical field
-       rather than movement (section 9). The scroll system asks the
-       stylesheet — every rule it owns is written into a
-       `(prefers-reduced-motion: no-preference)` query, and every
-       timeline into the matching gsap.matchMedia condition — so when
-       this preference is set, the closing panel is never clipped and
-       no timeline is ever built. There is nothing here to undo. */
     .btn:hover svg,
     .breadcrumb:hover svg,
     .case-next a:hover .case-next__title,
     .case-next a:hover .case-next__go svg { transform: none; }
 }
 
-/* A finger is not a cursor. The quiet registers on the site are set
-   small on purpose — the scroll cue, the case-study breadcrumb, the
-   footer's return, the Elsewhere links, a caption's source — and at
-   that size they are a line of type before they are a target. Not one
-   of them changes size here: each only takes its target out of the
-   space it already sits in, so the composition is where the type left
-   it and the box around it is a thumb's.
-
-   The two that would otherwise move the page give the height back
-   where they took it — the breadcrumb out of the margin below it, the
-   Elsewhere links out of the gap between them — so the gap to the case
-   title, and the rhythm of the list, are the ones the type set. */
 @media (pointer: coarse) {
     .hero__scroll,
     .site-foot a,
@@ -5683,29 +3968,18 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .contact__links a,
     .contact__links span { min-height: 2.75rem; }
 
-    /* Areas of interest is not a list of targets, and takes the step
-       anyway: from 40rem the two lists stand side by side under
-       matching labels and matching rules, and a column that kept the
-       tighter rhythm would read as the pair coming apart. */
     .contact__interests li {
         display: flex;
         align-items: center;
         min-height: 2.75rem;
     }
 
-    /* A caption's link is the one place padding is free: it is inline,
-       so the box grows around the text without the line it sits on
-       giving up a pixel. */
     .cap a { padding-block: 0.5rem; }
 }
 
 @media (forced-colors: active) {
     .masthead__inner, .menu { background: Canvas; }
 
-    /* The menu's frame and its dimming are both colour standing in for
-       an edge, and neither survives the flattening: the bars keep the
-       edge as a border, the fillets and the scrim have nothing left to
-       say. */
     .underlay__dark, .underlay__fillet { display: none; }
     .underlay__bar { background: Canvas; border-bottom: 1px solid CanvasText; }
     .underlay__row:last-child .underlay__bar {
@@ -5714,24 +3988,11 @@ html:not(.js) .gem-reel__ctl { display: none; }
     }
     .zone-invert, .zone-warm { background: Canvas; color: CanvasText; }
 
-    /* A flattened palette forces an author's background to the system's
-       ground, which takes four black covers down to four page-coloured
-       rectangles on a page — the shelf, gone. Named in the system's own
-       ink they come back: the cover is the fill, the type on it is the
-       ground, and the rule they stand on is a line rather than a
-       painted box. */
     .shelf__vol { background: CanvasText; color: Canvas; box-shadow: none; }
     .shelf__board::before { background: CanvasText; }
     .btn, .theme-toggle, .frame__media, .case-figure img, .lightbox { border: 1px solid CanvasText; }
     .glass__cell img { border: 1px solid CanvasText; }
 
-    /* Three lines that used to be borders, or are new, and a flattened
-       palette forces an author's background to the system's ground: a
-       hairline painted rather than bordered is a hairline that is not
-       there. Named in the system's own ink, which is honoured, they are
-       drawn again — the band dividers as they always were, and the
-       reading line and its ruler for the first time, since the bar was
-       painted this way before any of this and had the same problem. */
     .band + .band::before,
     .progress__fill { background: CanvasText; }
 
@@ -5741,40 +4002,20 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .reticle__tick { border-color: CanvasText; }
     .reticle__say { color: CanvasText; }
 
-    /* Grounds carry no information once colour is flattened: the closing
-       panel becomes Canvas, so its edges say nothing and its clip would
-       only risk cropping what is in front of it. */
     .close__ground { clip-path: none !important; }
     .masthead__inner, .menu-btn, .wordmark__face { border: 1px solid CanvasText; }
-    /* Backgrounds are flattened here, so the filled row that says "you
-       are here" in the panel becomes every other row. The underline
-       carries the state instead — and it has to, because the panel is
-       the only place on the site that marks a current anything. */
+
     .menu__link[aria-current],
     .menu__small[aria-current] { text-decoration: underline; }
     .tbd { border: 1px dashed CanvasText; background: Canvas; }
     .frame::before, .frame::after,
     .case-figure::before, .case-figure::after { border-color: CanvasText; }
 
-    /* The short ticks are drawn as backgrounds rather than borders, and
-       a background is exactly what this mode flattens away. Repainted
-       in the system's ink so the idiom survives. */
     .case-figure figcaption::before,
     .case-list li::before,
     .case-next__label::before,
     .hero__title[data-typing] .hero__char.is-caret::before { background: CanvasText; }
 
-    /* And so is the live dot, for the same reason. Its two states were
-       two steps of a ramp that no longer exists here, and its breath
-       crossed to an accent that does not either, so what is left is
-       the mark itself.
-
-       Both selectors, and the animation off with them: the live state
-       is written one level deeper than the resting one, and an
-       animation outranks any declaration whatever its selector. A
-       single-class rule here would lose to both and leave the dot
-       painted in a ramp this mode then flattens to the ground it is
-       drawn on — which is to say, invisible. */
     .presence__dot,
     .presence[data-state='live'] .presence__dot {
         background-color: CanvasText;
@@ -5786,11 +4027,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .masthead, .menu, .theme-toggle, .skip-link,
     .case-next, .progress, .folio, .reticle, .hero__scroll, .intro { display: none !important; }
 
-    /* The carousel survives the loss of the scroll that drives it: it is
-       the whole of the work now, so on paper it becomes what it already
-       is underneath — the six covers in a row, each under its own
-       title. The lens, the counter and the label are the parts that
-       needed a screen. */
     .glass {
         position: static !important;
         aspect-ratio: auto !important;
@@ -5801,10 +4037,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 
     .glass__canvas, .glass__count, .glass__label { display: none !important; }
 
-    /* Who was reading at the moment the sheet was printed is not a
-       fact about the page. The footer keeps its colophon and loses
-       this, the same way the carousel keeps its covers and loses its
-       counter. */
     .presence { display: none !important; }
 
     .glass .glass__strip { display: flex !important; }
@@ -5853,18 +4085,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 
     .hero__stage { padding-block: 0 1.5rem !important; }
 
-    /* On screen the statement is painted through its own glyphs, which
-       makes it a background — and a background is precisely the thing a
-       printer is entitled not to lay down. Left as it is, the page
-       prints a heading-shaped hole. The image is dropped and the ink
-       handed back, so what is printed is the ramp above like everything
-       else on the sheet.
-
-       The fill is deliberately not named here. -webkit-text-fill-color
-       inherits, and the stop carries its own colour as `color` alone —
-       so naming the fill on the heading would reach past it and print
-       the full stop at full ink instead of one step down the ramp,
-       which is the one thing about this heading that is not the ink. */
     .hero__title {
         background-image: none !important;
         color: var(--ink) !important;
@@ -5874,10 +4094,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
        ink around the last page. */
     .close__ground { display: none !important; }
 
-    /* The ramp is reset once, at every site that declares it, rather
-       than each ground being overridden where it is painted: a sheet
-       of paper is white however the screen was set, and everything on
-       the site now reads its colour from these eight names. */
     :root,
     :root[data-theme="dark"],
     :root[data-theme="light"],
@@ -5893,9 +4109,7 @@ html:not(.js) .gem-reel__ctl { display: none; }
         --ink-3:      #555555;
         --rule:       #BBBBBB;
         --rule-2:     #999999;
-        /* Declared light and dark at the three sites above; on paper it
-           is neither, and leaving it dark asks the UA to render form
-           controls and any UA-painted surface for a dark ground. */
+
         color-scheme: light;
     }
 
@@ -5904,9 +4118,7 @@ html:not(.js) .gem-reel__ctl { display: none; }
     .band { padding-block: 1.25rem; break-inside: avoid; }
 
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
-    /* The band dividers, which are an entrance now rather than a border
-       and would otherwise print only for the bands the reader happened
-       to have scrolled past before pressing print. */
+
     .js [data-reveal-rule]::before { transform: none !important; }
     /* One more part of the carousel that needed a screen: a strip that
        cannot be dragged does not need telling that it can. */
@@ -5914,3 +4126,6 @@ html:not(.js) .gem-reel__ctl { display: none; }
 
     a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: var(--ink-3); }
 }
+
+.tag__no, .cap__no { display: none; }
+.tag::before, .tag::after { content: none; }

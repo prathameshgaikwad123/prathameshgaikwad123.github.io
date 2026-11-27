@@ -1,14 +1,4 @@
-/* The crew: four pointers with a name each, the way collaborators show
-   up in a design file — except that all four are the same person.
 
-   They are ordinary elements laid over the canvas, not drawn into it,
-   so their type is the site's type and the stylesheet owns how they
-   look (section 7, .wall-hand). This file only says where each one is
-   going, whether it is on stage, and when it presses.
-
-   Each eases toward wherever it was last sent rather than being placed
-   there, so a hand that is sent somewhere new while still travelling
-   bends its path instead of jumping. */
 
 const ARROW = '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true">'
     + '<path d="M1 1v12.2l3.3-3 2.3 4.9 2.2-1-2.3-4.8H11z"/></svg>';
@@ -42,8 +32,7 @@ export function createCrew(stage, names) {
         press(k) {
             const { el } = hands[k];
             el.classList.remove('is-press');
-            /* Read back so the class coming off and going on again are
-               two style changes, not one that cancels out. */
+
             void el.offsetWidth;
             el.classList.add('is-press');
         },
@@ -52,8 +41,6 @@ export function createCrew(stage, names) {
             hands.forEach((hand, k) => this.show(k, false));
         },
 
-        /* `quick` is how tightly a hand follows what it was sent: loose
-           while it travels to a click, tight while it lays a course. */
         tick(dt, now, quick) {
             const k = Math.min(1, dt * quick);
             hands.forEach((hand, n) => {

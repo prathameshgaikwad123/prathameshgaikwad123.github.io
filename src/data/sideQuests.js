@@ -1,37 +1,7 @@
-/* ===================================================================
-   SIDE QUESTS
-   Things made because I wanted to. Personal, experimental, small — the
-   work that has no brief behind it and no client at the end of it.
 
-   One record per pinned plate. Everything except `href` is required;
-   a quest without a link is a plate that simply sits there, which is
-   the right answer for the ones that were never published anywhere.
-
-   IN THE MAKING: every `cover` points at an "In the making" plate in
-   public/assets/images/side-quests/. Swap the extension here when a
-   real 1200×1200 export goes in beside it, and rewrite the `alt`. See
-   ASSETS.md.
-
-   To add one: copy a record, give it the next `no` and a `family`.
-   Nothing else needs touching — the rail and its counts follow.
-   =================================================================== */
 
 const plate = (file) => `/assets/images/side-quests/${file}`;
 
-/* `family` is what the rail above the grid sorts by, and it is
-   deliberately coarser than `type`. There are five types across six
-   quests, so a rail built from them would have five states in which a
-   single card sat alone in a three-column grid. Two families divide
-   the same six evenly — three each — so every state of the rail fills
-   the grid exactly, which is the whole reason the grid can stay
-   aligned while the content changes.
-
-   `type` is still what the card says about itself. The family is how
-   it is found; the type is what it is.
-
-   A new family needs nothing but this field: the rail is built from
-   whatever families the data contains, in the order they first appear,
-   and counts itself. */
 export const sideQuests = [
     {
         id: 'css-experiments',

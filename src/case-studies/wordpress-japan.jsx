@@ -1,19 +1,5 @@
 import { Zoomable } from '../components/Lightbox.jsx';
 
-/* WordPress websites for clients in Japan, on the same shell as every
-   case study: the brief in words, then Horita DM Clinic's screens in
-   pictures — the home page at desktop width, the same page on a phone, and
-   the inner pages — and then FotoLib Kyoto, from the export of its design.
-   Kuwahara Lab has no screens and appears by name and link only.
-
-   The clinic's pictures are the frames of the Figma file its site was built
-   from, cut at section edges and kept in the repository, so they are plain
-   local files rather than Cloudinary uploads. Each is given its width and
-   never a shape, as FLOWID's are: the desktop plates run the width of the
-   column and the phone frames stand three to a row at their own height, so
-   nothing is cropped or stretched. They are listed, with their sizes and
-   what each shows, on the project record in src/data/projects.js. */
-
 const DIR = '/assets/images/projects/wordpress-japan/';
 
 function Shot({ shot: [file, w, h, alt], eager, onZoom }) {

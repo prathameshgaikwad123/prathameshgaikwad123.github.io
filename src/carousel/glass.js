@@ -6,24 +6,6 @@ import {
     VIGNETTE, CARD_EDGE, SURGE, LUT_SIZE, MAX_DPR, MAX_PIXELS,
 } from './config.js';
 
-/* ===================================================================
-   THE RENDERER
-   -------------------------------------------------------------------
-   WebGL2, by hand. The scene is a handful of textured quads and one
-   fullscreen pass, which is less than any library would charge to
-   describe it, and the effect needs three texture reads per fragment
-   at three different magnifications plus a spatially varying blur —
-   which is not something backdrop-filter, an SVG filter chain or a 2D
-   canvas can be talked into at sixty frames a second.
-
-     pass one   ground and cards, flat, into a texture; mips generated
-     pass two   one triangle, reading that texture back through the lens
-
-   Everything the second pass needs about the field arrives in a small
-   lookup built by warp.js. The shader itself does nine texture reads
-   and no loops.
-   =================================================================== */
-
 function compile(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -81,9 +63,6 @@ export function createGlass(canvas, sources, onTextureReady) {
         return null;
     }
 
-    /* Two buffers, both static: the unit quad every card is drawn from,
-       and the single oversized triangle the second pass covers the
-       viewport with. */
     const quad = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, quad);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
@@ -96,9 +75,6 @@ export function createGlass(canvas, sources, onTextureReady) {
     gl.bindVertexArray(vao);
     gl.enableVertexAttribArray(0);
 
-    /* The strip's own framebuffer. Its texture carries a mip chain,
-       which is where the rim blur comes from: a bias into an existing
-       chain rather than a variable-radius kernel nobody can afford. */
     const sceneTexture = gl.createTexture();
     const frame = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, frame);
@@ -110,11 +86,6 @@ export function createGlass(canvas, sources, onTextureReady) {
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, sceneTexture, 0);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    /* The warp. Half float rather than full: the values stored are
-       displacements from identity, never larger than about a thirtieth
-       of the stage, so ten bits of mantissa put the error two orders of
-       magnitude below a pixel — and half float is filterable in core
-       WebGL2, where float is an extension away. */
     const warpTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, warpTexture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -127,14 +98,7 @@ export function createGlass(canvas, sources, onTextureReady) {
     const textures = createTextureSet(gl, sources, onTextureReady);
 
     const size = { w: 0, h: 0, dpr: 1 };
-    /* Seeded white rather than the warm tan this used to hold. The
-       renderer is built before the stage is measured, so on the paths
-       where measure() takes an early return — a stage inside a
-       collapsed or display:none ancestor — this is the colour the
-       first frames actually clear to. White is the light ground, which
-       is what an unresolved theme falls back to everywhere else on the
-       site; setGround() replaces it as soon as the stage can be read.
-       See readGround() in src/hooks/useGlassCarousel.js. */
+
     let ground = [1, 1, 1];
     const uniform = {
         quad: QUAD, mag: STRENGTH, disp: DISPERSION, dispX: DISPERSION_X, lod: LOD_MAX,
@@ -143,13 +107,7 @@ export function createGlass(canvas, sources, onTextureReady) {
     };
 
     function resize(width, height, ratio) {
-        /* Two ceilings on how many fragments the second pass has to
-           shade. The device ratio is capped because past two the rim
-           blur is hiding more detail than a third device pixel could
-           add; the area is capped because a very large display would
-           otherwise take the same ratio and ask for four times the
-           work. The deficit lands where the glass is softening the
-           picture anyway. */
+
         const budget = Math.sqrt(MAX_PIXELS / Math.max(width * height, 1));
         const dpr = Math.min(ratio || 1, MAX_DPR, budget);
         const w = Math.max(2, Math.round(width * dpr));
@@ -170,9 +128,6 @@ export function createGlass(canvas, sources, onTextureReady) {
         ground = rgb;
     }
 
-    /* `list` is [{ card, cx }] from the layout, already culled and in
-       draw order. Positions arrive in stage pixels and are scaled here,
-       so nothing upstream has to think about device ratio. */
     function render(list, centreY, speed = 0) {
         const { w, h, dpr } = size;
         gl.bindVertexArray(vao);
@@ -198,8 +153,6 @@ export function createGlass(canvas, sources, onTextureReady) {
             const ch = entry.card.h * dpr;
             const cardAspect = entry.card.w / entry.card.h;
 
-            /* Cover fit: the crop is taken from the middle, and the
-               axis that is already right is left alone. */
             let sx = 1;
             let sy = 1;
             if (slot.aspect > cardAspect) sx = cardAspect / slot.aspect;
@@ -216,10 +169,6 @@ export function createGlass(canvas, sources, onTextureReady) {
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         }
 
-        /* Unbound first: the texture the chain is being built from is
-           this framebuffer's own colour attachment, and leaving it
-           attached while it is written to is a feedback loop that some
-           drivers will quietly get wrong. */
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, sceneTexture);
         gl.generateMipmap(gl.TEXTURE_2D);
@@ -247,21 +196,10 @@ export function createGlass(canvas, sources, onTextureReady) {
         gl.bindVertexArray(null);
     }
 
-    /* Live knobs. The uniform table is the whole of the effect's
-       tuning, and it is reachable from the console and from the
-       verification harness so it can be fitted against numbers rather
-       than against an opinion. */
     function tune(next) {
         Object.assign(uniform, next);
     }
 
-    /* Deletes what it made and stops there. Forcing the context to be
-       lost would hand the driver its memory back a moment sooner and
-       cost far more than that: a lost context cannot be re-acquired
-       from the same canvas, so a remount — which React does on every
-       mount in development, and which any route change can do —  would
-       find getContext returning the same dead context and paint
-       nothing. The element is being discarded anyway. */
     function dispose() {
         textures.dispose();
         gl.deleteBuffer(quad);

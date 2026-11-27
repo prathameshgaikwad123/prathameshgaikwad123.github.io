@@ -5,22 +5,13 @@ import useScrollEffect from '../hooks/useScrollEffect.js';
 import wordReveal from '../animations/wordReveal.js';
 import lineReveal from '../animations/lineReveal.js';
 
-/* Two effects, one section. Declared here rather than inline for the
-   reason useScrollEffect gives: a new array on every render would take
-   both timelines down and build them again. */
 const EFFECTS = [wordReveal, lineReveal];
 
-/* The statement this section turns on. Split into words here rather
-   than in script so the sentence is complete, selectable and correct
-   in the prerendered document — the reveal only changes its weight. */
 const LEDE =
     'My work sits between design, technology and communication. I enjoy taking '
     + 'an idea from an early concept through structure, visual design and digital '
     + 'execution.';
 
-/* The contribution chart comes from ghchart.rshah.org, a third party. If
-   that service is unreachable, hide the whole figure rather than leaving a
-   broken image in the middle of the page. */
 function GitHubChart() {
     const imgRef = useRef(null);
     const [down, setDown] = useState(false);
@@ -46,7 +37,6 @@ function GitHubChart() {
                 />
             </div>
             <figcaption className="cap">
-                <span className="cap__no num">Fig. 08</span>
                 <span className="cap__text">
                     GitHub contribution activity ·{' '}
                     <a href={SITE.github} target="_blank" rel="noopener noreferrer">
@@ -66,81 +56,17 @@ export default function About() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag about__tag" data-reveal="">
-                        <span className="tag__no num">03</span>About
+                        About
                     </p>
                     <h2 className="statement about__statement" id="about-title" data-reveal="">
-                        {/* Split by hand rather than by the splitter,
-                            because this statement is not only text: the
-                            last word of it is an annotated phrase with a
-                            drawing under it, and the full stop belongs
-                            to that word rather than to a line of its
-                            own. */}
-                        <span className="sw">
-                            <span>A</span>
-                        </span>{' '}
-                        <span className="sw">
-                            <span>designer</span>
-                        </span>{' '}
-                        <span className="sw">
-                            <span>who</span>
-                        </span>{' '}
-                        <span className="sw">
-                            <span>works</span>
-                        </span>{' '}
-                        <span className="sw">
-                            <span>across</span>
-                        </span>{' '}
-                        {/* Not masked — see .sw--free in stylesheet
-                            section 4. The stroke under this phrase hangs
-                            below the baseline, and a box that clipped
-                            the word would clip the drawing off it. */}
-                        <span className="sw sw--free">
-                        <span>
-                        <span className="mark" data-reveal-draw="">
-                            <em>disciplines</em>
-                            {/* The one annotated phrase on the site. Two
-                                strokes that do not quite retrace each
-                                other, drawn in sequence, so the mark reads
-                                as authored rather than as a rule the
-                                interface drew.
-
-                                `pathLength` normalises each curve to a
-                                length of 1, so the stylesheet can draw
-                                them with a dash of 1 and an offset of 1
-                                without measuring anything — which is what
-                                keeps this an entrance (section 6) rather
-                                than something that needs the scroll
-                                system's library to exist. */}
-                            <svg
-                                className="mark__draw"
-                                viewBox="0 0 220 20"
-                                preserveAspectRatio="none"
-                                aria-hidden="true"
-                                focusable="false"
-                            >
-                                <path
-                                    pathLength="1"
-                                    d="M4 12.4C41 7.6 92 15.2 137 9.8c26-3.1 51-1.4 79 2.2"
-                                />
-                                <path
-                                    pathLength="1"
-                                    d="M17 17.1c38-3.9 88 3.1 132-1.7 21-2.3 42-1.2 62 1.1"
-                                />
-                            </svg>
-                        </span>
-                        .
-                        </span>
-                        </span>
+                        <Words text="A brand designer who also builds for the web." className="sw" inner />
                     </h2>
 
                     <div className="about__body">
                         <div className="about__aside" data-reveal="">
                             <figure className="about__portrait frame">
                                 <span className="frame__media">
-                                    {/* The same illustrated portrait the header's identity
-                                        chip crops square — cut from its
-                                        ground and given room to breathe, rather than a
-                                        second, different image standing in for it. */}
+
                                     <img
                                         src="/assets/images/portrait.webp"
                                         alt={`Illustrated portrait of ${SITE.name}.`}
@@ -151,7 +77,6 @@ export default function About() {
                                     />
                                 </span>
                                 <figcaption className="cap">
-                                    <span className="cap__no num">Fig. 07</span>
                                     <span className="cap__text">
                                         {SITE.name} · {SITE.place}
                                     </span>
@@ -184,19 +109,13 @@ export default function About() {
                     <section className="sub" id="practice" aria-labelledby="practice-title" data-reveal="">
                         <header className="sub__head">
                             <h3 className="sub__title" id="practice-title">
-                                I build what I design.
+                                Design and front-end work
                             </h3>
-                            <p className="tag">
-                                <span className="tag__no num">03.1</span>In Practice
-                            </p>
                         </header>
 
                         <div className="practice">
                             <p className="practice__copy">
-                                Design decisions survive contact with implementation, or they don't survive
-                                at all. A lot of my web work happens in the browser rather than only in
-                                Figma — this portfolio included, which is React and hand-written CSS,
-                                with no template or UI kit behind it.
+                                I do a lot of my web work in the browser as well as in Figma. This portfolio is built with React and hand-written CSS, with no template or UI kit.
                             </p>
 
                             <GitHubChart />

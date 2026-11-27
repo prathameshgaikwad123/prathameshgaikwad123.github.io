@@ -1,6 +1,4 @@
-/* The site's inline icons, unchanged from the hand-written build. They are
-   drawn in currentColor and marked decorative, because every one of them
-   sits next to a text label that already says what it does. */
+
 
 export const ArrowRight = () => (
     <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -20,8 +18,6 @@ export const ArrowDown = () => (
     </svg>
 );
 
-/* The footer's own arrow keeps its inline sizing: it sits inside a line of
-   text rather than in a control, so it is measured in the text's terms. */
 export const ArrowUpInline = () => (
     <svg
         viewBox="0 0 12 12"

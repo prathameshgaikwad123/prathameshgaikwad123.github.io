@@ -1,34 +1,11 @@
 import { useState } from 'react';
 
-/* A video in a case study. The videos themselves are not in the
-   repository, and should not be: an MP4 is tens of megabytes, every clone
-   of the repository would carry it for ever, and a file served from GitHub
-   Pages does not adapt to the reader's connection. They live on a video
-   host and are named here by the id they were given there.
-
-   `provider`  'youtube' | 'vimeo' | 'file'. A file is a direct MP4 URL —
-               a Cloudinary video upload, say — and is played by the
-               browser's own <video>.
-   `id`        The YouTube or Vimeo id, or for a file its full URL. Left
-               null, the slot is a labelled placeholder and nothing is
-               fetched from anywhere.
-   `poster`    Optional. A still, as a URL. YouTube has one for every video,
-               so a YouTube entry works without it; the other two want one.
-
-   It is a facade. Until the reader presses play the page holds a picture
-   and a link, so a case study with three videos does not make three
-   requests to a video host, set that host's cookies or run its player
-   before anyone has asked. The link is also the no-JavaScript answer:
-   pressed with the script not running, it opens the video where it lives. */
-
 const WATCH = {
     youtube: (id) => `https://www.youtube.com/watch?v=${id}`,
     vimeo: (id) => `https://vimeo.com/${id}`,
     file: (id) => id,
 };
 
-/* The no-cookie hosts, and autoplay because the press that opened the
-   player is the reader's request for it to play. */
 const EMBED = {
     youtube: (id) => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`,
     vimeo: (id) => `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1`,

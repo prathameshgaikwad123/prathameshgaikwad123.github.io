@@ -5,50 +5,6 @@ import { createCrew } from './crew.js';
 import { clatter } from './sound.js';
 import { intoSlab, lookAt, multiply, ortho, perspective, placement, project } from './mat.js';
 
-/* ===================================================================
-   THE WALL
-   -------------------------------------------------------------------
-   The stretch of the navigation panel between the four rows and the
-   foot, and the one thing in the panel that is built rather than set.
-
-   It is a wall of bricks that turn. Each has a paper face, an ink face
-   a quarter turn away and a glazed face behind, and can be stopped
-   anywhere between — so the wall draws in greys, and what it draws is
-   whatever it is told: a word, a pair of letters, the colours of the
-   project tiles.
-
-   What it is told comes from three places, in this order of say:
-
-     the reader    a row of the navigation under the pointer, or given
-                   focus, turns the wall to what is behind that row.
-                   Me is a greeting; Just
-                   because is a pattern that does not hold still; Say hi
-                   is the time where the reply would be coming from.
-
-     the crew      four pointers, each one a hat the same person wears.
-                   The first time the panel opens in a visit they lay
-                   the wall, course by course. After that they take
-                   turns: one travels to a spot, presses, and the next
-                   picture spreads from where it pressed.
-
-     the pointer   resting on the wall it pushes the bricks under it
-                   towards their other face; pressed, it sends a ring
-                   through all of them, and that one thing is heard. The wall leans a few degrees
-                   towards it and the light follows it round.
-
-   The theme is not a recolouring. Dark is the same wall resting on its
-   ink face, so changing theme with the panel open turns every brick.
-
-   This file is the wall's clock and its decisions. The bricks are in
-   field.js, the pictures in pictures.js, the crew in crew.js, the
-   drawing in renderer.js and the one sound in sound.js; nothing here
-   touches React.
-   =================================================================== */
-
-/* A long lens, close to none at all: seen square on, the only thing in
-   a joint is the bed behind it, and the same in every course. A wider
-   one looks down into the low joints and up into the high ones, and
-   the wall comes out striped. */
 const FOV = (5 * Math.PI) / 180;
 const FOOT = 26;            /* css px under the wall, kept for the line it says */
 const HOLD = 4.6;           /* seconds a picture is up */
@@ -123,8 +79,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         say.textContent = field ? PICTURES[id].say : '';
     }
 
-    /* Turn the wall to a picture: as a wave out of `origins`, or, with
-       no delay, all at once and already at rest. */
     function put(id, origins, delay) {
         showing = id;
         const picture = PICTURES[id];
@@ -143,20 +97,13 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         scene.bed.fill(r.bed);
     }
 
-    /* The wall is sized from the room it is given: about forty courses
-       in the height, each between seven and a half and nine and a half
-       pixels, and as many bricks across as fit. Where that is too few
-       to draw with, nothing is drawn. */
     function size(w, h, ratio) {
         width = w;
         height = h;
         const dpr = Math.min(ratio || 1, 2);
         renderer.resize(w, h, dpr);
         const tall = h - FOOT;
-        /* A course is a whole number of device pixels and so is a joint,
-           and the wall is set down on a pixel boundary. Otherwise the
-           joints, which are a pixel wide, land between pixels in some
-           courses and on them in others, and the wall comes out banded. */
+
         pitch = Math.round(Math.max(7.5, Math.min(9.6, tall / 40)) * dpr) / dpr;
         const rows = Math.floor((tall - 6) / pitch);
         const cols = Math.floor(w / pitch / 2);
@@ -196,9 +143,7 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         }
 
         if (mode === 'build' && fresh && laidFrom < 0) {
-            /* Every brick put away, with the moment it is due: a course
-               at a time from the bottom, each swept from the end the
-               last one finished at. */
+
             born = new Float32Array(field.n);
             for (let i = 0; i < field.n; i += 1) {
                 const r = field.row[i];
@@ -212,8 +157,7 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
             count.textContent = '';
             say.textContent = 'laying courses.';
         } else {
-            /* A resize in the middle of anything lands on the picture
-               that was up, standing. */
+
             if (mode === 'build') finish();
             put(showing, null, 0);
         }
@@ -233,8 +177,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         return out;
     }
 
-    /* The pointer taken back through the lean of the wall to the plane
-       the bricks' faces are on. */
     function toWall(px, py, out) {
         const t = Math.tan(FOV / 2);
         intoSlab(scene.slab, 0, 0, eye, 1, o3);
@@ -278,8 +220,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         if (t >= LEAD + (rows - 1) * COURSE + SWEEP + 0.45) finish();
     }
 
-    /* Send whoever the next picture belongs to out to where it will
-       start from. The picture itself waits for them to get there. */
     function plan(n) {
         const id = REEL[n];
         if (id === 'face' && !kit.face) { turn = n; return; }
@@ -314,9 +254,7 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
 
         const picture = PICTURES[showing];
         if (picture.live) {
-            /* A rule, not a picture: asked again every frame, and handed
-               to each brick as soon as the wave that brought it in has
-               passed. */
+
             paint(picture, dark, kit, angles, glazes, time);
             for (let i = 0; i < field.n; i += 1) {
                 if (field.nextAt[i] > 0) field.next[i] = angles[i];
@@ -336,8 +274,7 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
     }
 
     function draw(dt) {
-        /* Square on when left alone: the joints are a pixel wide, and a
-           wall that drifts while nobody is touching it makes them crawl. */
+
         const gx = pointer.inside ? pointer.nx * 0.2 : 0;
         const gy = pointer.inside ? pointer.ny * 0.1 : 0;
         const k = dt ? Math.min(1, dt * 4) : 1;
@@ -349,9 +286,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         placement(tiltY, tiltX, shift, lift, scene.slab);
         multiply(vp, scene.slab, mvp);
 
-        /* The bed goes up with the wall: behind what has been laid and
-           nothing else, so a wall half built is not a grey panel with
-           bricks on the bottom of it. */
         const { rows, cols } = field;
         const up = mode === 'build' && laidFrom >= 0
             ? Math.min(rows, Math.max(0, (time - laidFrom - LEAD) / COURSE - 2))
@@ -359,8 +293,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
         scene.bedDim.set([1, 0.505, 0.04]);
         scene.bedCount = Math.min(rows, Math.floor(up));
 
-        /* The key light, swung a little towards wherever the pointer
-           is, so the shadows and the shine on the ink move with it. */
         const lx = KEY[0] + lampX * 0.42, ly = KEY[1] - lampY * 0.3, lz = KEY[2];
         const ll = Math.hypot(lx, ly, lz);
         scene.light[0] = lx / ll; scene.light[1] = ly / ll; scene.light[2] = lz / ll;
@@ -385,9 +317,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
             direct(dt);
         }
 
-        /* The lean has to be current before the pointer is taken back
-           through it, so this frame's push lands under this frame's
-           pointer. */
         if (pointer.inside || pointer.down) {
             placement(tiltY, tiltX, shift, lift, scene.slab);
             const at = [0, 0];
@@ -433,8 +362,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
     canvas.addEventListener('pointerleave', leave);
     canvas.addEventListener('pointerdown', down);
 
-    /* What the pictures are waiting on. Either may arrive after the
-       picture that wants it is already up, so each redraws it. */
     function redraw(ids) {
         if (!field || !ids.includes(showing)) return;
         put(showing, [[0, 0]], running ? 0.02 : 0);
@@ -468,8 +395,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
             if (!running) { step(field, 0, time); draw(0); }
         },
 
-        /* The section a row of the navigation leads to, or null when
-           the reader has let go of the rows. */
         ask(section) {
             const id = (section && ASKED[section]) || null;
             if (id === asked) return;
@@ -490,8 +415,6 @@ export function createWall({ canvas, stage, count, say }, { face, built = false,
             pointer.inside = false;
         },
 
-        /* One frame and no clock: the wall standing, saying hello. For a
-           reader who has asked for less motion. */
         still() {
             if (!field) return;
             if (mode === 'build') finish();
