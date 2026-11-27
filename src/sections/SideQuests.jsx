@@ -6,58 +6,16 @@ import useScrollEffect from '../hooks/useScrollEffect.js';
 import lineReveal from '../animations/lineReveal.js';
 import { responsive } from '../data/cloudinary.js';
 
-/* ===================================================================
-   SIDE QUESTS
-   -------------------------------------------------------------------
-   The one section with nothing to prove. Everything above it answered
-   to somebody — a brief, an organisation, a deadline — and this is the
-   rest of it.
-
-   It used to be a wall of plates pinned a degree or two off true. The
-   tilt was doing all the work of saying "these are different", and it
-   was the wrong kind of different: a grid that has been knocked rather
-   than a section that is playful. What is playful here now is the
-   thing the reader does, not the angle the pictures sit at.
-
-   So: a rail, and a grid that answers it. The rail names the families
-   the quests fall into and carries a rule that travels between them —
-   and the rule leads with the edge it is travelling towards, so it
-   stretches on the way and settles at the far end rather than sliding
-   as a rigid block. That stretch is the whole of the section's
-   character, and it is two transition durations rather than a library.
-
-   The grid stays a grid through all of it. Three columns, then two,
-   then one; every card the same width, the same ratio, the same
-   distance from its neighbour. The families are sized so that every
-   state of the rail fills those columns exactly — see the note in
-   src/data/sideQuests.js — which is what lets the content change
-   without the composition ever going ragged.
-
-   Two entrance systems, and they do not overlap. Until the reader
-   touches the rail, the cards carry `data-reveal` and arrive with the
-   rest of the page on scroll. From the first press onwards the key
-   changes with the family, which remounts the cards and replays the
-   settle animation in the stylesheet — and `data-reveal` comes off, so
-   a remounted card is never left at the opacity the reveal starts on
-   with no observer to take it off again.
-   =================================================================== */
-
 const ALL = 'all';
 
-/* One column of the grid below at each of its three widths. A
-   placeholder ignores this; a Cloudinary upload is fetched to match. */
 const QUEST_SIZES = '(min-width: 92rem) 440px, (min-width: 62rem) 30vw, (min-width: 40rem) 45vw, 92vw';
 
-/* One card. An anchor when the quest has somewhere to go and a plain
-   block when it does not, which is the only difference a link makes:
-   nothing here is clickable that does not lead anywhere. */
 function Quest({ item }) {
     const inner = (
         <>
             <span className="quest__plate frame">
                 <span className="frame__media">
-                    {/* REPLACE: labelled placeholder — see
-                        src/data/sideQuests.js. */}
+
                     <img
                         {...responsive(item.cover, QUEST_SIZES)}
                         alt={item.alt}
@@ -88,10 +46,6 @@ function Quest({ item }) {
 
             <span className="quest__note">{item.note}</span>
 
-            {/* The rule under the card, drawn from the left on the
-                gesture. It is the accent's one appearance here at rest
-                scale, and it is a scaleX rather than a width so it
-                costs a composite and not a layout. */}
             <span className="quest__rule" aria-hidden="true" />
         </>
     );
@@ -112,12 +66,9 @@ export default function SideQuests() {
     const btnRefs = useRef({});
 
     const [family, setFamily] = useState(ALL);
-    /* Whether the rail has been used. Before it has, the cards keep the
-       page's own entrance; after, they get the rail's. */
+
     const [touched, setTouched] = useState(false);
 
-    /* The rail, built from the data rather than written out: the
-       families in the order they first appear, each with its count. */
     const families = useMemo(() => {
         const seen = [];
         for (const q of sideQuests) if (!seen.includes(q.family)) seen.push(q.family);
@@ -136,11 +87,6 @@ export default function SideQuests() {
         [family],
     );
 
-    /* The travelling rule. Both edges are written as insets so each can
-       be given its own duration in the stylesheet — the leading edge
-       arrives first and the trailing one catches up, which is the
-       stretch. Measured in a layout effect so the rule is already in
-       place on the frame the press paints. */
     const place = useCallback(() => {
         const rail = railRef.current;
         const btn = btnRefs.current[family];
@@ -152,15 +98,6 @@ export default function SideQuests() {
         rail.dataset.placed = '';
     }, [family]);
 
-    /* `enhanced` is in the dependencies because the rail is: it is false
-       on the first render, so there is nothing to measure then, and
-       without it here the effect would never run again once there was.
-
-       The chips are what is observed rather than the rail. The rail is
-       the full measure at every width and so never changes size, while
-       the chips are the things whose widths the rule is written from —
-       and those move when the interface face lands, which is the one
-       reflow that would otherwise leave the rule under nothing. */
     useLayoutEffect(() => {
         place();
         if (!enhanced) return undefined;
@@ -184,8 +121,7 @@ export default function SideQuests() {
 
     const choose = (id) => {
         if (id === family) return;
-        /* Which way the rule is going, so the stylesheet knows which
-           edge should lead. */
+
         if (railRef.current) {
             const from = families.findIndex((f) => f.id === family);
             const to = families.findIndex((f) => f.id === id);
@@ -206,27 +142,15 @@ export default function SideQuests() {
             <div className="shell">
                 <div className="grid">
                     <p className="tag quests__tag" data-reveal="">
-                        <span className="tag__no num">04</span>Side Quests
+                        Side projects
                     </p>
                     <h2 className="statement quests__statement" id="side-quests-title" data-reveal="">
-                        <Words
-                            text={'Things I made because I\u00A0wanted\u00A0to.'}
-                            className="sw"
-                            inner
-                        />
+                        <Words text="Experiments and side projects." className="sw" inner />
                     </h2>
                     <p className="lead quests__lead" data-reveal="">
-                        No brief, no client, no deadline. Experiments, small builds and
-                        whatever else I was curious about that week. This wall is still
-                        being filled in; each plate goes live as it is ready.
+                        Experiments, small builds and other things I was curious about. This section is still being filled in, and each project goes up when it is ready.
                     </p>
 
-                    {/* The rail is a control, so it is only offered where
-                        it works. Without a script it would be a row of
-                        buttons that do nothing over a grid that already
-                        shows everything, which is worse than not being
-                        there — and the grid below is the full set either
-                        way. */}
                     {enhanced ? (
                         <div className="quests__rail" ref={railRef} data-reveal="">
                             <div className="quests__chips" role="group" aria-label="Filter side quests">
@@ -265,8 +189,6 @@ export default function SideQuests() {
                         ))}
                     </ul>
 
-                    {/* What changed, for a reader who cannot see the grid
-                        re-compose under the rail. */}
                     <p className="visually-hidden" aria-live="polite" aria-atomic="true">
                         {touched
                             ? `${shown.length} of ${sideQuests.length} side quests shown.`

@@ -1,11 +1,5 @@
 import CaseVideo from '../components/CaseVideo.jsx';
 
-/* AI-assisted video creation, on the shell every case study shares. Only what
-   the project's own summary already says is written down here — that the
-   videos were made for VOEPL's HSE department, with AI tools, from concept to
-   finished video. The videos carry the page, and they are on the record in
-   src/data/projects.js, so adding one is a line there and nothing here. */
-
 export default function blocks(project) {
     return [
         {

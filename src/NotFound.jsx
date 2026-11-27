@@ -2,7 +2,6 @@ import Loader from './components/Loader.jsx';
 import Navigation from './components/Navigation.jsx';
 import Menu from './components/Menu.jsx';
 import Underlay from './components/Underlay.jsx';
-import Reticle from './components/Reticle.jsx';
 import { PageFoot, SkipLink } from './components/Chrome.jsx';
 import { ArrowRight } from './components/Icons.jsx';
 
@@ -37,7 +36,6 @@ export default function NotFound() {
                 onClick={menu.onPanelClick}
             />
             <Underlay onClick={menu.onOverlayClick} />
-            <Reticle />
 
             <div data-main="" inert={menu.open || undefined}>
                 <main id="main" className="page">

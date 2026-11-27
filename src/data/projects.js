@@ -1,54 +1,8 @@
-/* ===================================================================
-   SELECTED WORK
-   One record per project, in carousel order. The carousel on the home
-   page and the case study pages are both built from this, so a project
-   is described once — including the path of every plate, which is where
-   you change a placeholder's extension when you replace it. See
-   ASSETS.md.
 
-   A record needs seven fields to be a card: slug, no, category, short,
-   title, summary and cover. Everything past `href` is the case study,
-   and only a project that has one carries it.
 
-   `href` is what makes a card a link, and it is the only thing that
-   does. A project with a case study points at its page; a project
-   without one is `null`, and the carousel renders it as a cover and a
-   caption rather than as a link to nowhere — the card, the counter,
-   the label and the strip all behave exactly as they do for a linked
-   project, minus the anchor. Giving one a destination later is one
-   line here and nothing anywhere else: a case study page, or an
-   external URL, or a Behance project.
-   =================================================================== */
-
-/* REPLACE: the gallery plates below point at labelled SVG placeholders in
-   public/assets/images/projects/. Swap the extension here when you drop in
-   a real 1400×1050 gallery plate, and rewrite the alt text next to it. */
 const img = (slug, file) => `/assets/images/projects/${slug}/${file}`;
 
-/* The covers are the real thing, and they are not in the repository:
-   they are delivered from Cloudinary. Nothing about the carousel had to
-   change to take them — a cover is a URL, and the strip's `img` and the
-   WebGL pass that rasterises it both take a remote one as readily as a
-   local one. The second of those asks for it cross-origin, so the
-   delivery host has to answer with `Access-Control-Allow-Origin`; a
-   card whose texture cannot be read draws as ground and the strip
-   below still shows and links it. One entry per card, in carousel
-   order. */
 const cdn = (file) => `https://res.cloudinary.com/duhuxaukd/image/upload/${file}`;
-
-/* `tile` is what the home carousel draws for a card: a flat brand-coloured
-   placeholder with the project's mark (or its name, set as a mark) in white,
-   in public/assets/images/projects/<slug>/tile.webp. It is only the carousel's —
-   `cover` is still the project's real picture, which the case study page, its
-   view transition and the share previews keep using. Delete a record's `tile`
-   line and its card goes back to showing its cover. Tiles are 1600×1000
-   with the mark held inside the central 4:5, so neither card shape crops it. */
-
-/* `short` is the index label — the name this project answers to in a
-   list rather than on a page. The navigation panel's work list is set
-   from it, and that list carries only the projects that have somewhere
-   to go, so a `short` on an unlinked project is what it would be
-   called once it does. */
 
 export const projects = [
     {
@@ -67,10 +21,7 @@ export const projects = [
         cover: cdn('v1789371081/1_ivtwne.png'),
         tile: img('voepl-website', 'tile.webp'),
         coverAlt: 'Cover image for the VOEPL corporate website case study.',
-        /* The one project with a case study, so the one card that is a
-           link. The URL is the one the carousel used to build from the
-           slug, written out rather than derived now that not every card
-           has one. */
+
         href: 'work/voepl-website.html',
         /* The case study page. */
         lead:
@@ -90,30 +41,17 @@ export const projects = [
                 'Website design, publishing and maintenance; responsive layouts; product and capability presentation',
             ],
         ],
-        /* Captured from the live site at 1440 px wide, and the phone plate at
-           390 px, so what is shown is what the site actually looks like. */
+
         gallery: [
             [img('voepl-website', '01.webp'), 'The VOEPL home page at desktop width: the navigation, the \u201cDesign, Manufacture, Delight\u201d hero and the opening company statement.'],
             [img('voepl-website', '02.webp'), 'The VOEPL \u201cOur Products\u201d page: air conditioners, LED lighting, water dispensers, commercial freezers, washing machines and compressors, each given an icon tile.'],
             [img('voepl-website', '03.webp'), 'The VOEPL website on a phone, three pages side by side: the home page, the products page and the electronics manufacturing services page.'],
         ],
-        /* The only line of this record that had to change. It pointed
-           at the second case study, and there is no second case study
-           any more — so it points where the last project's pointer
-           always pointed, which is the way out of the work. */
-        /* Where the case study goes at the end of itself. `href`, `label`,
-           `title` and `aria` are the plate; `cover` and `coverAlt` are
-           optional and are what make it carry a picture. A `next` that
-           points at another project should have them — the cover is also
-           what the cross-document view transition settles into on the
-           page it opens (stylesheet section 15). This one points back at
-           the home page's last band rather than at a project, because
-           there is only one case study so far, and a plate for a section
-           has no cover to show. */
+
         next: {
             href: '../index.html#contact',
             label: 'Next',
-            title: 'Open to Opportunities — get in touch',
+            title: 'Open to opportunities, get in touch',
             aria: 'Continue',
         },
     },
@@ -123,7 +61,7 @@ export const projects = [
         no: '02',
         category: 'Brand Identity / Logo Design',
         short: 'Gem Opalus',
-        title: 'Logo Design & Brand Identity — Gem Opalus',
+        title: 'Gem Opalus logo design and brand identity',
         summary:
             'Created the logo and overall brand identity, establishing a cohesive ' +
             'visual presence for the brand.',
@@ -133,15 +71,6 @@ export const projects = [
         go: 'View the project',
         href: 'work/gem-opalus-identity.html',
 
-        /* The case study page: the brand identity guidelines document, in
-           its own order, under its own section names. The blocks are
-           src/case-studies/gem-opalus-identity.jsx; the pages are
-           public/assets/images/projects/gem-opalus-identity/brand-NN.webp
-           (NN is the page in the PDF) and the PDF itself is
-           public/assets/gem-opalus-brand-identity.pdf.
-
-           No 16:10 cover: the document's own cover opens the first block
-           uncut instead. */
         caseTitle: 'Gem Opalus',
         caseCategory: 'Logo Design & Brand Identity',
         caseCover: false,
@@ -182,7 +111,7 @@ export const projects = [
         no: '03',
         category: 'Character Design / Brand Identity',
         short: 'Amanoya Mascot',
-        title: 'Mascot Creation — Amanoya, Japan',
+        title: 'Amanoya mascot design, Japan',
         summary:
             'Designed and developed a mascot concept, contributing to the brand\u2019s ' +
             'visual identity and character development.',
@@ -196,44 +125,19 @@ export const projects = [
         slug: 'flowid-collateral',
         no: '04',
         category: 'Graphic Design / Marketing Collateral',
-        /* FLOWID is the client's own styling of its name, and it is
-           written that way here rather than set in capitals by the
-           stylesheet: the carousel, the navigation, the page, its title
-           and every description of a picture all read these strings. */
+
         short: 'FLOWID Collateral',
-        title: 'Brochure & Banner Design — FLOWID, Netherlands',
+        title: 'FLOWID brochure and banner design, Netherlands',
         summary:
             'Created brochures and banners aligned with the company\u2019s branding and ' +
             'communication requirements.',
         go: 'View the project',
-        /* The banner artwork itself rather than a photograph of it: the
-           card stands for the design. It is 4:5, which is the shape the
-           strip gives this slot (every even card is tall), so the glass
-           crops nothing off it. */
+
         cover: cdn('v1790314212/Flowid_banner_csf5vg.jpg'),
         tile: img('flowid-collateral', 'tile.webp'),
         coverAlt: 'The FLOWID exhibition banner artwork.',
         href: 'work/flowid-collateral.html',
 
-        /* The case study page, on the same shell and in the same places
-           as VOEPL's: the hero with its lead and facts, then one block per
-           part of the work — the banner, the banner at the expo, the
-           brochure — each with its label in the left column and its
-           pictures in the right. The blocks are src/case-studies/
-           flowid-collateral.jsx; the pictures, and the order they are
-           shown in, are here.
-
-           No 16:10 cover: it would cut the banner, which is 4:5, so the
-           banner opens the first block uncut instead.
-
-           `w` and `h` are what the page reserves before a picture has
-           arrived, so only their ratio matters. The banner's is its
-           print size, 2 m by 2.5 m, and the brochure's pages are A4. The
-           photographs are a mix of portrait and landscape and were not
-           measured, so they are reserved as portrait 3:4; the block
-           measures each one when it arrives and lays the three out from
-           their real shapes. Entering a photograph's real size here stops
-           the page moving when it does. */
         caseTitle: 'FLOWID',
         caseCategory: 'Brochure & Banner Design',
         caseCover: false,
@@ -280,8 +184,7 @@ export const projects = [
             { src: cdn('v1790315381/flowfn_conv_2_fo3f9a.png'), w: 2480, h: 3508 },
             { src: cdn('v1790315398/flowfn_conv_3_rmqhko.png'), w: 2480, h: 3508 },
         ],
-        /* The way out is the way in: back to the strip this came from.
-           No label: the title already says what the plate does. */
+
         next: {
             href: '../index.html#work',
             title: 'Back to Selected Work',
@@ -295,15 +198,13 @@ export const projects = [
         no: '05',
         category: 'Web Development / WordPress',
         short: 'WordPress Development',
-        title: 'WordPress Website Development — Japan',
+        title: 'WordPress website development, Japan',
         summary:
             'Delivered four WordPress websites for businesses in Japan, including Horita DM ' +
             'Clinic, Kuwahara Lab and FotoLib Kyoto, building supplied Figma designs into ' +
             'responsive sites and owning scope, timelines and QA through handover.',
         go: 'View the project',
-        /* A collage made for the card: the clinic's home page at desktop
-           width and on a phone, beside the top of the FotoLib page. Kuwahara
-           Lab has no pictures and is in the card by name and link only. */
+
         cover: img('wordpress-japan', 'cover.webp'),
         tile: img('wordpress-japan', 'tile.webp'),
         coverAlt:
@@ -311,24 +212,6 @@ export const projects = [
             'width and on a phone, beside the top of the FotoLib Kyoto page.',
         href: 'work/wordpress-japan.html',
 
-        /* The case study page: the hero with its lead and facts, then one
-           block per part of the work. The sites share it, because they are
-           the same kind of work for the same kind of client: the clinic's
-           and FotoLib's, which have screens, and Kuwahara Lab's, which has
-           only its link, in the facts and in the context. The blocks are
-           src/case-studies/wordpress-japan.jsx.
-
-           The clinic's pictures are the Figma file's own frames, exported and
-           cut at section edges (public/assets/images/projects/wordpress-japan/),
-           so they are local WebP rather than Cloudinary uploads; the page
-           reads them as they are. The numbers beside each are the exported
-           size, which is what the page reserves before a picture has arrived.
-
-           The clinic's name is the logo's, which is how it spells itself in
-           Latin letters; the Japanese is the name on its site.
-
-           No 16:10 cover, as with FLOWID: the first block opens with the
-           desktop home page uncut instead. */
         caseTitle: 'WordPress Websites \u2014 Japan',
         caseCategory: 'WordPress Development',
         caseCover: false,
@@ -353,15 +236,13 @@ export const projects = [
                 },
             ],
         ],
-        /* FotoLib Kyoto, cropped from a 3\u00d7 capture of the live page at phone
-           width and kept at 780 px wide, so the three are sharp. */
+
         fotolib: [
             ['fotolib-hero', 780, 1189, 'The top of the FotoLib Kyoto page: an orange header, a photograph of a woman in a kimono on a Kyoto street, two album plans with their prices, and three photographs of Arashiyama.'],
             ['fotolib-pages', 780, 1133, 'The FotoLib Kyoto page\u2019s list of what each album page includes, set as speech bubbles beside small illustrations of people.'],
             ['fotolib-plans', 780, 1283, 'The FotoLib Kyoto page\u2019s two plans side by side, a \u201cCreate My Kyoto Album\u201d button, and the first of the six ordering steps.'],
         ],
-        /* Kuwahara Lab's blog, from the live site: the top of the home page at
-           desktop width, and the same page on a phone. */
+
         kuwahara: [
             ['kuwahara-pc', 1440, 1080, 'The Kuwahara Lab blog at desktop width: the Kuwahara Lab logo and search, a row of navigation links, a carousel of featured articles and the start of the recommended-topics section.'],
             ['kuwahara-sp', 780, 1688, 'The Kuwahara Lab blog on a phone: the logo, search box and menu button above the featured-article carousel and the first recommended topic.'],
@@ -371,7 +252,7 @@ export const projects = [
                 ['pc-top-hero', 1440, 950, 'The Horita DM Clinic home page at desktop width: the header with the clinic’s phone number, online booking and LINE buttons, the hero with its consultation-hours table, and a notice banner.'],
                 ['pc-top-features', 1440, 830, 'The home page’s “Features” section: three numbered reasons to choose the clinic, each with a photograph and a short paragraph.'],
                 ['pc-top-service', 1440, 1350, 'The home page’s “Service” section: the diabetes and metabolic medicine departments as offset cards beside photographs.'],
-                ['pc-top-diabetes', 1440, 1020, 'The home page’s “About diabetes” section: four headed columns — types, treatment, tests and medicines — each with an outline icon and a list of links.'],
+                ['pc-top-diabetes', 1440, 1020, 'The home page’s “About diabetes” section: four headed columns, types, treatment, tests and medicines, each with an outline icon and a list of links.'],
             ],
             phone: [
                 ['sp-top-1', 375, 1540, 'The home page on a phone, top: the hero with booking and LINE buttons, the notice, and the news list.'],
@@ -401,15 +282,12 @@ export const projects = [
         no: '06',
         category: 'Creative Direction / Web3',
         short: 'NFT Projects',
-        title: 'NFT Projects — End-to-End Creation & Management',
+        title: 'NFT projects, from creation to management',
         summary:
             'Contributed to concept development, creative direction, project setup, ' +
             'execution, management, and coordination of NFT projects.',
         go: 'View the project',
-        /* REPLACE: Dino The Diamond's artwork, set on its own flat grey so the
-           card can crop it to either shape and the ground carries on. It is
-           the placeholder for the cover; swap it for the real one, a 1600×1000
-           upload on Cloudinary, when there is one. */
+
         cover: img('nft-projects', 'cover.webp'),
         tile: img('nft-projects', 'tile.webp'),
         coverAlt:
@@ -417,9 +295,6 @@ export const projects = [
             'small flying saucers circling its head and a green gem at its feet.',
         href: 'work/nft-projects.html',
 
-        /* The case study page: the project in its owner's own words, and where
-           to find it. The blocks are src/case-studies/nft-projects.jsx. The
-           cover is the page's cover as well, so it is replaced in one place. */
         caseTitle: 'Dino The Diamond',
         caseCategory: 'NFT Project',
         lead: 'Born from passion, creativity, and the joy of building something timeless.',
@@ -440,9 +315,7 @@ export const projects = [
                 },
             ],
         ],
-        /* The picture the collection started from, which was found rather than
-           made, so it is the page's own and not the cover. Name, width,
-           height and alt, as the screens on the Japan page are. */
+
         inspiration: [
             'inspiration', 1024, 1024,
             'The inspiration image: a small blue creature with large eyes and a faceted, ' +
@@ -467,10 +340,7 @@ export const projects = [
             'Created videos for the VOEPL HSE department using AI-powered tools for ' +
             'concept development, visual creation, and video production.',
         go: 'Watch the videos',
-        /* Not in the home carousel. The record is still a project, so the
-           page is built and the navigation panel lists it; `carousel: false`
-           is only what keeps its card out of the strip and its count out of
-           the index. Delete the line to put the card back. */
+
         carousel: false,
         cover: cdn('v1789371083/7_kwczeb.png'),
         coverAlt: 'Cover image for the AI-assisted video creation work.',
@@ -484,17 +354,12 @@ export const projects = [
             'department at VOEPL, from concept to finished video.',
         coverCaption: 'AI-assisted video creation for the VOEPL HSE department.',
         facts: [
-            ['Role', 'Video creation — concept, visuals and production'],
+            ['Role', 'Video creation, concept, visuals and production'],
             ['Organisation', 'Virtuoso Optoelectronics Limited (VOEPL)'],
             ['Department', 'Health, Safety and Environment (HSE)'],
             ['Method', 'AI-assisted'],
         ],
 
-        /* REPLACE: the videos. The files are not kept in the repository; they
-           are uploaded to YouTube (unlisted is fine) or Vimeo and named here
-           by their id. See src/components/CaseVideo.jsx for the fields. An
-           entry with no `id` renders as a labelled placeholder. Add, remove
-           or reorder entries freely — the page lays out whatever is here. */
         videos: [
             { title: 'Film 01 \u2014 uploading soon', note: 'Made for the HSE department with AI-assisted tools. Being prepared for upload.', provider: 'youtube', id: null },
             { title: 'Film 02 \u2014 uploading soon', note: 'Made for the HSE department with AI-assisted tools. Being prepared for upload.', provider: 'youtube', id: null },
@@ -511,8 +376,6 @@ export const projects = [
     },
 ];
 
-/* The projects that get a card in the home carousel, which is all of them
-   but the ones whose record says `carousel: false`. */
 export const carouselProjects = projects.filter((p) => p.carousel !== false);
 
 export const projectBySlug = (slug) => projects.find((p) => p.slug === slug);

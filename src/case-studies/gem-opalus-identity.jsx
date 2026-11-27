@@ -2,38 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Zoomable } from '../components/Lightbox.jsx';
 import { ArrowLeft, ArrowRight } from '../components/Icons.jsx';
 
-/* Gem Opalus, on the same shell as every case study, but opened differently:
-   a long document read top to bottom is a page nobody finishes, so the
-   brand identity is shown in two stages instead.
-
-     1. At a glance. Five tiles straight under the title — the ring, the
-        logo, the packaging, the palette, the Instagram system — so the whole
-        identity reads in one screen. Each tile is a way in to its chapter.
-     2. Explore the system. The document's 23 pages, one chapter at a time
-        (Brand, Logo, Colour, …), each chapter a row of pages to swipe
-        through. Nothing is cut: a page is shown whole and opens full size.
-
-   Without script, every chapter is simply shown in turn, so the page is
-   still the whole document.
-
-   The pages are the PDF's own, rendered at 2000px wide
-   (public/assets/images/projects/gem-opalus-identity/brand-NN.webp, NN being
-   the page number in the PDF), the tiles are crops of them (glance-*.webp)
-   and the PDF itself is offered as a download. All of it is the designer's
-   own work, shown unaltered. */
-
 const DIR = '/assets/images/projects/gem-opalus-identity';
 const PDF = '/assets/gem-opalus-brand-identity.pdf';
 
-/* Every page is A4 landscape; 2000 × 1413 is the exported size, so only
-   the ratio matters to the page reserving room for it. */
 const W = 2000;
 const H = 1413;
 const SLIDE = '(min-width: 92rem) 1000px, (min-width: 48rem) 70vw, 86vw';
 
-/* [page in the PDF, caption, alt]. The caption is the page's own
-   headline; the alt says what is on it, because the text inside a picture
-   is not text to a screen reader. */
 const P = {
     1: ['The Earth’s treasures, shaped by time, made to be yours.',
         'The cover of the Gem Opalus brand identity guidelines: the gold-leaf G symbol and wordmark beside a gold signet ring engraved with the G, under the line “The Earth’s treasures, shaped by time, made to be yours.”'],
@@ -83,8 +58,6 @@ const P = {
         'The brand in application: blade signs on shopfronts, a white paper bag, a wall plaque and business cards, all carrying the gold-leaf lockup on white.'],
 };
 
-/* The palette is the document's own, set here as colour rather than
-   shown as a picture of colour, so a reader can read and copy the values. */
 const PALETTE = [
     ['Opalus Gold', '#B6915E', 'Primary', 'Wordmark colour'],
     ['Leaf Gold', '#EBB44B', 'Primary', 'Gold-leaf backdrop of the symbol'],
@@ -103,8 +76,6 @@ const TRAITS = [
     ['Timeless', 'Stones formed over millennia deserve a calm, lasting identity — nothing trend-led.'],
 ];
 
-/* The chapters, in the order of the document. `extra` is what a chapter
-   sets natively above its pages. */
 const CHAPTERS = [
     {
         key: 'brand',
@@ -181,8 +152,6 @@ const CHAPTERS = [
     },
 ];
 
-/* The way in. Each tile is a crop of the document that stands for a
-   chapter, and a press on it opens that chapter below. */
 const TILES = [
     {
         key: 'ring',

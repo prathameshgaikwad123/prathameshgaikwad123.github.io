@@ -1,31 +1,10 @@
 import { GLAZE, tone } from './field.js';
 
-/* ===================================================================
-   WHAT THE WALL SAYS
-   -------------------------------------------------------------------
-   Each picture is drawn the ordinary way, small, on a 2D canvas — one
-   unit of the wall to four pixels — and the wall is read off it: a
-   brick takes the average of the patch it covers, and stops at the
-   angle that shows that much ink. So type is set in the site's own
-   Castoro, an edge that crosses a brick at a slant leaves it part
-   turned, and a photograph needs nothing special done to it.
-
-   A patch that is mostly a colour turns the brick right round to its
-   glazed face instead, and fires it that colour.
-
-   `by` is which of the crew starts the picture — an index into CREW,
-   'all', or nobody — and `say` is the line under the wall while it is
-   up. The lines are the masthead chip's own register: nothing here is
-   a caption for the work.
-   =================================================================== */
-
 export const CREW = ['ui/ux', 'web', 'brand', 'motion'];
 
 const SERIF = "Castoro, 'Iowan Old Style', Georgia, serif";
 const MONO = "ui-monospace, 'SF Mono', Menlo, Consolas, monospace";
 
-/* Set `text` as large as will fit inside the given fractions of the
-   wall, centred on its own ink rather than on its em box. */
 function set(g, W, H, text, font, high, wide, heavy = 0) {
     let size = H * high;
     g.font = font.replace('%', size);
@@ -41,8 +20,7 @@ function set(g, W, H, text, font, high, wide, heavy = 0) {
     const x = (W - (m.actualBoundingBoxRight - m.actualBoundingBoxLeft)) / 2;
     const y = (H + m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
     g.fillText(text, x, y);
-    /* And a little heavier than it was cut: a hairline is thinner than
-       a course, and a serif that vanishes is not a serif. */
+
     if (heavy) {
         g.lineJoin = 'round';
         g.lineWidth = heavy;
@@ -107,9 +85,6 @@ export const PICTURES = {
         },
     },
 
-    /* Not a picture: a rule, asked again every frame. Stripes bent by a
-       second, slower wave, so the bands of ink wander across the wall
-       and never quite repeat. */
     field: {
         say: 'weird little things.', by: 1,
         live(x, y, t) {
@@ -123,8 +98,7 @@ export const PICTURES = {
     clock: {
         say: 'in nashik, right now.', by: null,
         stamp: nashik,
-        /* Hours over minutes, the way a flap clock stacks them: at this
-           size five characters on one line are too fine to lay in brick. */
+
         draw(g, W, H) {
             const [hh, mm] = nashik().split(':');
             if (!mm) return;
@@ -143,16 +117,11 @@ export const PICTURES = {
 /* The order they come round in when nobody is asking for one. */
 export const REEL = ['hi', 'type', 'pointer', 'code', 'play', 'field', 'rest'];
 
-/* And the one each row of the navigation asks for, by the section the
-   row leads to. */
 export const ASKED = { about: 'hi', 'side-quests': 'field', contact: 'clock' };
 
 const SCALE = 4;
 const linear = (v) => Math.pow(v / 255, 2.2);
 
-/* Returns paint(picture, dark, kit, angles, glazes, time): fills
-   `angles` with one angle a brick, and `glazes` with a linear colour
-   for each brick that has turned to its glazed face. */
 export function createPainter(field) {
     const W = field.width, H = field.rows;
     const canvas = document.createElement('canvas');
@@ -197,20 +166,14 @@ export function createPainter(field) {
                 glazes[i * 3 + 1] = linear(gr);
                 glazes[i * 3 + 2] = linear(b);
             } else if (!picture.photo) {
-                /* A drawing is ink or it is not: only a brick an edge
-                   really crosses is left part turned. */
+
                 const t = Math.min(1, Math.max(0, (cover * (1 - lum) - 0.22) / 0.56));
                 const ink = t * t * (3 - 2 * t);
                 angles[i] = tone(dark ? 1 - ink : ink);
             } else if (cover < 0.14) {
                 angles[i] = dark ? tone(1) : tone(0);
             } else {
-                /* The same greys on either wall: a photograph is not a
-                   drawing to be reversed. On the dark one its blacks are
-                   held a little off black, so the hair keeps an edge
-                   against a wall that is black already; and a brick the
-                   cut-out only partly covers is fired part way to the
-                   wall's own colour. */
+
                 const ground = dark ? 0.06 : 0.965;
                 const grey = dark ? 0.15 + 0.85 * lum : lum;
                 const v = (ground + (grey - ground) * Math.min(1, cover / 0.92)) * 255;

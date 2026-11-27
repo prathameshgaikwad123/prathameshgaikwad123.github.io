@@ -1,13 +1,4 @@
-/* ===================================================================
-   GLSL — two passes
-   -------------------------------------------------------------------
-   Pass one draws the ground and the cards flat, at stage resolution,
-   into a texture. Pass two is the glass: one fullscreen triangle that
-   reads that texture back through the warp.
 
-   Nothing about the strip is curved geometry. What was measured off
-   the reference is a screen-space field, so it is reproduced as one.
-   =================================================================== */
 
 export const QUAD_VERT = `#version 300 es
 in vec2 aPos;
@@ -20,12 +11,6 @@ void main() {
     vUv = aPos;
 }`;
 
-/* One card. The image is cover-fitted into whatever aspect the strip
-   gave it, and the only surface treatment is a hairline lift along the
-   edges — measured in the reference as a cool near-white a single pixel
-   wide, heavier on the top and left, which is a light source at the
-   upper left and the one thing that stops the cards reading as holes
-   cut in the ground. Rounded corners, no shadow. */
 export const CARD_FRAG = `#version 300 es
 precision highp float;
 in vec2 vUv;
@@ -102,30 +87,6 @@ void main() {
     gl_Position = vec4(aPos * 2.0 - 1.0, 0.0, 1.0);
 }`;
 
-/* The glass.
-
-   uWarp holds, per column: the horizontal displacement and the field
-   strength e. The horizontal term has to be a table because the base
-   map is the integral of 1/m and has no closed form; the vertical term
-   is a plain division, because m does not vary with y.
-
-   The pivot the vertical division works about sits below the strip and
-   walks outward with the field, which is what lifts a card's top edge
-   163 pixels while its bottom edge drops 18, and what turns its
-   straight vertical sides into curves. No curvature term is written
-   anywhere: it falls out of scaling about a point that is not the
-   centre.
-
-   Dispersion arrives twice because the base map is not isotropic and
-   the reference's dispersion is: vertically as three magnifications,
-   horizontally as a radial offset. See config.js — both were measured,
-   and neither route produces the other.
-
-   Blur is a bias into the mip chain, driven by the same e. It is not
-   driven by velocity — at 200 pixels a frame the reference's card
-   edges are still pin-sharp, and the smear at the sides is there on
-   frames where nothing is moving at all. There is a knob for it all
-   the same, and it is off; config.js says why. */
 export const GLASS_FRAG = `#version 300 es
 precision highp float;
 in vec2 vUv;

@@ -4,7 +4,6 @@ import Loader from './components/Loader.jsx';
 import Navigation from './components/Navigation.jsx';
 import Menu from './components/Menu.jsx';
 import Underlay from './components/Underlay.jsx';
-import Reticle from './components/Reticle.jsx';
 import Lightbox, { Zoomable } from './components/Lightbox.jsx';
 import { PageFoot, Progress, SkipLink } from './components/Chrome.jsx';
 import { ArrowLeft, ArrowRight } from './components/Icons.jsx';
@@ -20,28 +19,10 @@ import useUnderlayNav from './hooks/useUnderlayNav.js';
 import useScrollEffect from './hooks/useScrollEffect.js';
 import closePanel from './animations/closePanel.js';
 
-/* How wide a figure in the page's column is drawn: the shell's content
-   box, which is the window less its gutters up to a 92rem shell less
-   its own. */
 const FIGURE_SIZES = '(min-width: 92rem) 1344px, 92vw';
 
 const HOME = '../index.html';
 
-/* Two elements on one page cannot carry the same view-transition name —
-   a browser handed a duplicate abandons the transition altogether — and
-   a case study has two covers on it the moment the plate at the foot of
-   the page carries one: its own, at the top, and the next project's.
-
-   So the name is moved rather than shared, and it is moved in the
-   stylesheet (section 15) off an attribute written here, for the same
-   reason the theme wipe does it that way: a name is a style, and a style
-   the stylesheet owns cannot be left behind by a navigation that never
-   happened. From the press until the document goes away, the cover that
-   is named is the one the reader is travelling to.
-
-   Only a plain press. A modified click opens a tab, which is not a
-   navigation this document is taking part in, and naming anything for
-   it would leave the mark on a page the reader is still reading. */
 function useHandover() {
     useEffect(() => {
         const root = document.documentElement;
@@ -62,10 +43,6 @@ function useHandover() {
             root.setAttribute('data-going', '');
         };
 
-        /* A page restored from the back-forward cache comes back exactly
-           as it left, attribute and all — which on this page would be a
-           document whose own cover has given its name away to a plate at
-           the bottom of it. */
         const back = () => root.removeAttribute('data-going');
 
         link.addEventListener('click', go);
@@ -79,10 +56,6 @@ function useHandover() {
     }, []);
 }
 
-/* One fact row. Most values are a plain string; one that points somewhere
-   else — the live sites — is `{ links: [{ text, href }, …] }`, one link to
-   a line; and the one that is still to be confirmed carries its marker
-   through rather than being filled in. */
 function Fact({ label, value }) {
     return (
         <div className="case-facts__item">
@@ -115,8 +88,6 @@ function Fact({ label, value }) {
     );
 }
 
-/* The shell every case study shares. The written body of each one comes from
-   src/case-studies/, and everything else is read from the project record. */
 export default function CaseStudy({ slug }) {
     const project = projectBySlug(slug);
     const intro = useIntro();
@@ -127,10 +98,6 @@ export default function CaseStudy({ slug }) {
     useUnderlayNav(menu.open);
     useHandover();
 
-    /* The same ending the home page has, for the same reason: the last
-       thing in a document is a ground closing over rather than another
-       block of it passing. One effect, one set of tokens — see
-       src/animations/closePanel.js. */
     const closeRef = useScrollEffect(closePanel);
 
     const blocks = caseBlocks[slug](project, setZoomed);
@@ -164,7 +131,6 @@ export default function CaseStudy({ slug }) {
                 onClick={menu.onPanelClick}
             />
             <Underlay onClick={menu.onOverlayClick} />
-            <Reticle />
             <Progress />
 
             <div data-main="" inert={menu.open || undefined}>
@@ -182,9 +148,6 @@ export default function CaseStudy({ slug }) {
                                 <span className="case-hero__cat">{project.caseCategory || project.category}</span>
                             </div>
 
-                            {/* `caseTitle` and `caseCategory` are for a project
-                                whose carousel caption is not the name its
-                                page should be headed with. */}
                             <h1 className="case-hero__title" id="case-title">
                                 {project.caseTitle || project.title}
                             </h1>
@@ -195,9 +158,7 @@ export default function CaseStudy({ slug }) {
                         </section>
 
                         {/* ---------- OPENING ---------- */}
-                        {/* A case study with its own opening shows it in the
-                            cover's place, and the facts follow it so that the
-                            first screen is the work and not a table. */}
+
                         {Opening ? (
                             <>
                                 <Opening project={project} onZoom={setZoomed} />
@@ -206,14 +167,11 @@ export default function CaseStudy({ slug }) {
                         ) : null}
 
                         {/* ---------- COVER ---------- */}
-                        {/* The cover is cut to 16:10. A project whose first
-                            picture must not be cut sets `caseCover: false`
-                            and opens its first block with it instead. */}
+
                         {project.caseCover === false || Opening ? null : (
                             <div className="shell">
                                 <figure className="case-figure case-figure--cover frame">
-                                    {/* REPLACE: the cover is a 1600×1000 placeholder. Its
-                                        path and alt text are in src/data/projects.js. */}
+
                                     <span className="frame__media">
                                         <Zoomable
                                             {...responsive(project.cover, FIGURE_SIZES)}
@@ -256,24 +214,12 @@ export default function CaseStudy({ slug }) {
 
                         {/* ---------- NEXT ---------- */}
                         <div className="case-close zone-invert close" data-close-end="max" ref={closeRef}>
-                            {/* The band's ground, as its own layer, so it can
-                                arrive as a contained panel and open out to
-                                the edges without the plate inside it ever
-                                moving. Full bleed is the resting state. */}
+
                             <div className="close__ground" aria-hidden="true" />
 
                             <div className="shell close__type">
                                 <nav className="case-next" aria-label={project.next.aria || 'Next project'}>
-                                    {/* The cover is optional on the record and
-                                        the plate is a complete link without it:
-                                        a `next` can point at a project, and
-                                        then it has one, or at somewhere on the
-                                        home page, and then there is no cover to
-                                        show and nothing is invented. See the
-                                        note on `next` in src/data/projects.js. */}
-                                    {/* `back` is a plate that returns rather
-                                        than continues, and its arrow says
-                                        so; its label is optional. */}
+
                                     <a
                                         href={project.next.href}
                                         data-cover={project.next.cover ? '' : undefined}
@@ -312,10 +258,6 @@ export default function CaseStudy({ slug }) {
                 <PageFoot />
             </div>
 
-            {/* The lightbox is a dialog, so it is drawn in the top layer
-                and belongs outside the layer that travels — and outside
-                what the menu makes inert, or a reader could open one and
-                then not close it. */}
             <Lightbox item={zoomed} onClose={() => setZoomed(null)} />
         </>
     );

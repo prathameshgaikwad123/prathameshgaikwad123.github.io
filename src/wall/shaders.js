@@ -1,29 +1,4 @@
-/* The wall's two programs.
 
-   A brick is a unit box, stretched to size, turned about its long axis
-   and pushed forward by however far it has to stand out to turn — all
-   in the vertex shader, from one small record per brick, so the whole
-   wall is a single instanced draw.
-
-   Which face is which is decided by the normal the box was authored
-   with, before any turning:
-
-     +z  paper   matt, the face the wall rests on in the light theme
-     +y  ink     black lacquer, a quarter turn away
-     -z  glaze   a fired colour, a half turn away
-     -y  paper   the underside, seen only on an overshoot
-     ±x  ends
-
-   A brick that has stopped part way between paper and ink shows a
-   stripe of each, and more of the ink the further it has gone — which
-   is how the wall draws in greys with two colours of face. The light
-   does the rest: the paper face is turning away from it as the ink
-   face turns into it.
-
-   The edges are not modelled. Each face carries its own coordinates,
-   and within a bevel's width of an edge the normal is leaned over it,
-   so a box of twelve triangles takes a highlight along its arrises like
-   something that was cast. */
 
 const COMMON = `#version 300 es
 layout(location = 0) in vec3 aPos;

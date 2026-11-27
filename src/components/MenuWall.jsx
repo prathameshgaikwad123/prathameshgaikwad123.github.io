@@ -1,37 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { activeTheme, onMedia, useReducedMotion } from '../hooks/dom.js';
 
-/* The stretch of the menu between the rows and the foot, put to use: a
-   wall of bricks that turn — paper on one face, ink on the next, a
-   glaze behind — and draw whatever they are told by stopping part way.
-   What it is told, and by whom, is at the head of src/wall/index.js.
-   This file is only the wall's place in the document, and its manners.
-
-   Nothing of it is in any page's first load. The code is fetched the
-   first time the panel is opened and not before, so a reader who never
-   opens the menu never pays for it; and it is written against WebGL2
-   directly, like the carousel, so what is fetched is the wall and not
-   a library with the wall inside it.
-
-   It runs only while the panel is open. Closed, the panel is behind an
-   opaque page and nobody can see it, so the loop is stopped rather than
-   left to burn frames under it. For a reader who has asked for less
-   motion there is no loop at all: one frame, the wall standing, saying
-   hello.
-
-   The four rows of the navigation are its switches. It listens for the
-   pointer and the focus arriving on a row and reads the section off the
-   row's own href, so the panel does not have to know the wall is there
-   and a fifth row would need nothing done here.
-
-   The wall is laid, course by course, the first time the panel is
-   opened in a visit — and only then. That is remembered for the length
-   of the tab, across pages, because being made to watch a wall go up
-   again on every case study would turn a welcome into a wait.
-
-   Where the browser has no WebGL2, or the room is too short to hold
-   enough courses to draw with, nothing is drawn and nothing is said. */
-
 const LAID = 'wall-laid';
 
 function laid() {
@@ -56,8 +25,7 @@ export default function MenuWall({ open }) {
     const stage = useRef(null);
     const count = useRef(null);
     const say = useRef(null);
-    /* null until the panel is first opened; false if it was tried and
-       the browser would not have it. */
+
     const wall = useRef(null);
     const reduced = useReducedMotion();
 
@@ -131,8 +99,7 @@ export default function MenuWall({ open }) {
                 wall.current = made || false;
                 if (made) run(made);
             }, () => {
-                /* A chunk that never arrived is a wall that is not
-                   there, and the panel is complete without it. */
+
             });
         }
 
